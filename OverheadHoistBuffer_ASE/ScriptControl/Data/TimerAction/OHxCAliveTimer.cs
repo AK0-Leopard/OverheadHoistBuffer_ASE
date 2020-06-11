@@ -32,7 +32,7 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
         private static Logger logger = LogManager.GetCurrentClassLogger();
         protected SCApplication scApp = null;
         protected MPLCSMControl smControl;
-        int[] syncPoint = new int[7];
+        int[] syncPoint = new int[1];
         public OHxCAliveTimer(string name, long intervalMilliSec)
             : base(name, intervalMilliSec)
         {
@@ -46,14 +46,7 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
         }
         public override void doProcess(object obj)
         {
-            //Task.Run(() => AliveMTL());
-            Task.Run(() => AliveToDevice(0, "MTL", "OHXC_TO_MTL_ALIVE_INDEX"));
-            Task.Run(() => AliveToDevice(1, "MTS", "OHXC_TO_MTL_ALIVE_INDEX"));
-            Task.Run(() => AliveToDevice(2, "MTS2", "OHXC_TO_MTL_ALIVE_INDEX"));
-            Task.Run(() => AliveToDevice(3, "HID", "OHXC_TO_HID_ALIVE_INDEX"));
-            Task.Run(() => AliveToDevice(4, "HID2", "OHXC_TO_HID_ALIVE_INDEX"));
-            Task.Run(() => AliveToDevice(5, "HID3", "OHXC_TO_HID_ALIVE_INDEX"));
-            Task.Run(() => AliveToDevice(6, "HID4", "OHXC_TO_HID_ALIVE_INDEX"));
+            Task.Run(() => AliveToDevice(0, "HID", "OHXC_TO_HID_ALIVE_INDEX"));
         }
 
         private long syncMTLPoint = 0;
