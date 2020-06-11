@@ -1,0 +1,1163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{34F0D133-FC32-4219-BCA9-9D0BC9A74AD6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>com.mirle.ibg3k0.sc</RootNamespace>
+    <AssemblyName>ScriptControl</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <PublishUrl>發行\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Simulator|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Simulator\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;SIMULATOR</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Simulator|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Simulator\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AsyncIO, Version=0.1.69.0, Culture=neutral, PublicKeyToken=44a94435bd6f33f8, processorArchitecture=MSIL">
+      <HintPath>..\packages\AsyncIO.0.1.69\lib\net40\AsyncIO.dll</HintPath>
+    </Reference>
+    <Reference Include="BlockControlFramework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLL\BlockControlFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.3.3.1\lib\net40\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.Core.3.3.1\lib\net40\Common.Logging.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Elasticsearch.Net, Version=7.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
+      <HintPath>..\packages\Elasticsearch.Net.7.0.0\lib\net461\Elasticsearch.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader, Version=3.4.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.3.4.0\lib\net45\ExcelDataReader.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader.DataSet, Version=3.4.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.DataSet.3.4.0\lib\net45\ExcelDataReader.DataSet.dll</HintPath>
+    </Reference>
+    <Reference Include="GenericParsing, Version=1.1.3.20921, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLL\GenericParsing.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Protobuf, Version=3.6.1.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Protobuf.3.6.1\lib\net45\Google.Protobuf.dll</HintPath>
+    </Reference>
+    <Reference Include="hasp_net_windows, Version=7.1.1.42581, Culture=neutral, PublicKeyToken=56120be447701319, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLL\hasp_net_windows.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLL\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Ionic.Zip, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLL\Ionic.Zip.dll</HintPath>
+    </Reference>
+    <Reference Include="KingAOP, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\KingAOP.1.0.0\lib\KingAOP.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="M2Mqtt.Net">
+      <HintPath>DLL\M2Mqtt.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="Mirle.Hlts.ReserveSection.Map, Version=1.0.7370.25109, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLL\Mirle.Hlts.ReserveSection.Map.dll</HintPath>
+    </Reference>
+    <Reference Include="Mirle.Hlts.ReserveSection.Vision, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLL\Mirle.Hlts.ReserveSection.Vision.dll</HintPath>
+    </Reference>
+    <Reference Include="Mirle.Hlts.Utils, Version=1.0.7369.31596, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLL\Mirle.Hlts.Utils.dll</HintPath>
+    </Reference>
+    <Reference Include="MPLCConnectionControl, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLL\MPLCConnectionControl.dll</HintPath>
+    </Reference>
+    <Reference Include="Nancy, Version=1.4.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nancy.1.4.4\lib\net40\Nancy.dll</HintPath>
+    </Reference>
+    <Reference Include="Nancy.Hosting.Self, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nancy.Hosting.Self.1.4.1\lib\net40\Nancy.Hosting.Self.dll</HintPath>
+    </Reference>
+    <Reference Include="NATS.Client, Version=0.8.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NATS.Client.0.8.1\lib\net45\NATS.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Nest, Version=7.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
+      <HintPath>..\packages\NEST.7.0.0\lib\net461\Nest.dll</HintPath>
+    </Reference>
+    <Reference Include="NetMQ, Version=4.0.0.207, Culture=neutral, PublicKeyToken=a6decef4ddc58b3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\NetMQ.4.0.0.207\lib\net40\NetMQ.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.4.12\lib\net45\NLog.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="Quartz, Version=2.6.1.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Quartz.2.6.1\lib\net40\Quartz.dll</HintPath>
+    </Reference>
+    <Reference Include="SECSTrxControl, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLL\SECSTrxControl.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SQLite.Designer, Version=1.0.90.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLL\SQLite.Designer.dll</HintPath>
+    </Reference>
+    <Reference Include="StackExchange.Redis, Version=1.2.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StackExchange.Redis.1.2.6\lib\net46\StackExchange.Redis.dll</HintPath>
+    </Reference>
+    <Reference Include="STAN.Client, Version=0.1.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\STAN.Client.0.1.4\lib\net45\STAN.Client.DLL</HintPath>
+    </Reference>
+    <Reference Include="Stateless, Version=4.0.0.0, Culture=neutral, PublicKeyToken=93038f0927583c9a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stateless.4.0.1-dev-00256\lib\net45\Stateless.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.SQLite, Version=1.0.90.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLL\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq, Version=1.0.90.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLL\System.Data.SQLite.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.3.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.5.1\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.IO.Abstractions, Version=1.4.0.32, Culture=neutral, PublicKeyToken=d480b5b72fb413da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLL\System.IO.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Runtime" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="TCPIPTrxControl, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLL\TCPIPTrxControl.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.WinControls, Version=2017.2.613.40, Culture=neutral, PublicKeyToken=5bb2a467cbec794e, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\Program Files (x86)\Telerik\UI for WinForms R2 2017\Bin40\Telerik.WinControls.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Telerik.WinControls.UI, Version=2017.2.613.40, Culture=neutral, PublicKeyToken=5bb2a467cbec794e, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\Program Files (x86)\Telerik\UI for WinForms R2 2017\Bin40\Telerik.WinControls.UI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="TelerikCommon, Version=2017.2.613.40, Culture=neutral, PublicKeyToken=5bb2a467cbec794e, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\Program Files (x86)\Telerik\UI for WinForms R2 2017\Bin40\TelerikCommon.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="UtilityCommon, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\BlockControlSystem_OHT\ScriptControl\DLL\UtilityCommon.dll</HintPath>
+    </Reference>
+    <Reference Include="Utility_LogQuery, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\BlockControlSystem_OHT\ScriptControl\DLL\Utility_LogQuery.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLL\Xceed.Wpf.Toolkit.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AADDRESS.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AADDRESS_DATA.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ABASEDATA_VER.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ABLOCKZONEDETAIL.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ABLOCKZONEMASTER.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ABUFFER.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ACASSETTE.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ACEID.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ACMD_MCS.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ACMD_OHTC.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ACMD_OHTC_DETAIL.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ACRATE.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ACYCLEZONEDETAIL.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ACYCLEZONEMASTER.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ACYCLEZONETYPE.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AECDATAMAP.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AEQPT.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AEVENTRPTCOND.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AFLOW_REL.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AGROUPRAILS.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AHIDZONEDETAIL.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AHIDZONEMASTER.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AHIDZONEQUEUE.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ALARM.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ALARMMAP.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ALARMRPTCOND.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ALINE.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ALOT.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AMAIN_VER.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AMCSREPORTQUEUE.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ANETWORKQUALITY.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ANODE.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="APARKZONEDETAIL.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="APARKZONEMASTER.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="APARKZONETYPE.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="APOINT.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="APORT.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="APORTICON.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="APORTSTATION.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="APORT_POSITION_TEACHING_DATA.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="App\SCAppConstants.cs" />
+    <Compile Include="App\SCApplication.cs" />
+    <Compile Include="ARAIL.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ARPTID.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ASECTION.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ASECTION_CONTROL_100.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ASEGMENT.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ASEQUENCE.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ASHEET.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ASUB_VER.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ASYSEXCUTEQUALITY.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ATRACEITEM.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ATRACESET.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AUNIT.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AVEHICLE.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AVEHICLE_CONTROL_100.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AVIDINFO.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AZONE.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BCSTAT.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BLL\191204Test\CassetteDataBLL.cs" />
+    <Compile Include="BLL\191204Test\ShelfDefBLL.cs" />
+    <Compile Include="BLL\191204Test\ZoneDefBLL.cs" />
+    <Compile Include="BLL\AlarmBLL.cs" />
+    <Compile Include="BLL\BCSystemBLL.cs" />
+    <Compile Include="BLL\BlockControlBLL.cs" />
+    <Compile Include="BLL\GuideBLL.cs" />
+    <Compile Include="BLL\HIDBLL.cs" />
+    <Compile Include="BLL\EventBLL.cs" />
+    <Compile Include="BLL\LineBLL.cs" />
+    <Compile Include="BLL\MapBLL.cs" />
+    <Compile Include="BLL\ParkBLL.cs" />
+    <Compile Include="BLL\NodeBLL.cs" />
+    <Compile Include="BLL\PortBLL.cs" />
+    <Compile Include="BLL\191204Test\PortDefBLL.cs" />
+    <Compile Include="BLL\PortStationBLL.cs" />
+    <Compile Include="BLL\ReportBLL.cs" />
+    <Compile Include="BLL\ReserveBLL.cs" />
+    <Compile Include="BLL\SectionBLL.cs" />
+    <Compile Include="BLL\SegmentBLL.cs" />
+    <Compile Include="BLL\SequenceBLL.cs" />
+    <Compile Include="BLL\StageBLL.cs" />
+    <Compile Include="BLL\UserBLL.cs" />
+    <Compile Include="BLL\EquipmentBLL.cs" />
+    <Compile Include="BLL\VehicleBLL.cs" />
+    <Compile Include="BLL\CMDBLL.cs" />
+    <Compile Include="BLL\CycleRunBLL.cs" />
+    <Compile Include="BLL\CEIDBLL.cs" />
+    <Compile Include="BLL\DataSyncBLL.cs" />
+    <Compile Include="BLL\VIDBLL.cs" />
+    <Compile Include="BLL\NetworkQualityBLL.cs" />
+    <Compile Include="BLL\SysExcuteQualityBLL.cs" />
+    <Compile Include="BLOCKZONEQUEUE.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CassetteData.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Common\CheckSystemEventHandler.cs" />
+    <Compile Include="Common\ClassAOPAspect.cs" />
+    <Compile Include="Common\CommObjCacheManager.cs" />
+    <Compile Include="Common\ElasticSearchManager.cs" />
+    <Compile Include="Common\EQObjCacheManager.cs" />
+    <Compile Include="Common\JsHelper.cs" />
+    <Compile Include="Common\LogHelper.cs" />
+    <Compile Include="Common\NatsManager.cs" />
+    <Compile Include="Common\RedisCacheManager.cs" />
+    <Compile Include="Common\ObjectPool.cs" />
+    <Compile Include="Common\SCUtility.cs" />
+    <Compile Include="Common\StateMachine.cs" />
+    <Compile Include="Common\WebClientManager.cs" />
+    <Compile Include="ConfigHandler\DataCollectionConfigHandler.cs" />
+    <Compile Include="ConfigHandler\ProcessDataConfigHandler.cs" />
+    <Compile Include="ConfigHandler\SVDataConfigHandler.cs" />
+    <Compile Include="ConfigHandler\RecipeParameterConfigHandler.cs" />
+    <Compile Include="ConfigHandler\ECIDConfigHandler.cs" />
+    <Compile Include="CONTROL_DATA.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\BackgroundWorkSample.cs" />
+    <Compile Include="Data\DAO\191204Test\CassetteDataDao.cs" />
+    <Compile Include="Data\DAO\191204Test\ShelfDefDao.cs" />
+    <Compile Include="Data\DAO\191204Test\ZoneDefDao.cs" />
+    <Compile Include="Data\DAO\ADDRESSDao.cs" />
+    <Compile Include="Data\DAO\AddressDataDao.cs" />
+    <Compile Include="Data\DAO\EqptLocationInfoDao.cs" />
+    <Compile Include="Data\DAO\191204Test\PortDefDao.cs" />
+    <Compile Include="Data\DAO\ReserveEnhanceInfoDao.cs" />
+    <Compile Include="Data\DAO\VCMD_MCSDao.cs" />
+    <Compile Include="Data\DAO\PortStationDao.cs" />
+    <Compile Include="Data\DAO\ReturnCodeMapDao.cs" />
+    <Compile Include="Data\DAO\AlarmRptCondDao.cs" />
+    <Compile Include="Data\DAO\DataCollectionDao.cs" />
+    <Compile Include="Data\DAO\FlexsimCommandDao.cs" />
+    <Compile Include="Data\DAO\HIDZoneQueueDao.cs" />
+    <Compile Include="Data\DAO\HIDZoneDetailDao.cs" />
+    <Compile Include="Data\DAO\ScaleBaseDataDao.cs" />
+    <Compile Include="Data\DAO\ControlDataDao.cs" />
+    <Compile Include="Data\DAO\TestTranTaskDao.cs" />
+    <Compile Include="Data\DAO\VehicleControlDao.cs" />
+    <Compile Include="Data\DAO\ViewSectionDao.cs" />
+    <Compile Include="Data\DAO\EntityFramework\CMD_MCSDao.cs" />
+    <Compile Include="Data\DAO\EntityFramework\CEIDDao.cs" />
+    <Compile Include="Data\DAO\EntityFramework\RPTIDDao.cs" />
+    <Compile Include="Data\DAO\EntityFramework\VIDINFODao.cs" />
+    <Compile Include="Data\DAO\EntityFramework\NetworkQualityDao.cs" />
+    <Compile Include="Data\DAO\EntityFramework\SysExcuteQualityDao.cs" />
+    <Compile Include="Data\DAO\EntityFramework\PortIconDao.cs" />
+    <Compile Include="Data\DAO\GROUPRAILSDao.cs" />
+    <Compile Include="Data\DAO\AlarmDao.cs" />
+    <Compile Include="Data\DAO\AlarmMapDao.cs" />
+    <Compile Include="Data\DAO\POINTDao.cs" />
+    <Compile Include="Data\DAO\BCStatusDao.cs" />
+    <Compile Include="Data\DAO\BufferPortDao.cs" />
+    <Compile Include="Data\DAO\CassetteDao.cs" />
+    <Compile Include="Data\DAO\CrateDao.cs" />
+    <Compile Include="Data\DAO\ECDataMapDao.cs" />
+    <Compile Include="Data\DAO\EqptDao.cs" />
+    <Compile Include="Data\DAO\EventRptCondDao.cs" />
+    <Compile Include="Data\DAO\FlowRelDao.cs" />
+    <Compile Include="Data\DAO\FunctionCodeDao.cs" />
+    <Compile Include="Data\DAO\LineDao.cs" />
+    <Compile Include="Data\DAO\MainAlarmDao.cs" />
+    <Compile Include="Data\DAO\NodeDao.cs" />
+    <Compile Include="Data\DAO\OperationHisDao.cs" />
+    <Compile Include="Data\DAO\PortDao.cs" />
+    <Compile Include="Data\DAO\RAILDao.cs" />
+    <Compile Include="Data\DAO\SECTIONDao.cs" />
+    <Compile Include="Data\DAO\SegmentDao.cs" />
+    <Compile Include="Data\DAO\TraceSetDao.cs" />
+    <Compile Include="Data\DAO\UserGroupDao.cs" />
+    <Compile Include="Data\DAO\VehicleDao.cs" />
+    <Compile Include="Data\DAO\BlockZoneMasterDao.cs" />
+    <Compile Include="Data\DAO\BlockZoneDetailDao.cs" />
+    <Compile Include="Data\DAO\BlockZoneQueueDao.cs" />
+    <Compile Include="Data\DAO\CMD_OHTCDao.cs" />
+    <Compile Include="Data\DAO\CMD_OHTC_DetalDao.cs" />
+    <Compile Include="Data\DAO\ParkZoneMasterDao.cs" />
+    <Compile Include="Data\DAO\ParkZoneDetailDao.cs" />
+    <Compile Include="Data\DAO\ParkZoneTypeDao.cs" />
+    <Compile Include="Data\DAO\CycleZoneTypeDao.cs" />
+    <Compile Include="Data\DAO\CycleZoneMasterDao.cs" />
+    <Compile Include="Data\DAO\CycleZoneDetailDao.cs" />
+    <Compile Include="Data\DAO\APSettingDao.cs" />
+    <Compile Include="Data\DAO\MCSReportQueueDao.cs" />
+    <Compile Include="Data\DAO\HIDZoneMasterDao.cs" />
+    <Compile Include="Data\DBConnection_EF.cs" />
+    <Compile Include="Data\PLC_Functions\OHxCToPLC_SetSystemInfo.cs" />
+    <Compile Include="Data\PLC_Functions\HIDToOHxC_TempAlarm.cs" />
+    <Compile Include="Data\PLC_Functions\HIDToOHxC_PowerAlarm.cs" />
+    <Compile Include="Data\PLC_Functions\MtlToOHxC_AlarmReport.cs" />
+    <Compile Include="Data\PLC_Functions\PortPLCControl.cs" />
+    <Compile Include="Data\PLC_Functions\PortPLCInfo.cs" />
+    <Compile Include="Data\PLC_Functions\TestRead.cs" />
+    <Compile Include="Data\PLC_Functions\TestWrite.cs" />
+    <Compile Include="Data\PLC_Functions\OHCVToOHxC_SafetyCheckComplete.cs" />
+    <Compile Include="Data\PLC_Functions\OHCVToOHxC_SafetyCheckRequest.cs" />
+    <Compile Include="Data\PLC_Functions\OHxCToHID_Control.cs" />
+    <Compile Include="Data\PLC_Functions\OHxCToOHVC_RoadControlCompleteNotify.cs" />
+    <Compile Include="Data\PLC_Functions\OHxCToOHVC_RoadControlInitNotify.cs" />
+    <Compile Include="Data\PLC_Functions\OHxCToMtl_AlarmResetRequest.cs" />
+    <Compile Include="Data\PLC_Functions\OHxCToMtl_CarOutNotify.cs" />
+    <Compile Include="Data\PLC_Functions\MtlToOHxC_CarInSafetyCheck.cs" />
+    <Compile Include="Data\PLC_Functions\OHxCToMtl_CarRealtimeInfo.cs" />
+    <Compile Include="Data\PLC_Functions\MtlToOHxC_CarOutSafetyCheck.cs" />
+    <Compile Include="Data\PLC_Functions\OHxCToOHVC_Alive.cs" />
+    <Compile Include="Data\PLC_Functions\OHxCToMtl_MessageDownload.cs" />
+    <Compile Include="Data\PLC_Functions\OHxCToMtl_DateTimeSync.cs" />
+    <Compile Include="Data\PLC_Functions\MtlToOHxC_LFTStatus.cs" />
+    <Compile Include="Data\PLC_Functions\MtlToOHxC_Alive.cs" />
+    <Compile Include="Data\PLC_Functions\MtlToOHxC_CurrentCarID.cs" />
+    <Compile Include="Data\PLC_Functions\MtlToOHxC_RequestCarInDataCheck.cs" />
+    <Compile Include="Data\PLC_Functions\PLCElement .cs" />
+    <Compile Include="Data\PLC_Functions\PLC_FunBase.cs" />
+    <Compile Include="Data\PLC_Functions\VehicleControl_PLCSignal.cs" />
+    <Compile Include="Data\PLC_Functions\MtlToOHxC_MtlCarOutRepuest.cs" />
+    <Compile Include="Data\PLC_Functions\HIDToOHxC_ChargeInfo.cs" />
+    <Compile Include="Data\PLC_Functions\VehicleHardwareInfo.cs" />
+    <Compile Include="Data\PLC_Functions\VehicleInterface.cs" />
+    <Compile Include="Data\PLC_Functions\VehicleInfoFromPLC.cs" />
+    <Compile Include="Data\SECS\ASE\S10F3.cs" />
+    <Compile Include="Data\SECS\ASE\S10F4.cs" />
+    <Compile Include="Data\SECS\ASE\S1F1.cs" />
+    <Compile Include="Data\SECS\ASE\S1F13.cs" />
+    <Compile Include="Data\SECS\ASE\S1F14.cs" />
+    <Compile Include="Data\SECS\ASE\S1F15.cs" />
+    <Compile Include="Data\SECS\ASE\S1F16.cs" />
+    <Compile Include="Data\SECS\ASE\S1F17.cs" />
+    <Compile Include="Data\SECS\ASE\S1F18.cs" />
+    <Compile Include="Data\SECS\ASE\S1F2.cs" />
+    <Compile Include="Data\SECS\ASE\S1F3.cs" />
+    <Compile Include="Data\SECS\ASE\S1F4.cs" />
+    <Compile Include="Data\SECS\ASE\S2F13.cs" />
+    <Compile Include="Data\SECS\ASE\S2F14.cs" />
+    <Compile Include="Data\SECS\ASE\S2F15.cs" />
+    <Compile Include="Data\SECS\ASE\S2F16.cs" />
+    <Compile Include="Data\SECS\ASE\S2F31.cs" />
+    <Compile Include="Data\SECS\ASE\S2F32.cs" />
+    <Compile Include="Data\SECS\ASE\S2F33.cs" />
+    <Compile Include="Data\SECS\ASE\S2F34.cs" />
+    <Compile Include="Data\SECS\ASE\S2F35.cs" />
+    <Compile Include="Data\SECS\ASE\S2F36.cs" />
+    <Compile Include="Data\SECS\ASE\S2F37.cs" />
+    <Compile Include="Data\SECS\ASE\S2F38.cs" />
+    <Compile Include="Data\SECS\ASE\S2F41.cs" />
+    <Compile Include="Data\SECS\ASE\S2F42.cs" />
+    <Compile Include="Data\SECS\ASE\S2F49.cs" />
+    <Compile Include="Data\SECS\ASE\S2F50.cs" />
+    <Compile Include="Data\SECS\ASE\S5F1.cs" />
+    <Compile Include="Data\SECS\ASE\S5F2.cs" />
+    <Compile Include="Data\SECS\ASE\S5F3.cs" />
+    <Compile Include="Data\SECS\ASE\S5F4.cs" />
+    <Compile Include="Data\SECS\ASE\S6F11.cs" />
+    <Compile Include="Data\SECS\ASE\S6F12.cs" />
+    <Compile Include="Data\SECS\ASE\S9F1.cs" />
+    <Compile Include="Data\SECS\ASE\S9F11.cs" />
+    <Compile Include="Data\SECS\ASE\S9F3.cs" />
+    <Compile Include="Data\SECS\ASE\S9F5.cs" />
+    <Compile Include="Data\SECS\ASE\S9F7.cs" />
+    <Compile Include="Data\SECS\ASE\S9F9.cs" />
+    <Compile Include="Data\SECS\ASE\SECSConst.cs" />
+    <Compile Include="Data\SECS\CSOT\S1F13.cs" />
+    <Compile Include="Data\SECS\CSOT\S1F14.cs" />
+    <Compile Include="Data\SECS\CSOT\S1F15.cs" />
+    <Compile Include="Data\SECS\CSOT\S1F16.cs" />
+    <Compile Include="Data\SECS\CSOT\S1F17.cs" />
+    <Compile Include="Data\SECS\CSOT\S1F18.cs" />
+    <Compile Include="Data\SECS\CSOT\S1F3.cs" />
+    <Compile Include="Data\SECS\CSOT\S1F4.cs" />
+    <Compile Include="Data\SECS\CSOT\S2F15.cs" />
+    <Compile Include="Data\SECS\CSOT\S2F16.cs" />
+    <Compile Include="Data\SECS\CSOT\S2F17.cs" />
+    <Compile Include="Data\SECS\CSOT\S2F18.cs" />
+    <Compile Include="Data\SECS\CSOT\S2F23.cs" />
+    <Compile Include="Data\SECS\CSOT\S2F24.cs" />
+    <Compile Include="Data\SECS\CSOT\S2F31.cs" />
+    <Compile Include="Data\SECS\CSOT\S2F32.cs" />
+    <Compile Include="Data\SECS\CSOT\S2F33.cs" />
+    <Compile Include="Data\SECS\CSOT\S2F34.cs" />
+    <Compile Include="Data\SECS\CSOT\S2F35.cs" />
+    <Compile Include="Data\SECS\CSOT\S2F36.cs" />
+    <Compile Include="Data\SECS\CSOT\S2F37.cs" />
+    <Compile Include="Data\SECS\CSOT\S2F38.cs" />
+    <Compile Include="Data\SECS\CSOT\S2F41.cs" />
+    <Compile Include="Data\SECS\CSOT\S2F42.cs" />
+    <Compile Include="Data\SECS\CSOT\S2F49.cs" />
+    <Compile Include="Data\SECS\CSOT\S2F50.cs" />
+    <Compile Include="Data\SECS\CSOT\S5F1.cs" />
+    <Compile Include="Data\SECS\CSOT\S5F2.cs" />
+    <Compile Include="Data\SECS\CSOT\S5F5.cs" />
+    <Compile Include="Data\SECS\CSOT\S5F6.cs" />
+    <Compile Include="Data\SECS\CSOT\S6F11.cs" />
+    <Compile Include="Data\SECS\CSOT\S6F12.cs" />
+    <Compile Include="Data\SECS\CSOT\SECSConst.cs" />
+    <Compile Include="Data\SECS\S1F0.cs" />
+    <Compile Include="Data\SECS\S1F13.cs" />
+    <Compile Include="Data\SECS\S1F14.cs" />
+    <Compile Include="Data\SECS\S2F105.cs" />
+    <Compile Include="Data\SECS\S2F106.cs" />
+    <Compile Include="Data\SECS\S2F107.cs" />
+    <Compile Include="Data\SECS\S2F108.cs" />
+    <Compile Include="Data\SECS\S2F13.cs" />
+    <Compile Include="Data\SECS\S2F14.cs" />
+    <Compile Include="Data\SECS\S2F36.cs" />
+    <Compile Include="Data\SECS\S2F35.cs" />
+    <Compile Include="Data\SECS\S2F34.cs" />
+    <Compile Include="Data\SECS\S2F33.cs" />
+    <Compile Include="Data\SECS\S2F49.cs" />
+    <Compile Include="Data\SECS\S2F50.cs" />
+    <Compile Include="Data\SECS\S5F3.cs" />
+    <Compile Include="Data\DAO\SequenceDao.cs" />
+    <Compile Include="Data\DAO\UnitDao.cs" />
+    <Compile Include="Data\DAO\UserDao.cs" />
+    <Compile Include="Data\DAO\UserFuncDao.cs" />
+    <Compile Include="Data\DAO\ZoneDao.cs" />
+    <Compile Include="Data\InitAction\ShareMemoryInitProcess_Base.cs" />
+    <Compile Include="Data\SECS\S10F1.cs" />
+    <Compile Include="Data\SECS\S10F2.cs" />
+    <Compile Include="Data\SECS\S10F5.cs" />
+    <Compile Include="Data\SECS\S10F6.cs" />
+    <Compile Include="Data\SECS\S1F1.cs" />
+    <Compile Include="Data\SECS\S1F11.cs" />
+    <Compile Include="Data\SECS\S1F12.cs" />
+    <Compile Include="Data\SECS\S1F15.cs" />
+    <Compile Include="Data\SECS\S1F16.cs" />
+    <Compile Include="Data\SECS\S1F17.cs" />
+    <Compile Include="Data\SECS\S1F18.cs" />
+    <Compile Include="Data\SECS\S1F2.cs" />
+    <Compile Include="Data\SECS\S1F3.cs" />
+    <Compile Include="Data\SECS\S1F4.cs" />
+    <Compile Include="Data\SECS\S1F5.cs" />
+    <Compile Include="Data\SECS\S1F6.cs" />
+    <Compile Include="Data\SECS\S2F103.cs" />
+    <Compile Include="Data\SECS\S2F104.cs" />
+    <Compile Include="Data\SECS\S2F15.cs" />
+    <Compile Include="Data\SECS\S2F16.cs" />
+    <Compile Include="Data\SECS\S2F17.cs" />
+    <Compile Include="Data\SECS\S2F18.cs" />
+    <Compile Include="Data\SECS\S2F23.cs" />
+    <Compile Include="Data\SECS\S2F24.cs" />
+    <Compile Include="Data\SECS\S2F29.cs" />
+    <Compile Include="Data\SECS\S2F30.cs" />
+    <Compile Include="Data\SECS\S2F31.cs" />
+    <Compile Include="Data\SECS\S2F32.cs" />
+    <Compile Include="Data\SECS\S2F37.cs" />
+    <Compile Include="Data\SECS\S2F38.cs" />
+    <Compile Include="Data\SECS\S2F41.cs" />
+    <Compile Include="Data\SECS\S2F42.cs" />
+    <Compile Include="Data\SECS\S5F1.cs" />
+    <Compile Include="Data\SECS\S5F103.cs" />
+    <Compile Include="Data\SECS\S5F104.cs" />
+    <Compile Include="Data\SECS\S5F2.cs" />
+    <Compile Include="Data\SECS\S5F4.cs" />
+    <Compile Include="Data\SECS\S5F5.cs" />
+    <Compile Include="Data\SECS\S5F6.cs" />
+    <Compile Include="Data\SECS\S6F1.cs" />
+    <Compile Include="Data\SECS\S6F103.cs" />
+    <Compile Include="Data\SECS\S6F104.cs" />
+    <Compile Include="Data\SECS\S6F11.cs" />
+    <Compile Include="Data\SECS\S6F12.cs" />
+    <Compile Include="Data\SECS\S6F3.cs" />
+    <Compile Include="Data\SECS\S6F4.cs" />
+    <Compile Include="Data\SECS\S7F19.cs" />
+    <Compile Include="Data\SECS\S7F20.cs" />
+    <Compile Include="Data\SECS\S7F23.cs" />
+    <Compile Include="Data\SECS\S7F24.cs" />
+    <Compile Include="Data\SECS\S7F25.cs" />
+    <Compile Include="Data\SECS\S7F26.cs" />
+    <Compile Include="Data\SECS\S9F13.cs" />
+    <Compile Include="Data\SECS\SECSConst.cs" />
+    <Compile Include="Data\SECS\SECSDriver\GEMDriver.cs" />
+    <Compile Include="Data\SECS\SECSDriver\IBSEMDriver.cs" />
+    <Compile Include="Data\SECS\SECSDriver\SEMDriver.cs" />
+    <Compile Include="Data\TcpIp\MsgStructure.cs" />
+    <Compile Include="Data\TimerAction\OHCVAliveTimer.cs" />
+    <Compile Include="Data\TimerAction\OHxCAliveTimer.cs" />
+    <Compile Include="Data\TimerAction\PLCAliveTimer.cs" />
+    <Compile Include="Data\TimerAction\PLCTimeCalibrationTimer.cs" />
+    <Compile Include="Data\TimerAction\RandomGeneratesCommandMove.cs" />
+    <Compile Include="Data\TimerAction\RandomGeneratesCommandTimerAction_OHTC.cs" />
+    <Compile Include="Data\TimerAction\VehicleHardwareInfoCollectionTimerAction.cs" />
+    <Compile Include="Data\TimerAction\RandomGeneratesCommandTimerAction.cs" />
+    <Compile Include="Data\TimerAction\BCSystemStatusTimer.cs" />
+    <Compile Include="Data\TimerAction\FailOverTimerAction.cs" />
+    <Compile Include="Data\TimerAction\ZabbixDataCollectionTimerAction.cs" />
+    <Compile Include="Data\TimerAction\TransferCommandTimerAction.cs" />
+    <Compile Include="Data\TimerAction\LinkStatusCheck.cs" />
+    <Compile Include="Data\TimerAction\EqptAliveCheck.cs" />
+    <Compile Include="Data\TimerAction\SECSHeartBeatTimerAction.cs" />
+    <Compile Include="Data\TimerAction\TraceDataReportTimer.cs" />
+    <Compile Include="Data\TimerAction\PositionReportTimerAction.cs" />
+    <Compile Include="Data\TimerAction\ZoneBlockCheck.cs" />
+    <Compile Include="Data\TimerAction\IdleVehicleTimerAction.cs" />
+    <Compile Include="Data\TimerAction\TaskCommandTimerAction.cs" />
+    <Compile Include="Data\TimerAction\DBTableWatcherTimerAction.cs" />
+    <Compile Include="Data\ValueDefMapAction\ASEMCSDefaultMapAction.cs" />
+    <Compile Include="Data\ValueDefMapAction\OHCVValueDefMapAction.cs" />
+    <Compile Include="Data\ValueDefMapAction\HIDValueDefMapAction.cs" />
+    <Compile Include="Data\ValueDefMapAction\MTLValueDefMapActionNew.cs" />
+    <Compile Include="Data\ValueDefMapAction\MTSValueDefMapActionNew.cs" />
+    <Compile Include="Data\ValueDefMapAction\MTxValueDefMapActionBase.cs" />
+    <Compile Include="Data\ValueDefMapAction\MESDefaultMapAction.cs" />
+    <Compile Include="Data\ValueDefMapAction\PLCSystemInfoMapAction.cs" />
+    <Compile Include="Data\ValueDefMapAction\PortDefaultValueDefMapAction.cs" />
+    <Compile Include="Data\ValueDefMapAction\PortValueDefMapAction.cs" />
+    <Compile Include="Data\ValueDefMapAction\TESTValueDefMapAction.cs" />
+    <Compile Include="Data\ValueDefMapAction\ValueDefMapActionBase.cs" />
+    <Compile Include="Data\ValueDefMapAction\EQTcpIpMapAction.cs" />
+    <Compile Include="Data\VO\AlarmHisList.cs" />
+    <Compile Include="Data\VO\Interface\IConnectionStatusChange.cs" />
+    <Compile Include="Data\VO\Interface\IMaintainDevice.cs" />
+    <Compile Include="Data\VO\OHCV.cs" />
+    <Compile Include="Data\VO\MaintainSpace.cs" />
+    <Compile Include="Data\VO\MaintainLift.cs" />
+    <Compile Include="Data\VO\PartialVo\AADDRESS.cs" />
+    <Compile Include="Data\VO\PartialVo\ASECTION.cs" />
+    <Compile Include="Data\VO\PartialVo\ASEGMENT.cs" />
+    <Compile Include="Data\VO\PartialVo\APORTSTATION.cs" />
+    <Compile Include="Data\VO\PartialVo\BLOCKZONEQUEUE.cs" />
+    <Compile Include="Data\VO\PartialVo\ACMD_MCS.cs" />
+    <Compile Include="Data\VO\EqptLocationInfo.cs" />
+    <Compile Include="Data\VO\PartialVo\PortDef.cs" />
+    <Compile Include="Data\VO\PartialVo\ShelfDef.cs" />
+    <Compile Include="Data\VO\PartialVo\CassetteData.cs" />
+    <Compile Include="Data\VO\ReserveEnhanceInfo.cs" />
+    <Compile Include="Data\VO\ReturnCodeMap.cs" />
+    <Compile Include="Data\VO\AlarmMap.cs" />
+    <Compile Include="Data\VO\DataCollectionSetting.cs" />
+    <Compile Include="Data\VO\BaseUnitObject.cs" />
+    <Compile Include="Data\VO\CassetteLoader.cs" />
+    <Compile Include="Data\VO\ComboDataObj.cs" />
+    <Compile Include="Data\VO\CommonInfo.cs" />
+    <Compile Include="Data\VO\CommuncationStatus.cs" />
+    <Compile Include="Data\VO\DataID.cs" />
+    <Compile Include="Data\VO\ECDataMap.cs" />
+    <Compile Include="Data\VO\FlowRelation.cs" />
+    <Compile Include="Data\VO\InProcLotList.cs" />
+    <Compile Include="Data\VO\Interface\IVIDCollection.cs" />
+    <Compile Include="Data\VO\LogObj.cs" />
+    <Compile Include="Data\VO\LotLoader.cs" />
+    <Compile Include="Data\VO\MainAlarm.cs" />
+    <Compile Include="Data\VO\PartialVo\ASYSEXCUTEQUALITY.cs" />
+    <Compile Include="Data\VO\PartialVo\AVEHICLE.cs" />
+    <Compile Include="Data\VO\PartialVo\AEQPT.cs" />
+    <Compile Include="Data\VO\PartialVo\ALINE.cs" />
+    <Compile Include="Data\VO\PartialVo\AZONE.cs" />
+    <Compile Include="Data\VO\PartialVo\ANODE.cs" />
+    <Compile Include="Data\VO\PartialVo\AUNIT.cs" />
+    <Compile Include="Data\VO\PartialVo\ABUFFER.cs" />
+    <Compile Include="Data\VO\PartialVo\ACASSETTE.cs" />
+    <Compile Include="Data\VO\PartialVo\ACRATE.cs" />
+    <Compile Include="Data\VO\PartialVo\ALOT.cs" />
+    <Compile Include="Data\VO\PartialVo\ASHEET.cs" />
+    <Compile Include="Data\VO\PartialVo\gpb\ID_134_TRANS_EVENT_REP.cs" />
+    <Compile Include="Data\VO\PartialVo\HASHEET.cs" />
+    <Compile Include="Data\VO\PartialVo\ATRACESET.cs" />
+    <Compile Include="Data\VO\PartialVo\UASUSR.cs" />
+    <Compile Include="Data\VO\PartialVo\APORT.cs" />
+    <Compile Include="Data\VO\PartialVo\AMCSREPORTQUEUE.cs" />
+    <Compile Include="Data\VO\SheetList.cs" />
+    <Compile Include="Data\VO\APSetting.cs" />
+    <Compile Include="Data\VO\DeviceConnectionInfo.cs" />
+    <Compile Include="Data\VO\MTSSetting.cs" />
+    <Compile Include="Data\VO\UserOperationLog.cs" />
+    <Compile Include="Data\VO\VEHICLEMAP.cs" />
+    <Compile Include="EventAction\ImmediateNotificationRegister.cs" />
+    <Compile Include="EventAction\QueryExtension.cs" />
+    <Compile Include="E_ADR_TYPE.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="E_ALARM_LVL.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="E_BLOCK_ZONE_TYPE.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="E_CMD_STATUS.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="E_CMD_TYPE.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="E_CSTState.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="E_DIRC_DRIV.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="E_DIRC_GUID.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="E_ENCODER_POLE.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="E_HIDQueueStatus.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="E_PARK_TYPE.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="E_POINT_TYPE.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="E_PortType.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="E_PORT_STATUS.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="E_RAIL_DIR.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="E_RAIL_TYPE.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="E_SEG_STATUS.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="E_TRAN_STATUS.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="E_VH_TYPE.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="HASHEET.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="HOPERATION.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MQTTControl\MQTTControl.cs" />
+    <Compile Include="ObjectRelay\CMD_MCSObjToShow.cs" />
+    <Compile Include="ObjectRelay\IDataGridUpdateNotify.cs" />
+    <Compile Include="ObjectRelay\VehicleObjToShow.cs" />
+    <Compile Include="OHTCContext.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="OHTCContext.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="OHTCContext.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OHTCContext.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="PortDef.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProtocolFormat\Ohtmessage.cs" />
+    <Compile Include="RouteKit\FloydAlgorithmRouteGuide.cs" />
+    <Compile Include="RouteKit\Guide.cs" />
+    <Compile Include="RouteKit\IRouteGuide.cs" />
+    <Compile Include="RouteKit\Section.cs" />
+    <Compile Include="RouteKit\Segment.cs" />
+    <Compile Include="SCALE_BASE_DATA.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Scheduler\MTTFAndMTBFScheduler.cs" />
+    <Compile Include="Scheduler\ZabbixDataCollectionScheduler.cs" />
+    <Compile Include="Service\BlockControlService.cs" />
+    <Compile Include="Service\EmptyBoxHandlerService.cs" />
+    <Compile Include="Service\FailOverService.cs" />
+    <Compile Include="Service\LineService.cs" />
+    <Compile Include="Service\OHCVService.cs" />
+    <Compile Include="Service\MTLService.cs" />
+    <Compile Include="Service\RoadControlService.cs" />
+    <Compile Include="Service\PortStationService.cs" />
+    <Compile Include="Service\ShelfService.cs" />
+    <Compile Include="Service\TransferService.cs" />
+    <Compile Include="Service\ConnectionInfoService.cs" />
+    <Compile Include="Service\UserControlService.cs" />
+    <Compile Include="Service\VehicleService.cs" />
+    <Compile Include="ShelfDef.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StateMachine\StateMachineFactory.cs" />
+    <Compile Include="UASFNC.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UASUFNC.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UASUSR.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UASUSRGRP.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="VACMD_MCS.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ValueHandler\ProcessDataValueHandler.cs" />
+    <Compile Include="ValueHandler\ValueHandlerBase.cs" />
+    <Compile Include="VSECTION_100.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="WebAPI\CSTBoxControl.cs" />
+    <Compile Include="WebAPI\MTSMTLInfo.cs" />
+    <Compile Include="WebAPI\TransferManagement.cs" />
+    <Compile Include="WebAPI\ConnectionInfo.cs" />
+    <Compile Include="WebAPI\UserControl.cs" />
+    <Compile Include="WebAPI\VehicleInfo.cs" />
+    <Compile Include="WIF\BCSystemWIF.cs" />
+    <Compile Include="WIF\LineWIF.cs" />
+    <Compile Include="WIF\OHTCContext.cs" />
+    <Compile Include="WIF\OHTCContext.designer.cs">
+      <DependentUpon>OHTCContext.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ZoneDef.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DLL\BlockControlFramework.dll.config" />
+    <None Include="DLL\MPLCConnectionControl.dll.config" />
+    <None Include="DLL\nhibernate-configuration.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DLL\nhibernate-mapping.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <EntityDeploy Include="OHTCContext.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>OHTCContext.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="DLL\SECSTrxControl.dll.config" />
+    <None Include="DLL\TCPIPTrxControl.dll.config" />
+    <None Include="DLL\Utility_LogQuery.dll.config" />
+    <None Include="job_scheduling_data_2_0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="OHTCContext.edmx.diagram">
+      <DependentUpon>OHTCContext.edmx</DependentUpon>
+    </None>
+    <None Include="packages.config" />
+    <None Include="ProtocolFormat\ohtmessage.proto" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DLL\BlockControlFramework.dll" />
+    <Content Include="DLL\BlockControlFramework.pdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DLL\Mirle.Hlts.ReserveSection.Map.dll" />
+    <Content Include="DLL\Mirle.Hlts.ReserveSection.Map.pdb" />
+    <Content Include="DLL\Mirle.Hlts.ReserveSection.Vision.dll" />
+    <Content Include="DLL\Mirle.Hlts.ReserveSection.Vision.pdb" />
+    <Content Include="DLL\Mirle.Hlts.Utils.dll" />
+    <Content Include="DLL\Mirle.Hlts.Utils.pdb" />
+    <Content Include="DLL\MPLC.dll" />
+    <Content Include="DLL\MPLC.NetMQ.dll" />
+    <Content Include="DLL\MPLCConnectionControl.pdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DLL\opencv_world412.dll" />
+    <Content Include="DLL\SECSTrxControl.pdb" />
+    <Content Include="DLL\TCPIPTrxControl.pdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DLL\Utility_LogQuery.pdb" />
+    <Content Include="DLL\Xceed.Wpf.Toolkit.dll" />
+    <Content Include="hasp_windows_24266.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="hasp_windows_x64_24266.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="OHTCContext.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>OHTCContext.Context.cs</LastGenOutput>
+      <DependentUpon>OHTCContext.edmx</DependentUpon>
+    </Content>
+    <Content Include="OHTCContext.edmx.sql" />
+    <Content Include="DLL\Cowboy.Sockets.dll" />
+    <Content Include="DLL\Logrila.Logging.dll" />
+    <Content Include="DLL\M2Mqtt.Net.dll" />
+    <Content Include="DLL\TCPIPTrxControl.dll" />
+    <Content Include="DLL\UtilityCommon.dll" />
+    <Content Include="DLL\Utility_LogQuery.dll" />
+    <Content Include="hasp_windows_101490.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="hasp_windows_x64_101490.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="apidsp_windows.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="apidsp_windows_x64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DLL\hasp_net_windows.dll" />
+    <Content Include="DLL\SECSTrxControl.dll" />
+    <Content Include="DLL\BlockControlFramework.XML" />
+    <Content Include="DLL\GenericParsing.dll" />
+    <Content Include="DLL\ICSharpCode.SharpZipLib.dll" />
+    <Content Include="DLL\Iesi.Collections.dll" />
+    <Content Include="DLL\Iesi.Collections.xml" />
+    <Content Include="DLL\Ionic.Zip.dll" />
+    <Content Include="DLL\log4net.dll" />
+    <Content Include="DLL\MPLCConnectionControl.dll" />
+    <Content Include="DLL\MPLCConnectionControl.XML" />
+    <Content Include="DLL\NHibernate.dll" />
+    <Content Include="DLL\NHibernate.xml" />
+    <Content Include="DLL\NLog.dll" />
+    <Content Include="DLL\NLog.Extended.dll" />
+    <Content Include="DLL\NLog.Extended.xml" />
+    <Content Include="DLL\NLog.xml" />
+    <Content Include="DLL\QS2305A2_Retail.exe" />
+    <Content Include="DLL\SECSTrxControl.xml" />
+    <Content Include="DLL\SQLite.Designer.dll" />
+    <Content Include="DLL\System.Data.SQLite.dll" />
+    <Content Include="DLL\System.Data.SQLite.Linq.dll" />
+    <Content Include="DLL\System.IO.Abstractions.dll" />
+    <Content Include="OHTCContext.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>OHTCContext.cs</LastGenOutput>
+      <DependentUpon>OHTCContext.edmx</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 和 x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="docs\" />
+    <Folder Include="ValueHandler\Vo\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

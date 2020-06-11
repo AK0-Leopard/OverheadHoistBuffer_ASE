@@ -1,0 +1,1207 @@
+﻿// See README.txt for information and build instructions.
+//
+// Note: START and END tags are used in comments to define sections used in
+// tutorials.  They are not part of the syntax for Protocol Buffers.
+//
+// To get an in-depth walkthrough of this file and the related examples, see:
+// https://developers.google.com/protocol-buffers/docs/tutorials
+
+// [START declaration]
+syntax = "proto3";
+
+option cc_enable_arenas = true;
+option go_package = "github.com/golang/protobuf/ptypes/timestamp";
+option java_multiple_files = true;
+option objc_class_prefix = "GPB";
+package tutorial;
+// [END declaration]
+
+// [START java_declaration]
+option java_package = "com.example.tutorial";
+option java_outer_classname = "AddressBookProtos";
+// [END java_declaration]
+
+// [START csharp_declaration]
+option csharp_namespace = "com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage";
+// [END csharp_declaration]
+
+// [START messages]
+message Timestamp {
+
+  // Represents seconds of UTC time since Unix epoch
+  // 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
+  // 9999-12-31T23:59:59Z inclusive.
+  int64 seconds = 1;
+
+  // Non-negative fractions of a second at nanosecond resolution. Negative
+  // second values with fractions must still have non-negative nanos values
+  // that count forward in time. Must be from 0 to 999,999,999
+  // inclusive.
+  int32 nanos = 2;
+}
+
+  enum ActiveType {
+    MOVE = 0;
+    LOAD = 1;
+    UNLOAD = 2;
+    LOADUNLOAD = 3;
+    HOME = 4;
+    OVERRIDE = 5;
+	MTLHOME = 7;
+	SCAN = 8;
+	MOVETOMTL = 10;
+	SYSTEMOUT = 11;
+	SYSTEMIN = 12;
+	TECHINGMOVE = 13;
+	ROUND=99;
+  }
+   enum EventType {
+    LoadArrivals = 0;
+    LoadComplete = 1;
+    UnloadArrivals = 2;
+    UnloadComplete = 3;
+	AdrOrMoveArrivals =4;
+	AdrPass = 5;
+    MovePause = 6;
+    MoveRestart = 7;
+	ReserveReq = 8;
+	BlockReq = 9;
+	HIDReq = 10;
+	BlockHIDReq = 11;
+	VHLoading = 12;
+	VHUnloading = 13;
+	BCRRead = 14;
+	DoubleStorage = 15;
+	EmptyRetrieval = 16;
+	Scan = 17;
+	BlockRelease = 21;
+	HIDRelease = 22;
+	BlockHIDRelease = 23;
+  }
+	enum CompleteStatus {
+	CmpStatusMove = 0;
+    CmpStatusLoad = 1;
+    CmpStatusUnload = 2;
+    CmpStatusLoadunload = 3;
+    CmpStatusHome = 4;
+    CmpStatusOverride = 5;
+	CmpStatusCstIDRenmae = 6;
+	CmpStatusMTLHome = 7;
+	CmpStatusScan = 8;
+	CmpStatusMoveToMTL = 10;
+	CmpStatusSystemOut = 11;
+	CmpStatusSystemIn = 12;
+	CmpStatusTechingMove = 13;
+	CmpStatusCancel = 20;
+	CmpStatusAbort = 21;
+	CmpStatusVehicleAbort = 22;
+	CmpStatusIDMisMatch = 23;
+	CmpStatusIDReadFailed = 24;
+	CmpStatusIDReadDuplicate = 25;
+	CmpStatusInterlockError = 64;
+
+	CmpStatusLongTimeInaction = 98;
+	CmpStatusForceFinishByOp = 99;
+  }
+  	enum CMDCancelType {
+	CMD_None = 0;
+	CMD_Retry = 1;
+	CMD_Cancel = 20;
+	CMD_Abort = 21;
+	CMD_Cancel_ID_Mismatch = 23;
+	CMD_Cancel_ID_Read_Failed = 24;
+	CMD_Cancel_ID_Read_Duplicate = 25;
+	CMD_Cancel_ID_Read_ForceFinish = 26;
+  }
+  	enum PauseEvent {
+	Continue = 0;
+	Pause = 1;	
+  }
+   enum PauseType {
+	PauseType_None= 0;
+	PauseType_OHxC= 1;
+	PauseType_Block = 2;
+	PauseType_HID = 3;
+	PauseType_EarthQuake = 4;
+	PauseType_Safety = 5;
+	PauseType_Reserve = 6;
+	PauseType_ManualBlock = 7;
+	PauseType_ManualHID = 8;
+	PauseType_All = 9;
+  }
+   enum VhGuideStatus{
+    Unlock = 0;
+	Lock = 1;
+  }
+   enum PassType{
+    Pass = 0;
+	Block = 1;
+  }	
+
+   enum E_AreaSensorDir{
+    AreaSensorDir_None = 0;
+    Straight = 1;
+	Left = 2;
+	Right = 3;
+  }
+
+  message ID_1_HOST_BASIC_INFO_VERSION_REP {
+		string DataDateTime_Year = 1;
+		string DataDateTime_Month = 2;
+		string DataDateTime_Day = 3;
+		string DataDateTime_Hour = 4;
+		string DataDateTime_Minute = 5;
+		string DataDateTime_Second = 6;
+		string CurrentTime_Year = 7;
+		string CurrentTime_Month = 8;
+		string CurrentTime_Day = 9;
+		string CurrentTime_Hour = 10;
+		string CurrentTime_Minute = 11;
+		string CurrentTime_Second = 12;
+  }
+   message ID_101_HOST_BASIC_INFO_VERSION_RESPONSE {
+		int32 ReplyCode = 1;
+  }
+
+     message ID_102_BASIC_INFO_VERSION_REP {
+		string BasicInfoVersion_Year = 1;
+		string BasicInfoVersion_Month = 2;
+		string BasicInfoVersion_Day = 3;
+		string BasicInfoVersion_Hour = 4;
+		string BasicInfoVersion_Minute = 5;
+		string BasicInfoVersion_Second = 6;
+  }
+   message ID_2_BASIC_INFO_VERSION_RESPONSE {
+		int32 ReplyCode = 1;
+  }
+
+   message ID_11_BASIC_INFO_REP {
+		int32 TravelBasicDataCount = 1;
+		int32 SectionDataCount = 2;
+		int32 AddressDataCount = 3;
+		int32 ScaleDataCount = 4;
+		int32 ContrlDataCount = 5;
+		int32 GuideDataCount = 6;
+  }
+   message ID_111_BASIC_INFO_RESPONSE {
+		int32 ReplyCode = 1;
+  }
+
+
+  message ID_13_TAVELLING_DATA_REP{
+		uint32 Resolution = 1;
+		uint32 StartStopSpd = 2;
+		uint32 MaxSpeed = 3;
+		uint32 AccelTime = 4;
+		int32 SCurveRate = 5;
+		int32 OriginDir = 6;
+		uint32 OriginSpd = 7;
+		uint32 BeaemSpd = 8;
+		uint32 ManualHSpd = 9;
+		uint32 ManualLSpd = 10;
+		uint32 TeachingSpd = 11;
+		int32 RotateDir = 12;
+		int32 EncoderPole = 13;
+		uint32 PositionCompensation = 14;
+		uint32 KeepDistFar = 15;
+		uint32 KeepDistNear = 16;
+  }
+   message ID_113_TAVELLING_DATA_RESPONSE {
+		int32 ReplyCode = 1;
+  }
+
+   message ID_15_SECTION_DATA_REP{
+	 message Section {
+				int32 DriveDir = 1;
+				int32 AeraSecsor = 2;
+				int32 GuideDir = 3;
+				string SectionID = 4;
+				string FromAddr = 5;
+				string ToAddr = 6;
+				int32 ControlTable = 7;
+				uint32 Speed = 9;
+				uint32 Distance = 10;
+				int32 ChangeAreaSensor1 = 11;
+				int32 ChangeGuideDir1 = 12;
+				string ChangeSegNum1 = 13;
+				int32 ChangeAreaSensor2 = 14;
+				int32 ChangeGuideDir2 = 15;
+				string ChangeSegNum2 = 16;
+				string AtSegment = 17;
+			}
+	repeated Section Sections = 1;
+  }
+   message ID_115_SECTION_DATA_RESPONSE {
+		int32 ReplyCode = 1;
+  }
+
+   message ID_17_ADDRESS_DATA_REP{
+	 message Address {
+		string Addr = 1;
+		int32 Resolution = 2;
+		int32 Loaction = 3;
+		int32 BlockRelease = 4;
+		int32 HIDRelease = 5;				
+	 }
+	repeated Address Addresss = 1;
+  }
+   message ID_117_ADDRESS_DATA_RESPONSE {
+	 int32 ReplyCode = 1;
+  }
+
+   message ID_19_SCALE_DATA_REP{
+	 uint32 Resolution = 1;
+	 uint32 InposArea = 2;
+	 uint32 InposStability = 3;
+	 uint32 ScalePulse = 4;
+	 uint32 ScaleOffset = 5;				
+	 uint32 ScaleReset = 6;				
+	 int32 ReadDir = 7;				
+  }
+   message ID_119_SCALE_DATA_RESPONSE {
+	 int32 ReplyCode = 1;
+  }
+
+   message ID_21_CONTROL_DATA_REP{
+	 uint32 TimeoutT1 = 1;
+	 uint32 TimeoutT2 = 2;
+	 uint32 TimeoutT3 = 3;
+	 uint32 TimeoutT4 = 4;
+	 uint32 TimeoutT5 = 5;				
+	 uint32 TimeoutT6 = 6;				
+	 uint32 TimeoutT7 = 7;				
+	 uint32 TimeoutT8 = 8;				
+	 uint32 TimeoutBlock = 9;				
+  }
+   message ID_121_CONTROL_DATA_RESPONSE {
+	 int32 ReplyCode = 1;
+  }
+
+    message ID_23_GUIDE_DATA_REP{
+	 uint32 StartStopSpd = 1;
+	 uint32 MaxSpeed = 2;
+	 uint32 AccelTime = 3;
+	 int32 SCurveRate = 4;
+	 uint32 NormalSpd = 5;				
+	 uint32 ManualHSpd = 6;				
+	 uint32 ManualLSpd = 7;				
+	 uint32 LFLockPos = 8;				
+	 uint32 LBLockPos = 9;				
+	 uint32 RFLockPos = 10;				
+	 uint32 RBLockPos = 11;				
+	 uint32 ChangeStabilityTime = 12;				
+  }
+   message ID_123_GUIDE_DATA_RESPONSE {
+	 int32 ReplyCode = 1;
+  }
+
+  
+   message ID_61_INDIVIDUAL_UPLOAD_REQ{
+  }
+   message ID_161_INDIVIDUAL_UPLOAD_RESPONSE {
+	 uint32 OffsetGuideFL = 1;
+	 uint32 OffsetGuideRL = 2;
+	 uint32 OffsetGuideFR = 3;
+	 uint32 OffsetGuideRR = 4;
+  }
+
+   message ID_162_GUIDE_DATA_UPLOAD_REP{
+   	 uint32 OffsetGuideFL = 1;
+	 uint32 OffsetGuideRL = 2;
+	 uint32 OffsetGuideFR = 3;
+	 uint32 OffsetGuideRR = 4;
+  }
+   message ID_62_GUID_DATA_UPLOAD_RESPONSE {
+     int32 ReplyCode = 1;
+  }
+
+  message ID_63_INDIVIDUAL_CHANGE_REQ {
+	 uint32 OffsetGuideFL = 1;
+	 uint32 OffsetGuideRL = 2;
+	 uint32 OffsetGuideFR = 3;
+	 uint32 OffsetGuideRR = 4;
+  }
+   message ID_163_INDIVIDUAL_CHANGE_RESPONSE {
+   	 int32 ReplyCode = 1;
+  }
+
+  enum OperatingVHMode {
+    Operating_Auto = 0;
+    Operating_Manual = 1;
+  }
+ 
+   
+
+  message ID_31_TRANS_REQUEST {
+  	string Cmd_ID = 1;
+    ActiveType ActType = 2;
+	string LoadAdr =3;
+	string ToAdr = 4;
+	string LoadPortID = 5;
+	string UnloadPortID = 6;
+	uint32 Sec_Distance = 7;
+	string BOX_ID = 8;
+	string CST_ID = 9;
+	string LOT_ID = 10;
+	repeated string Guide_Sections_StartToLoad = 11;
+	repeated string Guide_Address_StartToLoad = 12;
+	repeated string Guide_Sections_ToDestination = 13;
+	repeated string Guide_Address_ToDestination = 14;
+  }
+  message ID_131_TRANS_RESPONSE {
+  	string Cmd_ID = 1;
+	ActiveType ActType = 2;
+	int32 ReplyCode = 3;
+	string NgReason = 4;
+  }
+
+
+  message ID_132_TRANS_COMPLETE_REPORT {
+	string Cmd_ID = 1;
+	string BOX_ID = 2;
+	string CST_ID = 3;
+	string LOT_ID = 4;
+	CompleteStatus CmpStatus = 5;
+	string CurrentAdrID =6;
+	string CurrentSecID = 7;
+	uint32 Sec_Distance = 8;
+	int32 Cmd_Distance = 9;
+	VhLoadCarrierStatus HasBox = 10;
+	string CarBoxID = 11;
+	VhLoadCarrierStatus HasCst = 12;
+	string CarCstID = 13;
+  }
+
+  message ID_32_TRANS_COMPLETE_RESPONSE {
+	int32 ReplyCode = 1;
+  }
+
+  enum ControlType
+  {
+    Nothing = 0;
+	ControlType_Block = 4;
+	ControlType_HID = 5;
+	ControlType_Reserver = 6;
+  }
+
+  enum DriveDirction
+  {
+    DriveDir_None =0;
+	DriveDir_Forward=1;
+	DriveDir_Reverse=2;
+  }
+  message ID_33_CONTROL_ZONE_REPUEST_CANCEL_REQUEST {
+  	ControlType ControlType = 1;
+	string CancelSecID = 2;
+  }
+
+    message ID_133_CONTROL_ZONE_REPUEST_CANCEL_RESPONSE {
+	ControlType ControlType = 1;
+	string CancelSecID = 2;
+	int32 ReplyCode = 3;
+  }
+
+  message ID_134_TRANS_EVENT_REP {
+    EventType EventType = 1;
+	string CurrentAdrID = 2;
+	string CurrentSecID = 3;
+	VhGuideStatus LeftGuideLockStatus = 5;
+	VhGuideStatus RightGuideLockStatus = 6;
+	uint32 Sec_Distance = 7;
+	double Speed = 8;
+	double Angle = 9;	
+	double XAxis = 10;
+	double YAxis = 11;
+	  
+  }
+
+  message ID_35_CARRIER_ID_RENAME_REQUEST {
+  	string OLD_BOX_ID = 1;
+  	string NEW_BOX_ID = 2;
+	string OLD_CST_ID = 3;
+  	string NEW_CST_ID = 4;
+	string OLD_LOT_ID = 5;
+  	string NEW_LOT_ID = 6;
+  }
+  message ID_135_CARRIER_ID_RENAME_RESPONSE {
+	int32 ReplyCode = 1;
+  }
+
+  message ReserveInfo
+  {
+	string Reserve_Section_ID=1;
+	DriveDirction DriveDirction =2;
+  }
+  enum ReserveResult
+  {
+	  ReserveResult_Success = 0;
+	  ReserveResult_Unsuccess = 1;
+  }
+  enum BCRReadResult
+  {
+    BCR_Normal = 0;
+	BCR_ReadFail = 1;
+	BCR_MisMatch = 2;
+  }
+
+   message ID_136_TRANS_EVENT_REP {
+    EventType EventType = 1;
+	repeated ReserveInfo ReserveInfos = 2;
+	string Request_Block_ID = 3;
+	string Request_HID_ID = 4;
+	string BOX_ID = 5;
+	string CST_ID = 6;
+	string LOT_ID = 7;
+	string Release_Block_AdrID = 8;
+	string Release_HID_AdrID = 9;
+	string LoadPortID = 10;
+	string UnloadPortID = 11;
+	string CurrentAdrID = 12;
+	string CurrentSecID = 13;
+	uint32 Sec_Distance = 14;
+	BCRReadResult BCRReadResult =15;
+  }
+
+  message ID_36_TRANS_EVENT_RESPONSE {
+	PassType Is_Block_Pass = 1;
+	ReserveResult Is_Reserve_Success = 2;
+    repeated ReserveInfo ReserveInfos = 3;	
+	PassType Is_HID_Pass = 4;
+	string RenameBOXID = 5;
+	string RenameCSTID = 6;
+	string RenameLOTID = 7;
+	CMDCancelType ReplyActiveType = 8;
+	int32 ReplyCode = 9;				  
+  }
+
+  message ID_37_TRANS_CANCEL_REQUEST {
+  	string Cmd_ID = 1;
+    CMDCancelType ActType = 2;
+  }
+  message ID_137_TRANS_CANCEL_RESPONSE {
+  	string Cmd_ID = 1;
+    CMDCancelType ActType = 2;
+	int32 ReplyCode = 3;
+  }
+
+  message ID_138_TRANS_CANCEL_FAIL_REQUEST {
+  	string Cmd_ID = 1;
+    CMDCancelType ActType = 2;
+  }
+  message ID_38_TRANS_CANCEL_FAIL_RESPONSE {
+	int32 ReplyCode = 1;
+  }
+
+
+  message ID_39_PAUSE_REQUEST {
+  	PauseEvent EventType = 1;
+  	PauseType PauseType = 2;
+	repeated ReserveInfo ReserveInfos = 3;								   
+  }
+  message ID_139_PAUSE_RESPONSE {
+	PauseEvent EventType = 1;
+	int32 ReplyCode = 2;
+  }
+
+  enum VHModeStatus {
+    None = 0;
+    Initial_Power_OFF = 1;
+    Initial_Power_ON = 2;
+    Manual = 3;
+    Auto_Remote = 4;
+    Auto_Local = 5;
+    Auto_MTS = 6;
+    Auto_MTL = 7;
+  }
+   enum VHActionStatus {
+    NoCommand = 0;
+    Commanding = 1;
+    Teaching = 5;
+    GripperTeaching = 6;
+    CycleRun = 7;
+  }
+  enum VhPowerStatus{
+    Power_Off = 0;
+    Power_On = 1;
+  }
+  enum VhLoadCarrierStatus{
+    NotExist  = 0;
+    Exist = 1;
+  }
+  enum VhStopSingle{
+    StopSingle_Off = 0;
+	StopSingle_On = 1;
+  }
+ 
+   message ID_41_MODE_CHANGE_REQ {
+	 OperatingVHMode OperatingVHMode = 1;
+  }
+   message ID_141_MODE_CHANGE_RESPONSE {
+   	 int32 ReplyCode = 1;
+  }
+
+  message ID_43_STATUS_REQUEST {
+	string SystemTime = 1;
+  }
+
+  message ID_143_STATUS_RESPONSE {
+	string CurrentAdrID = 1;
+	string CurrentSecID = 2;
+	VHModeStatus ModeStatus = 3;
+	VHActionStatus ActionStatus = 4;
+	VhPowerStatus PowerStatus = 5;
+	VhStopSingle ObstacleStatus = 6;
+	VhStopSingle BlockingStatus = 7;
+	VhStopSingle HIDStatus = 8;
+	VhStopSingle PauseStatus = 9;
+	VhStopSingle ErrorStatus = 10;
+	VhStopSingle ReserveStatus = 11;
+	uint32 Sec_Distance = 12;
+	int32 Obst_Distance = 13;
+	string Obst_Vehicle_ID = 14;								
+	string Stopped_Block_ID_= 15;
+	string Stopped_HID_ID = 16;
+	VhStopSingle Earthquake_Pause_tatus = 17;
+	VhStopSingle Safety_Pause_Status = 18;
+	repeated ReserveInfo ReserveInfos = 19;
+	DriveDirction DrivingDirection= 20;
+	int32 Speed = 21;
+	double Angle = 22;
+	double XAxis = 23;
+	double YAxis = 24;
+	string Cmd_ID = 25;
+	string BOX_ID = 26;
+	string CST_ID = 27;
+	string LOT_ID = 28;
+	VhLoadCarrierStatus HasBox = 29;
+	string CarBoxID = 30;
+	VhLoadCarrierStatus HasCst = 31;
+	string CarCstID = 32;
+  }
+
+  message ID_144_STATUS_CHANGE_REP {
+	string CurrentAdrID = 1;
+	string CurrentSecID = 2;
+	VHModeStatus ModeStatus = 3;
+	VHActionStatus ActionStatus = 4;
+	VhPowerStatus PowerStatus = 5;
+	VhStopSingle ObstacleStatus = 6;
+	VhStopSingle BlockingStatus = 7;
+	VhStopSingle HIDStatus = 8;
+	VhStopSingle PauseStatus = 9;
+	VhStopSingle ErrorStatus = 10;
+	VhStopSingle ReserveStatus = 11;
+	uint32 Sec_Distance = 12;
+	int32 Obst_Distance = 13;
+	string Obst_Vehicle_ID = 14;								
+										
+	string Stopped_Block_ID_= 15;
+	string Stopped_HID_ID = 16;
+	VhStopSingle Earthquake_Pause_tatus = 17;
+	VhStopSingle Safety_Pause_Status = 18;
+	repeated ReserveInfo ReserveInfos = 19;
+	DriveDirction DrivingDirection= 20;
+					
+	int32 Speed = 21;
+	double Angle = 22;
+	double XAxis = 23;
+	double YAxis = 24;
+	string Cmd_ID = 25;
+	string BOX_ID = 26;
+	string CST_ID = 27;
+	string LOT_ID = 28;			   
+	VhLoadCarrierStatus HasBox = 29;
+	string CarBoxID = 30;
+	VhLoadCarrierStatus HasCst = 31;
+	string CarCstID = 32;
+  }
+
+  message ID_44_STATUS_CHANGE_RESPONSE {
+	int32 ReplyCode = 1;
+  }
+
+  enum OperatingPowerMode {
+    Operating_Power_Off = 0;
+    Operating_Power_On = 1;
+  }
+  message ID_45_POWER_OPE_REQ {
+	 OperatingPowerMode OperatingPowerMode = 1;
+  }
+  message ID_145_POWER_OPE_RESPONSE {
+   	 int32 ReplyCode = 1;
+  }
+   
+  message ID_51_AVOID_REQUEST {
+	string DestinationAdr = 1;
+	repeated string Guide_Sections = 2;
+	repeated string Guide_Addresses = 3;
+  }
+  message ID_151_AVOID_RESPONSE {
+	int32 ReplyCode = 1;
+	string NgReason = 2;
+  }
+  
+  message ID_152_AVOID_COMPLETE_REPORT {
+	int32 CmpStatus = 1;
+  }
+  message ID_52_AVOID_COMPLETE_RESPONSE {
+	int32 ReplyCode = 1;
+  }	
+
+  message ID_71_RANGE_TEACHING_REQUEST {
+	string FromAdr = 1;
+	string ToAdr = 2;
+  }
+  message ID_171_RANGE_TEACHING_RESPONSE {
+	int32 ReplyCode = 1;
+  }
+
+  message ID_172_RANGE_TEACHING_COMPLETE_REPORT {
+	string FromAdr = 1;
+	string ToAdr = 2;
+	uint32 Sec_Distance = 3;
+	int32 Complete_Code = 4;
+  }
+  message ID_72_RANGE_TEACHING_COMPLETE_RESPONSE {
+	int32 ReplyCode = 1;
+  }
+
+  message ID_174_ADDRESS_TEACH_REPORT {
+	string Addr = 1;
+	int32 Position = 2;
+  }
+  message ID_74_ADDRESS_TEACH_RESPONSE {
+	int32 ReplyCode = 1;
+  }
+
+  message ID_91_ALARM_RESET_REQUEST {
+  }
+  message ID_191_ALARM_RESET_RESPONSE {
+	int32 ReplyCode = 1;
+  }
+  enum ErrorStatus {
+    Err_Reset = 0;
+	Err_Set = 1;
+  }
+  message ID_194_ALARM_REPORT {
+	string ErrCode = 1;
+	ErrorStatus ErrStatus = 2;
+	string ErrDescription = 3;
+  }
+  message ID_94_ALARM_RESPONSE {
+	int32 ReplyCode = 1;
+  }
+
+  enum VehicleType 
+  {
+       VhType_None = 0;
+       VhType_Clean = 1;
+       VhType_Dirty = 2;
+  }
+   
+   enum CommandType 
+   {
+        CMD_Move = 0;
+        CMD_Move_Park = 1;
+        CMD_Move_MTPort = 2;
+        CMD_Load = 3;
+        CMD_Unload = 4;
+        CMD_LoadUnload = 5;
+        CMD_Teaching = 6;
+        CMD_Continue = 7;
+        CMD_Round = 8;
+        CMD_Home = 9;
+        CMD_Override = 10;
+   }
+   enum CommandStatus
+   {
+        CMDSt_Queue = 0;
+        CMDSt_Sending = 1;
+        CMDSt_Execution = 2;
+        CMDSt_Aborting = 3;
+        CMDSt_Canceling = 4;
+        CMDSt_NormalEnd = 5;
+        CMDSt_AbnormalEndByOHT = 6;
+        CMDSt_AbnormalEndByMCS = 7;
+        CMDSt_AbnormalEndByOHTC = 8;
+        CMDSt_CancelEndByOHTC = 9;
+   }
+   enum SectionType
+   {
+        Normal = 0;
+        MTL = 1;
+   }
+
+   enum TSCState
+   {
+		TSCNONE = 0;
+        TSCINT = 1;
+        PAUSED = 2;
+        AUTO = 3;
+        PAUSING = 4;
+   }
+   enum TSCEvent
+   {
+        TSCInitial = 0;
+        SystemStartedUpSuccessfully = 1;
+        TSCResumed = 2;
+        TCSRequestedToPause = 3;
+		PauseComplete = 4;
+   }
+
+  enum VehicleState
+  {
+    VehicleState_None =0;
+    VehicleState_Remove =1;
+    VehicleState_NotAssigned =2;
+    VehicleState_Enroute =3;
+    VehicleState_Parked =4;
+    VehicleState_Acquiring =5;
+    VehicleState_Depositing = 6;
+    VehicleState_Assigned =7;
+  }
+
+  message VEHICLE_INFO {
+	bool isTcpIpConnect = 1;
+	string VEHICLE_ID = 2;
+	VehicleType VEHICLE_TYPE = 3;
+	string CUR_ADR_ID = 4;
+	string CUR_SEC_ID = 5;
+	// google.protobuf.Timestamp SEC_ENTRY_TIME = 5;
+	double ACC_SEC_DIST = 6;
+	VHModeStatus MODE_STATUS = 7;
+	VHActionStatus ACT_STATUS = 8;
+	string MCS_CMD = 9;
+	string OHTC_CMD = 10;
+	VhStopSingle BLOCK_PAUSE = 11;
+	VhStopSingle CMD_PAUSE = 12;
+	VhStopSingle OBS_PAUSE = 13;
+	VhStopSingle HID_PAUSE= 14;
+	VhStopSingle ERROR = 15;
+	int32 OBS_DIST = 16;
+	int32 HAS_CST = 17;
+	string CST_ID = 18;
+	Timestamp UPD_TIME = 19;
+	int32 VEHICLE_ACC_DIST = 20;
+	int32 MANT_ACC_DIST = 21;
+	Timestamp MANT_DATE = 22;
+	int32 GRIP_COUNT = 23;
+	int32 GRIP_MANT_COUNT = 24;
+	Timestamp GRIP_MANT_DATE = 25;
+	// string NODE_ADR = 25;
+	bool IS_PARKING = 26;
+	Timestamp PARK_TIME = 27;
+	string PARK_ADR_ID = 28;
+	bool IS_CYCLING = 29;
+	Timestamp CYCLERUN_TIME = 30;
+	string CYCLERUN_ID = 31;
+
+	repeated string PredictPath = 32;
+	repeated string CyclingPath = 33;
+	string startAdr = 34;
+	string FromAdr = 35;
+	string ToAdr = 36;
+	double Speed = 37;
+	string ObsVehicleID = 38;
+	repeated string Alarms = 39;
+	CommandType CmdType = 40;
+	CommandStatus vh_CMD_Status = 41;
+	EventType VhRecentTranEvent = 42;
+	repeated string WillPassSectionID = 43;
+	int32 procProgress_Percen = 44;
+	DriveDirction CurrentDriveDirction = 45;
+	int32 CMD_PRIOTITY = 46;
+	string CMD_CST_ID = 47;
+	VehicleState State = 48;
+	VhStopSingle PauseStatus = 49;
+	VhStopSingle SAFETY_DOOR_PAUSE = 50;
+	VhStopSingle EARTHQUAKE_PAUSE = 51;
+  }
+
+  message PORT_INFO{
+  	   Timestamp Timestamp = 1;
+       bool OpAutoMode = 2;         //D6401.0
+       bool OpManualMode = 3;       //D6401.1 
+       bool OpError = 4;
+       bool IsInputMode = 5;        //D6401.3
+       bool IsOutputMode = 6;       //D6401.4
+       bool IsModeChangable = 7;    //D6401.5
+       bool IsAGVMode = 8;
+       bool IsMGVMode = 9;
+       bool PortWaitIn = 10;         //D6401.8
+       bool PortWaitOut = 11;        //D6401.9
+       bool IsAutoMode = 12;
+       bool IsReadyToLoad = 13;      //D6401.12
+       bool IsReadyToUnload = 14;    //D6401.13
+       bool LoadPosition1 = 15;      //D6402.0
+       bool LoadPosition2 = 16;      //D6402.1
+       bool LoadPosition3 = 17;      //D6402.2
+       bool LoadPosition4 = 18;      //D6402.3
+       bool LoadPosition5 = 19;      //D6402.4
+       bool LoadPosition7 = 20;      //D6402.B
+       bool LoadPosition6 = 21;      //D6402.C
+       bool IsCSTPresence = 22;      //D6402.5
+       bool AGVPortReady = 23;       //D6402.6
+       bool CanOpenBox = 24;        
+       bool IsBoxOpen = 25;
+       bool BCRReadDone = 26;
+       bool CSTPresenceMismatch = 27;    //D6402.A
+       bool IsTransferComplete = 28;
+       bool CstRemoveCheck = 29;
+       int32 ErrorCode = 30;
+       string BoxID = 31;
+       string CassetteID = 32;
+       string PortID = 33;
+  }
+
+   enum LinkStatus
+   {
+        LinkFail = 0;
+        LinkOK= 1;
+   }
+   enum HostMode
+   {
+        Offline = 0;
+        OnlineRemote = 1;
+        OnlineLocal = 2;
+   }
+
+   enum DeviceConnectionType
+   {
+        DeviceConnectionType_MCS = 0;
+        DeviceConnectionType_PLC = 1;
+        DeviceConnectionType_AP = 2;
+   }
+
+
+   enum ConnectionStatus
+   {
+        ConnectionStatus_Success = 0;
+        ConnectionStatus_Unsuccess= 1;
+   }
+
+   message DEVICE_CONNECTION_INFO
+   {
+		string Name = 1;
+		DeviceConnectionType Type = 2;
+		ConnectionStatus Status = 3;
+   }
+
+    message LINE_INFO {
+	LinkStatus PLC = 1;
+	LinkStatus Host = 2;
+	HostMode HostMode = 3;
+	TSCState TSCState = 4;
+	LinkStatus IMS = 5;
+	int32 CurrntVehicleModeAutoRemoteCount =6;
+	int32 CurrntVehicleModeAutoLoaclCount =7;
+	int32 CurrntVehicleStatusIdelCount =8;
+	int32 CurrntVehicleStatusErrorCount =9;
+	int32 CurrntCSTStatueTransferCount =10;
+	int32 CurrntCSTStatueWaitingCount =11;
+	int32 CurrntHostCommandTransferStatueAssignedCount =12;
+	int32 CurrntHostCommandTransferStatueWaitingCounr =13;
+	repeated DEVICE_CONNECTION_INFO DeviceConnectionInfos = 14;
+	string LineID = 15;
+	bool AlarmHappen = 16;
+   }
+
+
+    message ONLINE_CHECK_INFO 
+	{
+	bool CurrentPortStateChecked = 1;
+	bool CurrentStateChecked = 2;
+	bool EnhancedVehiclesChecked = 3;
+	bool TSCStateChecked = 4;
+	bool UnitAlarmStateListChecked = 5;
+	bool EnhancedTransfersChecked =6;
+	bool EnhancedCarriersChecked =7;
+	bool CurrentPortTypesChecked=8;
+	bool AlarmSetChecked=9;
+	bool CurrentEQPortStateChecked=10;
+   }
+
+    message PING_CHECK_INFO 
+	{
+	bool MCSConnectionSuccess = 1;
+	bool RouterConnectionSuccess = 2;
+	bool OHT1ConnectionSuccess = 3;
+	bool OHT2ConnectionSuccess = 4;
+	bool OHT3ConnectionSuccess = 5;
+	bool OHT4ConnectionSuccess =6;
+	bool OHT5ConnectionSuccess =7;
+	bool OHT6ConnectionSuccess =8;
+	bool OHT7ConnectionSuccess =9;
+	bool OHT8ConnectionSuccess =10;
+	bool OHT9ConnectionSuccess =11;
+	bool OHT10ConnectionSuccess =12;
+	bool OHT11ConnectionSuccess =13;
+	bool OHT12ConnectionSuccess =14;
+	bool OHT13ConnectionSuccess =15;
+	bool OHT14ConnectionSuccess =16;
+	bool MTLConnectionSuccess =17;
+	bool MTSConnectionSuccess =18;
+	bool MTS2ConnectionSuccess =19;
+	bool HID1ConnectionSuccess =20;
+	bool HID2ConnectionSuccess =21;
+	bool HID3ConnectionSuccess =22;
+	bool HID4ConnectionSuccess =23;
+	bool Adam1ConnectionSuccess =24;
+	bool Adam2ConnectionSuccess =25;
+	bool Adam3ConnectionSuccess =26;
+	bool Adam4ConnectionSuccess =27;
+	bool AP1ConnectionSuccess =28;
+	bool AP2ConnectionSuccess =29;
+	bool AP3ConnectionSuccess =30;
+	bool AP4ConnectionSuccess =31;
+	bool AP5ConnectionSuccess =32;
+	bool AP6ConnectionSuccess =33;
+	bool AP7ConnectionSuccess =34;
+	bool AP8ConnectionSuccess =35;
+	bool AP9ConnectionSuccess =36;
+	bool AP10ConnectionSuccess =37;
+   }
+
+
+
+    message SYSTEM_LOG 
+	{
+        string dateTime =1;
+        string LogLevel =2;
+        string Process =3;
+        string Class =4;
+        string Method =5;
+        string Device =6;
+        string LogID =7;
+        string ThreadID =8;
+        string Data =9;
+        string VHID =10;
+        string CarrierID =11;
+        string Lot =12;
+        string Level =13;
+        string ServiceID =14;
+        string XID =15;
+        string Sequence =16;
+        string TransactionID =17;
+        string Details =18;
+        string Index =19;
+   }
+
+    message MTL_MTS_INFO 
+	{
+	string StationID = 1;
+	bool NetworkLink = 2;
+	bool Alive = 3;
+	bool Mode = 4;
+	bool Interlock = 5;
+	string CarID = 6;
+	string MTLLocation =7;
+	string SynchronizeTime =8;
+	string distance =9;
+   }
+
+   message TRANSFER_INFO 
+   {
+	    bool MCSCommandAutoAssign = 1;
+   }
+
+   enum PortStationServiceStatus
+   {
+        NoDefinition = 0;
+        OutOfService = 1;
+        InService = 2;
+   }
+
+   enum PortStationStatus
+   {
+        Down = 0;
+        LoadRequest = 1;
+        UnloadRequest = 2;
+        Wait = 3;
+        Disabled = 4;
+   }
+
+   enum MsgLevel
+   {
+        MsgLevel_Info= 0;
+        MsgLevel_Warn = 1;
+        MsgLevel_Error = 2;
+   }
+
+   message TIP_MESSAGE_INFO
+   {
+	string Time = 1;
+	MsgLevel MsgLevel = 2;
+	string Message = 3;
+	string XID = 4;
+   }
+
+   message TIP_MESSAGE_COLLECTION
+   {
+	repeated TIP_MESSAGE_INFO TIP_MESSAGE_INFOS = 1;
+   }
+
+   enum MTxMode
+   {
+        MTxMode_Manual = 0;
+        MTxMode_Auto = 1;
+   }
+   enum MTLLocation
+   {
+        MTLLocation_None = 0;
+        MTLLocation_Upper = 1;
+        MTLLocation_Bottorn = 2;
+   }
+   enum MTLMovingStatus
+   {
+        MTLMovingStatus_Stop = 0;
+        MTLMovingStatus_Moving = 1;
+   }
+   enum VhInPosition
+   {
+        VhInPosition_Nothing = 0;
+        VhInPosition_InPostion = 1;
+   }
+
+  message WrapperMessage {
+    int32 ID = 1000;
+	int32 SeqNum = 1001;    
+    oneof msg {
+
+		ID_1_HOST_BASIC_INFO_VERSION_REP Host_Basic_Info_Rep = 1;
+		ID_101_HOST_BASIC_INFO_VERSION_RESPONSE Host_Basic_Info_Resp = 101;
+
+		ID_102_BASIC_INFO_VERSION_REP Basic_Info_Version_Rep = 102;
+		ID_2_BASIC_INFO_VERSION_RESPONSE Basic_Info_Version_Resp = 2;
+
+		ID_11_BASIC_INFO_REP Basic_Info_Rep = 11;
+		ID_111_BASIC_INFO_RESPONSE Basic_Info_Resp = 111;
+
+		ID_13_TAVELLING_DATA_REP Tavelling_Data_Rep = 13;
+		ID_113_TAVELLING_DATA_RESPONSE Tavelling_Data_Resp = 113;
+
+		ID_15_SECTION_DATA_REP Section_Data_Rep = 15;
+		ID_115_SECTION_DATA_RESPONSE Section_Data_Resp = 115;
+
+		ID_17_ADDRESS_DATA_REP Address_Data_Rep = 17;
+		ID_117_ADDRESS_DATA_RESPONSE Address_Data_Resp = 117;
+
+		ID_19_SCALE_DATA_REP Scale_Data_Rep = 19;
+		ID_119_SCALE_DATA_RESPONSE Scale_Data_Resp = 119;
+		
+		ID_21_CONTROL_DATA_REP Control_Data_Rep = 21;
+		ID_121_CONTROL_DATA_RESPONSE Control_Data_Resp = 121;
+
+		ID_23_GUIDE_DATA_REP Guide_Data_Rep = 23;
+		ID_123_GUIDE_DATA_RESPONSE Guide_Data_Resp = 123;
+
+		ID_61_INDIVIDUAL_UPLOAD_REQ Individual_Upload_Req = 61;
+		ID_161_INDIVIDUAL_UPLOAD_RESPONSE Individual_Upload_Resp = 161;
+
+		ID_162_GUIDE_DATA_UPLOAD_REP GUIDE_Data_Upload_Req = 162;
+		ID_62_GUID_DATA_UPLOAD_RESPONSE GUIDE_Data_Upload_Resp = 62;
+
+		ID_63_INDIVIDUAL_CHANGE_REQ Individual_Change_Req = 63;
+		ID_163_INDIVIDUAL_CHANGE_RESPONSE Individual_Change_Resp = 163;
+
+		ID_41_MODE_CHANGE_REQ Mode_Change_Req = 41;
+		ID_141_MODE_CHANGE_RESPONSE Mode_Change_Resp = 141;
+
+        ID_31_TRANS_REQUEST Trans_Req = 31;
+        ID_131_TRANS_RESPONSE Trans_Resp = 131;
+
+		ID_132_TRANS_COMPLETE_REPORT Tran_Cmp_Rep = 132;
+		ID_32_TRANS_COMPLETE_RESPONSE Tran_Cmp_Resp = 32;
+
+		ID_33_CONTROL_ZONE_REPUEST_CANCEL_REQUEST  Control_Zone_Req = 33;
+		ID_133_CONTROL_ZONE_REPUEST_CANCEL_RESPONSE Control_Zone_Resp = 133;
+
+        ID_35_CARRIER_ID_RENAME_REQUEST CARRIER_ID_Rename_Req = 35;
+        ID_135_CARRIER_ID_RENAME_RESPONSE CARRIER_ID_Rename_Resp = 135;
+
+        ID_37_TRANS_CANCEL_REQUEST Trans_Cancel_Req = 37;
+        ID_137_TRANS_CANCEL_RESPONSE Trans_Cancel_Resp = 137;
+
+        ID_138_TRANS_CANCEL_FAIL_REQUEST Trans_Cancel_Fail_Req = 138;
+        ID_38_TRANS_CANCEL_FAIL_RESPONSE Trans_Cancel_Fail_Resp = 38;
+
+        ID_39_PAUSE_REQUEST Pause_Req = 39;
+        ID_139_PAUSE_RESPONSE Pause_Resp = 139;
+
+		ID_134_TRANS_EVENT_REP Trans_Event_Rep = 134;
+
+		ID_136_TRANS_EVENT_REP Imp_Trans_Event_Rep = 136;
+        ID_36_TRANS_EVENT_RESPONSE Imp_Trans_Event_Resp = 36;
+
+		ID_43_STATUS_REQUEST Status_Req = 43;
+		ID_143_STATUS_RESPONSE Status_Req_Resp = 143;
+
+		ID_144_STATUS_CHANGE_REP Statue_Change_Rep = 144;
+		ID_44_STATUS_CHANGE_RESPONSE Status_Change_Resp = 44;
+
+		ID_45_POWER_OPE_REQ Power_Ope_Req = 45;
+		ID_145_POWER_OPE_RESPONSE Power_Ope_Resp = 145;
+
+		ID_71_RANGE_TEACHING_REQUEST Range_Teaching_Req = 71;
+		ID_171_RANGE_TEACHING_RESPONSE Range_Teaching_Resp = 171;
+
+		ID_172_RANGE_TEACHING_COMPLETE_REPORT Range_Teaching_Cmp_Rep = 172;
+		ID_72_RANGE_TEACHING_COMPLETE_RESPONSE Range_Teaching_Cmp_Resp = 72;
+
+		ID_174_ADDRESS_TEACH_REPORT Address_Teach_Rep = 174;
+		ID_74_ADDRESS_TEACH_RESPONSE Address_Teach_Resp = 74;
+
+		ID_91_ALARM_RESET_REQUEST Alarm_Reset_Req = 91;
+		ID_191_ALARM_RESET_RESPONSE Alarm_Reset_Resp = 191;
+
+		ID_194_ALARM_REPORT Alarm_Rep = 194;
+		ID_94_ALARM_RESPONSE Alarm_Resp = 94;
+    }
+}
+
+	message SYSTEMPROCESS_INFO {
+	   string TIME = 1;
+	   uint64 SEQ = 2;
+	   string LOG_LEVEL = 3;
+	   string CLASS = 4;
+       string METHOD = 5;
+       string DEVICE = 6;
+	   string DATA = 7;
+	   string VH_ID = 8;
+	   string CRR_ID = 9;
+	   string TYPE = 10;
+	   string LOG_ID = 11;
+	   string THREAD_ID = 12;
+	   string LOT = 13;
+	   string LEVEL = 14;
+	   string XID = 15;
+	   string TRX_ID = 16;
+	   string DETAILS = 17;
+    }
+
+	message HOSTLOG_INFO {
+	   string TIME = 1;
+	   string EQ_ID = 2;
+	   string SEND_RECEIVE = 3;
+       string SX = 4;
+       string FY = 5;
+	   string DEVICE = 6;
+	   string FUN_NAME = 7;
+	   string MESSAGE = 8;
+    }
+
+    message EQLOG_INFO {
+	   string TIME = 1;
+	   string SEND_RECEIVE = 2;
+	   string FUN_NAME = 3;
+	   int32 SEQ_NO = 4;
+	   string VH_ID = 5;
+	   string OHTC_CMD_ID = 6;
+       string ACT_TYPE = 7;
+       string MCS_CMD_ID = 8;
+	   string EVENT_TYPE = 9;
+	   string VH_STATUS = 10;
+	   string MESSAGE = 11;
+    }
+
+// [END messages]

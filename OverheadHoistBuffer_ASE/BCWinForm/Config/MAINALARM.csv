@@ -1,0 +1,4 @@
+CODE,DESCRIPTION,ACTION
+WE001,Wait message reply time out.VH:{0} Packet ID:{1} Seq No:{2} ,
+WE002,Send message error happend.VH:{0} Packet ID:{1} Seq No:{2} ,
+AE001,Can't find the way to transfer. VH:{0} OhxC Cmd ID:{1},

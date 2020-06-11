@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="84fed8068adf4a8d89944fabd2b5fc15" Name="圖表1" ZoomLevel="75">
+        <EntityTypeShape EntityType="OHTC_DevModel.ABASEDATA_VER" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ABLOCKZONEDETAIL" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="OHTC_DevModel.AGROUPRAILS" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="OHTC_DevModel.AMAIN_VER" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="OHTC_DevModel.APOINT" Width="1.5" PointX="4.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ARAIL" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ASEGMENT" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ASUB_VER" Width="1.5" PointX="6.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="OHTC_DevModel.BLOCKZONEQUEUE" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ABLOCKZONEMASTER" Width="1.5" PointX="9.375" PointY="4.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ASEQUENCE" Width="1.5" PointX="4.75" PointY="8.625" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ACYCLEZONEDETAIL" Width="1.5" PointX="4.75" PointY="11.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ACYCLEZONEMASTER" Width="1.5" PointX="6.75" PointY="11.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ACYCLEZONETYPE" Width="1.5" PointX="12.75" PointY="0.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.AADDRESS" Width="1.5" PointX="0.75" PointY="12.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ACMD_OHTC" Width="1.5" PointX="12.75" PointY="3.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ACEID" Width="1.5" PointX="14.75" PointY="0.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ARPTID" Width="1.5" PointX="2.75" PointY="14.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.AVIDINFO" Width="1.5" PointX="14.75" PointY="3.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ANETWORKQUALITY" Width="1.5" PointX="7.75" PointY="14.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.APORTICON" Width="1.5" PointX="17.375" PointY="0.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.BCSTAT" Width="1.5" PointX="17.375" PointY="4.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.AEQPT" Width="1.5" PointX="17.375" PointY="7.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ALINE" Width="1.5" PointX="7.375" PointY="17.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.AZONE" Width="1.5" PointX="9.375" PointY="17.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ANODE" Width="1.5" PointX="17.375" PointY="11.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.AUNIT" Width="1.5" PointX="11.375" PointY="17.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ABUFFER" Width="1.5" PointX="17.375" PointY="14.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ACASSETTE" Width="1.5" PointX="3.375" PointY="18.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ACRATE" Width="1.5" PointX="13.375" PointY="18.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.AECDATAMAP" Width="1.5" PointX="19.375" PointY="0.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.AEVENTRPTCOND" Width="1.5" PointX="19.375" PointY="3.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.AFLOW_REL" Width="1.5" PointX="19.375" PointY="6.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.UASFNC" Width="1.5" PointX="19.375" PointY="9.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ALOT" Width="1.5" PointX="19.375" PointY="12.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.HOPERATION" Width="1.5" PointX="19.375" PointY="16.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ASHEET" Width="1.5" PointX="19.375" PointY="19.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.HASHEET" Width="1.5" PointX="5.375" PointY="20.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ATRACEITEM" Width="1.5" PointX="7.375" PointY="20.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ATRACESET" Width="1.5" PointX="21.375" PointY="0.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.UASUSR" Width="1.5" PointX="0.75" PointY="21.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.UASUSRGRP" Width="1.5" PointX="21.375" PointY="4.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.UASUFNC" Width="1.5" PointX="21.375" PointY="6.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.APORTSTATION" Width="1.5" PointX="21.375" PointY="9.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.APORT" Width="1.5" PointX="9.375" PointY="21.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.AMCSREPORTQUEUE" Width="1.5" PointX="11.375" PointY="21.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.AADDRESS_DATA" Width="1.5" PointX="9.75" PointY="7.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ACMD_OHTC_DETAIL" Width="1.5" PointX="9.75" PointY="10.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.APARKZONEDETAIL" Width="1.5" PointX="11.75" PointY="8.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.APARKZONEMASTER" Width="1.5" PointX="11.75" PointY="11.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.APARKZONETYPE" Width="1.5" PointX="13.75" PointY="21.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.APORT_POSITION_TEACHING_DATA" Width="1.5" PointX="15.75" PointY="21.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ASECTION" Width="1.5" PointX="30.125" PointY="1.125" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ASECTION_CONTROL_100" Width="1.5" PointX="23.75" PointY="9.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.AVEHICLE_CONTROL_100" Width="1.5" PointX="23.75" PointY="14.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.CONTROL_DATA" Width="1.5" PointX="25.75" PointY="0.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.SCALE_BASE_DATA" Width="1.5" PointX="0.75" PointY="25.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ASYSEXCUTEQUALITY" Width="1.5" PointX="9.375" PointY="25.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.AVEHICLE" Width="1.5" PointX="23.375" PointY="23.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.AHIDZONEDETAIL" Width="1.5" PointX="14.375" PointY="12.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.AHIDZONEMASTER" Width="1.5" PointX="13.375" PointY="15.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.AHIDZONEQUEUE" Width="1.5" PointX="15.375" PointY="25.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ALARMRPTCOND" Width="1.5" PointX="0.75" PointY="18.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ALARM" Width="1.5" PointX="15.375" PointY="17.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ALARMMAP" Width="1.5" PointX="26.375" PointY="5.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ZoneDef" Width="1.5" PointX="19.375" PointY="26.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ACMD_MCS" Width="3.25" PointX="26.375" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="OHTC_DevModel.CassetteData" Width="1.5" PointX="5.375" PointY="27.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.ShelfDef" Width="1.5" PointX="25.375" PointY="23.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.PortDef" Width="1.5" PointX="11.375" PointY="25.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.VACMD_MCS" Width="1.5" PointX="26.375" PointY="14.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.VSECTION_100" Width="1.5" PointX="27.375" PointY="20.75" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

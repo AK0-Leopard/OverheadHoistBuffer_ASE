@@ -1,0 +1,1276 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D3CDE50E-CB24-4654-9A2B-926BEB391038}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>com.mirle.ibg3k0.bc.winform</RootNamespace>
+    <AssemblyName>OHxC</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <PublishUrl>D:\deploy\GVO_MPC\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <InstallUrl>http://192.168.70.72:8000/GVO_MPC/</InstallUrl>
+    <ProductName>Master PC</ProductName>
+    <PublisherName>Mirle 3K0</PublisherName>
+    <SuiteName>Master PC</SuiteName>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
+    <WebPage>publish.htm</WebPage>
+    <ApplicationRevision>7</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <CreateDesktopShortcut>true</CreateDesktopShortcut>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <CodeAnalysisIgnoreGeneratedCode>true</CodeAnalysisIgnoreGeneratedCode>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>OHxC.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>CD36714F9B2B6529DDABBE5BE92448672CB97326</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>BCWinForm_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>false</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AsyncIO, Version=0.1.69.0, Culture=neutral, PublicKeyToken=44a94435bd6f33f8, processorArchitecture=MSIL">
+      <HintPath>..\packages\AsyncIO.0.1.69\lib\net40\AsyncIO.dll</HintPath>
+    </Reference>
+    <Reference Include="BlockControlFramework, Version=1.0.0.4, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ScriptControl\DLL\BlockControlFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="CSkin">
+      <HintPath>..\ScriptControl\DLL\CSkin.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Protobuf, Version=3.6.1.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Protobuf.3.6.1\lib\net45\Google.Protobuf.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ScriptControl\DLL\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Ionic.Zip">
+      <HintPath>..\ScriptControl\DLL\Ionic.Zip.dll</HintPath>
+    </Reference>
+    <Reference Include="KingAOP, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\KingAOP.1.0.0\lib\KingAOP.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="M2Mqtt.Net">
+      <HintPath>..\ScriptControl\DLL\M2Mqtt.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Mirle.Hlts.Utils">
+      <HintPath>..\ScriptControl\DLL\Mirle.Hlts.Utils.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data, Version=6.10.6.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\MySQL\MySQL Connector Net 6.10.6\Assemblies\v4.5.2\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data.Entity.EF6, Version=6.10.6.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\MySQL\MySQL Connector Net 6.10.6\Assemblies\v4.5.2\MySql.Data.Entity.EF6.dll</HintPath>
+    </Reference>
+    <Reference Include="NATS.Client, Version=0.8.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NATS.Client.0.8.1\lib\net45\NATS.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="NetMQ, Version=4.0.0.207, Culture=neutral, PublicKeyToken=a6decef4ddc58b3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\NetMQ.4.0.0.207\lib\net40\NetMQ.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.4.12\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="STAN.Client, Version=0.1.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\STAN.Client.0.1.4\lib\net45\STAN.Client.DLL</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.IO.Abstractions, Version=1.4.0.32, Culture=neutral, PublicKeyToken=d480b5b72fb413da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ScriptControl\DLL\System.IO.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Runtime" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="UtilityCommon">
+      <HintPath>..\ScriptControl\DLL\UtilityCommon.dll</HintPath>
+    </Reference>
+    <Reference Include="Utility_LogQuery">
+      <HintPath>..\ScriptControl\DLL\Utility_LogQuery.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
+    <Reference Include="Xceed.Wpf.Toolkit, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLL\Xceed.Wpf.Toolkit.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App\BCAppConstants.cs" />
+    <Compile Include="App\BCApplication.cs" />
+    <Compile Include="Common\BCUtility.cs" />
+    <Compile Include="Common\LogHelper.cs" />
+    <Compile Include="ConfigSystem.cs" />
+    <Compile Include="i18n\LocalizedDisplayNameAttribute.cs" />
+    <Compile Include="i18n\MsgHelper.cs" />
+    <Compile Include="MultiLanguage\LanguageConfigHandler.cs" />
+    <Compile Include="MultiLanguage\Localization.cs" />
+    <Compile Include="ObjectRelay\SectionObjToShow.cs" />
+    <Compile Include="Operation\MPCInfoMsgDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Operation\MPCInfoMsgDialog.Designer.cs">
+      <DependentUpon>MPCInfoMsgDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="BCMainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BCMainForm.Designer.cs">
+      <DependentUpon>BCMainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resource.en-US..Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.en-US..resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.zh-TW.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.zh-TW.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Test\CMD_CST_DATA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Test\CMD_CST_DATA.Designer.cs">
+      <DependentUpon>CMD_CST_DATA.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Test\S6F11Demo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Test\S6F11Demo.designer.cs">
+      <DependentUpon>S6F11Demo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Test\TestGetPortData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Test\TestGetPortData.Designer.cs">
+      <DependentUpon>TestGetPortData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Components\MyUserControl\LabelExt.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UI\Components\MyUserControl\RoundButton_AllRound.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UI\Components\MyUserControl\RoundPanel_AllRound.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UI\Components\MyUserControl\TabControlEx1.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UI\Components\MyUserControl\uc_bt_Save.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Components\MyUserControl\uc_bt_Save.Designer.cs">
+      <DependentUpon>uc_bt_Save.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Components\MyUserControl\uc_bt_DownloadToVehicle.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Components\MyUserControl\uc_bt_DownloadToVehicle.Designer.cs">
+      <DependentUpon>uc_bt_DownloadToVehicle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Components\MyUserControl\uc_GuideData.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Components\MyUserControl\uc_GuideData.Designer.cs">
+      <DependentUpon>uc_GuideData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Components\MyUserControl\uc_AddressData.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Components\MyUserControl\uc_AddressData.Designer.cs">
+      <DependentUpon>uc_AddressData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Components\MyUserControl\uc_SectionData.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Components\MyUserControl\uc_SectionData.Designer.cs">
+      <DependentUpon>uc_SectionData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Components\MyUserControl\uc_ScaleData.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Components\MyUserControl\uc_ScaleData.Designer.cs">
+      <DependentUpon>uc_ScaleData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Components\MyUserControl\uc_ControlData.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Components\MyUserControl\uc_ControlData.Designer.cs">
+      <DependentUpon>uc_ControlData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Components\MyUserControl\uc_TravelBaseData.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Components\MyUserControl\uc_TravelBaseData.Designer.cs">
+      <DependentUpon>uc_TravelBaseData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Components\uctlAddress.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Components\uctlAddress.Designer.cs">
+      <DependentUpon>uctlAddress.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Components\uctlButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UI\Components\uctlCommStatus.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Components\uctlCommStatus.Designer.cs">
+      <DependentUpon>uctlCommStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Components\uctlNewVehicle.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Components\uctlNewVehicle.Designer.cs">
+      <DependentUpon>uctlNewVehicle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Components\uctlPortNew.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Components\uctlPortNew.Designer.cs">
+      <DependentUpon>uctlPortNew.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Components\uctlRail.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Components\uctlRail.Designer.cs">
+      <DependentUpon>uctlRail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Components\uctlVehicle.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Components\uctlVehicle.Designer.cs">
+      <DependentUpon>uctlVehicle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Components\uctl_Map.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Components\uctl_Map.Designer.cs">
+      <DependentUpon>uctl_Map.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Components\ui_Vehicle.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Components\ui_Vehicle.Designer.cs">
+      <DependentUpon>ui_Vehicle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Components\uctlTcpIpAgentStatus.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Components\uctlTcpIpAgentStatus.Designer.cs">
+      <DependentUpon>uctlTcpIpAgentStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Components\VhOfPLCInfo.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Components\VhOfPLCInfo.Designer.cs">
+      <DependentUpon>VhOfPLCInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Components\WPFComponents\uctlReserveSectionView.xaml.cs">
+      <DependentUpon>uctlReserveSectionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Maintenance\CarrierMaintenanceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Maintenance\CarrierMaintenanceForm.Designer.cs">
+      <DependentUpon>CarrierMaintenanceForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Maintenance\ReserveSectionInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Maintenance\ReserveSectionInfoForm.designer.cs">
+      <DependentUpon>ReserveSectionInfoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\MonitorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\MonitorForm.Designer.cs">
+      <DependentUpon>MonitorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\OHT_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\OHT_Form.Designer.cs">
+      <DependentUpon>OHT_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Operate\DebugForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Operate\DebugForm.Designer.cs">
+      <DependentUpon>DebugForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Operate\MaintainDeviceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Operate\MaintainDeviceForm.Designer.cs">
+      <DependentUpon>MaintainDeviceForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Operate\EngineerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Operate\EngineerForm.Designer.cs">
+      <DependentUpon>EngineerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Operate\HostModeChg_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Operate\HostModeChg_Form.Designer.cs">
+      <DependentUpon>HostModeChg_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Operate\RoadControlForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Operate\RoadControlForm.Designer.cs">
+      <DependentUpon>RoadControlForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Operate\VehicleDataSettingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Operate\VehicleDataSettingForm.Designer.cs">
+      <DependentUpon>VehicleDataSettingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Query\TransferCommandQureyListForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Query\TransferCommandQureyListForm.Designer.cs">
+      <DependentUpon>TransferCommandQureyListForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Template\BCBasicForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Template\BCBasicForm.Designer.cs">
+      <DependentUpon>BCBasicForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Components\uiCircularProgressBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Components\UtilityLog.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Components\UtilityLog.Designer.cs">
+      <DependentUpon>UtilityLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Components\UtilityLogQuery.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Components\UtilityLogQuery.Designer.cs">
+      <DependentUpon>UtilityLogQuery.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ProgressBarDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\ProgressBarDialog.designer.cs">
+      <DependentUpon>ProgressBarDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Template\BOperationForm01.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Template\BOperationForm01.Designer.cs">
+      <DependentUpon>BOperationForm01.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Test\WaitInOutLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Test\WaitInOutLog.Designer.cs">
+      <DependentUpon>WaitInOutLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\UAS\ChangePwdForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\UAS\ChangePwdForm.Designer.cs">
+      <DependentUpon>ChangePwdForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\UAS\FuncCodePopupForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\UAS\FuncCodePopupForm.Designer.cs">
+      <DependentUpon>FuncCodePopupForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\UAS\FunctionMngForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\UAS\FunctionMngForm.Designer.cs">
+      <DependentUpon>FunctionMngForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\UAS\LoginPopupForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\UAS\LoginPopupForm.Designer.cs">
+      <DependentUpon>LoginPopupForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\UAS\UASMainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\UAS\UASMainForm.Designer.cs">
+      <DependentUpon>UASMainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\UAS\UserGrpMngForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\UAS\UserGrpMngForm.Designer.cs">
+      <DependentUpon>UserGrpMngForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\UAS\UserMngForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\UAS\UserMngForm.Designer.cs">
+      <DependentUpon>UserMngForm.cs</DependentUpon>
+    </Compile>
+    <Content Include="DLL\CSkin.dll" />
+    <Content Include="DLL\Xceed.Wpf.Toolkit.dll" />
+    <Content Include="Doc\Database Modify Note.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\arrow.png" />
+    <Content Include="Image\add.png" />
+    <Content Include="Image\arrow.png" />
+    <None Include="Config\App.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Config\ASE\AddressBaseDefs_simple.config">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE\App.config">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Content Include="Config\ASE\AppSettings_simple.config">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Config\ASE\CSTTranSchedule.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE\CSV\ALARMMAP.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE\CSV\APSETTING.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE\CSV\ECDATAMAP.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE\CSV\EQPTLOCATIONINFO.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE\CSV\MapInfo\AADDRESS.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE\CSV\MapInfo\ASECTION.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE\CSV\RESERVEENHANCEINFO.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE\CSV\RETURNCODEMAP.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE\DataCollectionSetting.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE\EQMapToValueEvent.config">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE\EquipmentDefs_simple.config">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE\MPLCConnectionSetting.config">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE\SECSConnectionSetting.config">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE\TcpIpConnectionSetting.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE2\AddressBaseDefs_simple.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE2\App.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE2\AppSettings_simple.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE2\CSTTranSchedule.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE2\CSV\ALARMMAP.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE2\CSV\APSETTING.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE2\CSV\ECDATAMAP.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE2\CSV\EQPTLOCATIONINFO.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE2\CSV\MapInfo\AADDRESS.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE2\CSV\MapInfo\ASECTION.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE2\CSV\RESERVEENHANCEINFO.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE2\CSV\RETURNCODEMAP.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE2\DataCollectionSetting.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE2\EQMapToValueEvent.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE2\EquipmentDefs_simple.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE2\MPLCConnectionSetting.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE2\SECSConnectionSetting.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE2\TcpIpConnectionSetting.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE3\AddressBaseDefs_simple.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE3\App.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE3\AppSettings_simple.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE3\CSTTranSchedule.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE3\CSV\ALARMMAP.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE3\CSV\APSETTING.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE3\CSV\ECDATAMAP.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE3\CSV\EQPTLOCATIONINFO.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE3\CSV\MapInfo\AADDRESS.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE3\CSV\MapInfo\ASECTION.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE3\CSV\RESERVEENHANCEINFO.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE3\CSV\RETURNCODEMAP.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE3\DataCollectionSetting.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE3\EQMapToValueEvent.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE3\EquipmentDefs_simple.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE3\MPLCConnectionSetting.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE3\SECSConnectionSetting.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE3\TcpIpConnectionSetting.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LOOP\AddressBaseDefs_simple.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LOOP\App.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LOOP\AppSettings_simple.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LOOP\CSTTranSchedule.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LOOP\CSV\ALARMMAP.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LOOP\CSV\APSETTING.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LOOP\CSV\ECDATAMAP.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LOOP\CSV\EQPTLOCATIONINFO.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LOOP\CSV\MapInfo\AADDRESS.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LOOP\CSV\MapInfo\ASECTION.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LOOP\CSV\RESERVEENHANCEINFO.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LOOP\CSV\RETURNCODEMAP.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LOOP\DataCollectionSetting.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LOOP\EQMapToValueEvent.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LOOP\EquipmentDefs_simple.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LOOP\MPLCConnectionSetting.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LOOP\SECSConnectionSetting.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LOOP\TcpIpConnectionSetting.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ValueDefs_simple.config">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ValueEventRelativeDefs.config">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Image\single_0.png" />
+    <None Include="Image\single_1.png" />
+    <None Include="Image\single_2.png" />
+    <None Include="Image\single_3.png" />
+    <None Include="Image\single_4.png" />
+    <None Include="Image\single_5.png" />
+    <Content Include="Image\OHxC icon.png" />
+    <Content Include="MapFile\ASE_K21_LINE1\Sql\ase_k21_20200109_a.sql" />
+    <Content Include="MapFile\ASE_K21_LINE1\Sql\ase_k21_20200109_b.sql" />
+    <Content Include="MapFile\ASE_K21_LINE1\Sql\ase_k21_20200113.sql" />
+    <Content Include="MapFile\ASE_K21_LINE1\Sql\ase_k21_20200117.sql" />
+    <Content Include="MapFile\ASE_K21_LINE1\Sql\ase_k21_20200130.sql" />
+    <Content Include="MapFile\ASE_K21_LINE1\Sql\ase_k21_20200205.sql" />
+    <Content Include="MapFile\ASE_K21_LINE1\Sql\ase_k21_20200207_b.sql" />
+    <Content Include="MapFile\ASE_K21_LINE1\Sql\ase_k21_20200210.sql" />
+    <Content Include="MapFile\ASE_K21_LINE1\Sql\ase_k21_20200210_b.sql" />
+    <Content Include="MapFile\ASE_K21_LINE1\Sql\ase_k21_20200218.sql" />
+    <Content Include="MapFile\ASE_K21_LINE1\Sql\ASE_K21_Line1_0212.sql" />
+    <Content Include="MapFile\ASE_K21_LINE1\Sql\ACMD_MCS.Table_200604.sql" />
+    <Content Include="MapFile\ASE_K21_LINE1\Sql\OHBC_ASE_K21_200203.sql" />
+    <Content Include="MapFile\ASE_K21_LINE1\Sql\OHBC_ASE_K21_200207.sql" />
+    <Content Include="MapFile\ASE_K21_LINE1\Sql\OHBC_ASE_K21_200216.sql" />
+    <Content Include="MapFile\ASE_K21_LINE1\Sql\OHBC_ASE_K21_200224.sql" />
+    <Content Include="MapFile\ASE_K21_LINE1\Sql\OHBC_ASE_K21_200305.sql" />
+    <Content Include="MapFile\ASE_K21_LINE2\ACMD_MCS.Table_200604.sql" />
+    <Content Include="MapFile\ASE_K21_LINE2\OHBC_ASE_K21_LINE2.sql" />
+    <Content Include="MapFile\ASE_K21_LINE3\ACMD_MCS.Table_200604.sql" />
+    <Content Include="MapFile\ASE_K21_LINE3\OHBC_ASE_K21_LINE3_200305.sql" />
+    <Content Include="MapFile\ASE_K21_LOOP\Sql\ACMD_MCS.Table_200604.sql" />
+    <Content Include="MapFile\ASE_K21_LOOP\Sql\OHBC_ASE_K21_LOOP_20200217.sql" />
+    <Content Include="OHxC.ico" />
+    <Content Include="ResGen.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\1430821398_Go.ico" />
+    <Content Include="Resources\1448701926_Exit.ico" />
+    <Content Include="Resources\Advanced Options.ico" />
+    <None Include="Config\MAINALARM.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\DataSources\com.mirle.ibg3k0.bc.winform.ObjectRelay.SectionObjToShow.datasource" />
+    <None Include="Properties\DataSources\com.mirle.ibg3k0.sc.ObjectRelay.CMD_MCSObjToShow.datasource" />
+    <None Include="Properties\DataSources\com.mirle.ibg3k0.sc.ObjectRelay.SectionObjToShow.datasource" />
+    <None Include="Properties\DataSources\com.mirle.ibg3k0.sc.ObjectRelay.VehicleObjToShow.datasource" />
+    <None Include="Resources\alert-red_org.png" />
+    <Content Include="Resources\arrow.PNG" />
+    <Content Include="Resources\arrowDown.png" />
+    <Content Include="Resources\arrowUP.png" />
+    <Content Include="Resources\arrow_two_head.ico" />
+    <Content Include="Resources\aw.gif" />
+    <Content Include="Resources\aw1.gif" />
+    <Content Include="Resources\aw1.png" />
+    <Content Include="Resources\aw2.jpg" />
+    <Content Include="Resources\b1.png" />
+    <Content Include="Resources\b11.png" />
+    <Content Include="Resources\b12.png" />
+    <Content Include="Resources\Ball Green.png" />
+    <Content Include="Resources\brlight.gif" />
+    <Content Include="Resources\bufferglight.gif" />
+    <Content Include="Resources\buf_glight.png" />
+    <Content Include="Resources\Circle_Green.png" />
+    <Content Include="Resources\Circle_Red.png" />
+    <Content Include="Resources\clear.ico" />
+    <Content Include="Resources\clear1.ico" />
+    <Content Include="Resources\connect.ico" />
+    <Content Include="Resources\conver_E.png" />
+    <Content Include="Resources\conver_F.png" />
+    <Content Include="Resources\Crane1.ico" />
+    <Content Include="Resources\down.gif" />
+    <Content Include="Resources\down.PNG" />
+    <Content Include="Resources\down1.PNG" />
+    <Content Include="Resources\Down2.png" />
+    <Content Include="Resources\edit.ico" />
+    <Content Include="Resources\edit_clear.ico" />
+    <Content Include="Resources\edit_undo.ico" />
+    <Content Include="Resources\EXCLEM.ICO" />
+    <Content Include="Resources\exit01.ico" />
+    <Content Include="Resources\export.ico" />
+    <Content Include="Resources\FOLDER01.ICO" />
+    <Content Include="Resources\folder_clock.ico" />
+    <Content Include="Resources\FORM.ICO" />
+    <Content Include="Resources\futaba.PNG" />
+    <Content Include="Resources\Futaba1.jpg" />
+    <Content Include="Resources\GEARWEEL.ICO" />
+    <Content Include="Resources\General Options.ico" />
+    <Content Include="Resources\gnome_go_top.ico" />
+    <Content Include="Resources\GRAPH01.ICO" />
+    <Content Include="Resources\GRAPH04.ICO" />
+    <Content Include="Resources\gray.png" />
+    <Content Include="Resources\gray1.gif" />
+    <Content Include="Resources\group.ico" />
+    <Content Include="Resources\home4.ico" />
+    <Content Include="Resources\home5.ico" />
+    <Content Include="Resources\home_w3.ico" />
+    <Content Include="Resources\Icons8-Ios7-Logos-Administrative-Tools.ico" />
+    <Content Include="Resources\leve2.gif" />
+    <Content Include="Resources\leve3.gif" />
+    <Content Include="Resources\level.gif" />
+    <Content Include="Resources\level1.gif" />
+    <Content Include="Resources\level5.gif" />
+    <Content Include="Resources\level51.gif" />
+    <Content Include="Resources\level6.gif" />
+    <Content Include="Resources\level6.jpg" />
+    <Content Include="Resources\Lifter_E.png" />
+    <Content Include="Resources\Lifter_F.png" />
+    <Content Include="Resources\list_edit.ico" />
+    <Content Include="Resources\lock.png" />
+    <Content Include="Resources\lock_yellow.ico" />
+    <Content Include="Resources\login.ico" />
+    <Content Include="Resources\logo.gif" />
+    <Content Include="Resources\main.jpg" />
+    <Content Include="Resources\Mini-Tools.ico" />
+    <Content Include="Resources\MiningModel.ico" />
+    <Content Include="Resources\Mirle.jpg" />
+    <Content Include="Resources\Mirle.png" />
+    <None Include="Resources\Mirle_Loading_9.gif" />
+    <Content Include="Resources\MISC14.ICO" />
+    <Content Include="Resources\Monitor.png" />
+    <Content Include="Resources\noorder.png" />
+    <Content Include="Resources\note2.ico" />
+    <Content Include="Resources\oglight.gif" />
+    <Content Include="Resources\ovenrlight.gif" />
+    <Content Include="Resources\PasswordOff.ico" />
+    <Content Include="Resources\PasswordOn %283%29.ico" />
+    <Content Include="Resources\pause.ico" />
+    <Content Include="Resources\pin_blue.ico" />
+    <Content Include="Resources\play.ico" />
+    <Content Include="Resources\player_stop.ico" />
+    <Content Include="Resources\Query.ico" />
+    <Content Include="Resources\quit.ico" />
+    <Content Include="Resources\red light_oven.png" />
+    <Content Include="Resources\red light_oven1.png" />
+    <Content Include="Resources\red light_oven2.png" />
+    <Content Include="Resources\redline.gif" />
+    <Content Include="Resources\Refresh.ico" />
+    <Content Include="Resources\robot.png" />
+    <Content Include="Resources\Save.ICO" />
+    <None Include="Resources\se.png" />
+    <Content Include="Resources\search02.ico" />
+    <Content Include="Resources\services.ico" />
+    <Content Include="Resources\sign_out1.ico" />
+    <Content Include="Resources\stop.ico" />
+    <Content Include="Resources\Student-id-128.png" />
+    <Content Include="Resources\terminal.ico" />
+    <Content Include="Resources\tools.ico" />
+    <Content Include="Resources\transfer.ico" />
+    <Content Include="Resources\transfer_right_left.ico" />
+    <Content Include="Resources\TRU_L.png" />
+    <Content Include="Resources\TRU_R.png" />
+    <Content Include="Resources\undo.ico" />
+    <Content Include="Resources\undo16.ico" />
+    <Content Include="Resources\undo24.ico" />
+    <Content Include="Resources\undo24_1.ico" />
+    <Content Include="Resources\unlock.png" />
+    <Content Include="Resources\USER.ico" />
+    <Content Include="Resources\user1.ico" />
+    <Content Include="Resources\user1.png" />
+    <Content Include="Resources\User2.png" />
+    <Content Include="Resources\van-gogh-vincent-starry-night_2.jpg" />
+    <Content Include="Resources\VH_Display\Action [Cassette].png" />
+    <Content Include="Resources\VH_Display\Action [Correcting action].png" />
+    <None Include="Resources\VH_Display\Action [Loading].png" />
+    <None Include="Resources\VH_Display\Action [Maintenance].png" />
+    <Content Include="Resources\VH_Display\Action [Moving].png" />
+    <Content Include="Resources\VH_Display\Action [Parked].png" />
+    <Content Include="Resources\VH_Display\Action [Parking].png" />
+    <None Include="Resources\VH_Display\Action [Unloading].png" />
+    <Content Include="Resources\VH_Display\Action [Receive command].png" />
+    <Content Include="Resources\VH_Display\Alarm [Alert].png" />
+    <Content Include="Resources\VH_Display\Alarm [Error].png" />
+    <Content Include="Resources\VH_Display\Alarm [Warning].png" />
+    <None Include="Resources\VH_Display\Pause [Block].png" />
+    <Content Include="Resources\VH_Display\Pause [Earthquake].png" />
+    <Content Include="Resources\VH_Display\Pause [HID].png" />
+    <Content Include="Resources\VH_Display\Pause [Obstructed].png" />
+    <Content Include="Resources\VH_Display\Pause [Pause].png" />
+    <Content Include="Resources\VH_Display\Pause [Safety].png" />
+    <Content Include="Resources\VH_Display\Speed [Fast].png" />
+    <Content Include="Resources\VH_Display\Speed [Medium].png" />
+    <Content Include="Resources\VH_Display\Speed [Slow].png" />
+    <Content Include="Resources\VH_Display\Vehicle display_V2.3.png" />
+    <Content Include="Resources\VH_Display\Vehicle [Auto-Local].png" />
+    <Content Include="Resources\VH_Display\Vehicle [Auto-Remote].png" />
+    <Content Include="Resources\VH_Display\Vehicle [Manual].png" />
+    <Content Include="Resources\VH_Display\Vehicle [Power on].png" />
+    <Content Include="Resources\VH_Display\Vehicle [Unconnected].png" />
+    <Content Include="Resources\W95MBX03.ICO" />
+    <Content Include="Resources\warning-28-xxl.png" />
+    <Content Include="Resources\white.PNG" />
+    <Content Include="Resources\wlm.ico" />
+    <Content Include="Resources\小型_彩色Logo.jpg" />
+    <Content Include="Resources\小型_彩色Logo_去背.png" />
+    <Content Include="Resources\漸層.gif" />
+    <Content Include="Resources\短式_彩色Logo_去背.png" />
+    <Content Include="Resources\短式_彩色Logo_去背1.png" />
+    <EmbeddedResource Include="Operation\MPCInfoMsgDialog.resx">
+      <DependentUpon>MPCInfoMsgDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resource.en-US..resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.en-US..Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources1.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.zh-TW.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.zh-TW.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Test\CMD_CST_DATA.resx">
+      <DependentUpon>CMD_CST_DATA.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Test\S6F11Demo.resx">
+      <DependentUpon>S6F11Demo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Test\TestGetPortData.resx">
+      <DependentUpon>TestGetPortData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Components\MyUserControl\RoundButton_AllRound.resx">
+      <DependentUpon>RoundButton_AllRound.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Components\MyUserControl\RoundPanel_AllRound.resx">
+      <DependentUpon>RoundPanel_AllRound.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Components\MyUserControl\uc_bt_Save.resx">
+      <DependentUpon>uc_bt_Save.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Components\MyUserControl\uc_bt_DownloadToVehicle.resx">
+      <DependentUpon>uc_bt_DownloadToVehicle.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Components\MyUserControl\uc_GuideData.resx">
+      <DependentUpon>uc_GuideData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Components\MyUserControl\uc_AddressData.resx">
+      <DependentUpon>uc_AddressData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Components\MyUserControl\uc_SectionData.resx">
+      <DependentUpon>uc_SectionData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Components\MyUserControl\uc_ScaleData.resx">
+      <DependentUpon>uc_ScaleData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Components\MyUserControl\uc_ControlData.resx">
+      <DependentUpon>uc_ControlData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Components\MyUserControl\uc_TravelBaseData.resx">
+      <DependentUpon>uc_TravelBaseData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Components\uctlAddress.resx">
+      <DependentUpon>uctlAddress.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Components\uctlCommStatus.resx">
+      <DependentUpon>uctlCommStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Components\uctlNewVehicle.resx">
+      <DependentUpon>uctlNewVehicle.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Components\uctlPortNew.resx">
+      <DependentUpon>uctlPortNew.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Components\uctlRail.resx">
+      <DependentUpon>uctlRail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Components\uctlVehicle.resx">
+      <DependentUpon>uctlVehicle.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Components\uctl_Map.resx">
+      <DependentUpon>uctl_Map.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Components\ui_Vehicle.resx">
+      <DependentUpon>ui_Vehicle.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Components\uctlTcpIpAgentStatus.resx">
+      <DependentUpon>uctlTcpIpAgentStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Components\VhOfPLCInfo.resx">
+      <DependentUpon>VhOfPLCInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Maintenance\CarrierMaintenanceForm.resx">
+      <DependentUpon>CarrierMaintenanceForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Maintenance\ReserveSectionInfoForm.resx">
+      <DependentUpon>ReserveSectionInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\MonitorForm.resx">
+      <DependentUpon>MonitorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\OHT_Form.resx">
+      <DependentUpon>OHT_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Operate\DebugForm.resx">
+      <DependentUpon>DebugForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Operate\MaintainDeviceForm.resx">
+      <DependentUpon>MaintainDeviceForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Operate\EngineerForm.resx">
+      <DependentUpon>EngineerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Operate\HostModeChg_Form.resx">
+      <DependentUpon>HostModeChg_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Operate\RoadControlForm.resx">
+      <DependentUpon>RoadControlForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Operate\VehicleDataSettingForm.resx">
+      <DependentUpon>VehicleDataSettingForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Query\TransferCommandQureyListForm.resx">
+      <DependentUpon>TransferCommandQureyListForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Template\BCBasicForm.resx">
+      <DependentUpon>BCBasicForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Components\UtilityLog.resx">
+      <DependentUpon>UtilityLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Components\UtilityLogQuery.resx">
+      <DependentUpon>UtilityLogQuery.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\ProgressBarDialog.resx">
+      <DependentUpon>ProgressBarDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Template\BOperationForm01.resx">
+      <DependentUpon>BOperationForm01.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Test\WaitInOutLog.resx">
+      <DependentUpon>WaitInOutLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\UAS\ChangePwdForm.resx">
+      <DependentUpon>ChangePwdForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\UAS\FuncCodePopupForm.resx">
+      <DependentUpon>FuncCodePopupForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\UAS\FunctionMngForm.resx">
+      <DependentUpon>FunctionMngForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\UAS\LoginPopupForm.resx">
+      <DependentUpon>LoginPopupForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\UAS\UASMainForm.resx">
+      <DependentUpon>UASMainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\UAS\UserGrpMngForm.resx">
+      <DependentUpon>UserGrpMngForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\UAS\UserMngForm.resx">
+      <DependentUpon>UserMngForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Content Include="al.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Config\MQTTSetting.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Image\close-24.png" />
+    <None Include="Image\Done.png" />
+    <Content Include="Image\Download.png" />
+    <None Include="Image\edit.png" />
+    <None Include="Image\User1.png" />
+    <None Include="Image\edit1_PPID.png" />
+    <None Include="Image\edit1_Recipe.png" />
+    <None Include="Image\enginner.png" />
+    <None Include="Image\export.png" />
+    <None Include="Image\Exit.png" />
+    <Content Include="Image\forum.png" />
+    <None Include="Image\refresh1.png" />
+    <None Include="Image\import.png" />
+    <None Include="Image\saveall-24.png" />
+    <None Include="Image\PlayBlue.png" />
+    <None Include="Image\screen_on.png" />
+    <None Include="Image\List.png" />
+    <None Include="Image\robot.png" />
+    <None Include="Image\Operation.png" />
+    <None Include="Image\passwordChange.png" />
+    <Content Include="Image\settings.png" />
+    <None Include="Image\show.png" />
+    <None Include="Image\th-list.png" />
+    <None Include="Image\th-small.png" />
+    <Content Include="Image\User.png" />
+    <None Include="Image\unlock.png" />
+    <None Include="Image\lock.png" />
+    <EmbeddedResource Include="BCMainForm.resx">
+      <DependentUpon>BCMainForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <None Include="BCWinForm_TemporaryKey.pfx" />
+    <Content Include="Config\message.properties">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Config\NLog_simple.config">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Properties\app.manifest" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ScriptControl\ScriptControl.csproj">
+      <Project>{34f0d133-fc32-4219-bca9-9d0bc9a74ad6}</Project>
+      <Name>ScriptControl</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Doc\Config Modify Note.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Doc\Version Release Note.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Image\alert.png" />
+    <Content Include="Image\Ball Bule.png" />
+    <Content Include="Image\Ball Yellow.png" />
+    <Content Include="Image\Handle.png" />
+    <Content Include="Image\logout.png" />
+    <None Include="Image\Mirle.png" />
+    <None Include="Image\icon_check.png" />
+    <None Include="Image\1405054835_Ball Green.png" />
+    <None Include="Image\1405054496_Ball Red.png" />
+    <Content Include="Config\SQLServer.cfg.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Images\CircleToolboxBitmap.bmp" />
+    <Content Include="Images\dialog_background_01.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 和 x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ConfigHandler\" />
+    <Folder Include="docs\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PublishFile Include="Config\SQLServer.cfg.xml">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="UI\Components\WPFComponents\uctlReserveSectionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,248 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MPLCConnectionControl</name>
+    </assembly>
+    <members>
+        <member name="F:com.mirle.ibg3k0.MPLCConnectionControl.ModBus.ModBusWrapper.dataIndex">
+            <summary>
+            数据序号标识
+            </summary>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.PLCConnection.IMPLCConnection.isCheckedOut">
+            <summary>
+            是否被Check Out拿去使用
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.PLCConnection.IMPLCConnection.checkOut">
+            <summary>
+            將此Connection Check out拿去使用
+            </summary>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.PLCConnection.IMPLCConnection.checkIn">
+            <summary>
+            將此Connection Check in回復
+            </summary>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.PLCConnection.IMPLCConnection.duration">
+            <summary>
+            取得距上次狀態改變的間隔時間
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.PLCConnection.IMPLCConnection.retire">
+            <summary>
+            將此Connection退除
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.MPLCConnectionControl.PLCConnection.PLCConnectionInfo.MaxRetryCount">
+            <summary>
+            最多可嘗試次數
+            </summary>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.PLCConnection.MPLCConnectionAdvantech.isAlive">
+            <summary>
+            透過簡單讀取某Block，判定該Connection目前是否可用
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.PLCConnection.MPLCConnectionAdvantech.Open">
+            <summary>
+            開啟此Connection
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.PLCConnection.MPLCConnectionAdvantech.Close">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.PLCConnection.MPLCConnectionMCProtocol.isAlive">
+            <summary>
+            透過簡單讀取某Block，判定該Connection目前是否可用
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.PLCConnection.MPLCConnectionMCProtocol.Open">
+            <summary>
+            開啟此Connection
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.PLCConnection.MPLCConnectionMCProtocol.Close">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.PLCConnection.MPLCConnectionMirle.isAlive">
+            <summary>
+            透過簡單讀取某Block，判定該Connection目前是否可用
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.PLCConnection.MPLCConnectionMirle.Open">
+            <summary>
+            開啟此Connection
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.PLCConnection.MPLCConnectionMirle.Close">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.PLCConnection.MPLCConnectionMitsubishi.isAlive">
+            <summary>
+            透過簡單讀取某Block，判定該Connection目前是否可用
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.PLCConnection.MPLCConnectionMitsubishi.Open">
+            <summary>
+            開啟此Connection
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.PLCConnection.MPLCConnectionMitsubishi.Close">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.License.AutomationLicenseKey.checkValidation(System.Object)">
+            <summary>
+            此FUN 要等到GVO現場的Key皆改為允許遠端控制後，再進行使用。//A0.05
+            </summary>
+            <param name="obj"></param>
+        </member>
+        <member name="F:com.mirle.ibg3k0.MPLCConnectionControl.License.AutomationLicenseKey.preCheckTime">
+            <summary>
+            在現場尚未將KeyPro中的"允許遠端桌面"設定開啟時，先使用使FUN。//A0.05
+            </summary>
+            <param name="obj"></param>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.License.AutomationLicenseKey.isOverCheckIntervalTime">
+            <summary>
+            A0.04
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.License.AutomationLicenseKey.getAppliedArea(System.String,com.mirle.ibg3k0.MPLCConnectionControl.License.AutomationLicenseKey.AppliedArea)">
+            <summary>
+            從AppSetting取得設定值，如果找不到該Key的設定值，將會回傳參數指定的預設值
+            </summary>
+            <param name="key">Key</param>
+            <param name="defaultValue">預設值</param>
+            <returns>System.Int32.</returns>
+        </member>
+        <member name="T:com.mirle.ibg3k0.MPLCConnectionControl.MPLCConnection">
+            <summary>
+            M/PLC Connection。
+            應由MPLCConnectionManager來操作此Connection
+            </summary>
+            
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.MPLCConnection.isCheckedOut">
+            <summary>
+            是否被Check Out拿去使用
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.MPLCConnection.checkOut">
+            <summary>
+            將此Connection Check out拿去使用
+            </summary>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.MPLCConnection.checkIn">
+            <summary>
+            將此Connection Check in回復
+            </summary>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.MPLCConnection.duration">
+            <summary>
+            取得距上次狀態改變的間隔時間
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.MPLCConnection.retire">
+            <summary>
+            將此Connection退除
+            </summary>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.MPLCConnection.isAlive">
+            <summary>
+            透過簡單讀取某Block，判定該Connection目前是否可用
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.MPLCConnection.Open">
+            <summary>
+            開啟此Connection
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.MPLCConnection.Close">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.MPLCConnectionControl.MPLCConnectionPool">
+            <summary>
+            MPLC連接埠池，所有連線皆是必須從這裡拿取
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.MPLCConnectionControl.MPLCConnectionManager">
+            <summary>
+            M/PLC Connection 管理器。
+            舉凡所有與M/PLC的通訊，皆透過此管理器進行。
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.MPLCConnectionControl.MPLCConnectionManager._maxRetryCount">
+            <summary>
+            最多可嘗試次數
+            </summary>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.MPLCConnectionManager.#ctor(System.Int32,System.Int64,System.Int32,System.String,System.Int32)">
+            <summary>
+            MPLC連線管理器建構式
+            </summary>
+            <param name="maxPoolSize">連接池最多允許的連線數量</param>
+            <param name="maxWaitTime">最多等待回應時間</param>
+            <param name="maxRetryCount">最多重複嘗試次數</param>
+            <param name="aliveDeviceBlock">監測MPLC讀寫正常的device位置</param>
+            <param name="logicalStationNumber">指定此連線管理器使用的連線ID</param>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.MPLCConnectionManager.isAlive">
+            <summary>
+            判定與MPLC連線是否正常
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.MPLCConnectionManager.writeDeviceBlock(System.String,System.Int32,System.Int32[]@)">
+            <summary>
+            寫入資料到指定的Device Block
+            </summary>
+            <param name="device">指定device block的起始位置</param>
+            <param name="size">指定device block的長度</param>
+            <param name="data">欲寫入的資料陣列</param>
+            <returns></returns>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.MPLCConnectionManager.writeDeviceBit(System.String,System.Int32)">
+            <summary>
+            寫入指定資料到Device Bit
+            </summary>
+            <param name="device">指定device位置</param>
+            <param name="bitData">欲寫入的資料</param>
+            <returns></returns>
+        </member>
+        <member name="M:com.mirle.ibg3k0.MPLCConnectionControl.MPLCConnectionManager.readDeviceBlock(System.String,System.Int32,System.Int32[]@)">
+            <summary>
+            從指定的Device Block讀取資料
+            </summary>
+            <param name="device"></param>
+            <param name="size"></param>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

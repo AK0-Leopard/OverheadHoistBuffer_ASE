@@ -1,0 +1,450 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="tableLayoutPanel1.ColumnCount" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="tableLayoutPanel2.ColumnCount" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="UserIDLbl.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Left, Right</value>
+  </data>
+  <data name="UserIDLbl.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="UserIDLbl.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 37</value>
+  </data>
+  <data name="UserIDLbl.Size" type="System.Drawing.Size, System.Drawing">
+    <value>117, 17</value>
+  </data>
+  <data name="UserIDLbl.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="UserIDLbl.Text" xml:space="preserve">
+    <value>User ID</value>
+  </data>
+  <data name="UserIDLbl.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="&gt;&gt;UserIDLbl.Name" xml:space="preserve">
+    <value>UserIDLbl</value>
+  </data>
+  <data name="&gt;&gt;UserIDLbl.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;UserIDLbl.Parent" xml:space="preserve">
+    <value>tableLayoutPanel2</value>
+  </data>
+  <data name="&gt;&gt;UserIDLbl.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="PwdLbl.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Left, Right</value>
+  </data>
+  <data name="PwdLbl.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="PwdLbl.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 68</value>
+  </data>
+  <data name="PwdLbl.Size" type="System.Drawing.Size, System.Drawing">
+    <value>117, 17</value>
+  </data>
+  <data name="PwdLbl.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="PwdLbl.Text" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="PwdLbl.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="&gt;&gt;PwdLbl.Name" xml:space="preserve">
+    <value>PwdLbl</value>
+  </data>
+  <data name="&gt;&gt;PwdLbl.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;PwdLbl.Parent" xml:space="preserve">
+    <value>tableLayoutPanel2</value>
+  </data>
+  <data name="&gt;&gt;PwdLbl.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="FuncCodeLbl.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Left, Right</value>
+  </data>
+  <data name="FuncCodeLbl.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="FuncCodeLbl.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 6</value>
+  </data>
+  <data name="FuncCodeLbl.Size" type="System.Drawing.Size, System.Drawing">
+    <value>117, 17</value>
+  </data>
+  <data name="FuncCodeLbl.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="FuncCodeLbl.Text" xml:space="preserve">
+    <value>Function Code</value>
+  </data>
+  <data name="FuncCodeLbl.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="&gt;&gt;FuncCodeLbl.Name" xml:space="preserve">
+    <value>FuncCodeLbl</value>
+  </data>
+  <data name="&gt;&gt;FuncCodeLbl.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;FuncCodeLbl.Parent" xml:space="preserve">
+    <value>tableLayoutPanel2</value>
+  </data>
+  <data name="&gt;&gt;FuncCodeLbl.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="FuncCodeTBx.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Left, Right</value>
+  </data>
+  <data name="FuncCodeTBx.Location" type="System.Drawing.Point, System.Drawing">
+    <value>126, 3</value>
+  </data>
+  <data name="FuncCodeTBx.Size" type="System.Drawing.Size, System.Drawing">
+    <value>189, 25</value>
+  </data>
+  <data name="FuncCodeTBx.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;FuncCodeTBx.Name" xml:space="preserve">
+    <value>FuncCodeTBx</value>
+  </data>
+  <data name="&gt;&gt;FuncCodeTBx.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;FuncCodeTBx.Parent" xml:space="preserve">
+    <value>tableLayoutPanel2</value>
+  </data>
+  <data name="&gt;&gt;FuncCodeTBx.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="UserIDTBx.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Left, Right</value>
+  </data>
+  <data name="UserIDTBx.Location" type="System.Drawing.Point, System.Drawing">
+    <value>126, 33</value>
+  </data>
+  <data name="UserIDTBx.Size" type="System.Drawing.Size, System.Drawing">
+    <value>189, 25</value>
+  </data>
+  <data name="UserIDTBx.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="UserIDTBx.Text" xml:space="preserve">
+    <value>ADMIN</value>
+  </data>
+  <data name="&gt;&gt;UserIDTBx.Name" xml:space="preserve">
+    <value>UserIDTBx</value>
+  </data>
+  <data name="&gt;&gt;UserIDTBx.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;UserIDTBx.Parent" xml:space="preserve">
+    <value>tableLayoutPanel2</value>
+  </data>
+  <data name="&gt;&gt;UserIDTBx.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="PwdTBx.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Left, Right</value>
+  </data>
+  <data name="PwdTBx.Location" type="System.Drawing.Point, System.Drawing">
+    <value>126, 64</value>
+  </data>
+  <data name="PwdTBx.Size" type="System.Drawing.Size, System.Drawing">
+    <value>189, 25</value>
+  </data>
+  <data name="PwdTBx.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;PwdTBx.Name" xml:space="preserve">
+    <value>PwdTBx</value>
+  </data>
+  <data name="&gt;&gt;PwdTBx.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;PwdTBx.Parent" xml:space="preserve">
+    <value>tableLayoutPanel2</value>
+  </data>
+  <data name="&gt;&gt;PwdTBx.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="tableLayoutPanel2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 3</value>
+  </data>
+  <data name="tableLayoutPanel2.RowCount" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="tableLayoutPanel2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>318, 93</value>
+  </data>
+  <data name="tableLayoutPanel2.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel2.Name" xml:space="preserve">
+    <value>tableLayoutPanel2</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TableLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel2.Parent" xml:space="preserve">
+    <value>tableLayoutPanel1</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel2.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="tableLayoutPanel2.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="UserIDLbl" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="PwdLbl" Row="2" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="FuncCodeLbl" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="FuncCodeTBx" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="UserIDTBx" Row="1" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="PwdTBx" Row="2" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,38.99371,Percent,61.00629" /&gt;&lt;Rows Styles="Absolute,30,Percent,50,Percent,50" /&gt;&lt;/TableLayoutSettings&gt;</value>
+  </data>
+  <data name="CancelBtn.Location" type="System.Drawing.Point, System.Drawing">
+    <value>233, 9</value>
+  </data>
+  <data name="CancelBtn.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 39</value>
+  </data>
+  <data name="CancelBtn.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="CancelBtn.Text" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="&gt;&gt;CancelBtn.Name" xml:space="preserve">
+    <value>CancelBtn</value>
+  </data>
+  <data name="&gt;&gt;CancelBtn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;CancelBtn.Parent" xml:space="preserve">
+    <value>LoginPnl</value>
+  </data>
+  <data name="&gt;&gt;CancelBtn.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="OKBtn.Location" type="System.Drawing.Point, System.Drawing">
+    <value>152, 9</value>
+  </data>
+  <data name="OKBtn.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 39</value>
+  </data>
+  <data name="OKBtn.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="OKBtn.Text" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="&gt;&gt;OKBtn.Name" xml:space="preserve">
+    <value>OKBtn</value>
+  </data>
+  <data name="&gt;&gt;OKBtn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;OKBtn.Parent" xml:space="preserve">
+    <value>LoginPnl</value>
+  </data>
+  <data name="&gt;&gt;OKBtn.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="LoginPnl.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 103</value>
+  </data>
+  <data name="LoginPnl.Size" type="System.Drawing.Size, System.Drawing">
+    <value>318, 50</value>
+  </data>
+  <data name="LoginPnl.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;LoginPnl.Name" xml:space="preserve">
+    <value>LoginPnl</value>
+  </data>
+  <data name="&gt;&gt;LoginPnl.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;LoginPnl.Parent" xml:space="preserve">
+    <value>tableLayoutPanel1</value>
+  </data>
+  <data name="&gt;&gt;LoginPnl.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="tableLayoutPanel1.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Arial, 11.25pt</value>
+  </data>
+  <data name="tableLayoutPanel1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>13, 13</value>
+  </data>
+  <data name="tableLayoutPanel1.RowCount" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="tableLayoutPanel1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>324, 156</value>
+  </data>
+  <data name="tableLayoutPanel1.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel1.Name" xml:space="preserve">
+    <value>tableLayoutPanel1</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TableLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="tableLayoutPanel1.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="tableLayoutPanel2" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="LoginPnl" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,50" /&gt;&lt;Rows Styles="Percent,64.10256,Percent,35.89743" /&gt;&lt;/TableLayoutSettings&gt;</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 12</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>362, 181</value>
+  </data>
+  <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Arial, 9pt</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Login or Sign in with a different account</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>LoginPopupForm</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+</root>

@@ -1,0 +1,840 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="tableLayoutPanel1.ColumnCount" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="tableLayoutPanel2.ColumnCount" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="labEx_UpdateTime_Name.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="labEx_UpdateTime_Name.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Arial, 10pt, style=Bold</value>
+  </data>
+  <data name="labEx_UpdateTime_Name.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="labEx_UpdateTime_Name.Location" type="System.Drawing.Point, System.Drawing">
+    <value>22, 1</value>
+  </data>
+  <data name="labEx_UpdateTime_Name.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>1, 1, 1, 1</value>
+  </data>
+  <data name="labEx_UpdateTime_Name.Size" type="System.Drawing.Size, System.Drawing">
+    <value>118, 26</value>
+  </data>
+  <data name="labEx_UpdateTime_Name.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="labEx_UpdateTime_Name.Text" xml:space="preserve">
+    <value>Update Time : </value>
+  </data>
+  <data name="labEx_UpdateTime_Name.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;labEx_UpdateTime_Name.Name" xml:space="preserve">
+    <value>labEx_UpdateTime_Name</value>
+  </data>
+  <data name="&gt;&gt;labEx_UpdateTime_Name.Type" xml:space="preserve">
+    <value>com.mirle.ibg3k0.bc.winform.UI.Components.MyUserControl.LabelExt, OHxC, Version=1.3.5.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;labEx_UpdateTime_Name.Parent" xml:space="preserve">
+    <value>tableLayoutPanel2</value>
+  </data>
+  <data name="&gt;&gt;labEx_UpdateTime_Name.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="labEx_UpdateUser_Name.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labEx_UpdateUser_Name.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="labEx_UpdateUser_Name.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Arial, 10pt, style=Bold</value>
+  </data>
+  <data name="labEx_UpdateUser_Name.Location" type="System.Drawing.Point, System.Drawing">
+    <value>333, 1</value>
+  </data>
+  <data name="labEx_UpdateUser_Name.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>1, 1, 1, 1</value>
+  </data>
+  <data name="labEx_UpdateUser_Name.Size" type="System.Drawing.Size, System.Drawing">
+    <value>118, 26</value>
+  </data>
+  <data name="labEx_UpdateUser_Name.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="labEx_UpdateUser_Name.Text" xml:space="preserve">
+    <value>Update User : </value>
+  </data>
+  <data name="labEx_UpdateUser_Name.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;labEx_UpdateUser_Name.Name" xml:space="preserve">
+    <value>labEx_UpdateUser_Name</value>
+  </data>
+  <data name="&gt;&gt;labEx_UpdateUser_Name.Type" xml:space="preserve">
+    <value>com.mirle.ibg3k0.bc.winform.UI.Components.MyUserControl.LabelExt, OHxC, Version=1.3.5.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;labEx_UpdateUser_Name.Parent" xml:space="preserve">
+    <value>tableLayoutPanel2</value>
+  </data>
+  <data name="&gt;&gt;labEx_UpdateUser_Name.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="lab_Time_Value.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lab_Time_Value.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="lab_Time_Value.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Arial, 10pt, style=Bold</value>
+  </data>
+  <data name="lab_Time_Value.Location" type="System.Drawing.Point, System.Drawing">
+    <value>142, 1</value>
+  </data>
+  <data name="lab_Time_Value.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>1, 1, 1, 1</value>
+  </data>
+  <data name="lab_Time_Value.Size" type="System.Drawing.Size, System.Drawing">
+    <value>168, 26</value>
+  </data>
+  <data name="lab_Time_Value.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="lab_Time_Value.Text" xml:space="preserve">
+    <value>2018.08.02-17:23:58</value>
+  </data>
+  <data name="lab_Time_Value.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;lab_Time_Value.Name" xml:space="preserve">
+    <value>lab_Time_Value</value>
+  </data>
+  <data name="&gt;&gt;lab_Time_Value.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lab_Time_Value.Parent" xml:space="preserve">
+    <value>tableLayoutPanel2</value>
+  </data>
+  <data name="&gt;&gt;lab_Time_Value.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="lab_UpdateUser_Value.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lab_UpdateUser_Value.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="lab_UpdateUser_Value.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Arial, 10pt, style=Bold</value>
+  </data>
+  <data name="lab_UpdateUser_Value.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lab_UpdateUser_Value.Location" type="System.Drawing.Point, System.Drawing">
+    <value>453, 1</value>
+  </data>
+  <data name="lab_UpdateUser_Value.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>1, 1, 1, 1</value>
+  </data>
+  <data name="lab_UpdateUser_Value.Size" type="System.Drawing.Size, System.Drawing">
+    <value>261, 26</value>
+  </data>
+  <data name="lab_UpdateUser_Value.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="lab_UpdateUser_Value.Text" xml:space="preserve">
+    <value>Admin 007</value>
+  </data>
+  <data name="lab_UpdateUser_Value.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;lab_UpdateUser_Value.Name" xml:space="preserve">
+    <value>lab_UpdateUser_Value</value>
+  </data>
+  <data name="&gt;&gt;lab_UpdateUser_Value.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lab_UpdateUser_Value.Parent" xml:space="preserve">
+    <value>tableLayoutPanel2</value>
+  </data>
+  <data name="&gt;&gt;lab_UpdateUser_Value.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="tableLayoutPanel2.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="tableLayoutPanel2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 704</value>
+  </data>
+  <data name="tableLayoutPanel2.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="tableLayoutPanel2.RowCount" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="tableLayoutPanel2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1110, 28</value>
+  </data>
+  <data name="tableLayoutPanel2.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel2.Name" xml:space="preserve">
+    <value>tableLayoutPanel2</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TableLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel2.Parent" xml:space="preserve">
+    <value>tableLayoutPanel1</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel2.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="tableLayoutPanel2.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="labEx_UpdateTime_Name" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="labEx_UpdateUser_Name" Row="0" RowSpan="1" Column="4" ColumnSpan="1" /&gt;&lt;Control Name="lab_Time_Value" Row="0" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="lab_UpdateUser_Value" Row="0" RowSpan="1" Column="5" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Absolute,21,Absolute,120,Absolute,170,Absolute,21,Absolute,120,Absolute,263,Percent,100,Absolute,20" /&gt;&lt;Rows Styles="Percent,100" /&gt;&lt;/TableLayoutSettings&gt;</value>
+  </data>
+  <data name="tabControlEx11.Alignment" type="System.Windows.Forms.TabAlignment, System.Windows.Forms">
+    <value>Left</value>
+  </data>
+  <data name="uc_TravelBaseData1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="uc_TravelBaseData1.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Arial, 4pt</value>
+  </data>
+  <data name="uc_TravelBaseData1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>10, 0</value>
+  </data>
+  <data name="uc_TravelBaseData1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="uc_TravelBaseData1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>851, 674</value>
+  </data>
+  <data name="uc_TravelBaseData1.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;uc_TravelBaseData1.Name" xml:space="preserve">
+    <value>uc_TravelBaseData1</value>
+  </data>
+  <data name="&gt;&gt;uc_TravelBaseData1.Type" xml:space="preserve">
+    <value>com.mirle.ibg3k0.bc.winform.UI.Components.MyUserControl.uc_TravelBaseData, OHxC, Version=1.3.5.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;uc_TravelBaseData1.Parent" xml:space="preserve">
+    <value>Travel_Base_Data</value>
+  </data>
+  <data name="&gt;&gt;uc_TravelBaseData1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="Travel_Base_Data.Location" type="System.Drawing.Point, System.Drawing">
+    <value>178, 4</value>
+  </data>
+  <data name="Travel_Base_Data.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="Travel_Base_Data.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>10, 0, 3, 0</value>
+  </data>
+  <data name="Travel_Base_Data.Size" type="System.Drawing.Size, System.Drawing">
+    <value>864, 674</value>
+  </data>
+  <data name="Travel_Base_Data.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="Travel_Base_Data.Text" xml:space="preserve">
+    <value>    Travel Base Data</value>
+  </data>
+  <data name="&gt;&gt;Travel_Base_Data.Name" xml:space="preserve">
+    <value>Travel_Base_Data</value>
+  </data>
+  <data name="&gt;&gt;Travel_Base_Data.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Travel_Base_Data.Parent" xml:space="preserve">
+    <value>tabControlEx11</value>
+  </data>
+  <data name="&gt;&gt;Travel_Base_Data.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="uc_GuideData1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="uc_GuideData1.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Arial, 4pt</value>
+  </data>
+  <data name="uc_GuideData1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>10, 0</value>
+  </data>
+  <data name="uc_GuideData1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>851, 674</value>
+  </data>
+  <data name="uc_GuideData1.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;uc_GuideData1.Name" xml:space="preserve">
+    <value>uc_GuideData1</value>
+  </data>
+  <data name="&gt;&gt;uc_GuideData1.Type" xml:space="preserve">
+    <value>com.mirle.ibg3k0.bc.winform.UI.Components.MyUserControl.uc_GuideData, OHxC, Version=1.3.5.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;uc_GuideData1.Parent" xml:space="preserve">
+    <value>Guide_Data</value>
+  </data>
+  <data name="&gt;&gt;uc_GuideData1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="Guide_Data.Location" type="System.Drawing.Point, System.Drawing">
+    <value>178, 4</value>
+  </data>
+  <data name="Guide_Data.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="Guide_Data.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>10, 0, 3, 0</value>
+  </data>
+  <data name="Guide_Data.Size" type="System.Drawing.Size, System.Drawing">
+    <value>864, 674</value>
+  </data>
+  <data name="Guide_Data.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="Guide_Data.Text" xml:space="preserve">
+    <value>    Guide Data</value>
+  </data>
+  <data name="&gt;&gt;Guide_Data.Name" xml:space="preserve">
+    <value>Guide_Data</value>
+  </data>
+  <data name="&gt;&gt;Guide_Data.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Guide_Data.Parent" xml:space="preserve">
+    <value>tabControlEx11</value>
+  </data>
+  <data name="&gt;&gt;Guide_Data.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="uc_AddressData1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="uc_AddressData1.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Arial, 4pt</value>
+  </data>
+  <data name="uc_AddressData1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>10, 0</value>
+  </data>
+  <data name="uc_AddressData1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="uc_AddressData1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>851, 674</value>
+  </data>
+  <data name="uc_AddressData1.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;uc_AddressData1.Name" xml:space="preserve">
+    <value>uc_AddressData1</value>
+  </data>
+  <data name="&gt;&gt;uc_AddressData1.Type" xml:space="preserve">
+    <value>com.mirle.ibg3k0.bc.winform.UI.Components.MyUserControl.uc_AddressData, OHxC, Version=1.3.5.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;uc_AddressData1.Parent" xml:space="preserve">
+    <value>Address_Data</value>
+  </data>
+  <data name="&gt;&gt;uc_AddressData1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="Address_Data.Location" type="System.Drawing.Point, System.Drawing">
+    <value>178, 4</value>
+  </data>
+  <data name="Address_Data.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="Address_Data.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>10, 0, 3, 0</value>
+  </data>
+  <data name="Address_Data.Size" type="System.Drawing.Size, System.Drawing">
+    <value>864, 674</value>
+  </data>
+  <data name="Address_Data.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="Address_Data.Text" xml:space="preserve">
+    <value>    Address Data</value>
+  </data>
+  <data name="&gt;&gt;Address_Data.Name" xml:space="preserve">
+    <value>Address_Data</value>
+  </data>
+  <data name="&gt;&gt;Address_Data.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Address_Data.Parent" xml:space="preserve">
+    <value>tabControlEx11</value>
+  </data>
+  <data name="&gt;&gt;Address_Data.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="uc_SectionData1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="uc_SectionData1.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Arial, 4pt</value>
+  </data>
+  <data name="uc_SectionData1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>10, 0</value>
+  </data>
+  <data name="uc_SectionData1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="uc_SectionData1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>851, 674</value>
+  </data>
+  <data name="uc_SectionData1.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;uc_SectionData1.Name" xml:space="preserve">
+    <value>uc_SectionData1</value>
+  </data>
+  <data name="&gt;&gt;uc_SectionData1.Type" xml:space="preserve">
+    <value>com.mirle.ibg3k0.bc.winform.UI.Components.MyUserControl.uc_SectionData, OHxC, Version=1.3.5.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;uc_SectionData1.Parent" xml:space="preserve">
+    <value>Section_Data</value>
+  </data>
+  <data name="&gt;&gt;uc_SectionData1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="Section_Data.Location" type="System.Drawing.Point, System.Drawing">
+    <value>178, 4</value>
+  </data>
+  <data name="Section_Data.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="Section_Data.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>10, 0, 3, 0</value>
+  </data>
+  <data name="Section_Data.Size" type="System.Drawing.Size, System.Drawing">
+    <value>864, 674</value>
+  </data>
+  <data name="Section_Data.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="Section_Data.Text" xml:space="preserve">
+    <value>    Section Data</value>
+  </data>
+  <data name="&gt;&gt;Section_Data.Name" xml:space="preserve">
+    <value>Section_Data</value>
+  </data>
+  <data name="&gt;&gt;Section_Data.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Section_Data.Parent" xml:space="preserve">
+    <value>tabControlEx11</value>
+  </data>
+  <data name="&gt;&gt;Section_Data.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="uc_ScaleData1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="uc_ScaleData1.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Arial, 4pt</value>
+  </data>
+  <data name="uc_ScaleData1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>10, 0</value>
+  </data>
+  <data name="uc_ScaleData1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="uc_ScaleData1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>851, 674</value>
+  </data>
+  <data name="uc_ScaleData1.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;uc_ScaleData1.Name" xml:space="preserve">
+    <value>uc_ScaleData1</value>
+  </data>
+  <data name="&gt;&gt;uc_ScaleData1.Type" xml:space="preserve">
+    <value>com.mirle.ibg3k0.bc.winform.UI.Components.MyUserControl.uc_ScaleData, OHxC, Version=1.3.5.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;uc_ScaleData1.Parent" xml:space="preserve">
+    <value>Scale_Data</value>
+  </data>
+  <data name="&gt;&gt;uc_ScaleData1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="Scale_Data.Location" type="System.Drawing.Point, System.Drawing">
+    <value>178, 4</value>
+  </data>
+  <data name="Scale_Data.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="Scale_Data.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>10, 0, 3, 0</value>
+  </data>
+  <data name="Scale_Data.Size" type="System.Drawing.Size, System.Drawing">
+    <value>864, 674</value>
+  </data>
+  <data name="Scale_Data.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="Scale_Data.Text" xml:space="preserve">
+    <value>    Scale Data</value>
+  </data>
+  <data name="&gt;&gt;Scale_Data.Name" xml:space="preserve">
+    <value>Scale_Data</value>
+  </data>
+  <data name="&gt;&gt;Scale_Data.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Scale_Data.Parent" xml:space="preserve">
+    <value>tabControlEx11</value>
+  </data>
+  <data name="&gt;&gt;Scale_Data.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="uc_ControlData2.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Arial, 4pt</value>
+  </data>
+  <data name="uc_ControlData2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>546, 395</value>
+  </data>
+  <data name="uc_ControlData2.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="uc_ControlData2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>8, 48</value>
+  </data>
+  <data name="uc_ControlData2.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;uc_ControlData2.Name" xml:space="preserve">
+    <value>uc_ControlData2</value>
+  </data>
+  <data name="&gt;&gt;uc_ControlData2.Type" xml:space="preserve">
+    <value>com.mirle.ibg3k0.bc.winform.UI.Components.MyUserControl.uc_ControlData, OHxC, Version=1.3.5.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;uc_ControlData2.Parent" xml:space="preserve">
+    <value>Control_Data</value>
+  </data>
+  <data name="&gt;&gt;uc_ControlData2.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="uc_ControlData1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="uc_ControlData1.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Arial, 4pt</value>
+  </data>
+  <data name="uc_ControlData1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>10, 0</value>
+  </data>
+  <data name="uc_ControlData1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="uc_ControlData1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>851, 674</value>
+  </data>
+  <data name="uc_ControlData1.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;uc_ControlData1.Name" xml:space="preserve">
+    <value>uc_ControlData1</value>
+  </data>
+  <data name="&gt;&gt;uc_ControlData1.Type" xml:space="preserve">
+    <value>com.mirle.ibg3k0.bc.winform.UI.Components.MyUserControl.uc_ControlData, OHxC, Version=1.3.5.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;uc_ControlData1.Parent" xml:space="preserve">
+    <value>Control_Data</value>
+  </data>
+  <data name="&gt;&gt;uc_ControlData1.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="Control_Data.Location" type="System.Drawing.Point, System.Drawing">
+    <value>178, 4</value>
+  </data>
+  <data name="Control_Data.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="Control_Data.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>10, 0, 3, 0</value>
+  </data>
+  <data name="Control_Data.Size" type="System.Drawing.Size, System.Drawing">
+    <value>864, 674</value>
+  </data>
+  <data name="Control_Data.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="Control_Data.Text" xml:space="preserve">
+    <value>    Control Data</value>
+  </data>
+  <data name="&gt;&gt;Control_Data.Name" xml:space="preserve">
+    <value>Control_Data</value>
+  </data>
+  <data name="&gt;&gt;Control_Data.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Control_Data.Parent" xml:space="preserve">
+    <value>tabControlEx11</value>
+  </data>
+  <data name="&gt;&gt;Control_Data.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="tabControlEx11.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="tabControlEx11.ItemSize" type="System.Drawing.Size, System.Drawing">
+    <value>30, 174</value>
+  </data>
+  <data name="tabControlEx11.Location" type="System.Drawing.Point, System.Drawing">
+    <value>32, 22</value>
+  </data>
+  <data name="tabControlEx11.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>32, 0, 32, 0</value>
+  </data>
+  <data name="tabControlEx11.Padding" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="tabControlEx11.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1046, 682</value>
+  </data>
+  <data name="tabControlEx11.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;tabControlEx11.Name" xml:space="preserve">
+    <value>tabControlEx11</value>
+  </data>
+  <data name="&gt;&gt;tabControlEx11.Type" xml:space="preserve">
+    <value>WindowsFormsApplication8.TabControlEx1, OHxC, Version=1.3.5.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;tabControlEx11.Parent" xml:space="preserve">
+    <value>tableLayoutPanel1</value>
+  </data>
+  <data name="&gt;&gt;tabControlEx11.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="lab_Close.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Right</value>
+  </data>
+  <data name="lab_Close.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lab_Close.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Arial, 15pt, style=Bold</value>
+  </data>
+  <data name="lab_Close.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lab_Close.Location" type="System.Drawing.Point, System.Drawing">
+    <value>1089, 0</value>
+  </data>
+  <data name="lab_Close.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="lab_Close.Size" type="System.Drawing.Size, System.Drawing">
+    <value>21, 22</value>
+  </data>
+  <data name="lab_Close.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="lab_Close.Text" xml:space="preserve">
+    <value>x</value>
+  </data>
+  <data name="lab_Close.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopRight</value>
+  </data>
+  <data name="&gt;&gt;lab_Close.Name" xml:space="preserve">
+    <value>lab_Close</value>
+  </data>
+  <data name="&gt;&gt;lab_Close.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lab_Close.Parent" xml:space="preserve">
+    <value>tableLayoutPanel1</value>
+  </data>
+  <data name="&gt;&gt;lab_Close.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="tableLayoutPanel1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="tableLayoutPanel1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="tableLayoutPanel1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="tableLayoutPanel1.RowCount" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="tableLayoutPanel1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1110, 730</value>
+  </data>
+  <data name="tableLayoutPanel1.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel1.Name" xml:space="preserve">
+    <value>tableLayoutPanel1</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TableLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="tableLayoutPanel1.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="tableLayoutPanel2" Row="2" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="tabControlEx11" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="lab_Close" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Absolute,1110" /&gt;&lt;Rows Styles="Absolute,22,Absolute,682,Absolute,28" /&gt;&lt;/TableLayoutSettings&gt;</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>10, 22</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>1110, 730</value>
+  </data>
+  <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Consolas, 14.25pt</value>
+  </data>
+  <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>5, 6, 5, 6</value>
+  </data>
+  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
+    <value>CenterScreen</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>VehicleDataSettingForm</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+</root>

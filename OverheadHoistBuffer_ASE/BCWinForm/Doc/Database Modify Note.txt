@@ -1,0 +1,159 @@
+**********************************************
+*  BlockControlSystem_GVO-v1.0.1
+*  Latest modifications record
+*  Date  : 2014/11/20
+*  Author: 
+*  Mail  : 
+*  Tel   : 03-5783280
+**********************************************
+***v200604
+   2020/06/04 (SCC)
+   註：將 dbo.ACMD_MCS.Table 刪除，再用 TFS 上的 SQL 進行新增也行
+   資料表:dbo.ACMD_MCS.Table
+		新增：RelayStation varchar(64) 可Null
+			說明：中繼站，命令分兩段完成需要用到
+
+***v200317
+   2020/03/17 (Wu GuanAi)
+   資料表:AVEHICLE
+		新增：HAS_BOX int 不可Null
+			說明：之後用來判定是否要派命令給車子的參考之一
+	   
+***v200309
+   2020/03/09 (WeiLun Chang)
+   資料表:Alarm
+   修改:
+	   RPT_DATE_TIME  char(19) => datetime
+***v200224
+	2020/02/24 (SCC)
+	資料表：PortDef
+		新增：
+			Enable	varchar(1) 不可Null	
+			說明：
+				啟用：
+				根據PLC給的訊號來判斷 In of Service、Out of Service。
+
+				禁用：
+				不理PLC給的訊號來判斷 In of Service、Out of Service。
+				對MCS上報 In of Service、Out of Service，由 OHBC 控制(人員操作)
+
+***v20200218
+	2020/02/18 (Hsinyu Chang)
+	更新LINE1的圖資
+
+***v20200217
+	2020/02/17 (JasonWu)
+	加入"ASE_K21_LOOP"的地圖設定檔。
+
+***v200214
+	2020/02/14 (SCC)
+	資料表：ACMD_MCS
+	新增：
+	CRANE	varchar(64)		//此筆命令現在由誰在搬送
+
+	資料表：PortDef
+	修改
+	State		可 Null >> 不可 Null
+	PortType	可 Null >> 不可 Null
+
+***v20200210
+	2020/02/07 (Hsinyu Chang)
+
+	資料表：ACMD_MCS
+	變更欄位屬性：
+	BOX_ID 	nullable	//因為scan命令有可能box ID, cassette ID都不帶
+
+***v20200207_b
+	2020/02/07 (Hsinyu Chang)
+
+	資料表：ACMD_MCS
+	變更欄位屬性：
+	CARRIER_ID 	nullable	//cassette ID，若為空盒則此欄null
+	BOX_ID 	non-nullable	//box ID
+
+***v200206
+	2020/02/06 (SCC)
+
+	資料表：ALARM
+	新增欄位：
+	UnitID		varchar(2)	//上報MCS需要
+	UnitState	varchar(2)	//上報MCS需要
+
+***v20200205
+	2020/02/05 (JasonWu)
+
+	資料表：AVEHICLE
+	新增欄位：
+	BOX_ID 	char(64)	//紀錄目前車上的BOX ID
+	LOT_ID 	char(64)	//紀錄目前車上的LOT ID
+
+
+***v20200203
+	2020/02/03 (SCC)
+
+	資料表：PortDef
+	新增欄位：
+	AGVState 	numeric(2, 0)	//AGV Port上，流向與BOX關係，流向為 Input 且 有 空BOX 為正常(2 = InService)，流向為 Output 且 無BOX 為正常(2 = InService)，其餘皆異常(1 = OutOfService) 
+	UnitType 	varchar(20)		//判斷 Port的型態，OHCV、AGV、NTB
+	PortGroup 	int 			//判斷此 AGV Group 幾進幾出
+	PRIORITY  	int 			//Port 的優先度
+	AGVPortTypeDef	int			//預設AGVPort 流向，0 = In、 1 = Out
+
+	資料表：ACMD_MCS
+	CARRIER_ID_ON_CRANE	varchar(64)	//OHT BCR讀到的BOXID
+	CMDTYPE				varchar(64)	//此筆命令是MCS、手動、自動生成
+
+***v20200117
+	2020/01/17 (SCC)
+
+修改欄位資料類型
+	ACMD_MCS
+		-CMD_ID		char(64) 改成 varchar(64)
+		-CARRIER_ID	char(64) 改成 varchar(64)
+
+***v20200109_a
+   2020/01/09  (Kevin Wei)
+增加欄位
+	ACMD_OHTC
+		-SOURCE_ADR	char(64)	
+		-DESTINATION_ADR	char(64)	
+		-BOX_ID	char(64)	
+		-LOT_ID	char(64)	
+	ASECTION
+		-ADR1_CHG_SEC_ID_1	char(5)	Checked
+		-ADR1_CHG_SEC_COST_1	int	Unchecked
+		-ADR1_CHG_SEC_ID_2	char(5)	Checked
+		-ADR1_CHG_SEC_COST_2	int	Unchecked
+		-ADR1_CHG_SEC_ID_3	char(5)	Checked
+		-ADR1_CHG_SEC_COST_3	int	Unchecked
+		-ADR2_CHG_SEC_ID_1	char(5)	Checked
+		-ADR2_CHG_SEC_COST_1	int	Unchecked
+		-ADR2_CHG_SEC_ID_2	char(5)	Checked
+		-ADR2_CHG_SEC_COST_2	int	Unchecked
+		-ADR2_CHG_SEC_ID_3	char(5)	Checked
+		-ADR2_CHG_SEC_COST_3	int	Unchecked
+		-SEC_COST_From2To	int	Unchecked
+		-SEC_COST_To2From	int	Unchecked
+		-ISBANEND_From2To	bit	Unchecked
+		-ISBANEND_To2From	bit	Unchecked
+		-STATUS	int	Unchecked
+		-NOTE	nchar(40)	Checked
+		-PRE_DISABLE_FLAG	bit	Unchecked
+		-PRE_DISABLE_TIME	datetime	Checked
+		-DISABLE_TIME	datetime	Checked
+		-DISABLE_FLAG_USER	bit	Unchecked
+		-DISABLE_FLAG_SAFETY	bit	Unchecked
+		-DISABLE_FLAG_CHARGE	bit	Unchecked
+		-DISABLE_FLAG_SYSTEM	bit	Unchecked
+		
+***v20200109_b
+   2020/01/09  (Hsinyu Chang)
+變更欄位資料型態
+	ACMD_OHTC
+		-VH_ID char(5) -> char(32)
+		
+***v20200130
+   2020/01/30  (Hsinyu Chang)
+增加欄位
+	ACMD_MCS
+		-CARRIER_ID_ON_CRANE char(64) nullable

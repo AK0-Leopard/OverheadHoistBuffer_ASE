@@ -1,0 +1,541 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SECSTrxControl</name>
+    </assembly>
+    <members>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.addSystemErrorReceivedHandler(System.EventHandler{com.mirle.ibg3k0.stc.Common.SECSEventArgs})">
+            <summary>
+            A0.01
+            System Error (S9FY) 的監聽
+            </summary>
+            <param name="handler"></param>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.onSystemErrorReceive(System.String,com.mirle.ibg3k0.stc.Common.SECSEventArgs)">
+            <summary>
+            A0.01
+            觸發System Error Stream Function的事件
+            </summary>
+            <param name="streamFunction"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.replySECSMsg(com.mirle.ibg3k0.stc.Data.SecsData.SXFY)">
+            回傳SECS 訊息
+            
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSConnection.sendS9F9(System.Object)">
+            <summary>
+            Transaction Timer Timeout
+            </summary>
+            <param name="obj"></param>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSConnection.sendS9F5(System.Object)">
+            <summary>
+            Unrecognized Function Type
+            </summary>
+            <param name="obj"></param>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSConnection.sendS9F3(System.Object)">
+            <summary>
+            Unrecognized Stream Type
+            </summary>
+            <param name="obj"></param>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSConnection.startToListen">
+            開始聆聽
+            
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSConnection.stopToListen">
+            結束鈴聽動作
+            
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSConnection.replyTimeout">
+            T3 Timeout
+            
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Common.TrxSECS">
+            <summary>
+            此類別用於SECS格式的通訊：
+            1. 單一SECS Message傳送
+            2. 進行SECS的通訊交握
+            3. 進行SECS的通訊交握，並且接續進行對話計時
+            </summary>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.TrxSECS.#ctor(com.mirle.ibg3k0.stc.Common.SECS.SECSAgent)">
+            <summary>
+            TrxSECS建構式
+            </summary>
+            <param name="agent"></param>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.TrxSECS.replySECS(com.mirle.ibg3k0.stc.Data.SecsData.SXFY)">
+            <summary>
+            傳送SECS Message
+            </summary>
+            <param name="inSecs"></param>
+            <returns></returns>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.TrxSECS.sendRecv``1(com.mirle.ibg3k0.stc.Data.SecsData.SXFY,``0@,com.mirle.ibg3k0.stc.Data.SecsData.SXFY@,System.String@,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            用於進行SECS的交握
+            </summary>
+            <typeparam name="TSource"></typeparam>
+            <param name="inSecs"></param>
+            <param name="outSecs"></param>
+            <param name="rtnMsg"></param>
+            <param name="predicate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.TrxSECS.sendRecv``2(com.mirle.ibg3k0.stc.Data.SecsData.SXFY,``0@,com.mirle.ibg3k0.stc.Data.SecsData.SXFY@,System.String@,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},``1@,System.Int64,System.Linq.Expressions.Expression{System.Func{``1,System.Boolean}})">
+            <summary>
+            用於進行SECS的交握，並且於交握完成後，進行接續的對話（等待Host的訊息）。
+            </summary>
+            <typeparam name="TSource"></typeparam>
+            <typeparam name="TSource2"></typeparam>
+            <param name="inSecs"></param>
+            <param name="outSecs"></param>
+            <param name="rtnMsg"></param>
+            <param name="predicate"></param>
+            <param name="convSecs"></param>
+            <param name="convTimeoutSec"></param>
+            <param name="convPredicate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.TrxSECS.sendRecv``2(com.mirle.ibg3k0.stc.Data.SecsData.SXFY,``0@,com.mirle.ibg3k0.stc.Data.SecsData.SXFY@,System.String@,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},``1@,System.Int64,System.Linq.Expressions.Expression{System.Func{``1,System.Boolean}},com.mirle.ibg3k0.stc.Common.IBreakConvWait)">
+            <summary>
+            用於進行SECS的交握，並且於交握完成後，進行接續的對話（等待Host的訊息）。
+            </summary>
+            <typeparam name="TSource"></typeparam>
+            <typeparam name="TSource2"></typeparam>
+            <param name="inSecs"></param>
+            <param name="outSecs"></param>
+            <param name="rtnMsg"></param>
+            <param name="predicate"></param>
+            <param name="convSecs"></param>
+            <param name="convTimeoutSec"></param>
+            <param name="convPredicate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.TrxSECS.sendRecv``1(com.mirle.ibg3k0.stc.Data.SecsData.SXFY,``0@,com.mirle.ibg3k0.stc.Data.SecsData.SXFY@,System.String@,System.Int64,System.Int32,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            用於進行SECS的交握
+            </summary>
+            <typeparam name="TSource"></typeparam>
+            <param name="inSecs"></param>
+            <param name="outSecs"></param>
+            <param name="rtnMsg"></param>
+            <param name="timeoutSec"></param>
+            <param name="retryCnt"></param>
+            <param name="predicate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.TrxSECS.sendRecv``2(com.mirle.ibg3k0.stc.Data.SecsData.SXFY,``0@,com.mirle.ibg3k0.stc.Data.SecsData.SXFY@,System.String@,System.Int64,System.Int32,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},``1@,System.Int64,System.Linq.Expressions.Expression{System.Func{``1,System.Boolean}})">
+            <summary>
+            用於進行SECS的交握，並且於交握完成後，進行接續的對話（等待Host的訊息）。
+            </summary>
+            <typeparam name="TSource"></typeparam>
+            <typeparam name="TSource2"></typeparam>
+            <param name="inSecs"></param>
+            <param name="outSecs"></param>
+            <param name="rtnMsg"></param>
+            <param name="timeoutSec"></param>
+            <param name="retryCnt"></param>
+            <param name="predicate"></param>
+            <param name="convSecs"></param>
+            <param name="convTimeoutSec"></param>
+            <param name="convPredicate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.TrxSECS.sendRecv``2(com.mirle.ibg3k0.stc.Data.SecsData.SXFY,``0@,com.mirle.ibg3k0.stc.Data.SecsData.SXFY@,System.String@,System.Int64,System.Int32,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Boolean,``1@,System.Int64,System.Linq.Expressions.Expression{System.Func{``1,System.Boolean}})">
+            <summary>
+            用於進行SECS的交握，並且可以指定是否於交握完成後，還進行接續的對話（等待Host的訊息）。
+            </summary>
+            <typeparam name="TSource">指定Receive的SECS型別</typeparam>
+            <typeparam name="TSource2">指定接續談話Receive的SECS型別</typeparam>
+            <param name="inSecs">傳送給Host的SCES Message</param>
+            <param name="outSecs">接收到的SECS Message</param>
+            <param name="rtnMsg">回傳額外資訊</param>
+            <param name="timeoutSec">指定Timeout秒數(T3 Timeout)</param>
+            <param name="retryCnt">指定重試次數</param>
+            <param name="predicate">指定接收SECS的內容條件檢查</param>
+            <param name="continueConversation">指定此交握，是否於交握結束後，接續進行對話</param>
+            <param name="convSecs">從Host接收到的對話SECS Message</param>
+            <param name="convTimeoutSec">指定接續對話的Timeout秒數</param>
+            <param name="convPredicate">指定接續對話SECS的內容條件檢查</param>
+            <returns></returns>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.TrxSECS.getNow">
+            <summary>
+            取得目前當下系統時間
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.TrxSECS.replyAbortHandler(System.Object,com.mirle.ibg3k0.stc.Common.SECSEventArgs,com.mirle.ibg3k0.stc.Data.SecsData.SXFY@)">
+            <summary>
+            A0.02 
+            加上Abort Stream Function的監聽
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+            <param name="inSecs"></param>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.TrxSECS.replySystemErrorHandler(System.Object,com.mirle.ibg3k0.stc.Common.SECSEventArgs,com.mirle.ibg3k0.stc.Data.SecsData.SXFY@)">
+            <summary>
+            A0.03
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+            <param name="inSecs"></param>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.TrxSECS.conversationReceive``1(``0@,System.Int64,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            指定接續進行談話(等待Host傳遞訊息)，並限定於特定時間內完成，否則回傳「ConversationTimeout」結果
+            </summary>
+            <typeparam name="TSource"></typeparam>
+            <param name="outSecs"></param>
+            <param name="conversationTimeoutSec"></param>
+            <param name="predicate"></param>
+            <returns></returns>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Common.TrxSECS.ReturnCode">
+            <summary>
+            SECS通訊結果代碼
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Common.TrxSECS.ReturnCode.Normal">
+            <summary>
+            成功
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Common.TrxSECS.ReturnCode.Timeout">
+            <summary>
+            T3 Timeout
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Common.TrxSECS.ReturnCode.SendDataFail">
+            <summary>
+            訊息傳送失敗
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Common.TrxSECS.ReturnCode.ConversationTimeout">
+            <summary>
+            連續對話Timeout
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Common.TrxSECS.ReturnCode.Abort">
+            <summary>
+            收到Abort Stream Function
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Common.TrxSECS.ReturnCode.SystemError">
+            <summary>
+            收到System Error Stream Function(S9FY)
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Common.TrxSECS.ReturnCode.BreakcConversationWait">
+            <summary>
+            中斷連續對話的等待
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.SXFY.SECSAgentName">
+            <summary>
+            SECS Agent Name
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.SXFY.StreamFunction">
+            <summary>
+            Stream Function
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.SXFY.W_Bit">
+            <summary>
+            Wait Bit
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.SXFY.SystemByte">
+            <summary>
+            System Byte
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.SXFY.CanAbort">
+            <summary>
+            Can Abort By SXF0
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.SXFY.IsBaseType">
+            <summary>
+            Is Base Type (Don't check field count)
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.SXFY.ValidateFormat">
+            <summary>
+            驗証格式(預設是需要驗証)
+            </summary>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Data.SecsData.SXFY.getAbortFunctionName">
+            <summary>
+            A0.03
+            取得對應用於Abort的Stream Function。
+            如果此SXFY不允許Abort，將會回傳空白字串。
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S1F2.MDLN">
+            <summary>
+            Equipment Model Type
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S1F2.SOFTREV">
+            <summary>
+            Software revision code
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S1F5">
+            <summary>
+            Formatted Status Request
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S1F6">
+            <summary>
+            Formatted Status Data
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S1F6_SFCD1">
+            <summary>
+            Equipment Status Request
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S1F6_SFCD2">
+            <summary>
+            Port Status Request (Not Crate Port)
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S1F6_SFCD2.RPTITEM">
+            <summary>
+            If one cassette has more than two lots, ‘LOTID’, ‘PPID’ and ‘LOTST’ should be empty.
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S1F6_SFCD3">
+            <summary>
+            Operation Status Request
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S1F6_SFCD4">
+            <summary>
+            Unit Status Request
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S1F6_SFCD5">
+            <summary>
+            Sub-Unit Status Request
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S1F6_SFCD6">
+            <summary>
+            Mask Status Request
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S1F6_SFCD7">
+            <summary>
+            Material Status Request
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S1F6_SFCD8">
+            <summary>
+            Sorter Job List Request
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S1F6_SFCD9">
+            <summary>
+            Crate Port Status Request
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S5F103">
+            <summary>
+            Current Alarm Set List Request (H -> E)
+            </summary>
+        </member>
+        <!-- 忽略成員 "T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S5F104" 中格式錯誤的 XML 註解 -->
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S5F5">
+            <summary>
+            List Alarms Data Request(LAR) (H -> E)
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S5F6">
+            <summary>
+            List Alarm Data(LAD)
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11">
+            <summary>
+            Event Report Send
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID104">
+            <summary>
+            Event Report Send: Operation mode Status Change
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID105">
+            <summary>
+            Event Report Send: Unit Status Change
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID106">
+            <summary>
+            Event Report Send: Sub-Unit Status Change
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID108">
+            <summary>
+            Event Report Send: Material State Change
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID109">
+            <summary>
+            Event Report Send: Equipment Constant Change
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID110">
+            <summary>
+            Event Report Send: Ready To Start
+            </summary>
+        </member>
+        <!-- 忽略成員 "T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID111_114" 中格式錯誤的 XML 註解 -->
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID118">
+            <summary>
+            Event Report Send: Operator Confirm Event about Operator Call Command
+            </summary>
+        </member>
+        <!-- 忽略成員 "T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID200_209" 中格式錯誤的 XML 註解 -->
+        <!-- 忽略成員 "T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID210_219" 中格式錯誤的 XML 註解 -->
+        <!-- 忽略成員 "T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID220_229" 中格式錯誤的 XML 註解 -->
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID301_307">
+            <summary>
+            Event Report Send: Process status change report
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID311">
+            <summary>
+            Event Report Send: Last Glass Process Start
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID321_326">
+            <summary>
+            Event Report Send: Glass Out/In
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID327_328">
+            <summary>
+            Event Report Send: Cassette Out/In Unit
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID331_332">
+            <summary>
+            Event Report Send: Glass Scrap / Unscrap
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID334">
+            <summary>
+            Event Report Send: Glass Turn
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID341_348">
+            <summary>
+            Event Report Send: Mask Out/In (Evaporation, Mask AMHS EQ only)
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID401">
+            <summary>
+            Event Report Send: Process Program or Recipe Change
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID411">
+            <summary>
+            Event Report Send: Assemble Complete Event
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID411.RPTINFO.RPTLTPSGLS">
+            <summary>
+            LTPS Glass Information
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID411.RPTINFO.RPTENCPGLS">
+            <summary>
+            Encap Glass Information
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID412">
+            <summary>
+            Event Report Send: Glass Cut Process
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID431_436">
+            <summary>
+             Report Send: Sorting Job Event
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F3_CEID500_501.PROCDATA.UNITID">
+            <summary>
+            如果是Lot Process Data，則留空白
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F3_CEID500_501.PROCDATA.SUNITID">
+            <summary>
+            如果是Lot Process Data，則留空白
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F3_CEID500_501.PROCDATA.GLSID">
+            <summary>
+            如果是Lot Process Data，則留空白
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S7F19">
+            <summary>
+            Current EPPD Request (H->E)
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S7F19.PPTYPE">
+            <summary>
+            Process Program Type
+            E: Equipment
+            U: Unit
+            S: Sub-Unit
+            </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S7F20">
+            <summary>
+            Current EPPD Data
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S7F20.UNITID">
+            <summary>
+            Equipment ID or Unit ID or Sub-Unit ID
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.Sample.SECSConst.CEID_ALL_CEID">
+            <summary>
+            用來代表所有的CEID（於Enable、Disable All CEID時會使用到）。
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.Sample.SECSConst.PPCINFO_Created">
+            <summary>
+            A new PPID is created and registered
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.Sample.SECSConst.PPCINFO_Modified">
+            <summary>
+            Some parameters of a PPID are modified
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.Sample.SECSConst.PPCINFO_Deleted">
+            <summary>
+            Any PPID is deleted
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.Sample.SECSConst.PPCINFO_Changed">
+            <summary>
+            Equipment sets up any PPID which different from current PPID
+            </summary>
+        </member>
+    </members>
+</doc>
