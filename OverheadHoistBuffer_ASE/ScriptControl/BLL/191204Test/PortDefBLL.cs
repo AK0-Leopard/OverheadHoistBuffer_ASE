@@ -193,7 +193,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
                     //取station最後一碼 以分辨其為哪一group
-                    int AGVStationID = Int32.Parse(stationID.Substring(stationID.Length - 1, 1));
+                    string AGVStationID = stationID.Substring(stationID.Length - 1, 1);
                     List<PortDef> agvPortFromStationID = portdefDao.LoadAGVPortByStationID(con, ohbName, AGVStationID);
                     return agvPortFromStationID;
                 }
@@ -213,14 +213,14 @@ namespace com.mirle.ibg3k0.sc.BLL
                 {
                     List<PortDef> agvPort = portdefDao.LoadPortDef(con, ohbName).Where(data => data.UnitType == "AGV").ToList();
                     PortDef portData = agvPort.Where(data => data.PLCPortID == portID).FirstOrDefault();
-                    int group = 0;
+                    string group = "";
 
                     if (portData != null)
                     {
-                        group = (int)portData.PortGroup;
+                        group = portData.ZoneName;
                     }
 
-                    return agvPort.Where(data => data.PortGroup == group).ToList();
+                    return agvPort.Where(data => data.ZoneName == group).ToList();
                 }
             }
             catch (Exception ex)
