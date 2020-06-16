@@ -1,4 +1,17 @@
-﻿using System;
+﻿//*********************************************************************************
+//      PortDefDao.cs
+//*********************************************************************************
+// File Name: PortDefDao.cs
+// Description: 讀取PortDef Table資料庫之方法
+//
+//(c) Copyright 2014, MIRLE Automation Corporation
+//
+// Date          Author         Request No.    Tag          Description
+// ------------- -------------  -------------  ------       -----------------------------
+// 2020/06/12    Jason Wu       N/A            A20.06.12.0  新增LoadAGVPortByStationID()讀取資料庫獲得目前AGV type的port之資訊
+//**********************************************************************************
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -78,6 +91,24 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                                      || a.UnitType == "AGV"
                                      || a.UnitType == "NTB"
                                      || a.UnitType == "STK")
+                           select a;
+                return port.ToList();
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex);
+                throw;
+            }
+        }
+        //A20.06.12
+        public List<PortDef> LoadAGVPortByStationID(DBConnection_EF conn, string ohbName, int AGVStationID)
+        {
+            try
+            {
+                var port = from a in conn.PortDef
+                           where a.OHBName == ohbName
+                                  && a.UnitType == "AGV"
+                                  && a.PortGroup == AGVStationID
                            select a;
                 return port.ToList();
             }

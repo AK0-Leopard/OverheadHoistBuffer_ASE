@@ -7,6 +7,7 @@
 // 2020/05/27    Jason Wu       N/A            A20.05.27   在優化shelf 的選擇中加入log紀錄
 // 2020/06/04    Jason Wu       N/A            A20.06.04.0 修改load MCS CMD方法，避免一次撈取全部命令。
 // 2020/06/09    Jason Wu       N/A            A20.06.09.0 修改紀錄於CombineMCSLogData中之log內容。
+// 2020/06/15    Jason Wu       N/A            A20.06.15.0 修改GetCmdDataByDest 中呼叫Dao取得Cmd內容的function，先行於Dao濾掉已完成的命令。
 //**********************************************************************************
 using com.mirle.ibg3k0.bcf.App;
 using com.mirle.ibg3k0.sc.App;
@@ -199,7 +200,8 @@ namespace com.mirle.ibg3k0.sc.BLL
             {
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
-                    return cmd_mcsDao.LoadCmdData(con).Where(cmdData => cmdData.HOSTDESTINATION.Trim() == portName.Trim()
+                    //A20.06.15.0
+                    return cmd_mcsDao.LoadCmdData_WithoutComplete(con).Where(cmdData => cmdData.HOSTDESTINATION.Trim() == portName.Trim()
                                                                 && cmdData.TRANSFERSTATE != E_TRAN_STATUS.TransferCompleted).ToList();
                 }
             }

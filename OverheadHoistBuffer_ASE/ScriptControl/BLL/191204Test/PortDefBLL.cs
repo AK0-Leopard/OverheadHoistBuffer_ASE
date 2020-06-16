@@ -1,4 +1,16 @@
-﻿using System;
+﻿//*********************************************************************************
+//      PortDefBLL.cs
+//*********************************************************************************
+// File Name: PortDefBLL.cs
+// Description: 處理對於PortDef資訊的方法
+//
+//(c) Copyright 2014, MIRLE Automation Corporation
+//
+// Date          Author         Request No.    Tag          Description
+// ------------- -------------  -------------  ------       -----------------------------
+// 2020/06/12    Jason Wu       N/A            A20.06.12.0  新增GetAGVPortGroupDataByStationID()處理轉換AGVStationID 為AGVPortID之流程。
+//**********************************************************************************
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -165,6 +177,25 @@ namespace com.mirle.ibg3k0.sc.BLL
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
                     return portdefDao.LoadCVPort(con, ohbName);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return null;
+            }
+        }
+        //A20.06.12
+        public List<PortDef> GetAGVPortGroupDataByStationID(string ohbName, string stationID)
+        {
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    //取station最後一碼 以分辨其為哪一group
+                    int AGVStationID = Int32.Parse(stationID.Substring(stationID.Length - 1, 1));
+                    List<PortDef> agvPortFromStationID = portdefDao.LoadAGVPortByStationID(con, ohbName, AGVStationID);
+                    return agvPortFromStationID;
                 }
             }
             catch (Exception ex)
