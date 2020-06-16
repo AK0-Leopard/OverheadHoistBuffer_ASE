@@ -116,7 +116,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Test
                 foreach (DataGridViewCell v in dataGridView1.SelectedCells)
                 {
                     string cmdID = dataGridView1.Rows[v.RowIndex].Cells["CMD_ID"].Value.ToString();
-                    BCApp.SCApplication.TransferService.LocalCmdCancel(cmdID);
+                    BCApp.SCApplication.TransferService.LocalCmdCancel(cmdID, "命令結束(本機)");
                 }
                 UpDate_CmdData();
             }

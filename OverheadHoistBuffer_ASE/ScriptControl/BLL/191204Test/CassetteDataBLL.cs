@@ -129,26 +129,37 @@ namespace com.mirle.ibg3k0.sc.BLL
             bool isSuccess = true;
             try
             {
-                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                CassetteData portCSTData = loadCassetteDataByLoc(loc);  //檢查同個位置是否有帳
+
+                if (portCSTData != null)
                 {
-                    //CassetteData cstData = con.CassetteData.Where(data => data.BOXID == boxid).First();  //沒透過dao查詢?? kevinwei
-                    CassetteData portCSTData = loadCassetteDataByLoc(loc);  //檢查同個位置是否有帳
-
-                    if (portCSTData != null)
+                    if (portCSTData.BOXID.Trim() == boxid.Trim())
                     {
-                        if(portCSTData.Stage == stage)
-                        {
-                            TransferServiceLogger.Info
-                            (
-                                DateTime.Now.ToString("HH:mm:ss.fff ")
-                                + "OHB >> DB|UpdateCSTLoc   發現更新位置有帳，刪除：" + scApp.TransferService.GetCstLog(portCSTData)
-                            );
+                        TransferServiceLogger.Info
+                        (
+                            DateTime.Now.ToString("HH:mm:ss.fff ")
+                            + "OHB >> DB|UpdateCSTLoc   發現更新位置有帳，BOXID相同不做更新：" + scApp.TransferService.GetCstLog(portCSTData)
+                        );
 
-                            scApp.ReportBLL.ReportCarrierRemovedCompleted(portCSTData.CSTID, portCSTData.BOXID);
-                        }
+                        return true;
                     }
 
+                    if (portCSTData.Stage == stage)
+                    {
+                        TransferServiceLogger.Info
+                        (
+                            DateTime.Now.ToString("HH:mm:ss.fff ")
+                            + "OHB >> DB|UpdateCSTLoc   發現更新位置有帳，刪除：" + scApp.TransferService.GetCstLog(portCSTData)
+                        );
+
+                        scApp.ReportBLL.ReportCarrierRemovedCompleted(portCSTData.CSTID, portCSTData.BOXID);
+                    }
+                }
+
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
                     CassetteData cstData = cassettedataDao.LoadCassetteDataByBoxID(con, boxid);
+                    string time = DateTime.Now.ToString("yy/MM/dd HH:mm:ss");
 
                     if (scApp.TransferService.isUnitType(cstData.Carrier_LOC, Service.UnitType.SHELF))
                     {
@@ -158,11 +169,27 @@ namespace com.mirle.ibg3k0.sc.BLL
                     if (scApp.TransferService.isUnitType(loc, Service.UnitType.SHELF))
                     {
                         scApp.ShelfDefBLL.updateStatus(loc, ShelfDef.E_ShelfState.Stored);
+                        cstData.StoreDT = time;
+                    }
+                    else if (scApp.TransferService.isCVPort(loc))
+                    {
+                        if (stage == 1)
+                        {
+                            cstData.WaitOutOPDT = time;
+                        }
+
+                        int portStage = scApp.TransferService.portINIData[loc].Stage;
+
+                        if (stage == portStage)
+                        {
+                            cstData.WaitOutLPDT = time;
+                        }
                     }
 
                     cstData.Carrier_LOC = loc;  //目前卡匣在哪
                     cstData.Stage = stage;
                     cstData.TrnDT = DateTime.Now.ToString("yy/MM/dd HH:mm:ss");
+
                     cassettedataDao.UpdateCassetteData(con);
 
                     TransferServiceLogger.Info
@@ -174,6 +201,7 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
             catch (Exception ex)
             {
+                TransferServiceLogger.Error(ex, "UpdateCSTLoc");
                 logger.Error(ex, "Exception");
                 isSuccess = false;
             }

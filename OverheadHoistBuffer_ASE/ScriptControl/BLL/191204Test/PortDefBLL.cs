@@ -72,6 +72,13 @@ namespace com.mirle.ibg3k0.sc.BLL
                     con.PortDef.Where(data => data.PLCPortID == portID).First().State = service;
                     con.SaveChanges();
                 }
+
+                scApp.TransferService.TransferServiceLogger.Info
+                (
+                    DateTime.Now.ToString("HH:mm:ss.fff ")
+                    + "UpdataPortService:  port_id: " + portID
+                    + " service: " + service
+                );
             }
             catch (Exception ex)
             {

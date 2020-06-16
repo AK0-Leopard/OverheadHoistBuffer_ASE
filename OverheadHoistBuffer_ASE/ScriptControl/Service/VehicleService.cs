@@ -1135,7 +1135,7 @@ namespace com.mirle.ibg3k0.sc.Service
                             }
                             else
                             {
-                                BCFApplication.onWarningMsg("車子不在線上，殘帳命令請點 命令結束(本機)");
+                                scApp.TransferService.LocalCmdCancel(cancel_abort_mcs_cmd_id, "車子不在線上");
                             }
                         }
                     }
@@ -1166,7 +1166,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         }
                         else
                         {
-                            BCFApplication.onWarningMsg("車子不在線上，殘帳命令請點 命令結束(本機)");
+                            scApp.TransferService.LocalCmdCancel(cancel_abort_mcs_cmd_id, "車子不在線上");
                         }
                     }
                     break;

@@ -340,6 +340,10 @@ namespace com.mirle.ibg3k0.sc.WebAPI
 							isSuccess = true; // todo block
 							result = isSuccess ? "OK" : "Unblock Port failed.";
 							break;
+						case "ClearAlarmPort":
+							isSuccess = true; // todo ClearAlarmPort
+							result = isSuccess ? "OK" : "Clear Alarm Port failed.";
+							break;
 					}
 				}
 				catch (Exception ex)

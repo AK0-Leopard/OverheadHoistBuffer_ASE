@@ -1,5 +1,6 @@
 ﻿using com.mirle.ibg3k0.sc;
 using com.mirle.ibg3k0.sc.Data.SECS.ASE;
+using com.mirle.ibg3k0.sc.Data.PLC_Functions;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -151,10 +152,6 @@ namespace com.mirle.ibg3k0.bc.winform
             BCApp.SCApplication.ReportBLL.Send(ceid, vids);
         }
 
-        private void button25_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void button28_Click(object sender, EventArgs e)
         {
@@ -194,7 +191,7 @@ namespace com.mirle.ibg3k0.bc.winform
         private void button4_Click(object sender, EventArgs e)
         {
             //BCApp.SCApplication.TransferService.PortType("PORT_" + comboBox3.Text, "Out");
-            BCApp.SCApplication.TransferService.PortTypeChange(comboBox3.Text, (E_PortType)comboBox10.SelectedIndex);
+            BCApp.SCApplication.TransferService.PortTypeChange(comboBox3.Text, (E_PortType)comboBox10.SelectedIndex, "S6F11 Demo");
         }
 
         private void button7_Click(object sender, EventArgs e)
@@ -403,6 +400,15 @@ namespace com.mirle.ibg3k0.bc.winform
         {
             BCApp.SCApplication.TransferService.cstIdle = (int)numericUpDown1.Value;
             numericUpDown1.Value = BCApp.SCApplication.TransferService.cstIdle;
+        }
+
+        private void button25_Click(object sender, EventArgs e)
+        {
+            PortPLCInfo portPLCInfo = new PortPLCInfo();
+            portPLCInfo.CassetteID = textBox1.Text;
+            portPLCInfo.BoxID = textBox2.Text;
+            portPLCInfo.EQ_ID = comboBox3.Text;
+            BCApp.SCApplication.TransferService.PLC_ReportPortWaitIn(portPLCInfo, "S6F11 Demo");
         }
     }
 }
