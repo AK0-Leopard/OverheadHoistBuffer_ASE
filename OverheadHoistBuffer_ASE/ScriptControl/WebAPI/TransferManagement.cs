@@ -296,6 +296,7 @@ namespace com.mirle.ibg3k0.sc.WebAPI
             Get["TransferManagement/TransferCheck/AGVStation/{AGVStationID}"] = (p) =>
             {
                 SCApplication scApp = SCApplication.getInstance();
+                //string queue_count = 0;
                 string agv_station_id = p.AGVStationID;
                 bool is_ok = false;
                 //todo 執行確認能否讓AGVC開始進行該AGV Station進貨的流程
