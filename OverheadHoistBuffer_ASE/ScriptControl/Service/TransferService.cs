@@ -5868,7 +5868,7 @@ namespace com.mirle.ibg3k0.sc.Service
             bool isSuccess = false;
             foreach(PortDef AGVPortData in AGVPortDatas)
             {
-                isSuccess = PortTypeChange(AGVPortData.PLCPortID, E_PortType.In);
+                isSuccess = PortTypeChange(AGVPortData.PLCPortID, E_PortType.In, "InputModeChange");
             }
             
             //PLC_AGV_Station_IN
