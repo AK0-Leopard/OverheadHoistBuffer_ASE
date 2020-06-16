@@ -16,8 +16,10 @@
 // 2020/05/28    Jason Wu       N/A            A20.05.28.0  用於計算並調整整條線的空box數量
 // 2020/05/29    Jason Wu       N/A            A20.05.29.0  用於計算並調整整條線的空box數量(以規劃圖進行修改)
 // 2020/06/09    Jason Wu       N/A            A20.06.09.0  修改getAddressID也能從vehicle取得
+// 2020/06/12    Jason Wu       N/A            A20.06.12.0  新增CanExcuteUnloadTransferAGVStationFromAGVC()處理判定切換Mode Type流程及觸發命令派送。
+// 2020/06/15    Jason Wu       N/A            A20.06.15.0  新增新增CanExcuteUnloadTransferAGVStationFromAGVC()後續處理流程。
 //**********************************************************************************
-
+////
 using com.mirle.ibg3k0.bcf.Common;
 using com.mirle.ibg3k0.sc.App;
 using com.mirle.ibg3k0.sc.BLL;
@@ -43,6 +45,14 @@ using static com.mirle.ibg3k0.sc.AVEHICLE;
 
 namespace com.mirle.ibg3k0.sc.Service
 {
+    //A20.06.13.0
+    public enum EmptyBoxNumber
+    {
+        NO_EMPTY_BOX = 0,
+        ONE_EMPTY_BOX = 1,
+        TWO_EMPTY_BOX = 2
+    }
+
     public class PortINIData
     {
         #region 共有屬性
@@ -5256,7 +5266,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 shelfDefBLL.updateStatus(dest, ShelfDef.E_ShelfState.StorageInReserved);
             }
         }
-            
+
         #endregion
 
         #endregion
@@ -5586,6 +5596,214 @@ namespace com.mirle.ibg3k0.sc.Service
             //紀錄log 因此處為實際執行命令之處
             //針對每一靠近zone之AGV station數量 配置對應數量的空BOX
         }
+        #endregion
+
+        #region Call by AGVC Restful API. Use for process the AGV Station.
+        /// <summary>
+        /// Call by AGVC Restful API. Use for process the AGV Station.
+        /// </summary>
+        /// A20.06.12.0 A20.06.15.0
+        /// <param name="AGVStationID"></param>
+        /// <param name="AGVCFromEQToStationCmdNum"></param>
+        /// <param name="isEmergency"></param>
+        /// <returns></returns>
+        public bool CanExcuteUnloadTransferAGVStationFromAGVC(string AGVStationID, int AGVCFromEQToStationCmdNum, bool isEmergency)
+        {
+            bool isOK = false;
+            try
+            {
+                //取得PLC目前資訊
+                List<PortDef> AGVStationData = scApp.PortDefBLL.GetAGVPortGroupDataByStationID(line.LINE_ID, AGVStationID);
+                ////目前先默認取前2個，確認port上Box數量(空與實皆要)
+                int emptyBoxNumber, fullBoxNumber;
+                (emptyBoxNumber, fullBoxNumber) = CountAGVStationBoxInfo(AGVStationData);
+                //若有實box 則先默認為NG，會稍微影響效率(在一AGV對多個Station時)
+                if (fullBoxNumber >= 0)
+                {
+                    //可針對特定細節做特化處理
+                    isOK = false;
+                }
+                //若無實Box 再行判斷空Box 數量。
+                switch (emptyBoxNumber)
+                {
+                    case (int)EmptyBoxNumber.NO_EMPTY_BOX:
+                        //若沒有空box，則執行OHBC優先判定。
+                        isOK = CheckForChangeAGVPortMode_OHBC(AGVCFromEQToStationCmdNum, AGVStationData, AGVStationID);
+                        break;
+                    case (int)EmptyBoxNumber.ONE_EMPTY_BOX:
+                        //目前先以執行AGVC優先判定為主，因為若有Cst卡在AGV上並無其餘可去之處。
+                        isOK = CheckForChangeAGVPortMode_AGVC(AGVCFromEQToStationCmdNum, AGVStationData, AGVStationID);
+                        break;
+                    case (int)EmptyBoxNumber.TWO_EMPTY_BOX:
+                        //若有2空box，則執行AGVC優先判定。
+                        isOK = CheckForChangeAGVPortMode_AGVC(AGVCFromEQToStationCmdNum, AGVStationData, AGVStationID);
+                        break;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                TransferServiceLogger.Error(ex, "CanExcuteUnloadTransferAGVStationFromAGVC");
+            }
+            return isOK;
+        }
+        /// <summary>
+        /// 優先判斷AGVC是否有命令與其後許處理流程。
+        /// </summary>
+        /// A20.06.15.0
+        /// <param name="AGVCFromEQToStationCmdNum"></param>
+        /// <param name="AGVStationData"></param>
+        /// <param name="AGVStationID"></param>
+        /// <returns></returns>
+        private bool CheckForChangeAGVPortMode_AGVC(int AGVCFromEQToStationCmdNum, List<PortDef> AGVStationData, string AGVStationID)
+        {
+            bool isOK = false;
+            try
+            {
+                if (AGVCFromEQToStationCmdNum > 0)
+                {
+                    isOK = true;
+                    InputModeChange(AGVStationData);
+                }
+                else
+                {
+                    isOK = false;
+                    int OHBCCmdNumber = GetToThisAGVStationMCSCmdNum(AGVStationData, AGVStationID);
+                    if(OHBCCmdNumber > 0)
+                    {
+                        OutputModeChange(AGVStationData);
+                    }
+                    else
+                    {
+                        InputModeChange(AGVStationData);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                TransferServiceLogger.Error(ex, "CheckForChangeAGVPortMode");
+            }
+            return isOK;
+        }
+
+        /// <summary>
+        /// 優先判斷OHBC是否有命令與其後許處理流程。
+        /// </summary>
+        /// A20.06.15.0
+        /// <param name="AGVCFromEQToStationCmdNum"></param>
+        /// <param name="AGVStationData"></param>
+        /// <param name="AGVStationID"></param>
+        /// <returns></returns>
+        private bool CheckForChangeAGVPortMode_OHBC(int AGVCFromEQToStationCmdNum, List<PortDef> AGVStationData, string AGVStationID)
+        {
+            bool isOK = false;
+            try
+            {
+                int OHBCCmdNumber = GetToThisAGVStationMCSCmdNum(AGVStationData, AGVStationID);
+                if (OHBCCmdNumber > 0)
+                {
+                    isOK = false;
+                    OutputModeChange(AGVStationData);
+                }
+                else
+                {
+                    if (AGVCFromEQToStationCmdNum > 0)
+                    {
+                        isOK = true;
+                        InputModeChange(AGVStationData);
+                    }
+                    else
+                    {
+                        isOK = false;
+                        OutputModeChange(AGVStationData);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                TransferServiceLogger.Error(ex, "CheckForChangeAGVPortMode");
+            }
+            return isOK;
+        }
+
+        /// <summary>
+        /// 計算目前的AGVStation 前2個port 上有多少個空Box 與實Box
+        /// </summary>
+        /// <param name="AGVStationData">A20.06.15.0 新增</param>
+        private (int emptyBoxNumber, int fullBoxNumber) CountAGVStationBoxInfo(List<PortDef> AGVStationData)
+        {
+            int _emptyBoxNumber = 0;
+            int _fullBoxNumber = 0;
+            int AGVStationNumber = 0;
+            foreach (PortDef AgvPortData in AGVStationData)
+            {
+                AGVStationNumber = AGVStationNumber + 1;
+                if (GetPLC_PortData(AgvPortData.PLCPortID).LoadPosition1 == true && GetPLC_PortData(AgvPortData.PLCPortID).IsCSTPresence == false)
+                {
+                    _emptyBoxNumber = _emptyBoxNumber + 1;
+                }
+                else if (GetPLC_PortData(AgvPortData.PLCPortID).LoadPosition1 == true && GetPLC_PortData(AgvPortData.PLCPortID).IsCSTPresence == true)
+                {
+                    _fullBoxNumber = _fullBoxNumber + 1;
+                }
+                //先寫死默認取前2個(應該可以改成取前2個可用的，但如何判斷可用)
+                if (AGVStationNumber >= 2)
+                {
+                    break;
+                }
+            }
+            return (_emptyBoxNumber, _fullBoxNumber);
+        }
+
+        /// <summary>
+        /// 取得目前會到此AGVStation 的OHBC Cmd 數量
+        /// </summary>
+        /// A20.06.15.0  新增
+        /// <param name="AGVStationData"></param>
+        /// <param name="AGVStationID"></param>
+        private int GetToThisAGVStationMCSCmdNum(List<PortDef> AGVStationData, string AGVStationID)
+        {
+            //取得目前有多少命令要下至此AGVStation
+            int cmdNumber = 0;
+            foreach(PortDef AGVPortData in AGVStationData)
+            {
+                List<ACMD_MCS> cmdData_PortID = cmdBLL.GetCmdDataByDest(AGVPortData.PLCPortID);
+                cmdNumber = cmdNumber + cmdData_PortID.Count();
+            }
+            List<ACMD_MCS> cmdData_StationID = cmdBLL.GetCmdDataByDest(AGVStationID);
+            cmdNumber = cmdNumber + cmdData_StationID.Count();
+            return cmdNumber;
+        }
+
+        /// <summary>
+        /// 切換該目的地Port為InputMode且執行退補空box
+        /// </summary>
+        /// A20.06.15.0 新增
+        /// <param name="AGVPortData"></param>
+        private void InputModeChange(List<PortDef> AGVPortDatas)
+        {
+            //Todo
+            // 需要實作更改該AGVPort為Input 及執行一次退補空box動作
+            bool isSuccess = false;
+            foreach(PortDef AGVPortData in AGVPortDatas)
+            {
+                isSuccess = PortTypeChange(AGVPortData.PLCPortID, E_PortType.In);
+            }
+            
+            //PLC_AGV_Station_IN
+        }
+
+        /// <summary>
+        /// 切換該目的地Port為OutputMode且執行退補空box
+        /// </summary>
+        /// A20.06.15.0  新增
+        /// <param name="AGVPortData"></param>
+        private void OutputModeChange(List<PortDef> AGVPortData)
+        {
+            //Todo
+            // 需要實作更改該AGVPort為Output 及執行一次退補空box動作
+        }
+
         #endregion
     }
 }
