@@ -190,7 +190,7 @@ namespace com.mirle.ibg3k0.sc.Service
 
                             data.UnitType = v.UnitType.Trim();
 
-                            if(v.UnitType.Trim() == UnitType.AGV.ToString())
+                            if (v.UnitType.Trim() == UnitType.AGV.ToString())
                             {
                                 data.ZoneName = v.ZoneName.Trim();
                             }
@@ -198,7 +198,7 @@ namespace com.mirle.ibg3k0.sc.Service
                             {
                                 data.ZoneName = v.PLCPortID.Trim();
                             }
-                            
+
                             data.Stage = (int)v.Stage;
                             data.openAGV_Station = false;
                             data.openAGV_AutoPortType = false;
@@ -221,7 +221,7 @@ namespace com.mirle.ibg3k0.sc.Service
 
                             if (v.UnitType.Trim() == UnitType.AGV.ToString())
                             {
-                                if(portINIData.ContainsKey(v.ZoneName) == false)
+                                if (portINIData.ContainsKey(v.ZoneName) == false)
                                 {
                                     PortINIData agvdata = new PortINIData();
                                     agvdata.PortName = v.ZoneName.Trim();
@@ -233,7 +233,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                     TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "AGVZone PortID:" + data.PortName + " PortType:" + data.UnitType);
                                 }
                             }
-                            
+
                         }
                     }
                 }
@@ -657,56 +657,56 @@ namespace com.mirle.ibg3k0.sc.Service
                         break;
                     }
 
-                                            bool sourcePortType = false;
-                                            bool destPortType = false;
-                                            string source = "";
-                                            #region 檢查來源狀態
-                                            if (string.IsNullOrWhiteSpace(v.RelayStation))  //檢查命令是否先搬到中繼站
-                                            {
-                                                if (isAGVZone(v.HOSTSOURCE)) //檢查來源是不是AGVZONE
-                                                {
-                                                    string agvPortName = GetAGV_InModeInServicePortName(v.HOSTSOURCE);
-                                                    if (string.IsNullOrWhiteSpace(agvPortName))
-                                                    {
-                                                        sourcePortType = false;
-                                                    }
-                                                    else
-                                                    {
-                                                        sourcePortType = true;
-                                                        v.HOSTSOURCE = agvPortName;
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    sourcePortType = AreSourceEnable(v.HOSTSOURCE);
-                                                    source = v.HOSTSOURCE;
-                                                }
-                                            }
-                                            else
-                                            {
-                                                sourcePortType = AreSourceEnable(v.RelayStation);
-                                                source = v.RelayStation;
-                                            }
-                                            #endregion
-                                            #region 檢查目的狀態
-                                            if (isAGVZone(v.HOSTDESTINATION))
-                                            {
-                                                string agvPortName = GetAGV_OutModeInServicePortName(v.HOSTDESTINATION);
-                                                if (string.IsNullOrWhiteSpace(agvPortName))
-                                                {
-                                                    destPortType = false;
-                                                }
-                                                else
-                                                {
-                                                    destPortType = true;
-                                                    v.HOSTDESTINATION = agvPortName;
-                                                }
-                                            }
-                                            else
-                                            {
-                                                destPortType = AreDestEnable(v.HOSTDESTINATION);
-                                            }
-                                            #endregion
+                    bool sourcePortType = false;
+                    bool destPortType = false;
+                    string source = "";
+                    #region 檢查來源狀態
+                    if (string.IsNullOrWhiteSpace(v.RelayStation))  //檢查命令是否先搬到中繼站
+                    {
+                        if (isAGVZone(v.HOSTSOURCE)) //檢查來源是不是AGVZONE
+                        {
+                            string agvPortName = GetAGV_InModeInServicePortName(v.HOSTSOURCE);
+                            if (string.IsNullOrWhiteSpace(agvPortName))
+                            {
+                                sourcePortType = false;
+                            }
+                            else
+                            {
+                                sourcePortType = true;
+                                v.HOSTSOURCE = agvPortName;
+                            }
+                        }
+                        else
+                        {
+                            sourcePortType = AreSourceEnable(v.HOSTSOURCE);
+                            source = v.HOSTSOURCE;
+                        }
+                    }
+                    else
+                    {
+                        sourcePortType = AreSourceEnable(v.RelayStation);
+                        source = v.RelayStation;
+                    }
+                    #endregion
+                    #region 檢查目的狀態
+                    if (isAGVZone(v.HOSTDESTINATION))
+                    {
+                        string agvPortName = GetAGV_OutModeInServicePortName(v.HOSTDESTINATION);
+                        if (string.IsNullOrWhiteSpace(agvPortName))
+                        {
+                            destPortType = false;
+                        }
+                        else
+                        {
+                            destPortType = true;
+                            v.HOSTDESTINATION = agvPortName;
+                        }
+                    }
+                    else
+                    {
+                        destPortType = AreDestEnable(v.HOSTDESTINATION);
+                    }
+                    #endregion
 
                     if (sourcePortType && destPortType)
                     {
@@ -1299,10 +1299,10 @@ namespace com.mirle.ibg3k0.sc.Service
                     case COMMAND_STATUS_BIT_INDEX_UNLOADING:   //出料進行中
                         break;
                     case COMMAND_STATUS_BIT_INDEX_UNLOAD_COMPLETE: //出料完成
-                        
+
                         CassetteData unLoadCSTData = cassette_dataBLL.loadCassetteDataByLoc(ohtName.Trim());
 
-                        if(string.IsNullOrWhiteSpace(cmd.RelayStation))
+                        if (string.IsNullOrWhiteSpace(cmd.RelayStation))
                         {
                             cmd.RelayStation = "";
                         }
@@ -3634,7 +3634,7 @@ namespace com.mirle.ibg3k0.sc.Service
             {
                 TransferServiceLogger.Info
                 (
-                    DateTime.Now.ToString("HH:mm:ss.fff ") 
+                    DateTime.Now.ToString("HH:mm:ss.fff ")
                     + "OHB >> PLC|PortTypeChange"
                     + "    誰呼叫:" + apiSource
                     + "    portID:" + portID
@@ -3681,7 +3681,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         + " 目前狀態 InputMode:" + plcInfo.IsInputMode + "  OutputMode:" + plcInfo.IsOutputMode
                     );
 
-                    if(plcInfo.IsInputMode)
+                    if (plcInfo.IsInputMode)
                     {
                         ReportPortType(portID, mode, "PortTypeChange");
                     }
@@ -5581,12 +5581,12 @@ namespace com.mirle.ibg3k0.sc.Service
 
             if (agvZoneData.Count() != 0)
             {
-                foreach(PortINIData agvPortData in agvZoneData)
+                foreach (PortINIData agvPortData in agvZoneData)
                 {
                     PortPLCInfo agvInfo = GetPLC_PortData(agvPortData.PortName);
-                    if(agvInfo.IsInputMode 
-                        && agvInfo.IsReadyToUnload 
-                        && agvInfo.OpAutoMode 
+                    if (agvInfo.IsInputMode
+                        && agvInfo.IsReadyToUnload
+                        && agvInfo.OpAutoMode
                         && agvInfo.LoadPosition1
                       )
                     {
@@ -5601,7 +5601,7 @@ namespace com.mirle.ibg3k0.sc.Service
         public string GetAGV_OutModeInServicePortName(string agvZone) //取得AGV ZONE 狀態為 OutMode 且上面沒有空 BOX 的 AGV Port 名稱
         {
             string agvPortName = "";
-            List<PortINIData> agvZoneData = portINIData.Values.Where(data => data.ZoneName == agvZone 
+            List<PortINIData> agvZoneData = portINIData.Values.Where(data => data.ZoneName == agvZone
                                                                             && data.UnitType == UnitType.AGV.ToString()).ToList();
 
             if (agvZoneData.Count() != 0)
@@ -5905,7 +5905,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 {
                     isOK = false;
                     int OHBCCmdNumber = GetToThisAGVStationMCSCmdNum(AGVStationData, AGVStationID);
-                    if(OHBCCmdNumber > 0)
+                    if (OHBCCmdNumber > 0)
                     {
                         OutputModeChange(AGVStationData);
                     }
@@ -6001,7 +6001,7 @@ namespace com.mirle.ibg3k0.sc.Service
         {
             //取得目前有多少命令要下至此AGVStation
             int cmdNumber = 0;
-            foreach(PortDef AGVPortData in AGVStationData)
+            foreach (PortDef AGVPortData in AGVStationData)
             {
                 List<ACMD_MCS> cmdData_PortID = cmdBLL.GetCmdDataByDest(AGVPortData.PLCPortID);
                 cmdNumber = cmdNumber + cmdData_PortID.Count();
@@ -6021,11 +6021,11 @@ namespace com.mirle.ibg3k0.sc.Service
             //Todo
             // 需要實作更改該AGVPort為Input 及執行一次退補空box動作
             bool isSuccess = false;
-            foreach(PortDef AGVPortData in AGVPortDatas)
+            foreach (PortDef AGVPortData in AGVPortDatas)
             {
                 isSuccess = PortTypeChange(AGVPortData.PLCPortID, E_PortType.In, "InputModeChange");
             }
-            
+
             //PLC_AGV_Station_IN
         }
 
