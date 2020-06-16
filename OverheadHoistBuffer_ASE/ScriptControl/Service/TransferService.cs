@@ -468,56 +468,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     #endregion
                     #region 卡匣資料處理
                     var cstDataList = cassette_dataBLL.LoadCassetteDataByNotCompleted();
-                    foreach (var cst in cstDataList)
-                    {
-                        int cstTimeOut = portINIData[cst.Carrier_LOC.Trim()].timeOutForAutoUD;
-                        string zoneName = portINIData[cst.Carrier_LOC.Trim()].ZoneName;
-
-                        bool success = false;
-
-                        if (isCVPort(zoneName) || isUnitType(zoneName, UnitType.CRANE))
-                        {
-                            success = true;
-                        }
-
-                        if (cstTimeOut != 0 && success)
-                        {
-                            TimeSpan cstTimeSpan = DateTime.Now - DateTime.Parse(cst.TrnDT);
-
-                            if (cstTimeSpan.Seconds >= cstTimeOut)   //停在Port上 30秒(之後要設成可調)，自動搬到儲位上
-                            {
-                                ACMD_MCS cmd = cmdBLL.getCMD_ByBoxID(cst.BOXID);
-
-                                if (cmd == null)
-                                {
-                                    TransferServiceLogger.Info
-                                    (
-                                        DateTime.Now.ToString("HH:mm:ss.fff ")
-                                        + "OHB >> OHB| 卡匣停留 " + cstIdle + "秒，尚未搬走，產生自動搬走命令 " + GetCstLog(cst)
-                                    );
-
-                                    List<ShelfDef> shelfData = null;
-
-                                    if (isCVPort(zoneName))
-                                    {
-                                        string timeOutZone = portINIData[cst.Carrier_LOC.Trim()].timeOutForAutoInZone;
-                                        shelfData = shelfDefBLL.GetEmptyAndEnableShelfByZone(timeOutZone);
-                                    }
-
-                                    string shelfID = GetShelfRecentLocation(shelfData, cst.Carrier_LOC.Trim());
-
-                                    if (string.IsNullOrWhiteSpace(shelfID) == false)
-                                    {
-                                        string cmdSource = cst.Carrier_LOC.Trim();
-                                        string cmdDest = "";
-                                        cmdDest = shelfID;
-
-                                        Manual_InsertCmd(cmdSource, cmdDest, "", 5, "cstTimeOut", CmdType.OHBC);
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    BoxDataHandler(cstDataList);
                     #endregion
                     #region 命令資料處理
                     //var vehicleData = scApp.VehicleBLL.loadAllVehicle();
@@ -626,110 +577,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                 #region 搬送命令
                                 else
                                 {
-                                    switch (v.TRANSFERSTATE)
-                                    {
-                                        #region E_TRAN_STATUS.Queue
-                                        case E_TRAN_STATUS.Queue:
-
-                                            if (isUnitType(v.HOSTDESTINATION, UnitType.ZONE))  //若 Zone 上沒有儲位，目的 Port 會為 ZoneName，並上報 MCS
-                                            {
-                                                cmdBLL.updateCMD_MCS_TranStatus(v.CMD_ID, E_TRAN_STATUS.TransferCompleted);
-
-                                                reportBLL.ReportTransferInitiated(v.CMD_ID.Trim());
-                                                reportBLL.ReportTransferCompleted(v, null, ResultCode.ZoneIsfull);
-                                                break;
-                                            }
-
-                                            bool sourcePortType = false;
-                                            bool destPortType = false;
-                                            string source = "";
-
-                                            if (string.IsNullOrWhiteSpace(v.RelayStation))
-                                            {
-                                                sourcePortType = AreSourceEnable(v.HOSTSOURCE);
-                                                source = v.HOSTSOURCE;
-                                            }
-                                            else
-                                            {
-                                                sourcePortType = AreSourceEnable(v.RelayStation);
-                                                source = v.RelayStation;
-                                            }
-
-                                            destPortType = AreDestEnable(v.HOSTDESTINATION);
-
-                                            if (sourcePortType && destPortType)
-                                            {
-                                                OHT_TransportRequest(v);
-                                            }
-                                            else if (sourcePortType && isCVPort(source) && destPortType == false && isCVPort(v.HOSTDESTINATION))
-                                            {
-                                                //來源目的都是 CV Port 且 目的不能搬，觸發將卡匣送至中繼站
-                                                PortPLCInfo plcInfo = GetPLC_PortData(v.HOSTDESTINATION);
-
-                                                if (plcInfo.OpAutoMode == false)
-                                                {
-                                                    ACMD_MCS cmdRelay = v.Clone();
-
-                                                    List<ShelfDef> shelfData = shelfDefBLL.GetEmptyAndEnableShelf();
-
-                                                    cmdRelay.HOSTDESTINATION = GetShelfRecentLocation(shelfData, v.HOSTDESTINATION);
-
-                                                    if (string.IsNullOrWhiteSpace(cmdRelay.HOSTDESTINATION) == false)
-                                                    {
-                                                        if (OHT_TransportRequest(cmdRelay))
-                                                        {
-                                                            ShelfReserved(cmdRelay.HOSTSOURCE, cmdRelay.HOSTDESTINATION);
-
-                                                            cmdBLL.updateCMD_MCS_RelayStation(v.CMD_ID, cmdRelay.HOSTDESTINATION);
-                                                        }
-                                                    }
-                                                }
-                                            }
-
-                                            break;
-                                        #endregion
-                                        #region E_TRAN_STATUS.Transferring
-                                        case E_TRAN_STATUS.Transferring:
-                                            switch (v.COMMANDSTATE)
-                                            {
-                                                case COMMAND_iIdle:
-                                                    #region Log
-                                                    TransferServiceLogger.Info
-                                                    (
-                                                        DateTime.Now.ToString("HH:mm:ss.fff ")
-                                                        + "OHT >> OHB|OHT_TransferProcess 發現車子未回應 COMMANDSTATE = COMMAND_iIdle 自動變回 Queue :\n"
-                                                        + GetCmdLog(v)
-                                                    );
-                                                    #endregion
-                                                    cmdBLL.updateCMD_MCS_TranStatus(v.CMD_ID, E_TRAN_STATUS.Queue);
-                                                    break;
-                                                case COMMAND_STATUS_BIT_INDEX_COMMNAD_FINISH:
-                                                    #region Log
-                                                    TransferServiceLogger.Info
-                                                    (
-                                                        DateTime.Now.ToString("HH:mm:ss.fff ")
-                                                        + "OHT >> OHB|OHT_TransferProcess 發現殘存 COMMANDSTATE = COMMAND_STATUS_BIT_INDEX_COMMNAD_FINISH :\n"
-                                                        + GetCmdLog(v)
-                                                    );
-                                                    #endregion
-                                                    cmdBLL.updateCMD_MCS_TranStatus(v.CMD_ID, E_TRAN_STATUS.TransferCompleted);
-                                                    break;
-                                            }
-                                            break;
-                                        #endregion
-                                        #region E_TRAN_STATUS.Paused
-                                        case E_TRAN_STATUS.Paused:
-                                            break;
-                                        #endregion
-                                        #region E_TRAN_STATUS.Canceling
-                                        case E_TRAN_STATUS.Canceling:
-                                            break;
-                                        #endregion
-                                        #region E_TRAN_STATUS.Aborting
-                                        case E_TRAN_STATUS.Aborting:
-                                            break;
-                                            #endregion
-                                    }
+                                    TransferCommandHandler(v);
                                 }
                                 #endregion
                             }
@@ -766,6 +614,169 @@ namespace com.mirle.ibg3k0.sc.Service
                 }
             }
         }
+
+        private void TransferCommandHandler(ACMD_MCS v)
+        {
+            switch (v.TRANSFERSTATE)
+            {
+                #region E_TRAN_STATUS.Queue
+                case E_TRAN_STATUS.Queue:
+
+                    if (isUnitType(v.HOSTDESTINATION, UnitType.ZONE))  //若 Zone 上沒有儲位，目的 Port 會為 ZoneName，並上報 MCS
+                    {
+                        cmdBLL.updateCMD_MCS_TranStatus(v.CMD_ID, E_TRAN_STATUS.TransferCompleted);
+
+                        reportBLL.ReportTransferInitiated(v.CMD_ID.Trim());
+                        reportBLL.ReportTransferCompleted(v, null, ResultCode.ZoneIsfull);
+                        break;
+                    }
+
+                    bool sourcePortType = false;
+                    bool destPortType = false;
+                    string source = "";
+
+                    if (string.IsNullOrWhiteSpace(v.RelayStation))
+                    {
+                        sourcePortType = AreSourceEnable(v.HOSTSOURCE);
+                        source = v.HOSTSOURCE;
+                    }
+                    else
+                    {
+                        sourcePortType = AreSourceEnable(v.RelayStation);
+                        source = v.RelayStation;
+                    }
+
+                    destPortType = AreDestEnable(v.HOSTDESTINATION);
+
+                    if (sourcePortType && destPortType)
+                    {
+                        OHT_TransportRequest(v);
+                    }
+                    else if (sourcePortType && isCVPort(source) && destPortType == false && isCVPort(v.HOSTDESTINATION))
+                    {
+                        //來源目的都是 CV Port 且 目的不能搬，觸發將卡匣送至中繼站
+                        PortPLCInfo plcInfo = GetPLC_PortData(v.HOSTDESTINATION);
+
+                        if (plcInfo.OpAutoMode == false)
+                        {
+                            ACMD_MCS cmdRelay = v.Clone();
+
+                            List<ShelfDef> shelfData = shelfDefBLL.GetEmptyAndEnableShelf();
+
+                            cmdRelay.HOSTDESTINATION = GetShelfRecentLocation(shelfData, v.HOSTDESTINATION);
+
+                            if (string.IsNullOrWhiteSpace(cmdRelay.HOSTDESTINATION) == false)
+                            {
+                                if (OHT_TransportRequest(cmdRelay))
+                                {
+                                    ShelfReserved(cmdRelay.HOSTSOURCE, cmdRelay.HOSTDESTINATION);
+
+                                    cmdBLL.updateCMD_MCS_RelayStation(v.CMD_ID, cmdRelay.HOSTDESTINATION);
+                                }
+                            }
+                        }
+                    }
+
+                    break;
+                #endregion
+                #region E_TRAN_STATUS.Transferring
+                case E_TRAN_STATUS.Transferring:
+                    switch (v.COMMANDSTATE)
+                    {
+                        case COMMAND_iIdle:
+                            #region Log
+                            TransferServiceLogger.Info
+                            (
+                                DateTime.Now.ToString("HH:mm:ss.fff ")
+                                + "OHT >> OHB|OHT_TransferProcess 發現車子未回應 COMMANDSTATE = COMMAND_iIdle 自動變回 Queue :\n"
+                                + GetCmdLog(v)
+                            );
+                            #endregion
+                            cmdBLL.updateCMD_MCS_TranStatus(v.CMD_ID, E_TRAN_STATUS.Queue);
+                            break;
+                        case COMMAND_STATUS_BIT_INDEX_COMMNAD_FINISH:
+                            #region Log
+                            TransferServiceLogger.Info
+                            (
+                                DateTime.Now.ToString("HH:mm:ss.fff ")
+                                + "OHT >> OHB|OHT_TransferProcess 發現殘存 COMMANDSTATE = COMMAND_STATUS_BIT_INDEX_COMMNAD_FINISH :\n"
+                                + GetCmdLog(v)
+                            );
+                            #endregion
+                            cmdBLL.updateCMD_MCS_TranStatus(v.CMD_ID, E_TRAN_STATUS.TransferCompleted);
+                            break;
+                    }
+                    break;
+                #endregion
+                #region E_TRAN_STATUS.Paused
+                case E_TRAN_STATUS.Paused:
+                    break;
+                #endregion
+                #region E_TRAN_STATUS.Canceling
+                case E_TRAN_STATUS.Canceling:
+                    break;
+                #endregion
+                #region E_TRAN_STATUS.Aborting
+                case E_TRAN_STATUS.Aborting:
+                    break;
+                    #endregion
+            }
+        }
+
+        private void BoxDataHandler(List<CassetteData> cstDataList)
+        {
+            foreach (var cst in cstDataList)
+            {
+                int cstTimeOut = portINIData[cst.Carrier_LOC.Trim()].timeOutForAutoUD;
+                string zoneName = portINIData[cst.Carrier_LOC.Trim()].ZoneName;
+
+                bool success = false;
+
+                if (isCVPort(zoneName) || isUnitType(zoneName, UnitType.CRANE))
+                {
+                    success = true;
+                }
+
+                if (cstTimeOut != 0 && success)
+                {
+                    TimeSpan cstTimeSpan = DateTime.Now - DateTime.Parse(cst.TrnDT);
+
+                    if (cstTimeSpan.Seconds >= cstTimeOut)   //停在Port上 30秒(之後要設成可調)，自動搬到儲位上
+                    {
+                        ACMD_MCS cmd = cmdBLL.getCMD_ByBoxID(cst.BOXID);
+
+                        if (cmd == null)
+                        {
+                            TransferServiceLogger.Info
+                            (
+                                DateTime.Now.ToString("HH:mm:ss.fff ")
+                                + "OHB >> OHB| 卡匣停留 " + cstIdle + "秒，尚未搬走，產生自動搬走命令 " + GetCstLog(cst)
+                            );
+
+                            List<ShelfDef> shelfData = null;
+
+                            if (isCVPort(zoneName))
+                            {
+                                string timeOutZone = portINIData[cst.Carrier_LOC.Trim()].timeOutForAutoInZone;
+                                shelfData = shelfDefBLL.GetEmptyAndEnableShelfByZone(timeOutZone);
+                            }
+
+                            string shelfID = GetShelfRecentLocation(shelfData, cst.Carrier_LOC.Trim());
+
+                            if (string.IsNullOrWhiteSpace(shelfID) == false)
+                            {
+                                string cmdSource = cst.Carrier_LOC.Trim();
+                                string cmdDest = "";
+                                cmdDest = shelfID;
+
+                                Manual_InsertCmd(cmdSource, cmdDest, "", 5, "cstTimeOut", CmdType.OHBC);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         public bool OHT_TransportRequest(ACMD_MCS cmd)  //詢問 OHT 此筆命令是否能執行 
         {
             if (string.IsNullOrWhiteSpace(cmd.RelayStation) == false)
