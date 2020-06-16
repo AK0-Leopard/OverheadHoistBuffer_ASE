@@ -298,6 +298,9 @@ namespace com.mirle.ibg3k0.sc.WebAPI
                 SCApplication scApp = SCApplication.getInstance();
                 //string queue_count = 0;
                 string agv_station_id = p.AGVStationID;
+                string excute_count= Request.Query.unfinishCmdCount.Value ?? Request.Form.unfinishCmdCount.Value ?? string.Empty;
+                string is_emergency= Request.Query.isEmergency.Value ?? Request.Form.isEmergency.Value ?? string.Empty;
+
                 bool is_ok = false;
                 //todo 執行確認能否讓AGVC開始進行該AGV Station進貨的流程
                 //is_ok = scApp.TransferService.canExcuteUnloadTransferAGVStationFromAGVC.....todo
