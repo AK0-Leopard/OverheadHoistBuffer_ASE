@@ -3,6 +3,7 @@
 //*********************************************************************************
 // File Name: EmptyBoxHandlerService.cs
 // Description: 處理空盒的service
+// Reference: Mirle E88 spec v1.1
 //
 //(c) Copyright 2020, MIRLE Automation Corporation
 //
@@ -20,7 +21,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NLog;
-using Quartz.Util;
 
 namespace com.mirle.ibg3k0.sc.Service
 {
@@ -53,33 +53,36 @@ namespace com.mirle.ibg3k0.sc.Service
             var emptyBox = GetTotalEmptyBoxNumber();
             if (emptyBox.isSuccess == true)
             {
-                var isEnoughEmptyBox = CheckIsEnoughEmptyBox(emptyBox.emptyBox.Count);
+                int requriedBoxAGV;
+                var isEnoughEmptyBox = CheckIsEnoughEmptyBox(emptyBox.emptyBox.Count, out requriedBoxAGV);
                 if (isEnoughEmptyBox.isSuccess == true)
                 {
                     //A20.05.28.0
                     //夠用，則確認目前總水位是否過高，若過高則退掉多餘Empty Box到 CV上。
+                    //2020/06/15: 如果未達緊急水位，就只向MCS要求退空box，然後等待MCS S2F49搬出(ref: Mirle E88 spec v1.1 P79 "Empty Box Recycling")
+                    //如果已達緊急水位，Line直接送到Loop，Loop直接送到Stocker(TODO)
                     if (isEnoughEmptyBox.isEnough == true)
                     {
                         foreach (var zoneData in zoneDatas)
                         {
                             if (CheckIfTooMuchBox(zoneData))
                             {
-                                //過多box，呼叫MCS退掉
-                                //TODO: this is sample code
+                                //TODO: 已達緊急水位，產生往Loop or STK的manual command退box
+
+                                //還沒到緊急水位走這邊
+                                //過多box，呼叫MCS退掉(優先退空的)
                                 DoSendPopEmptyBoxToMCS(emptyBox.emptyBox.FirstOrDefault().BOXID);
                             }
-                            else if (CheckIfBoxNotEnough(zoneData))
+                            else if (CheckIfBoxNotEnough(zoneData, out int boxCount))
                             {
                                 //空box不足，呼叫MCS補充
-                                //TODO: sample code
-                                DoSendRequireEmptyBoxToMCS(zoneData.ZoneID);
+                                DoSendRequireEmptyBoxToMCS(zoneData.ZoneID, (int)(zoneData.LowWaterMark - boxCount));
                             }
                         }
                     }
                     else //空box不夠，要補
                     {
-                        //TODO: sample code
-                        DoSendRequireEmptyBoxToMCS(zoneDatas.FirstOrDefault().ZoneID);
+                        DoSendRequireEmptyBoxToMCS(zoneDatas.FirstOrDefault().ZoneID, requriedBoxAGV);
                     }
                 }
             }
@@ -111,16 +114,21 @@ namespace com.mirle.ibg3k0.sc.Service
 
         //*******************
         //A20.05.28.0 判斷目前的空BOX數量是否滿足需求數量(目前需求數量是用AGV Station 數量判斷)
-        private (bool isEnough, bool isSuccess) CheckIsEnoughEmptyBox(int emptyBoxNumber)
+        private (bool isEnough, bool isSuccess) CheckIsEnoughEmptyBox(int emptyBoxNumber, out int requireBox)
         {
             bool isSuccess_ = false;
             bool isEnough_ = false;
+            requireBox = 0;
             try
             {
                 List<PortDef> AGV_station = scApp.PortDefBLL.getAGVPortData();
                 if (AGV_station.Count() <= emptyBoxNumber)
                 {
                     isEnough_ = true;
+                }
+                else
+                {
+                    requireBox = AGV_station.Count() - emptyBoxNumber;
                 }
                 isSuccess_ = true;
             }
@@ -143,13 +151,12 @@ namespace com.mirle.ibg3k0.sc.Service
         }
         //*******************
         //A20.05.28.0 這邊需要志昌幫忙實作跟MCS"要求"空box的流程。 此部分需要想要如何避免重複要empty box 的流程。
-        private void DoSendRequireEmptyBoxToMCS(string zoneID)
+        private void DoSendRequireEmptyBoxToMCS(string zoneID, int requireBox)
         {
             //紀錄log 因此處為實際執行命令之處
             //呼叫MCS需要空box
             //若能指定補到哪個zone 則指定。
-            //TODO: sample code
-            //scApp.ReportBLL.ReportEmptyBoxSupply("0", zoneID);
+            scApp.ReportBLL.ReportEmptyBoxSupply(requireBox.ToString(), zoneID);
         }
 
         //*******************
@@ -158,8 +165,7 @@ namespace com.mirle.ibg3k0.sc.Service
         {
             //紀錄log 因此處為實際執行命令之處
             //此部分需先確認目前沒有可執行的MCS命令，才進行要求退BOX動作。
-            //TODO: sample code
-            //scApp.ReportBLL.ReportEmptyBoxRecycling(boxID);
+            scApp.ReportBLL.ReportEmptyBoxRecycling(boxID);
         }
 
         //******************
@@ -173,21 +179,22 @@ namespace com.mirle.ibg3k0.sc.Service
 
         #region calculate waterlevel
         //2020/06/01 空箱數量是否低於低水位
-        private bool CheckIfBoxNotEnough(ZoneDef zoneData)
+        private bool CheckIfBoxNotEnough(ZoneDef zoneData, out int boxCount)
         {
             try
             {
                 //指定zone的空box清單
                 var emptyBoxList = cassette_dataBLL.loadCassetteData().
-                    Where(data => data.CSTID.IsNullOrWhiteSpace() && IsBelongsZone(data.Carrier_LOC, zoneData.ZoneID));
+                    Where(data => String.IsNullOrWhiteSpace(data.CSTID) && IsBelongsZone(data.Carrier_LOC, zoneData.ZoneID));
                 //數量
-                int boxCount = emptyBoxList.Count();
+                boxCount = emptyBoxList.Count();
                 return (boxCount < zoneData.LowWaterMark);
             }
             catch (Exception ex)
             {
                 logger.Error(ex, "Exception:");
                 emptyBoxLogger.Error(ex, DateTime.Now.ToString("HH:mm:ss.fff ") + "[CheckIfBoxNotEnough]");
+                boxCount = 0;
                 return false;
             }
         }
