@@ -534,5 +534,21 @@ namespace com.mirle.ibg3k0.sc.BLL
 
             return isSuccsess;
         }
+
+        public List<string> GetAllBoxLoc()
+        {
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    return cassettedataDao.GetOccupiedLocation(con);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return null;
+            }
+        }
     }
 }

@@ -257,17 +257,27 @@ namespace com.mirle.ibg3k0.sc.Service
         }
         public void iniShelfData()  //檢查目前 Cassette 是否在儲位上，沒有的話，設成空儲位
         {
+            List<string> boxLoc = cassette_dataBLL.GetAllBoxLoc();
             foreach (var v in shelfDefBLL.LoadShelf())
             {
-                CassetteData cstData = cassette_dataBLL.loadCassetteDataByLoc(v.ShelfID);
-                if (cstData == null)
+                //CassetteData cstData = cassette_dataBLL.loadCassetteDataByLoc(v.ShelfID);
+                //if (cstData == null)
+                //{
+                //    shelfDefBLL.updateStatus(v.ShelfID, ShelfDef.E_ShelfState.EmptyShelf);
+                //}
+                //else
+                //{
+                //    shelfDefBLL.updateStatus(v.ShelfID, ShelfDef.E_ShelfState.Stored);
+                //    TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "iniShelfData: " + v.ShelfID + " 有卡匣    BOXID: " + cstData.BOXID);
+                //}
+                if (boxLoc.Contains(v.ShelfID))
                 {
-                    shelfDefBLL.updateStatus(v.ShelfID, ShelfDef.E_ShelfState.EmptyShelf);
+                    shelfDefBLL.updateStatus(v.ShelfID, ShelfDef.E_ShelfState.Stored);
+                    TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + $"iniShelfData: {v.ShelfID} has box");
                 }
                 else
                 {
-                    shelfDefBLL.updateStatus(v.ShelfID, ShelfDef.E_ShelfState.Stored);
-                    TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "iniShelfData: " + v.ShelfID + " 有卡匣    BOXID: " + cstData.BOXID);
+                    shelfDefBLL.updateStatus(v.ShelfID, ShelfDef.E_ShelfState.EmptyShelf);
                 }
             }
         }
