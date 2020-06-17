@@ -18,6 +18,7 @@
 // 2020/06/09    Jason Wu       N/A            A20.06.09.0  修改getAddressID也能從vehicle取得
 // 2020/06/12    Jason Wu       N/A            A20.06.12.0  新增CanExcuteUnloadTransferAGVStationFromAGVC()處理判定切換Mode Type流程及觸發命令派送。
 // 2020/06/15    Jason Wu       N/A            A20.06.15.0  新增新增CanExcuteUnloadTransferAGVStationFromAGVC()後續處理流程。
+// 2020/06/16    Jason Wu       N/A            A20.06.16.0  新增確認該AGVport是否可用的優先流程FilterOfAGVPort()。
 //**********************************************************************************
 
 using com.mirle.ibg3k0.bcf.Common;
@@ -115,6 +116,7 @@ namespace com.mirle.ibg3k0.sc.Service
 
         NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         public NLog.Logger TransferServiceLogger = NLog.LogManager.GetLogger("TransferServiceLogger");
+        public NLog.Logger AGVCTriggerLogger = NLog.LogManager.GetLogger("TransferServiceLogger");
 
         private SCApplication scApp = null;
         private ReportBLL reportBLL = null;
@@ -5850,10 +5852,22 @@ namespace com.mirle.ibg3k0.sc.Service
             try
             {
                 //取得PLC目前資訊
+                AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " Trigger start. Get the AGVSTation Data, " +
+                    "AGVStationID = " + AGVStationID + ", AGVCFromEQToStationCmdNum = " + AGVCFromEQToStationCmdNum + ", isEmergency = " + isEmergency.ToString());
                 List<PortDef> AGVStationData = scApp.PortDefBLL.GetAGVPortGroupDataByStationID(line.LINE_ID, AGVStationID);
-                ////目前先默認取前2個，確認port上Box數量(空與實皆要)
+                AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " AGVStationID = ");
+
+                //確認取得的AGVStationData中的Port都只有可以用的。
+                AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " Enter the filter for AGV port.");
+                List<PortDef> accessAGVPortDatas = FilterOfAGVPort(AGVStationData);
+                AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " Enter the filter for AGV port.");
+
+                //目前先默認取前2個，確認port上Box數量(空與實皆要)
                 int emptyBoxNumber, fullBoxNumber;
-                (emptyBoxNumber, fullBoxNumber) = CountAGVStationBoxInfo(AGVStationData);
+                AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " Enter the Count Box number for AGV port.");
+                (emptyBoxNumber, fullBoxNumber) = CountAGVStationBoxInfo(accessAGVPortDatas);
+                AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " emptyBoxNumber = " + emptyBoxNumber + ", fullBoxNumber = " + fullBoxNumber);
+
                 //若有實box 則先默認為NG，會稍微影響效率(在一AGV對多個Station時)
                 if (fullBoxNumber >= 0)
                 {
@@ -5865,15 +5879,18 @@ namespace com.mirle.ibg3k0.sc.Service
                 {
                     case (int)EmptyBoxNumber.NO_EMPTY_BOX:
                         //若沒有空box，則執行OHBC優先判定。
-                        isOK = CheckForChangeAGVPortMode_OHBC(AGVCFromEQToStationCmdNum, AGVStationData, AGVStationID);
+                        AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " Enter the NO_EMPTY_BOX method");
+                        isOK = CheckForChangeAGVPortMode_OHBC(AGVCFromEQToStationCmdNum, accessAGVPortDatas, AGVStationID);
                         break;
                     case (int)EmptyBoxNumber.ONE_EMPTY_BOX:
                         //目前先以執行AGVC優先判定為主，因為若有Cst卡在AGV上並無其餘可去之處。
-                        isOK = CheckForChangeAGVPortMode_AGVC(AGVCFromEQToStationCmdNum, AGVStationData, AGVStationID);
+                        AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " Enter the ONE_EMPTY_BOX method");
+                        isOK = CheckForChangeAGVPortMode_AGVC(AGVCFromEQToStationCmdNum, accessAGVPortDatas, AGVStationID);
                         break;
                     case (int)EmptyBoxNumber.TWO_EMPTY_BOX:
                         //若有2空box，則執行AGVC優先判定。
-                        isOK = CheckForChangeAGVPortMode_AGVC(AGVCFromEQToStationCmdNum, AGVStationData, AGVStationID);
+                        AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " Enter the TWO_EMPTY_BOX method");
+                        isOK = CheckForChangeAGVPortMode_AGVC(AGVCFromEQToStationCmdNum, accessAGVPortDatas, AGVStationID);
                         break;
 
                 }
@@ -5884,6 +5901,32 @@ namespace com.mirle.ibg3k0.sc.Service
             }
             return isOK;
         }
+
+        /// <summary>
+        /// 確認該AGVport是否可用
+        /// </summary>
+        /// A20.06.16.0
+        /// <param name="AGVStationData"></param>
+        private List<PortDef> FilterOfAGVPort(List<PortDef> AGVStationData)
+        {
+            int count = 0;
+            List<PortDef> accessAGVPortDatas = new List<PortDef>();
+            foreach (PortDef AGVPortData in AGVStationData)
+            {
+                //確認可以用的，取前2個加入。
+                if (GetPLC_PortData(AGVPortData.PLCPortID).OpAutoMode == true)
+                {
+                    accessAGVPortDatas.Add(AGVPortData);
+                    count = count + 1;
+                    if (count >= 2)
+                    {
+                        break;
+                    }
+                }
+            }
+            return accessAGVPortDatas;
+        }
+
         /// <summary>
         /// 優先判斷AGVC是否有命令與其後許處理流程。
         /// </summary>
@@ -6004,10 +6047,10 @@ namespace com.mirle.ibg3k0.sc.Service
             int cmdNumber = 0;
             foreach (PortDef AGVPortData in AGVStationData)
             {
-                List<ACMD_MCS> cmdData_PortID = cmdBLL.GetCmdDataByDest(AGVPortData.PLCPortID);
+                List<ACMD_MCS> cmdData_PortID = cmdBLL.GetCmdDataByDest(AGVPortData.PLCPortID); //A01 A02
                 cmdNumber = cmdNumber + cmdData_PortID.Count();
             }
-            List<ACMD_MCS> cmdData_StationID = cmdBLL.GetCmdDataByDest(AGVStationID);
+            List<ACMD_MCS> cmdData_StationID = cmdBLL.GetCmdDataByDest(AGVStationID); //ST01
             cmdNumber = cmdNumber + cmdData_StationID.Count();
             return cmdNumber;
         }
@@ -6026,8 +6069,11 @@ namespace com.mirle.ibg3k0.sc.Service
             {
                 isSuccess = PortTypeChange(AGVPortData.PLCPortID, E_PortType.In, "InputModeChange");
             }
-
-            //PLC_AGV_Station_IN
+            SpinWait.SpinUntil(() => false, 500);
+            Task.Run(() =>
+            {
+                CyclingCheckReplenishment(AGVPortDatas);
+            });
         }
 
         /// <summary>
@@ -6035,12 +6081,117 @@ namespace com.mirle.ibg3k0.sc.Service
         /// </summary>
         /// A20.06.15.0  新增
         /// <param name="AGVPortData"></param>
-        private void OutputModeChange(List<PortDef> AGVPortData)
+        private void OutputModeChange(List<PortDef> AGVPortDatas)
         {
             //Todo
             // 需要實作更改該AGVPort為Output 及執行一次退補空box動作
+            bool isSuccess = false;
+            foreach (PortDef AGVPortData in AGVPortDatas)
+            {
+                isSuccess = PortTypeChange(AGVPortData.PLCPortID, E_PortType.Out, "OutputModeChange");
+            }
+            SpinWait.SpinUntil(() => false, 500);
+            Task.Run(() =>
+            {
+                CyclingCheckWithdraw(AGVPortDatas);
+            });
         }
 
+        /// <summary>
+        /// 用來重複確認AGV port 狀態，以進行補空盒動作。
+        /// </summary>
+        /// <param name="AGVPortDatas"></param>
+        private void CyclingCheckReplenishment(List<PortDef> AGVPortDatas)
+        {
+            try
+            {
+                bool AGVPortReady = false;
+                while (AGVPortReady == false)
+                {
+                    List<PortPLCInfo> portPLCDatas = new List<PortPLCInfo>();
+                    //取得目前PLC資料
+                    foreach (PortDef AGVPortData in AGVPortDatas)
+                    {
+                        PortPLCInfo portPLCStatus = GetPLC_PortData(AGVPortData.PLCPortID);
+                        portPLCDatas.Add(portPLCStatus);
+                    }
+                    //以目前資料判斷是否已經轉向完成
+                    foreach (PortPLCInfo portPLCStatus in portPLCDatas)
+                    {
+                        if ((portPLCStatus.IsReadyToLoad == true && portPLCStatus.IsInputMode == true) || //若該port為input mode且 is ready to load 為 true; (可以被補空盒)
+                            (portPLCStatus.IsReadyToUnload == true && portPLCStatus.IsInputMode == true)) //或者為input mode 且 is ready to unload 為true;   (上已有盒)
+                        {
+                            AGVPortReady = true;
+                        }
+                        else
+                        {
+                            AGVPortReady = false;
+                        }
+                    }
+
+                    if (AGVPortReady)
+                    {
+                        foreach (PortPLCInfo portPLCStatus in portPLCDatas)
+                        {
+                            PLC_AGV_Station_InMode(portPLCStatus);
+                        }
+                    }
+                    Thread.Sleep(1000);
+                }
+            }
+            catch (Exception ex)
+            {
+                TransferServiceLogger.Error(ex, "CheckForChangeAGVPortMode");
+            }
+        }
+
+        /// <summary>
+        /// 用來重複確認AGV port 狀態，以進行退空盒動作。
+        /// </summary>
+        /// <param name="AGVPortDatas"></param>
+        private void CyclingCheckWithdraw(List<PortDef> AGVPortDatas)
+        {
+            try
+            {
+                bool AGVPortReady = false;
+                while (AGVPortReady == false)
+                {
+                    List<PortPLCInfo> portPLCDatas = new List<PortPLCInfo>();
+                    //取得目前PLC資料
+                    foreach (PortDef AGVPortData in AGVPortDatas)
+                    {
+                        PortPLCInfo portPLCStatus = GetPLC_PortData(AGVPortData.PLCPortID);
+                        portPLCDatas.Add(portPLCStatus);
+                    }
+                    //以目前資料判斷是否已經轉向完成
+                    foreach (PortPLCInfo portPLCStatus in portPLCDatas)
+                    {
+                        if ((portPLCStatus.IsReadyToLoad == true && portPLCStatus.IsOutputMode == true) || //若該port為input mode且 is ready to load 為 true; (可以被補空盒)
+                            (portPLCStatus.IsReadyToUnload == true && portPLCStatus.IsOutputMode == true)) //或者為input mode 且 is ready to unload 為true;   (上已有盒)
+                        {
+                            AGVPortReady = true;
+                        }
+                        else
+                        {
+                            AGVPortReady = false;
+                        }
+                    }
+
+                    if (AGVPortReady)
+                    {
+                        foreach (PortPLCInfo portPLCStatus in portPLCDatas)
+                        {
+                            PLC_AGV_Station_OutMode(portPLCStatus);
+                        }
+                    }
+                    Thread.Sleep(1000);
+                }
+            }
+            catch (Exception ex)
+            {
+                TransferServiceLogger.Error(ex, "CheckForChangeAGVPortMode");
+            }
+        }
         #endregion
     }
 }
