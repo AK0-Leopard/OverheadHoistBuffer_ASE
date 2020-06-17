@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="84fed8068adf4a8d89944fabd2b5fc15" Name="圖表1" ZoomLevel="58">
+      <Diagram DiagramId="84fed8068adf4a8d89944fabd2b5fc15" Name="圖表1" ZoomLevel="75">
         <EntityTypeShape EntityType="OHTC_DevModel.ABASEDATA_VER" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="OHTC_DevModel.ABLOCKZONEDETAIL" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="OHTC_DevModel.AGROUPRAILS" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />

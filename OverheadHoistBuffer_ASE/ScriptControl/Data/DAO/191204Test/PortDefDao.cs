@@ -101,14 +101,14 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
             }
         }
         //A20.06.12
-        public List<PortDef> LoadAGVPortByStationID(DBConnection_EF conn, string ohbName, string AGVStationID)
+        public List<PortDef> LoadAGVPortByStationID(DBConnection_EF conn, string ohbName, int AGVStationID)
         {
             try
             {
                 var port = from a in conn.PortDef
                            where a.OHBName == ohbName
                                   && a.UnitType == "AGV"
-                                  && a.ZoneName == AGVStationID
+                                  && a.PortGroup == AGVStationID
                            select a;
                 return port.ToList();
             }
