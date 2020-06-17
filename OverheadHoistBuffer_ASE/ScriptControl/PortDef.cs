@@ -46,8 +46,8 @@ namespace com.mirle.ibg3k0.sc
         public string TrnDT { get; set; }
         public Nullable<decimal> AlarmType { get; set; }
         public string ADR_ID { get; set; }
-        public Nullable<int> PortGroup { get; set; }
         public Nullable<E_PortType> PortTypeDef { get; set; }
         public int PRIORITY { get; set; }
+        public string ZoneName { get; set; }
     }
 }
