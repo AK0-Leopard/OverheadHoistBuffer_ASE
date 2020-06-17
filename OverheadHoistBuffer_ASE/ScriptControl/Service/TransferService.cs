@@ -45,6 +45,7 @@ using static com.mirle.ibg3k0.sc.AVEHICLE;
 
 namespace com.mirle.ibg3k0.sc.Service
 {
+    //TEST
     //A20.06.13.0
     public enum EmptyBoxNumber
     {
