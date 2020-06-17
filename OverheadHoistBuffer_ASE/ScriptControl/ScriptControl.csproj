@@ -285,177 +285,177 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AADDRESS.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="AADDRESS_DATA.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ABASEDATA_VER.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ABLOCKZONEDETAIL.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ABLOCKZONEMASTER.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ABUFFER.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ACASSETTE.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ACEID.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ACMD_MCS.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ACMD_OHTC.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ACMD_OHTC_DETAIL.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ACRATE.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ACYCLEZONEDETAIL.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ACYCLEZONEMASTER.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ACYCLEZONETYPE.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="AECDATAMAP.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="AEQPT.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="AEVENTRPTCOND.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="AFLOW_REL.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="AGROUPRAILS.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="AHIDZONEDETAIL.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="AHIDZONEMASTER.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="AHIDZONEQUEUE.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ALARM.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ALARMMAP.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ALARMRPTCOND.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ALINE.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ALOT.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="AMAIN_VER.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="AMCSREPORTQUEUE.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ANETWORKQUALITY.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ANODE.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="APARKZONEDETAIL.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="APARKZONEMASTER.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="APARKZONETYPE.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="APOINT.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="APORT.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="APORTICON.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="APORTSTATION.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="APORT_POSITION_TEACHING_DATA.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="App\SCAppConstants.cs" />
     <Compile Include="App\SCApplication.cs" />
     <Compile Include="ARAIL.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ARPTID.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ASECTION.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ASECTION_CONTROL_100.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ASEGMENT.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ASEQUENCE.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ASHEET.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ASUB_VER.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ASYSEXCUTEQUALITY.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ATRACEITEM.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ATRACESET.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="AUNIT.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="AVEHICLE.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="AVEHICLE_CONTROL_100.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="AVIDINFO.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="AZONE.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="BCSTAT.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="BLL\191204Test\CassetteDataBLL.cs" />
     <Compile Include="BLL\191204Test\ShelfDefBLL.cs" />
@@ -490,10 +490,10 @@
     <Compile Include="BLL\NetworkQualityBLL.cs" />
     <Compile Include="BLL\SysExcuteQualityBLL.cs" />
     <Compile Include="BLOCKZONEQUEUE.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="CassetteData.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Common\CheckSystemEventHandler.cs" />
     <Compile Include="Common\ClassAOPAspect.cs" />
@@ -514,7 +514,7 @@
     <Compile Include="ConfigHandler\RecipeParameterConfigHandler.cs" />
     <Compile Include="ConfigHandler\ECIDConfigHandler.cs" />
     <Compile Include="CONTROL_DATA.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Data\BackgroundWorkSample.cs" />
     <Compile Include="Data\DAO\191204Test\CassetteDataDao.cs" />
@@ -865,81 +865,81 @@
     <Compile Include="EventAction\ImmediateNotificationRegister.cs" />
     <Compile Include="EventAction\QueryExtension.cs" />
     <Compile Include="E_ADR_TYPE.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="E_ALARM_LVL.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="E_BLOCK_ZONE_TYPE.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="E_CMD_STATUS.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="E_CMD_TYPE.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="E_CSTState.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="E_DIRC_DRIV.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="E_DIRC_GUID.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="E_ENCODER_POLE.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="E_HIDQueueStatus.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="E_PARK_TYPE.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="E_POINT_TYPE.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="E_PortType.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="E_PORT_STATUS.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="E_RAIL_DIR.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="E_RAIL_TYPE.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="E_SEG_STATUS.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="E_TRAN_STATUS.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="E_VH_TYPE.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="HASHEET.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="HOPERATION.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="MQTTControl\MQTTControl.cs" />
     <Compile Include="ObjectRelay\CMD_MCSObjToShow.cs" />
     <Compile Include="ObjectRelay\IDataGridUpdateNotify.cs" />
     <Compile Include="ObjectRelay\VehicleObjToShow.cs" />
-    <Compile Include="OHTCContext.Context.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>OHTCContext.Context.Context.tt</DependentUpon>
-    </Compile>
     <Compile Include="OHTCContext.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="OHTCContext.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="OHTCContext.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -947,7 +947,7 @@
       <DependentUpon>OHTCContext.edmx</DependentUpon>
     </Compile>
     <Compile Include="PortDef.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -958,7 +958,7 @@
     <Compile Include="RouteKit\Section.cs" />
     <Compile Include="RouteKit\Segment.cs" />
     <Compile Include="SCALE_BASE_DATA.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Scheduler\MTTFAndMTBFScheduler.cs" />
     <Compile Include="Scheduler\ZabbixDataCollectionScheduler.cs" />
@@ -976,28 +976,28 @@
     <Compile Include="Service\UserControlService.cs" />
     <Compile Include="Service\VehicleService.cs" />
     <Compile Include="ShelfDef.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="StateMachine\StateMachineFactory.cs" />
     <Compile Include="UASFNC.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="UASUFNC.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="UASUSR.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="UASUSRGRP.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="VACMD_MCS.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ValueHandler\ProcessDataValueHandler.cs" />
     <Compile Include="ValueHandler\ValueHandlerBase.cs" />
     <Compile Include="VSECTION_100.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="WebAPI\CSTBoxControl.cs" />
     <Compile Include="WebAPI\MTSMTLInfo.cs" />
@@ -1012,7 +1012,7 @@
       <DependentUpon>OHTCContext.cs</DependentUpon>
     </Compile>
     <Compile Include="ZoneDef.cs">
-      <DependentUpon>OHTCContext.Context.tt</DependentUpon>
+      <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -1073,11 +1073,6 @@
     <Content Include="hasp_windows_x64_24266.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="OHTCContext.Context.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>OHTCContext.Context.Context.cs</LastGenOutput>
-      <DependentUpon>OHTCContext.edmx</DependentUpon>
-    </Content>
     <Content Include="OHTCContext.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>OHTCContext.Context.cs</LastGenOutput>
@@ -1125,6 +1120,11 @@
     <Content Include="DLL\System.Data.SQLite.dll" />
     <Content Include="DLL\System.Data.SQLite.Linq.dll" />
     <Content Include="DLL\System.IO.Abstractions.dll" />
+    <Content Include="OHTCContext.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>OHTCContext.cs</LastGenOutput>
+      <DependentUpon>OHTCContext.edmx</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">

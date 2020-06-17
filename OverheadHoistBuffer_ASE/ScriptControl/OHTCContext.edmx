@@ -3788,7 +3788,7 @@
     <EntitySetMapping Name="AVEHICLE">
       <EntityTypeMapping TypeName="IsTypeOf(OHTC_DevModel.AVEHICLE)">
         <MappingFragment StoreEntitySet="AVEHICLE">
-                <ScalarProperty Name="HAS_BOX" ColumnName="HAS_BOX" />
+          <ScalarProperty Name="HAS_BOX" ColumnName="HAS_BOX" />
                 <ScalarProperty Name="VEHICLE_ID" ColumnName="VEHICLE_ID" />
           <ScalarProperty Name="VEHICLE_TYPE" ColumnName="VEHICLE_TYPE" />
           <ScalarProperty Name="CUR_ADR_ID" ColumnName="CUR_ADR_ID" />
@@ -3921,7 +3921,7 @@
     <EntitySetMapping Name="ACMD_MCS">
       <EntityTypeMapping TypeName="IsTypeOf(OHTC_DevModel.ACMD_MCS)">
         <MappingFragment StoreEntitySet="ACMD_MCS">
-                <ScalarProperty Name="RelayStation" ColumnName="RelayStation" />
+          <ScalarProperty Name="RelayStation" ColumnName="RelayStation" />
                 <ScalarProperty Name="CMD_ID" ColumnName="CMD_ID" />
           <ScalarProperty Name="CARRIER_ID" ColumnName="CARRIER_ID" />
           <ScalarProperty Name="TRANSFERSTATE" ColumnName="TRANSFERSTATE" />
