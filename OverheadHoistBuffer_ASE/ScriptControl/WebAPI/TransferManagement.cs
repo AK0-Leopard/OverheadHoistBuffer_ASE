@@ -304,7 +304,7 @@ namespace com.mirle.ibg3k0.sc.WebAPI
                 bool is_ok = false;
                 //todo 執行確認能否讓AGVC開始進行該AGV Station進貨的流程
                 //is_ok = scApp.TransferService.canExcuteUnloadTransferAGVStationFromAGVC.....todo
-
+                //TEST
 
                 var response = (Response)(is_ok ? "OK" : "NG");
                 response.ContentType = restfulContentType;
