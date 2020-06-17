@@ -806,7 +806,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 if (canChangCmd)
                 {
                     //scApp.PortStationService.doPortTypeChgeCommandByMCSCmdID(change_port_id, portType);
-                    scApp.TransferService.PortTypeChange(change_port_id, (E_PortType)portType);
+                    scApp.TransferService.PortTypeChange(change_port_id, (E_PortType)portType, "S2F41");
                     //scApp.TransferService.SetPortTypeCmd(change_port_id, (E_PortType)portType);
                 }
                 if (canInstallCmd)

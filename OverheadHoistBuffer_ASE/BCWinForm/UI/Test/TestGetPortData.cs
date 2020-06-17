@@ -253,7 +253,7 @@ namespace com.mirle.ibg3k0.bc.winform
         {
             string port_id = comboBox1.Text;
             E_PortType mode = (E_PortType)comboBox2.SelectedIndex;
-            await Task.Run(() => BCApp.SCApplication.TransferService.PortTypeChange(port_id, (E_PortType)mode));
+            await Task.Run(() => BCApp.SCApplication.TransferService.PortTypeChange(port_id, mode, "測試用 UI"));
         }
 
         private void button6_Click(object sender, EventArgs e)

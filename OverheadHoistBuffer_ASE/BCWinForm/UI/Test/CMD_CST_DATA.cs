@@ -16,7 +16,8 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Test
     {
         App.BCApplication BCApp;
         ALINE line = null;
-        List<PortDef> portList = null;
+        List<PortINIData> portInIList = null;
+
         List<ShelfDef> shelfDefs = null;
         List<AVEHICLE> avehicle = null;
 
@@ -31,21 +32,19 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Test
         private void CMD_CST_DATA_Load(object sender, EventArgs e)
         {
             line = BCApp.SCApplication.getEQObjCacheManager().getLine();
-            portList = BCApp.SCApplication.PortDefBLL.GetOHB_PortData(line.LINE_ID);
             shelfDefs = BCApp.SCApplication.ShelfDefBLL.LoadEnableShelf();
             avehicle = BCApp.SCApplication.VehicleBLL.loadAllVehicle();
+            portInIList = BCApp.SCApplication.TransferService.portINIData.Values.ToList();
 
-            foreach (var v in portList)
+            foreach (var v in portInIList)
             {
-                if (v.UnitType.Trim() == UnitType.OHCV.ToString()
-                 || v.UnitType.Trim() == UnitType.NTB.ToString()
-                 || v.UnitType.Trim() == UnitType.AGV.ToString()
-                 || v.UnitType.Trim() == UnitType.STK.ToString()
+                if ( (BCApp.SCApplication.TransferService.isCVPort(v.PortName) && v.nowStage == v.Stage)
+                    || BCApp.SCApplication.TransferService.isAGVZone(v.PortName)
                    )
                 {
-                    comboBox1.Items.Add(v.PLCPortID);
-                    comboBox2.Items.Add(v.PLCPortID);
-                    comboBox3.Items.Add(v.PLCPortID);
+                    comboBox1.Items.Add(v.PortName);
+                    comboBox2.Items.Add(v.PortName);
+                    comboBox3.Items.Add(v.PortName);
                 }
             }
 
@@ -116,7 +115,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Test
                 foreach (DataGridViewCell v in dataGridView1.SelectedCells)
                 {
                     string cmdID = dataGridView1.Rows[v.RowIndex].Cells["CMD_ID"].Value.ToString();
-                    BCApp.SCApplication.TransferService.LocalCmdCancel(cmdID);
+                    BCApp.SCApplication.TransferService.LocalCmdCancel(cmdID, "命令結束(本機)");
                 }
                 UpDate_CmdData();
             }

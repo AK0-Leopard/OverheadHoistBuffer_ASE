@@ -202,5 +202,20 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                 throw;
             }
         }
+
+        public List<string> GetOccupiedLocation(DBConnection_EF conn)
+        {
+            try
+            {
+                var loc = from a in conn.CassetteData
+                           select a.Carrier_LOC;
+                return loc.ToList();
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex);
+                throw;
+            }
+        }
     }
 }
