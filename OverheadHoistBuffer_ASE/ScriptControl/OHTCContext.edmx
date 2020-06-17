@@ -1037,7 +1037,7 @@
           <Property Name="TrnDT" Type="varchar" MaxLength="20" />
           <Property Name="AlarmType" Type="numeric" Precision="2" Scale="0" />
           <Property Name="ADR_ID" Type="char" MaxLength="5" Nullable="false" />
-          <Property Name="PortGroup" Type="int" />
+          <Property Name="ZoneName" Type="varchar" MaxLength="64" />
           <Property Name="PRIORITY" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="SCALE_BASE_DATA">
@@ -2732,9 +2732,9 @@
           <Property Name="TrnDT" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="AlarmType" Type="Decimal" Precision="2" Scale="0" />
           <Property Name="ADR_ID" Type="String" MaxLength="5" FixedLength="true" Unicode="false" Nullable="false" />
-          <Property Name="PortGroup" Type="Int32" />
           <Property Name="PortTypeDef" Type="OHTC_DevModel.E_PortType" />
           <Property Name="PRIORITY" Type="Int32" Nullable="false" />
+          <Property Name="ZoneName" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
         </EntityType>
         <EnumType Name="E_CSTState">
           <Member Name="WaitIn" Value="1" />
@@ -3788,7 +3788,7 @@
     <EntitySetMapping Name="AVEHICLE">
       <EntityTypeMapping TypeName="IsTypeOf(OHTC_DevModel.AVEHICLE)">
         <MappingFragment StoreEntitySet="AVEHICLE">
-          <ScalarProperty Name="HAS_BOX" ColumnName="HAS_BOX" />
+                <ScalarProperty Name="HAS_BOX" ColumnName="HAS_BOX" />
                 <ScalarProperty Name="VEHICLE_ID" ColumnName="VEHICLE_ID" />
           <ScalarProperty Name="VEHICLE_TYPE" ColumnName="VEHICLE_TYPE" />
           <ScalarProperty Name="CUR_ADR_ID" ColumnName="CUR_ADR_ID" />
@@ -3921,7 +3921,7 @@
     <EntitySetMapping Name="ACMD_MCS">
       <EntityTypeMapping TypeName="IsTypeOf(OHTC_DevModel.ACMD_MCS)">
         <MappingFragment StoreEntitySet="ACMD_MCS">
-          <ScalarProperty Name="RelayStation" ColumnName="RelayStation" />
+                <ScalarProperty Name="RelayStation" ColumnName="RelayStation" />
                 <ScalarProperty Name="CMD_ID" ColumnName="CMD_ID" />
           <ScalarProperty Name="CARRIER_ID" ColumnName="CARRIER_ID" />
           <ScalarProperty Name="TRANSFERSTATE" ColumnName="TRANSFERSTATE" />
@@ -3999,7 +3999,8 @@
     <EntitySetMapping Name="PortDef">
       <EntityTypeMapping TypeName="IsTypeOf(OHTC_DevModel.PortDef)">
         <MappingFragment StoreEntitySet="PortDef">
-          <ScalarProperty Name="PLCPortID" ColumnName="PLCPortID" />
+          <ScalarProperty Name="ZoneName" ColumnName="ZoneName" />
+                <ScalarProperty Name="PLCPortID" ColumnName="PLCPortID" />
           <ScalarProperty Name="StockerID" ColumnName="StockerID" />
           <ScalarProperty Name="OHBName" ColumnName="OHBName" />
           <ScalarProperty Name="State" ColumnName="State" />
@@ -4031,7 +4032,6 @@
           <ScalarProperty Name="TrnDT" ColumnName="TrnDT" />
           <ScalarProperty Name="AlarmType" ColumnName="AlarmType" />
           <ScalarProperty Name="ADR_ID" ColumnName="ADR_ID" />
-          <ScalarProperty Name="PortGroup" ColumnName="PortGroup" />
           <ScalarProperty Name="PortTypeDef" ColumnName="PortTypeDef" />
           <ScalarProperty Name="PRIORITY" ColumnName="PRIORITY" />
         </MappingFragment>
