@@ -654,7 +654,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                     + "新增命令: " + scApp.TransferService.GetCmdLog(cmd_mcs)
                 );
 
-                if (cmd_mcs.CMDTYPE != "PLC")
+                if (cmd_mcs.CMDTYPE != CmdType.PortTypeChange.ToString())
                 {
                     scApp.TransferService.ShelfReserved(cmd_mcs.HOSTSOURCE, cmd_mcs.HOSTDESTINATION);
                 }

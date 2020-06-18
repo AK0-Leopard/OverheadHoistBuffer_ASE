@@ -16,6 +16,7 @@ namespace com.mirle.ibg3k0.sc.BLL
         StoreDT,
         WaitOutOPDT,
         WaitOutLPDT,
+        TrnDT,
     }
 
     public class CassetteDataBLL
@@ -248,6 +249,9 @@ namespace com.mirle.ibg3k0.sc.BLL
                             break;
                         case UpdateCassetteTimeType.WaitOutLPDT:
                             cassettedataDao.LoadCassetteDataByBoxID(con, boxid).WaitOutLPDT = time;
+                            break;
+                        case UpdateCassetteTimeType.TrnDT:
+                            cassettedataDao.LoadCassetteDataByBoxID(con, boxid).TrnDT = time;
                             break;
                     }
                     cassettedataDao.UpdateCassetteData(con);

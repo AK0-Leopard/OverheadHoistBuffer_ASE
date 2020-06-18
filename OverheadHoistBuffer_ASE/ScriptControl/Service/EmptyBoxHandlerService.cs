@@ -78,7 +78,17 @@ namespace com.mirle.ibg3k0.sc.Service
                                     //已達緊急水位，產生往Loop or STK的manual command退box
                                     emptyBoxLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + $"{zoneData.ZoneID} reaches emergency water level: {zoneBLL.GetZoneTotalSize(zoneData.ZoneID) * emergencyWaterLevel}, force to send empty box to STK or OHCV...");
                                     //TODO: 第二個parameter填入out mode下的STK port，沒有就找out mode下的OHCV port
-                                    //scApp.TransferService.Manual_InsertCmd(emptyBox.emptyBox.FirstOrDefault().Carrier_LOC, "OHCV");
+                                    
+                                    string dest = scApp.TransferService.GetSTKorOHCV_OutModePortName();
+
+                                    if(string.IsNullOrWhiteSpace(dest) == false)
+                                    {
+                                        scApp.TransferService.Manual_InsertCmd(emptyBox.emptyBox.FirstOrDefault().Carrier_LOC, dest);
+                                    }
+                                    else
+                                    {
+                                        //沒有找到STK、OHCV為OutMode
+                                    }
                                 }
                                 else
                                 {

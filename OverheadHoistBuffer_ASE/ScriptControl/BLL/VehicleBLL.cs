@@ -1090,18 +1090,18 @@ namespace com.mirle.ibg3k0.sc.BLL
                 }
             }
             //A0.03
-            //foreach (AVEHICLE vh in vhs.ToList())
-            //{
-            //    if (scApp.CMDBLL.isCMD_OHTCQueueByVh(vh.VEHICLE_ID))
-            //    {
-            //        vhs.Remove(vh);
-            //        LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleBLL), Device: "OHxC",
-            //           Data: $"vh id:{vh.VEHICLE_ID} has ohxc command in queue," +
-            //                 $"so filter it out",
-            //           VehicleID: vh.VEHICLE_ID,
-            //           CarrierID: vh.CST_ID);
-            //    }
-            //}
+            foreach (AVEHICLE vh in vhs.ToList())
+            {
+                if (scApp.CMDBLL.isCMD_OHTCQueueByVh(vh.VEHICLE_ID))
+                {
+                    vhs.Remove(vh);
+                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleBLL), Device: "OHxC",
+                       Data: $"vh id:{vh.VEHICLE_ID} has ohxc command in queue," +
+                             $"so filter it out",
+                       VehicleID: vh.VEHICLE_ID,
+                       CarrierID: vh.CST_ID);
+                }
+            }
             //foreach (AVEHICLE vh in vhs.ToList())
             //{
             //    if (vh.ACT_STATUS == VHActionStatus.Commanding)

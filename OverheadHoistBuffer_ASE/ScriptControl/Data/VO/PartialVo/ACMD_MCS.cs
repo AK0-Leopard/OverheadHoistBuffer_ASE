@@ -58,7 +58,7 @@ namespace com.mirle.ibg3k0.sc
             SCAN,
             OHBC,       //OHBC 自動產生的命令          
             AGVStation, //AGV 退補 BOX
-            PLC,        //控制Port流向
+            PortTypeChange,        //控制Port流向
         }
 
         public class ResultCode

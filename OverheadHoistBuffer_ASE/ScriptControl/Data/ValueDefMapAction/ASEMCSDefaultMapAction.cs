@@ -1808,7 +1808,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
         private S6F11.RPTINFO.RPTITEM.VIDITEM_76_SV buildEnhancedTransfersVIDItem()
         {
             //List<ACMD_MCS> mcs_cmds = scApp.CMDBLL.loadACMD_MCSIsUnfinished();
-            List<ACMD_MCS> mcs_cmds = scApp.CMDBLL.LoadCmdData().Where(data => data.CMDTYPE != ACMD_MCS.CmdType.PLC.ToString()
+            List<ACMD_MCS> mcs_cmds = scApp.CMDBLL.LoadCmdData().Where(data => data.CMDTYPE != ACMD_MCS.CmdType.PortTypeChange.ToString()
 
                                                                       ).ToList();
             int cmd_count = mcs_cmds.Count;
