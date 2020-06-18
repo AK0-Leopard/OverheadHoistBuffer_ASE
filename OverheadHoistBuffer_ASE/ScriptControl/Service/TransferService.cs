@@ -219,9 +219,8 @@ namespace com.mirle.ibg3k0.sc.Service
                                 data.PortName = v.PLCPortID.Trim() + ((CassetteData.OHCV_STAGE)i).ToString();
                             }
 
-                            portINIData.Add(data.PortName, data);
-                            TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "CV_Port PortID:" + data.PortName + " PortType:" + data.UnitType);
-
+                            AddPortINIData(data);
+                            
                             if (v.UnitType.Trim() == UnitType.AGV.ToString())
                             {
                                 if (portINIData.ContainsKey(v.ZoneName) == false)
@@ -232,8 +231,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                     agvdata.ZoneName = v.ZoneName.Trim();
                                     agvdata.Stage = 1;
 
-                                    portINIData.Add(agvdata.PortName, agvdata);
-                                    TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "AGVZone PortID:" + data.PortName + " PortType:" + data.UnitType);
+                                    AddPortINIData(data);
                                 }
                             }
 
@@ -251,8 +249,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     data.timeOutForAutoUD = cstIdle;
                     //data.timeOutForAutoInZone = v.TimeOutForAutoInZone;
 
-                    portINIData.Add(data.PortName, data);
-                    TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "CRANE PortID:" + data.PortName + " PortType:" + data.UnitType);
+                    AddPortINIData(data);
                 }
 
                 foreach (var v in scApp.ShelfDefBLL.LoadShelf())
@@ -263,8 +260,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     data.ZoneName = v.ZoneID.Trim();
                     data.Stage = 1;
 
-                    portINIData.Add(data.PortName, data);
-                    TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "Shelf PortID:" + data.PortName + " PortType:" + data.UnitType);
+                    AddPortINIData(data);
                 }
 
                 foreach (var v in scApp.ZoneDefBLL.loadZoneData())
@@ -275,13 +271,24 @@ namespace com.mirle.ibg3k0.sc.Service
                     data.ZoneName = v.ZoneID.Trim();
                     data.Stage = 1;
 
-                    portINIData.Add(data.PortName, data);
-                    TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "Zone PortID:" + data.PortName + " PortType:" + data.UnitType);
+                    AddPortINIData(data);
                 }
             }
             catch (Exception ex)
             {
                 TransferServiceLogger.Error(ex, "SetPortData");
+            }
+        }
+        public void AddPortINIData(PortINIData data)
+        {
+            try
+            {
+                portINIData.Add(data.PortName, data);
+                TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "PortID:" + data.PortName + " PortType:" + data.UnitType);
+            }
+            catch (Exception ex)
+            {
+                TransferServiceLogger.Error(ex, "AddPortINIData");
             }
         }
         public void iniShelfData()  //檢查目前 Cassette 是否在儲位上，沒有的話，設成空儲位
@@ -390,14 +397,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 {
                     PortPLCInfo portValue = GetPLC_PortData(portName);
 
-                    if (portValue == null)
-                    {
-                        TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "PortPLCInfo >> PLCPortID: " + portName + " = Null");
-                    }
-                    else
-                    {
-                        PLC_AGV_Station(portValue, "updateAGVStation");
-                    }
+                    PLC_AGV_Station(portValue, "updateAGVStation");
                 }
             }
         }
@@ -5851,7 +5851,7 @@ namespace com.mirle.ibg3k0.sc.Service
             bool isOK = false;
             try
             {
-                if (scApp.PortDefBLL.GetPortData(AGVStationID).State == 0) //此AGVStation虛擬port是 Out of service 一律回復NG
+                if (scApp.PortDefBLL.GetPortData(AGVStationID).State == E_PORT_STATUS.InService) //此AGVStation虛擬port是 Out of service 一律回復NG
                 {
                     return isOK;
                 }
@@ -6188,7 +6188,10 @@ namespace com.mirle.ibg3k0.sc.Service
                     {
                         foreach (PortPLCInfo portPLCStatus in portPLCDatas)
                         {
+                            //呼叫退補空box 流程。 先將特定port 開啟自動退補，產生完命令後再關閉。
+                            portINIData[portPLCStatus.EQ_ID].openAGV_Station = true;
                             PLC_AGV_Station_OutMode(portPLCStatus);
+                            portINIData[portPLCStatus.EQ_ID].openAGV_Station = false;
                         }
                     }
                     Thread.Sleep(1000);
