@@ -193,7 +193,8 @@ namespace com.mirle.ibg3k0.sc.BLL
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
                     //取station最後一碼 以分辨其為哪一group
-                    string AGVStationID = stationID.Substring(stationID.Length - 1, 1);
+                    stationID = stationID.Trim();
+                    string AGVStationID = stationID;
                     List<PortDef> agvPortFromStationID = portdefDao.LoadAGVPortByStationID(con, ohbName, AGVStationID);
                     return agvPortFromStationID;
                 }
