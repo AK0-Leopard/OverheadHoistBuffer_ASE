@@ -5947,7 +5947,11 @@ namespace com.mirle.ibg3k0.sc.Service
                 if (AGVCFromEQToStationCmdNum > 0)
                 {
                     isOK = true;
-                    InputModeChange(AGVStationData);
+                    bool isSuccess = InputModeChange(AGVStationData);
+                    if (isSuccess == false)
+                    {
+                        isOK = false;
+                    }
                 }
                 else
                 {
@@ -5994,7 +5998,11 @@ namespace com.mirle.ibg3k0.sc.Service
                     if (AGVCFromEQToStationCmdNum > 0)
                     {
                         isOK = true;
-                        InputModeChange(AGVStationData);
+                        bool isSuccess = InputModeChange(AGVStationData);
+                        if(isSuccess == false) // 若port type 的port mode changeable 為 false 則回false
+                        {
+                            isOK = false;
+                        }
                     }
                     else
                     {
@@ -6064,20 +6072,27 @@ namespace com.mirle.ibg3k0.sc.Service
         /// </summary>
         /// A20.06.15.0 新增
         /// <param name="AGVPortData"></param>
-        private void InputModeChange(List<PortDef> AGVPortDatas)
+        private bool InputModeChange(List<PortDef> AGVPortDatas)
         {
             //Todo
             // 需要實作更改該AGVPort為Input 及執行一次退補空box動作
             bool isSuccess = false;
             foreach (PortDef AGVPortData in AGVPortDatas)
             {
+                PortPLCInfo portData = GetPLC_PortData(AGVPortData.PLCPortID);
+                if (portData.IsModeChangable == false)
+                {
+                    isSuccess = false;
+                    return isSuccess;
+                }
                 isSuccess = PortTypeChange(AGVPortData.PLCPortID, E_PortType.In, "InputModeChange");
             }
-            SpinWait.SpinUntil(() => false, 500);
+            SpinWait.SpinUntil(() => false, 200);
             Task.Run(() =>
             {
                 CyclingCheckReplenishment(AGVPortDatas);
             });
+            return isSuccess;
         }
 
         /// <summary>
@@ -6085,20 +6100,27 @@ namespace com.mirle.ibg3k0.sc.Service
         /// </summary>
         /// A20.06.15.0  新增
         /// <param name="AGVPortData"></param>
-        private void OutputModeChange(List<PortDef> AGVPortDatas)
+        private bool OutputModeChange(List<PortDef> AGVPortDatas)
         {
             //Todo
             // 需要實作更改該AGVPort為Output 及執行一次退補空box動作
             bool isSuccess = false;
             foreach (PortDef AGVPortData in AGVPortDatas)
             {
+                PortPLCInfo portData = GetPLC_PortData(AGVPortData.PLCPortID); 
+                if(portData.IsModeChangable == false)
+                {
+                    isSuccess = false;
+                    return isSuccess;
+                }
                 isSuccess = PortTypeChange(AGVPortData.PLCPortID, E_PortType.Out, "OutputModeChange");
             }
-            SpinWait.SpinUntil(() => false, 500);
+            SpinWait.SpinUntil(() => false, 200);
             Task.Run(() =>
             {
                 CyclingCheckWithdraw(AGVPortDatas);
             });
+            return isSuccess;
         }
 
         /// <summary>
