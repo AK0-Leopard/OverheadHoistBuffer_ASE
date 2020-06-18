@@ -333,16 +333,19 @@ namespace com.mirle.ibg3k0.sc.WebAPI
 							result = isSuccess ? "OK" : "Update Port TimeOutForAutoInZone failed.";
 							break;
 						case "BlockPort":
-							isSuccess = true; // todo block
-							result = isSuccess ? "OK" : "Block Port failed.";
+							//isSuccess = true; // todo block
+                            isSuccess = scApp.TransferService.UpdateIgnoreModeChange(port_id, "Y");
+                            result = isSuccess ? "OK" : "Block Port failed.";
 							break;
 						case "UnblockPort":
-							isSuccess = true; // todo block
-							result = isSuccess ? "OK" : "Unblock Port failed.";
+							//isSuccess = true; // todo block
+                            isSuccess = scApp.TransferService.UpdateIgnoreModeChange(port_id, "N");
+                            result = isSuccess ? "OK" : "Unblock Port failed.";
 							break;
 						case "ClearAlarmPort":
-							isSuccess = true; // todo ClearAlarmPort
-							result = isSuccess ? "OK" : "Clear Alarm Port failed.";
+							//isSuccess = true; // todo ClearAlarmPort
+                            isSuccess = scApp.TransferService.PortAlarrmReset(port_id);
+                            result = isSuccess ? "OK" : "Clear Alarm Port failed.";
 							break;
 					}
 				}

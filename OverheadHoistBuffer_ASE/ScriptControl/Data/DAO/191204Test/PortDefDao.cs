@@ -88,9 +88,11 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                 var port = from a in conn.PortDef
                            where a.OHBName == ohbName
                                   && (a.UnitType == "OHCV"
-                                     || a.UnitType == "AGV"
-                                     || a.UnitType == "NTB"
-                                     || a.UnitType == "STK")
+                                   || a.UnitType == "AGV"
+                                   || a.UnitType == "NTB"
+                                   || a.UnitType == "STK"
+                                   || a.UnitType == "AGVZONE"
+                                     )
                            select a;
                 return port.ToList();
             }

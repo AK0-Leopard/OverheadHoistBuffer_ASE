@@ -406,5 +406,25 @@ namespace com.mirle.ibg3k0.bc.winform
         {
             BCApp.SCApplication.TransferService.GetCVPortHelp(comboBox1.Text);
         }
+
+        private void button26_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewCell v in dataGridView1.SelectedCells)
+            {
+                string portName = dataGridView1.Rows[v.RowIndex].Cells["PLCPortID"].Value.ToString();
+                BCApp.SCApplication.TransferService.PortInOutService(portName, E_PORT_STATUS.InService, "TestGetPortData");
+            }
+            GetPortData();            
+        }
+
+        private void button27_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewCell v in dataGridView1.SelectedCells)
+            {
+                string portName = dataGridView1.Rows[v.RowIndex].Cells["PLCPortID"].Value.ToString();
+                BCApp.SCApplication.TransferService.PortInOutService(portName, E_PORT_STATUS.OutOfService, "TestGetPortData");
+            }
+            GetPortData();
+        }
     }
 }

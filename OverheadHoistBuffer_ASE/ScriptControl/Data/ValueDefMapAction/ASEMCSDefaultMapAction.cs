@@ -1608,13 +1608,8 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             //List<APORTSTATION> port_station = scApp.getEQObjCacheManager().getALLPortStation();
             string ohbName = scApp.getEQObjCacheManager().getLine().LINE_ID;
             //List<PortDef> port_station = scApp.PortDefBLL.GetOHB_PortData(ohbName); 
-            List<PortDef> port_station = (from a in scApp.PortDefBLL.GetOHB_PortData(ohbName)
-                                          where a.UnitType == "OHCV"
-                                             || a.UnitType == "AGV"
-                                             || a.UnitType == "NTB"
-                                             || a.UnitType == "STK"
-                                          select a)
-                                          .ToList();
+            List<PortDef> port_station = scApp.PortDefBLL.GetOHB_CVPortData(ohbName);
+
             int port_count = port_station.Count;
 
             string control_state = SCAppConstants.LineHostControlState.convert2MES(line.Host_Control_State);
@@ -1654,10 +1649,8 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
         {
             string ohbName = scApp.getEQObjCacheManager().getLine().LINE_ID;
             //List<PortDef> port_station = scApp.PortDefBLL.GetOHB_PortData(ohbName);
-            List<PortDef> port_station = (from a in scApp.PortDefBLL.GetOHB_PortData(ohbName)
-                                          where a.UnitType != Service.UnitType.SHELF.ToString()
-                                          select a)
-                                          .ToList();
+            List<PortDef> port_station = scApp.PortDefBLL.GetOHB_CVPortData(ohbName);
+
             int port_count = port_station.Count;
 
             string control_state = SCAppConstants.LineHostControlState.convert2MES(line.Host_Control_State);

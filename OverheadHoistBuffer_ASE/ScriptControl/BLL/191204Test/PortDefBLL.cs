@@ -313,7 +313,7 @@ namespace com.mirle.ibg3k0.sc.BLL
         public List<PortDef> getAGVPortData()
         {
             string ohbName = scApp.getEQObjCacheManager().getLine().LINE_ID;
-            List<PortDef> AGV_station = scApp.PortDefBLL.GetOHB_PortData(ohbName).
+            List<PortDef> AGV_station = scApp.PortDefBLL.GetOHB_CVPortData(ohbName).
                 Where(data => data.UnitType == "AGV"
                 ).ToList();
             return AGV_station;
