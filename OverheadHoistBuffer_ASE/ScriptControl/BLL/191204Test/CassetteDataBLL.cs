@@ -266,7 +266,8 @@ namespace com.mirle.ibg3k0.sc.BLL
             {
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
-                    return cassettedataDao.LoadCassetteData(con);
+                    var result = cassettedataDao.LoadCassetteData(con);
+                    return result;
                 }
             }
             catch (Exception ex)

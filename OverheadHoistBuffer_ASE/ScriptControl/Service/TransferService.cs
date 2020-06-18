@@ -5851,6 +5851,10 @@ namespace com.mirle.ibg3k0.sc.Service
             bool isOK = false;
             try
             {
+                if (scApp.PortDefBLL.GetPortData(AGVStationID).State == 0) //此AGVStation虛擬port是 Out of service 一律回復NG
+                {
+                    return isOK;
+                }
                 //取得PLC目前資訊
                 AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " Trigger start. Get the AGVSTation Data, " +
                     "AGVStationID = " + AGVStationID + ", AGVCFromEQToStationCmdNum = " + AGVCFromEQToStationCmdNum + ", isEmergency = " + isEmergency.ToString());
@@ -5869,7 +5873,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " emptyBoxNumber = " + emptyBoxNumber + ", fullBoxNumber = " + fullBoxNumber);
 
                 //若有實box 則先默認為NG，會稍微影響效率(在一AGV對多個Station時)
-                if (fullBoxNumber >= 0)
+                if (fullBoxNumber > 0)
                 {
                     //可針對特定細節做特化處理
                     isOK = false;
@@ -6133,7 +6137,10 @@ namespace com.mirle.ibg3k0.sc.Service
                     {
                         foreach (PortPLCInfo portPLCStatus in portPLCDatas)
                         {
+                            //呼叫退補空box 流程。 先將特定port 開啟自動退補，產生完命令後再關閉。
+                            portINIData[portPLCStatus.EQ_ID].openAGV_Station = true;
                             PLC_AGV_Station_InMode(portPLCStatus);
+                            portINIData[portPLCStatus.EQ_ID].openAGV_Station = false;
                         }
                     }
                     Thread.Sleep(1000);
