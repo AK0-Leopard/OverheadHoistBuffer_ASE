@@ -207,6 +207,7 @@ namespace com.mirle.ibg3k0.sc.Data.SECS.ASE
         public const string RCMD_DisableShelf = "DISABLESHELF";
         public const string RCMD_EnbleShelf = "ENABLESHELF";
         public const string RCMD_ReName = "RENAME";
+        public const string RCMD_CARRIERLOTIDUPDATE = "CARRIERLOTIDUPDATE";
         //public const string RCMD_TransferEXt = "TRANSFEREXT";
         //public const string RCMD_StageDelete = "STAGEDELETE";
         //public const string RCMD_ConfirmRoute = "CONFIRMROUTE";
@@ -221,7 +222,7 @@ namespace com.mirle.ibg3k0.sc.Data.SECS.ASE
         public const string CPNAME_PortunitType = "PORTUNITTYPE";
         public const string CPNAME_ErrorID = "ERRORID";
         public const string CPNAME_ShelfID = "SHELFID";
-
+        public const string CPNAME_LotID = "LOTID";
 
         public const string CPNAME_SourcePort = "SOURCEPORT";
         public const string CPNAME_DestPort = "DESTPORT";
