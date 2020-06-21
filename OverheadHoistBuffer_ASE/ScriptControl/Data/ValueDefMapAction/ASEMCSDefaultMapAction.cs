@@ -740,6 +740,10 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                                 box_id = rename_check_result.BOXID;
                                 carrier_loc = rename_check_result.LOCID;
                                 break;
+                            case SECSConst.RCMD_CARRIERLOTIDUPDATE:
+                                var CARRIERLOTIDUPDATE_check_result = checkHostCommandRCMD_CARRIERLOTIDUPDATE(s2f41 as S2F41);
+                                s2f42.HCACK = CARRIERLOTIDUPDATE_check_result.checkResult;
+                                break;
                         }
                         break;
                 }
@@ -805,9 +809,14 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 }
                 if (canChangCmd)
                 {
-                    //scApp.PortStationService.doPortTypeChgeCommandByMCSCmdID(change_port_id, portType);
-                    scApp.TransferService.PortTypeChange(change_port_id, (E_PortType)portType, "S2F41");
-                    //scApp.TransferService.SetPortTypeCmd(change_port_id, (E_PortType)portType);
+                    if (scApp.TransferService.isUnitType(change_port_id, Service.UnitType.AGV))
+                    {
+                        scApp.TransferService.ReportNowPortType(change_port_id);
+                    }
+                    else
+                    {
+                        scApp.TransferService.PortTypeChange(change_port_id, (E_PortType)portType, "S2F41");
+                    }
                 }
                 if (canInstallCmd)
                 {
@@ -1121,22 +1130,22 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             {
                 if(port_type == 0 | port_type == 1)
                 {
-                    if ((int)port_item.State == SECSConst.PortState_OutService || (int)port_item.AGVState == SECSConst.PortState_OutService)
+                    if ((int)port_item.State == SECSConst.PortState_OutService)
                     {
                         check_result = SECSConst.HCACK_Not_Able_Execute;
                         is_ok = false;
                     }
-                    else
-                    {
-                        if (port_item.PortType == (E_PortType)port_type)
-                        {
-                            check_result = SECSConst.HCACK_Rejected_Already_Requested;
-                            is_ok = false;
-                            LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
-                               Data: $"Process mcs command [PortTypeChg] can't excute, because mcs command id:{port_id} current transfer status:{port_item.PortType},ohtc reply:{check_result}",
-                               XID: port_id);
-                        }
-                    }
+                    //else
+                    //{
+                    //    if (port_item.PortType == (E_PortType)port_type)
+                    //    {
+                    //        check_result = SECSConst.HCACK_Rejected_Already_Requested;
+                    //        is_ok = false;
+                    //        LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
+                    //           Data: $"Process mcs command [PortTypeChg] can't excute, because mcs command id:{port_id} current transfer status:{port_item.PortType},ohtc reply:{check_result}",
+                    //           XID: port_id);
+                    //    }
+                    //}
                 }
                 else
                 {
@@ -1410,6 +1419,45 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 is_ok = false;
             }
             return (is_ok, check_result, error_id);
+        }
+
+        private (bool isOK, string checkResult) checkHostCommandRCMD_CARRIERLOTIDUPDATE(S2F41 s2F41)
+        {
+            bool is_ok = false;
+            string check_result = SECSConst.HCACK_Confirm;
+            string cstID = "";
+            string lotID = "";
+
+            var cstID_item = s2F41.REPITEMS.Where(item => SCUtility.isMatche(item.CPNAME, SECSConst.CPNAME_CarrierID)).FirstOrDefault();
+            var lotID_item = s2F41.REPITEMS.Where(item => SCUtility.isMatche(item.CPNAME, SECSConst.CPNAME_LotID)).FirstOrDefault();
+            
+            if (cstID_item != null && lotID_item != null)
+            {
+                cstID = cstID_item.CPVAL;
+                lotID = lotID_item.CPVAL;
+
+                CassetteData cstData = scApp.CassetteDataBLL.loadCassetteDataByCSTID(cstID);
+
+                if (cstData == null)
+                {
+                    check_result = SECSConst.HCACK_Obj_Not_Exist;
+                }
+                else
+                {
+                    is_ok = scApp.CassetteDataBLL.UpdateCSTID(cstData.Carrier_LOC, cstData.BOXID, cstData.CSTID, lotID.Trim());
+
+                    if(is_ok == false)
+                    {
+
+                    }
+                }
+            }
+            else
+            {
+                check_result = SECSConst.HCACK_Param_Invalid;
+            }
+
+            return (is_ok, check_result);
         }
 
         protected override void S1F3ReceiveSelectedEquipmentStatusRequest(object sender, SECSEventArgs e)

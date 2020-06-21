@@ -216,8 +216,8 @@ namespace com.mirle.ibg3k0.sc.BLL
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
                     CassetteData cstData = con.CassetteData.Where(data => data.Carrier_LOC == loc && data.BOXID == boxid).First();
-                    cstData.CSTID = cstid;
-                    cstData.LotID = lotID;
+                    cstData.CSTID = cstid.Trim();
+                    cstData.LotID = lotID.Trim();
                     cassettedataDao.UpdateCassetteData(con);
                 }
             }
