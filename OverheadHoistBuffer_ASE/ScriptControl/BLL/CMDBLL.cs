@@ -182,7 +182,7 @@ namespace com.mirle.ibg3k0.sc.BLL
             {
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
-                    return cmd_mcsDao.LoadCmdData(con).Where(cmdData => cmdData.HOSTSOURCE.Trim() == portName.Trim()
+                    return cmd_mcsDao.LoadCmdData_WithoutComplete(con).Where(cmdData => cmdData.HOSTSOURCE.Trim() == portName.Trim()
                                                                 && cmdData.TRANSFERSTATE != E_TRAN_STATUS.TransferCompleted).FirstOrDefault();
                 }
             }

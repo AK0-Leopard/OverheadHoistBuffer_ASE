@@ -5918,18 +5918,31 @@ namespace com.mirle.ibg3k0.sc.Service
             {
                 if (scApp.PortDefBLL.GetPortData(AGVStationID).State == E_PORT_STATUS.InService) //此AGVStation虛擬port是 Out of service 一律回復NG
                 {
+                    isOK = false;
+                    AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 此AGVStation虛擬port是 Out of service 一律回復NG ");
                     return isOK;
                 }
+
                 //取得PLC目前資訊
                 AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " Trigger start. Get the AGVSTation Data, " +
                     "AGVStationID = " + AGVStationID + ", AGVCFromEQToStationCmdNum = " + AGVCFromEQToStationCmdNum + ", isEmergency = " + isEmergency.ToString());
-                List<PortDef> AGVStationData = scApp.PortDefBLL.GetAGVPortGroupDataByStationID(line.LINE_ID, AGVStationID);
-                AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " AGVStationID = ");
+                List<PortDef> AGVPortDatas = scApp.PortDefBLL.GetAGVPortGroupDataByStationID(line.LINE_ID, AGVStationID);
+                AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " Exit GetAGVPortGroupDataByStationID().");
+
+                //確認目前的AGV port 是否有source 為它的取貨命令(若有，則一律回復否，避免先觸發退box後，卻因下一次觸發同意AGV來放貨)
+                AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " Enter CheckIsSourceFromAGVStation().");
+                bool haveCmdFromAGVPort = CheckIsSourceFromAGVStation(AGVPortDatas);
+                if (haveCmdFromAGVPort == true)
+                {
+                    isOK = false;
+                    AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " Return NG. Due to there is cmd from target AGV Station Port.");
+                    return isOK;
+                }
 
                 //確認取得的AGVStationData中的Port都只有可以用的。
                 AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " Enter the filter for AGV port.");
-                List<PortDef> accessAGVPortDatas = FilterOfAGVPort(AGVStationData);
-                AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " Enter the filter for AGV port.");
+                List<PortDef> accessAGVPortDatas = FilterOfAGVPort(AGVPortDatas);
+                AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " Exit the filter for AGV port.");
 
                 //目前先默認取前2個，確認port上Box數量(空與實皆要)
                 int emptyBoxNumber, fullBoxNumber;
@@ -5942,6 +5955,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 {
                     //可針對特定細節做特化處理
                     isOK = false;
+                    return isOK;
                 }
                 //若無實Box 再行判斷空Box 數量。
                 switch (emptyBoxNumber)
@@ -5969,6 +5983,24 @@ namespace com.mirle.ibg3k0.sc.Service
                 TransferServiceLogger.Error(ex, "CanExcuteUnloadTransferAGVStationFromAGVC");
             }
             return isOK;
+        }
+
+        /// <summary>
+        /// 確認目前沒有從該AGV Station出發之命令。有就回NG，以防止在產生退空盒動作後，卻又讓AGV車進行EQ至AGV Station 命令
+        /// </summary>
+        /// <param name="AGVStationData"></param>
+        /// <returns></returns>
+        private bool CheckIsSourceFromAGVStation(List<PortDef> AGVStationData)
+        {
+            foreach (PortDef AGVPortData in AGVStationData)
+            {
+                ACMD_MCS cmdData_FromPortID = cmdBLL.GetCmdDataBySource(AGVPortData.PLCPortID); //A01 A02
+                if(cmdData_FromPortID != null)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>
