@@ -6324,6 +6324,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         else
                         {
                             AGVPortReady = false;
+                            continue;
                         }
                     }
 
@@ -6375,6 +6376,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         else
                         {
                             AGVPortReady = false;
+                            continue;
                         }
                     }
 
