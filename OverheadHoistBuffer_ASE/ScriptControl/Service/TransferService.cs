@@ -83,6 +83,11 @@ namespace com.mirle.ibg3k0.sc.Service
         public string timeOutForAutoInZone { get; set; }    //timeOutForAutoUD 超過時間自動搬到哪個 Zone
 
         #endregion        
+        #region AGVZone_Port 才有用到的屬性
+
+        public E_PORT_STATUS openAGVZone { get; set; }
+
+        #endregion
     }
     public class WaitInOutLog
     {
@@ -194,6 +199,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         data.movebackBOXsleep = false;
                         data.timeOutForAutoUD = (int)v.TimeOutForAutoUD;
                         data.timeOutForAutoInZone = v.TimeOutForAutoInZone;
+                        data.openAGVZone = (E_PORT_STATUS)v.AGVState;
 
                         if (i == data.Stage)
                         {
@@ -206,6 +212,11 @@ namespace com.mirle.ibg3k0.sc.Service
 
                         AddPortINIData(data);
 
+                        if(isAGVZone(data.PortName))
+                        {
+                            OpenAGVZone(data.PortName, data.openAGVZone);
+                        }
+                        
                         //if (v.UnitType.Trim() == UnitType.AGV.ToString())
                         //{
                         //    if (portINIData.ContainsKey(v.ZoneName) == false)
@@ -2843,21 +2854,9 @@ namespace com.mirle.ibg3k0.sc.Service
                             reportBLL.ReportPortOutOfService(portName);
                         }
 
-                        if(isAGVZone(portName)) //200618 SCC+
+                        if (isUnitType(portDB.PLCPortID, UnitType.AGV))
                         {
-                            //冠皚提出: OutOfservice 打開自動退補 ( 後續人員若有需要可以再手動關閉自動退補)
-                            //          InService    關閉自動退補
-                            bool openAGVStation = false;
-
-                            if (service == E_PORT_STATUS.OutOfService)
-                            {
-                                openAGVStation = true;
-                            }
-
-                            foreach(PortINIData agvPort in GetAGVZone(portName))
-                            {
-                                OpenAGV_Station(agvPort.PortName, openAGVStation);
-                            }
+                            PLC_AGVZone_InOutService(portDB.PLCPortID);
                         }
                     }
                     else
@@ -3232,7 +3231,37 @@ namespace com.mirle.ibg3k0.sc.Service
                 TransferServiceLogger.Error(ex, "PLC_AGV_Station_OutMode");
             }
         }
+        public void PLC_AGVZone_InOutService(string agvPortName)
+        {
+            E_PORT_STATUS agvZoneInOutService = E_PORT_STATUS.OutOfService;
 
+            PortDef agvZone = portDefBLL.GetPortData(agvPortName.Trim());
+
+            if(portINIData[agvZone.PLCPortID].openAGVZone == E_PORT_STATUS.InService)
+            {
+                foreach (PortINIData agvPort in GetAGVPort(agvZone.PLCPortID))
+                {
+                    PortPLCInfo agvInfo = GetPLC_PortData(agvPort.PortName);
+
+                    if (agvInfo.OpAutoMode)
+                    {
+                        agvZoneInOutService = E_PORT_STATUS.InService;
+                    }
+                }
+            }
+
+            if(agvZone.State != agvZoneInOutService)
+            {
+                if (agvZoneInOutService == E_PORT_STATUS.InService)
+                {
+                    reportBLL.ReportPortInService(agvZone.PLCPortID);
+                }
+                else if (agvZoneInOutService == E_PORT_STATUS.OutOfService)
+                {
+                    reportBLL.ReportPortOutOfService(agvZone.PLCPortID);
+                }
+            }
+        }
         #region 補BOX、退BOX，控制處理
 
         public void MovebackBOX(string cstID, string boxID, string cstLoc, bool cstPresence)
@@ -5440,6 +5469,42 @@ namespace com.mirle.ibg3k0.sc.Service
             portDefBLL.updatePriority(portName, priority);
             return "OK";
         }
+        public void Manual_OpenAGV_State(string AGVZone)
+        {
+            if(isAGVZone(AGVZone))
+            {
+                portDefBLL.UpdataAGVPortService(AGVZone, E_PORT_STATUS.InService);
+                portINIData[AGVZone].openAGVZone = E_PORT_STATUS.InService;
+                OpenAGVZone(AGVZone, E_PORT_STATUS.InService);
+            }
+        }
+        public void Manual_CloseAGV_State(string AGVZone)
+        {
+            if (isAGVZone(AGVZone))
+            {
+                portDefBLL.UpdataAGVPortService(AGVZone, E_PORT_STATUS.OutOfService);
+                portINIData[AGVZone].openAGVZone = E_PORT_STATUS.OutOfService;
+                OpenAGVZone(AGVZone, E_PORT_STATUS.OutOfService);
+            }
+        }
+        public void OpenAGVZone(string AGVZone, E_PORT_STATUS status)
+        {
+            bool openAGVStation = false;    //是否開始自動退補BOX功能
+            string agvPortName = "";
+
+            if(status == E_PORT_STATUS.OutOfService)
+            {
+                openAGVStation = true;
+            }
+
+            foreach (PortINIData agvPort in GetAGVPort(AGVZone))
+            {
+                agvPortName = agvPort.PortName;
+                OpenAGV_Station(agvPort.PortName, openAGVStation);
+            }
+
+            PLC_AGVZone_InOutService(agvPortName);
+        }
         public bool doUpdateTimeOutForAutoUD(string port_id, int timeOutForAutoUD)  //更新Port TimeOut 時間
         {
             bool isSuccess = false;
@@ -5676,17 +5741,21 @@ namespace com.mirle.ibg3k0.sc.Service
                                                     ) 
                                            ).ToList();
         }
-        public List<PortINIData> GetAGVZone(string agvZone)
+        public List<PortINIData> GetAGVPort(string agvZoneName)
         {
-            return portINIData.Values.Where(data => data.ZoneName == agvZone.Trim()
+            return portINIData.Values.Where(data => data.ZoneName == agvZoneName.Trim()
                                                  && data.UnitType == UnitType.AGV.ToString()
                                            ).ToList();
         }
 
+        public List<PortINIData> GetAGVZone()
+        {
+            return portINIData.Values.Where(data => data.UnitType == UnitType.AGVZONE.ToString()).ToList();
+        }
         public string GetAGV_InModeInServicePortName(string agvZone) //取得AGV ZONE 狀態為 InMode 且上面有空 BOX 的 AGV Port 名稱
         {
             string agvPortName = "";
-            List<PortINIData> agvZoneData = GetAGVZone(agvZone);
+            List<PortINIData> agvZoneData = GetAGVPort(agvZone);
 
             if (agvZoneData.Count() != 0)
             {
@@ -5710,7 +5779,7 @@ namespace com.mirle.ibg3k0.sc.Service
         public string GetAGV_OutModeInServicePortName(string agvZone) //取得AGV ZONE 狀態為 OutMode 且上面沒有空 BOX 的 AGV Port 名稱
         {
             string agvPortName = "";
-            List<PortINIData> agvZoneData = GetAGVZone(agvZone);
+            List<PortINIData> agvZoneData = GetAGVPort(agvZone);
 
             if (agvZoneData.Count() != 0)
             {

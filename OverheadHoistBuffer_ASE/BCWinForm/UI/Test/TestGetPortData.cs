@@ -41,6 +41,12 @@ namespace com.mirle.ibg3k0.bc.winform
             comboBox2.Items.Add("Out");
             comboBox2.SelectedIndex = 0;
 
+            foreach(var v in BCApp.SCApplication.TransferService.GetAGVZone())
+            {
+                comboBox3.Items.Add(v.PortName);
+            }
+            comboBox2.SelectedIndex = 0;
+
             #region dataGridView2
             dataGridView2.Columns.Add("中文說明", "中文說明");
             dataGridView2.Columns.Add("訊號名稱", "訊號名稱");
@@ -425,6 +431,16 @@ namespace com.mirle.ibg3k0.bc.winform
                 BCApp.SCApplication.TransferService.PortInOutService(portName, E_PORT_STATUS.OutOfService, "TestGetPortData");
             }
             GetPortData();
+        }
+
+        private void button28_Click(object sender, EventArgs e)
+        {
+            BCApp.SCApplication.TransferService.Manual_OpenAGV_State(comboBox3.Text);
+        }
+
+        private void button29_Click(object sender, EventArgs e)
+        {
+            BCApp.SCApplication.TransferService.Manual_CloseAGV_State(comboBox3.Text);
         }
     }
 }
