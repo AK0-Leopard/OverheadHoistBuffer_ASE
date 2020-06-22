@@ -45,7 +45,7 @@ namespace com.mirle.ibg3k0.bc.winform
             {
                 comboBox3.Items.Add(v.PortName);
             }
-            comboBox2.SelectedIndex = 0;
+            comboBox3.SelectedIndex = 0;
 
             #region dataGridView2
             dataGridView2.Columns.Add("中文說明", "中文說明");
