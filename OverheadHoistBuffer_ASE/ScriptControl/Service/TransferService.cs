@@ -61,6 +61,7 @@ namespace com.mirle.ibg3k0.sc.Service
         public string PortName { get; set; }
         public string UnitType { get; set; }
         public string ZoneName { get; set; }
+        public string Group { get; set; }   //上報 MCS ZoneName 不能報 AGVZone (ST01、ST02)，所以另外開一個來記錄
         public DateTime portStateErrorLogTime { get; set; }  //執行的命令 port 狀態異常 10 秒記 Log 一次
         #endregion        
         #region CRANE 才有用到的屬性
@@ -200,6 +201,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         data.timeOutForAutoUD = (int)v.TimeOutForAutoUD;
                         data.timeOutForAutoInZone = v.TimeOutForAutoInZone;
                         data.openAGVZone = (E_PORT_STATUS)v.AGVState;
+                        data.Group = v.ZoneName?.Trim() ?? "";
 
                         if (i == data.Stage)
                         {
@@ -388,8 +390,7 @@ namespace com.mirle.ibg3k0.sc.Service
         }
         public void iniOHTData(string craneName)
         {
-            //AVEHICLE vehicle = scApp.VehicleService.GetVehicleDataByVehicleID(craneName);
-            AVEHICLE vehicle = scApp.VehicleBLL.cache.getVhByID(craneName);
+            AVEHICLE vehicle = scApp.VehicleService.GetVehicleDataByVehicleID(craneName);
 
             //ACMD_MCS cmd = cmdBLL.getCMD_ByOHTName(craneName).FirstOrDefault();
             //    AVEHICLE.HAS_BOX
@@ -5743,7 +5744,7 @@ namespace com.mirle.ibg3k0.sc.Service
         }
         public List<PortINIData> GetAGVPort(string agvZoneName)
         {
-            return portINIData.Values.Where(data => data.ZoneName == agvZoneName.Trim()
+            return portINIData.Values.Where(data => data.Group == agvZoneName.Trim()
                                                  && data.UnitType == UnitType.AGV.ToString()
                                            ).ToList();
         }
