@@ -6061,7 +6061,7 @@ namespace com.mirle.ibg3k0.sc.Service
             bool isOK = false;
             try
             {
-                if (scApp.PortDefBLL.GetPortData(AGVStationID).State == E_PORT_STATUS.InService) //此AGVStation虛擬port是 Out of service 一律回復NG
+                if (scApp.PortDefBLL.GetPortData(AGVStationID).State == E_PORT_STATUS.OutOfService) //此AGVStation虛擬port是 Out of service 一律回復NG
                 {
                     isOK = false;
                     AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 此AGVStation虛擬port是 Out of service 一律回復NG ");
