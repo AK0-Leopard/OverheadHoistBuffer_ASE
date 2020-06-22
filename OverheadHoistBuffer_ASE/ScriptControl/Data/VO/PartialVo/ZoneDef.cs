@@ -27,7 +27,14 @@ namespace com.mirle.ibg3k0.sc
             set
             {
                 emptyBoxList = value;
-                BoxCount = emptyBoxList.Count() + solidBoxList.Count();
+                if (solidBoxList != null)
+                {
+                    BoxCount = emptyBoxList.Count() + solidBoxList.Count();
+                }
+                else
+                {
+                    BoxCount = emptyBoxList.Count();
+                }
             }
         }
         //zone內的實箱清單，僅儲存box ID(2020/06/22目前看來不需要cassette ID)
@@ -37,7 +44,14 @@ namespace com.mirle.ibg3k0.sc
             set
             {
                 solidBoxList = value;
-                BoxCount = emptyBoxList.Count() + solidBoxList.Count();
+                if (emptyBoxList != null)
+                {
+                    BoxCount = emptyBoxList.Count() + solidBoxList.Count();
+                }
+                else
+                {
+                    BoxCount = solidBoxList.Count();
+                }
             }
         }
         //zone內的等待回收box清單

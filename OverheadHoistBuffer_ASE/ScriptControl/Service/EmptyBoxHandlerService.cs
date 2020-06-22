@@ -42,7 +42,9 @@ namespace com.mirle.ibg3k0.sc.Service
         private NLog.Logger emptyBoxLogger = NLog.LogManager.GetLogger("EmptyBoxHandlerServiceLogger");
 
         private static int lowLevelCheckCount = 0;
+        private static bool initializedFlag = false;
 
+        private List<ZoneDef> zoneCacheDatas;
         private List<ZoneDef> zoneDatas;
         private List<CassetteData> boxDatas;
         private List<ShelfDef> shelfDatas;
@@ -61,6 +63,18 @@ namespace com.mirle.ibg3k0.sc.Service
         {
             emptyBoxLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "[CheckTheEmptyBoxStockLevel]");
 
+            if(!initializedFlag)
+            {
+                zoneCacheDatas = zoneBLL.loadZoneData();
+                foreach (var zoneCache in zoneCacheDatas)
+                {
+                    zoneCache.EmptyBoxList = new List<string>();
+                    zoneCache.SolidBoxList = new List<string>();
+                    zoneCache.WaitForRecycleBoxList = new List<string>();
+                }
+                initializedFlag = true;
+            }
+
             zoneDatas = zoneBLL.loadZoneData();
             boxDatas = cassette_dataBLL.loadCassetteData();
             shelfDatas = shelfDefBLL.LoadShelf();
@@ -78,7 +92,7 @@ namespace com.mirle.ibg3k0.sc.Service
             //B2: 檢查各個zone是否需要補空box
 
             //高水位檢查
-            foreach (ZoneDef zoneData in zoneDatas)
+            foreach (ZoneDef zoneData in zoneCacheDatas)
             {
                 //A1: zone內有沒有已經標記成待退的空box，有則跳過這次檢查
                 if (zoneData.WaitForRecycleBoxList.Count() != 0)
@@ -136,12 +150,12 @@ namespace com.mirle.ibg3k0.sc.Service
                     {
                         emptyBoxLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") +
                             $"Not enough empty box for AGV ST use, request for empty box...");
-                        DoSendRequireEmptyBoxToMCS(zoneDatas.FirstOrDefault().ZoneID, requriedBoxAGV);
+                        DoSendRequireEmptyBoxToMCS(zoneCacheDatas.FirstOrDefault().ZoneID, requriedBoxAGV);
                     }
                     else
                     {
                         //B2: 檢查各個zone是否需要補空box
-                        foreach (ZoneDef zoneData in zoneDatas)
+                        foreach (ZoneDef zoneData in zoneCacheDatas)
                         {
                             if (zoneData.BoxCount < zoneData.LowWaterMark)
                             {
@@ -404,8 +418,15 @@ namespace com.mirle.ibg3k0.sc.Service
 
         private void UpdateZoneData()
         {
-            foreach (ZoneDef z in zoneDatas)
+            foreach (ZoneDef z in zoneCacheDatas)
             {
+                //update water mark settings
+                var zonedata = from zd in zoneDatas
+                              where zd.ZoneID == z.ZoneID
+                              select zd;
+                z.LowWaterMark = Decimal.ToInt32((decimal)zonedata.FirstOrDefault().LowWaterMark);
+                z.HighWaterMark = Decimal.ToInt32((decimal)zonedata.FirstOrDefault().HighWaterMark);
+
                 //zone size
                 var shelfByZone = from s in shelfDatas
                                   where s.ZoneID == z.ZoneID && s.Enable == "Y"
