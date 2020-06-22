@@ -824,6 +824,7 @@
     <Compile Include="Data\VO\PartialVo\PortDef.cs" />
     <Compile Include="Data\VO\PartialVo\ShelfDef.cs" />
     <Compile Include="Data\VO\PartialVo\CassetteData.cs" />
+    <Compile Include="Data\VO\PartialVo\ZoneDef.cs" />
     <Compile Include="Data\VO\ReserveEnhanceInfo.cs" />
     <Compile Include="Data\VO\ReturnCodeMap.cs" />
     <Compile Include="Data\VO\AlarmMap.cs" />
