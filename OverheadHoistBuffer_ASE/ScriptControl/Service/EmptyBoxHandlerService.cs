@@ -63,9 +63,13 @@ namespace com.mirle.ibg3k0.sc.Service
         {
             emptyBoxLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "[CheckTheEmptyBoxStockLevel]");
 
-            if(!initializedFlag)
+            zoneDatas = zoneBLL.loadZoneData();
+            boxDatas = cassette_dataBLL.loadCassetteData();
+            shelfDatas = shelfDefBLL.LoadShelf();
+
+            if (!initializedFlag)
             {
-                zoneCacheDatas = zoneBLL.loadZoneData();
+                zoneCacheDatas = new List<ZoneDef>(zoneDatas);
                 foreach (var zoneCache in zoneCacheDatas)
                 {
                     zoneCache.EmptyBoxList = new List<string>();
@@ -73,11 +77,8 @@ namespace com.mirle.ibg3k0.sc.Service
                     zoneCache.WaitForRecycleBoxList = new List<string>();
                 }
                 initializedFlag = true;
+                emptyBoxLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "===== EmptyBoxHandlerService initialized =====");
             }
-
-            zoneDatas = zoneBLL.loadZoneData();
-            boxDatas = cassette_dataBLL.loadCassetteData();
-            shelfDatas = shelfDefBLL.LoadShelf();
 
             //更新zone內的空箱實箱列表
             UpdateZoneData();
