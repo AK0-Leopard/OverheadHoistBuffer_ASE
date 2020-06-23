@@ -291,11 +291,6 @@ namespace com.mirle.ibg3k0.sc.BLL
 
         #region MCS SXFY Report
 
-
-
-
-
-
         public bool ReportEquiptmentOffLine()
         {
             bool isSuccsess = true;

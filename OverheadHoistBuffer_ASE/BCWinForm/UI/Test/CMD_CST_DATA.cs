@@ -273,7 +273,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Test
                     string boxID = dataGridView2.Rows[v.RowIndex].Cells["BOXID"].Value.ToString();
                     string loc = dataGridView2.Rows[v.RowIndex].Cells["Carrier_LOC"].Value.ToString();
                     string lotID = dataGridView2.Rows[v.RowIndex].Cells["LotID"].Value.ToString();
-                    BCApp.SCApplication.TransferService.OHBC_InsertCassette(cstID, boxID, loc, lotID);
+                    BCApp.SCApplication.TransferService.OHBC_InsertCassette(cstID, boxID, loc, lotID, "測試用 CMD_CST_DATA");
                 }
                 UpDate_CstData();
             }

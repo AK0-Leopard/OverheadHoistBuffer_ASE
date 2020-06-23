@@ -817,6 +817,9 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                         (
                             DateTime.Now.ToString("HH:mm:ss.fff ") +
                             "PLC >> PLC|Port_onBarcodeReadDone  PortName: " + function.EQ_ID
+                            + " BCRReadDone: " + function.BCRReadDone
+                            + " CassetteID: " + function.CassetteID
+                            + " BoxID: " + function.BoxID
                             + " IsReadyToLoad: " + function.IsReadyToLoad
                             + " IsReadyToUnload:" + function.IsReadyToUnload
                             + " IsCSTPresence:" + function.IsCSTPresence

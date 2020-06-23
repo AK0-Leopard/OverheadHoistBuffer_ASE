@@ -820,7 +820,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 }
                 if (canInstallCmd)
                 {
-                    scApp.TransferService.OHBC_InsertCassette(carrier_id, box_id, carrier_loc);
+                    scApp.TransferService.OHBC_InsertCassette(carrier_id, box_id, carrier_loc, "S2F41");
                     //scApp.VehicleService.doInstallCommandByMCSCmdID(has_carrier, carrier_id, box_id, carrier_loc);
                 }
                 if (canRemoveCmd)

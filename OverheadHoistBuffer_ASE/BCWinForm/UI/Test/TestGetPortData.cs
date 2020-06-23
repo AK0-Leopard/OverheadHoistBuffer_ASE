@@ -1,5 +1,6 @@
 ﻿using com.mirle.ibg3k0.sc;
 using com.mirle.ibg3k0.sc.Data.PLC_Functions;
+using com.mirle.ibg3k0.sc.Service;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,6 +19,9 @@ namespace com.mirle.ibg3k0.bc.winform
         ALINE line = null;
         List<PortDef> portList = null;
         PortPLCInfo portData = new PortPLCInfo();
+
+        TransferService transferService = null;
+
         public TestGetPortData()
         {
             InitializeComponent();
@@ -25,6 +29,7 @@ namespace com.mirle.ibg3k0.bc.winform
 
         private void TestGetPortData_Load(object sender, EventArgs e)
         {
+            transferService = BCApp.SCApplication.TransferService;
             line = BCApp.SCApplication.getEQObjCacheManager().getLine();
             portList = BCApp.SCApplication.PortDefBLL.GetOHB_CVPortData(line.LINE_ID);
 
@@ -33,19 +38,24 @@ namespace com.mirle.ibg3k0.bc.winform
 
             foreach (var v in portList)
             {
-                comboBox1.Items.Add(v.PLCPortID);
+                if(transferService.isCVPort(v.PLCPortID))
+                {
+                    comboBox1.Items.Add(v.PLCPortID);
+                }
             }
+
             comboBox1.SelectedIndex = 0;
 
             comboBox2.Items.Add("In");
             comboBox2.Items.Add("Out");
             comboBox2.SelectedIndex = 0;
 
-            foreach(var v in BCApp.SCApplication.TransferService.GetAGVZone())
+            foreach(var v in transferService.GetAGVZone())
             {
                 comboBox3.Items.Add(v.PortName);
+
+                comboBox3.SelectedIndex = 0;
             }
-            comboBox3.SelectedIndex = 0;
 
             #region dataGridView2
             dataGridView2.Columns.Add("中文說明", "中文說明");
@@ -124,7 +134,7 @@ namespace com.mirle.ibg3k0.bc.winform
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            portData = BCApp.SCApplication.TransferService.GetPLC_PortData(comboBox1.Text);
+            portData = transferService.GetPLC_PortData(comboBox1.Text);
             #region dataGridView2
             dataGridView2.Rows[0].Cells[2].Value = portData.OpAutoMode.ToString();
             dataGridView2.Rows[1].Cells[2].Value = portData.IsAutoMode.ToString();
@@ -166,8 +176,8 @@ namespace com.mirle.ibg3k0.bc.winform
             dataGridView3.Rows[11].Cells[2].Value = portData.LoadPosition7.ToString();
             #endregion
             #region dataGridView4
-            dataGridView4.Rows[0].Cells[2].Value = BCApp.SCApplication.TransferService.GetAGV_StationStatus(comboBox1.Text);
-            dataGridView4.Rows[1].Cells[2].Value = BCApp.SCApplication.TransferService.GetAGV_AutoPortType(comboBox1.Text);
+            dataGridView4.Rows[0].Cells[2].Value = transferService.GetAGV_StationStatus(comboBox1.Text);
+            dataGridView4.Rows[1].Cells[2].Value = transferService.GetAGV_AutoPortType(comboBox1.Text);
             dataGridView4.Rows[2].Cells[2].Value = portData.IsAGVMode.ToString();
             dataGridView4.Rows[3].Cells[2].Value = portData.IsMGVMode.ToString();
             //dataGridView4.Rows[4].Cells[2].Value = 
@@ -219,7 +229,7 @@ namespace com.mirle.ibg3k0.bc.winform
 
             //label4.Text =
             //    "AGV Port 專有訊號:\n"
-            //    + "開啟自動補退 BOX 功能_openAGV_Station:   " + BCApp.SCApplication.TransferService.GetAGV_StationStatus(comboBox1.Text) + "\n"
+            //    + "開啟自動補退 BOX 功能_openAGV_Station:   " + transferService.GetAGV_StationStatus(comboBox1.Text) + "\n"
             //    + "AGV模式_IsAGVMode:                       " + portData.IsAGVMode.ToString() + "\n"
             //    + "\n"
             //    + "AGVPortReady:                            " + portData.AGVPortReady.ToString() + "\n"
@@ -247,59 +257,59 @@ namespace com.mirle.ibg3k0.bc.winform
 
         private void button3_Click(object sender, EventArgs e)
         {
-            BCApp.SCApplication.TransferService.PortCommanding(comboBox1.Text ,true);
+            transferService.PortCommanding(comboBox1.Text ,true);
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            BCApp.SCApplication.TransferService.PortCommanding(comboBox1.Text, false);
+            transferService.PortCommanding(comboBox1.Text, false);
         }
 
         private async void button4_Click(object sender, EventArgs e)
         {
             string port_id = comboBox1.Text;
             E_PortType mode = (E_PortType)comboBox2.SelectedIndex;
-            await Task.Run(() => BCApp.SCApplication.TransferService.PortTypeChange(port_id, mode, "測試用 UI"));
+            await Task.Run(() => transferService.PortTypeChange(port_id, mode, "測試用 UI"));
         }
 
         private void button6_Click(object sender, EventArgs e)
         {
-            BCApp.SCApplication.TransferService.toAGV_Mode(comboBox1.Text);
+            transferService.toAGV_Mode(comboBox1.Text);
         }
 
         private void button7_Click(object sender, EventArgs e)
         {
-            BCApp.SCApplication.TransferService.toMGV_Mode(comboBox1.Text);
+            transferService.toMGV_Mode(comboBox1.Text);
         }
 
         private void button8_Click(object sender, EventArgs e)
         {
-            BCApp.SCApplication.TransferService.SetPortRun(comboBox1.Text);
+            transferService.SetPortRun(comboBox1.Text);
         }
 
         private void button9_Click(object sender, EventArgs e)
         {
-            BCApp.SCApplication.TransferService.SetPortStop(comboBox1.Text);
+            transferService.SetPortStop(comboBox1.Text);
         }
 
         private void button11_Click(object sender, EventArgs e)
         {
-            BCApp.SCApplication.TransferService.SetAGV_PortBCR_Read(comboBox1.Text);
+            transferService.SetAGV_PortBCR_Read(comboBox1.Text);
         }
 
         private void button12_Click(object sender, EventArgs e)
         {
-            BCApp.SCApplication.TransferService.SetAGV_PortOpenBOX(comboBox1.Text);
+            transferService.SetAGV_PortOpenBOX(comboBox1.Text);
         }
 
         private void button13_Click(object sender, EventArgs e)
         {
-            BCApp.SCApplication.TransferService.RstAGV_PortBCR_Read(comboBox1.Text);
+            transferService.RstAGV_PortBCR_Read(comboBox1.Text);
         }
 
         private void button10_Click(object sender, EventArgs e)
         {
-            BCApp.SCApplication.TransferService.PortAlarrmReset(comboBox1.Text);
+            transferService.PortAlarrmReset(comboBox1.Text);
         }
 
         private void button14_Click(object sender, EventArgs e)
@@ -319,7 +329,7 @@ namespace com.mirle.ibg3k0.bc.winform
             foreach (DataGridViewCell v in dataGridView1.SelectedCells)
             {
                 string portName = dataGridView1.Rows[v.RowIndex].Cells["PLCPortID"].Value.ToString();
-                BCApp.SCApplication.TransferService.UpdateIgnoreModeChange(portName, "Y");
+                transferService.UpdateIgnoreModeChange(portName, "Y");
             }
             GetPortData();
         }
@@ -329,28 +339,28 @@ namespace com.mirle.ibg3k0.bc.winform
             foreach (DataGridViewCell v in dataGridView1.SelectedCells)
             {
                 string portName = dataGridView1.Rows[v.RowIndex].Cells["PLCPortID"].Value.ToString();
-                BCApp.SCApplication.TransferService.UpdateIgnoreModeChange(portName, "N");
+                transferService.UpdateIgnoreModeChange(portName, "N");
             }
             GetPortData();
         }
 
         private void button31_Click(object sender, EventArgs e)
         {
-            BCApp.SCApplication.TransferService.OpenAGV_Station(comboBox1.Text, true);
+            transferService.OpenAGV_Station(comboBox1.Text, true);
         }
 
         private void button19_Click(object sender, EventArgs e)
         {
-            BCApp.SCApplication.TransferService.OpenAGV_Station(comboBox1.Text, false);
+            transferService.OpenAGV_Station(comboBox1.Text, false);
         }
 
         private void button17_Click(object sender, EventArgs e)
         {
             foreach (var v in portList)
             {
-                if(BCApp.SCApplication.TransferService.isUnitType(v.PLCPortID, sc.Service.UnitType.AGV))
+                if(transferService.isUnitType(v.PLCPortID, sc.Service.UnitType.AGV))
                 {
-                    BCApp.SCApplication.TransferService.OpenAGV_Station(v.PLCPortID, true);
+                    transferService.OpenAGV_Station(v.PLCPortID, true);
                 }
             }
         }
@@ -359,40 +369,40 @@ namespace com.mirle.ibg3k0.bc.winform
         {
             foreach (var v in portList)
             {
-                if (BCApp.SCApplication.TransferService.isUnitType(v.PLCPortID, sc.Service.UnitType.AGV))
+                if (transferService.isUnitType(v.PLCPortID, sc.Service.UnitType.AGV))
                 {
-                    BCApp.SCApplication.TransferService.OpenAGV_Station(v.PLCPortID, false);
+                    transferService.OpenAGV_Station(v.PLCPortID, false);
                 }
             }
         }
 
         private void button20_Click(object sender, EventArgs e)
         {
-            PortPLCInfo plcInfo = BCApp.SCApplication.TransferService.GetPLC_PortData(comboBox1.Text);
+            PortPLCInfo plcInfo = transferService.GetPLC_PortData(comboBox1.Text);
 
             if(plcInfo.LoadPosition1)
             {
-                BCApp.SCApplication.TransferService.PLC_ReportPortWaitIn(plcInfo, "TestGetPortData");
+                transferService.PLC_ReportPortWaitIn(plcInfo, "TestGetPortData");
             }
         }
 
         private void button21_Click(object sender, EventArgs e)
         {
-            BCApp.SCApplication.TransferService.OpenAGV_AutoPortType(comboBox1.Text, true);
+            transferService.OpenAGV_AutoPortType(comboBox1.Text, true);
         }
 
         private void button24_Click(object sender, EventArgs e)
         {
-            BCApp.SCApplication.TransferService.OpenAGV_AutoPortType(comboBox1.Text, false);
+            transferService.OpenAGV_AutoPortType(comboBox1.Text, false);
         }
 
         private void button23_Click(object sender, EventArgs e)
         {
             foreach (var v in portList)
             {
-                if (BCApp.SCApplication.TransferService.isUnitType(v.PLCPortID, sc.Service.UnitType.AGV))
+                if (transferService.isUnitType(v.PLCPortID, sc.Service.UnitType.AGV))
                 {
-                    BCApp.SCApplication.TransferService.OpenAGV_AutoPortType(v.PLCPortID, true);
+                    transferService.OpenAGV_AutoPortType(v.PLCPortID, true);
                 }
             }
         }
@@ -401,16 +411,16 @@ namespace com.mirle.ibg3k0.bc.winform
         {
             foreach (var v in portList)
             {
-                if (BCApp.SCApplication.TransferService.isUnitType(v.PLCPortID, sc.Service.UnitType.AGV))
+                if (transferService.isUnitType(v.PLCPortID, sc.Service.UnitType.AGV))
                 {
-                    BCApp.SCApplication.TransferService.OpenAGV_AutoPortType(v.PLCPortID, false);
+                    transferService.OpenAGV_AutoPortType(v.PLCPortID, false);
                 }
             }
         }
 
         private void button25_Click(object sender, EventArgs e)
         {
-            BCApp.SCApplication.TransferService.GetCVPortHelp(comboBox1.Text);
+            transferService.GetCVPortHelp(comboBox1.Text);
         }
 
         private void button26_Click(object sender, EventArgs e)
@@ -418,7 +428,7 @@ namespace com.mirle.ibg3k0.bc.winform
             foreach (DataGridViewCell v in dataGridView1.SelectedCells)
             {
                 string portName = dataGridView1.Rows[v.RowIndex].Cells["PLCPortID"].Value.ToString();
-                BCApp.SCApplication.TransferService.PortInOutService(portName, E_PORT_STATUS.InService, "TestGetPortData");
+                transferService.PortInOutService(portName, E_PORT_STATUS.InService, "TestGetPortData");
             }
             GetPortData();            
         }
@@ -428,19 +438,19 @@ namespace com.mirle.ibg3k0.bc.winform
             foreach (DataGridViewCell v in dataGridView1.SelectedCells)
             {
                 string portName = dataGridView1.Rows[v.RowIndex].Cells["PLCPortID"].Value.ToString();
-                BCApp.SCApplication.TransferService.PortInOutService(portName, E_PORT_STATUS.OutOfService, "TestGetPortData");
+                transferService.PortInOutService(portName, E_PORT_STATUS.OutOfService, "TestGetPortData");
             }
             GetPortData();
         }
 
         private void button28_Click(object sender, EventArgs e)
         {
-            BCApp.SCApplication.TransferService.Manual_OpenAGV_State(comboBox3.Text);
+            transferService.Manual_OpenAGV_State(comboBox3.Text);
         }
 
         private void button29_Click(object sender, EventArgs e)
         {
-            BCApp.SCApplication.TransferService.Manual_CloseAGV_State(comboBox3.Text);
+            transferService.Manual_CloseAGV_State(comboBox3.Text);
         }
     }
 }
