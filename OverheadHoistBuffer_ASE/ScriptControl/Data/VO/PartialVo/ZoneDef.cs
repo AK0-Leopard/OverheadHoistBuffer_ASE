@@ -56,6 +56,7 @@ namespace com.mirle.ibg3k0.sc
         }
         //zone內的等待回收box清單
         public List<string> WaitForRecycleBoxList { get; set; }
+        //zone內的box總數
         public int BoxCount { get; private set; }
     }
 }
