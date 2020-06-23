@@ -111,6 +111,32 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             }
         }
 
+        public void PLC_SetMCSOnline(bool online)
+        {
+            var function = scApp.getFunBaseObj<OHxCToPLC_SetSystemInfo_SetMCSOnline>(masterPLC.PORT_ID) as OHxCToPLC_SetSystemInfo_SetMCSOnline;
+            try
+            {
+                //1.建立各個Function物件
+                function.MCSOnline = online;
+                function.Write(bcfApp, masterPLC.EqptObjectCate, masterPLC.PORT_ID);
+                function.Timestamp = DateTime.Now;
+
+                //2.write log
+                //LogManager.GetLogger("com.mirle.ibg3k0.sc.Common.LogHelper").Info(function.ToString());
+                NLog.LogManager.GetCurrentClassLogger().Info(function.ToString());
+
+                //3.logical (include db save)
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+            }
+            finally
+            {
+                scApp.putFunBaseObj<OHxCToPLC_SetSystemInfo_SetMCSOnline>(function);
+            }
+        }
+
         public virtual void doShareMemoryInit(BCFAppConstants.RUN_LEVEL runLevel)
         {
             try

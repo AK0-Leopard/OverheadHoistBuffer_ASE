@@ -45,5 +45,13 @@ namespace com.mirle.ibg3k0.sc.Data.PLC_Functions
         [PLCElement(ValueName = "PLC_HEARTBEAT")]
         public bool PLCHeartBeat;
     }
+
+    class OHxCToPLC_SetSystemInfo_SetMCSOnline : PLC_FunBase
+    {
+        public DateTime Timestamp;
+
+        [PLCElement(ValueName = "MCS_ONLINE")]
+        public bool MCSOnline;
+    }
 }
 

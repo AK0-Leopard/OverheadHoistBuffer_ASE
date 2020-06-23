@@ -13,6 +13,7 @@
 // 2020/06/01    Hsinyu Chang   N/A            A20.06.01b   高低水位以database內的定義為準
 // 2020/06/22    Hsinyu Chang   N/A            A20.06.22a   新增Zone內的空箱&實箱列表
 // 2020/06/22    Hsinyu Chang   N/A            A20.06.22b   重構流程
+// 2020/06/23    Hsinyu Chang   N/A            A20.06.23    統計zone內空box時，排除已標記成預約取的
 //**********************************************************************************
 
 using com.mirle.ibg3k0.sc.App;
@@ -435,17 +436,25 @@ namespace com.mirle.ibg3k0.sc.Service
                 z.ZoneSize = shelfByZone.Count();
 
                 //empty box list
+                //2020.06.23 排除已標記成預約取的，以免退box時找不到
                 var emptyBoxes = from b in boxDatas
                                  from s in shelfDatas
-                                 where b.Carrier_LOC == s.ShelfID && string.IsNullOrEmpty(b.CSTID) && s.ZoneID == z.ZoneID
+                                 where b.Carrier_LOC == s.ShelfID &&
+                                    string.IsNullOrEmpty(b.CSTID) &&
+                                    s.ZoneID == z.ZoneID &&
+                                    s.ShelfState != ShelfDef.E_ShelfState.RetrievalReserved
                                  select b.BOXID;
                 //box(es) with cassette
                 var solidBoxes = from b in boxDatas
                                  from s in shelfDatas
-                                 where b.Carrier_LOC == s.ShelfID && !string.IsNullOrEmpty(b.CSTID) && s.ZoneID == z.ZoneID
+                                 where b.Carrier_LOC == s.ShelfID &&
+                                    !string.IsNullOrEmpty(b.CSTID) &&
+                                    s.ZoneID == z.ZoneID
                                  select b.BOXID;
                 z.EmptyBoxList = emptyBoxes.ToList();
                 z.SolidBoxList = solidBoxes.ToList();
+                emptyBoxLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") +
+                    $"{z.ZoneID} Size = {z.ZoneSize}, empty box count = {z.EmptyBoxList.Count()}, solid box count = {z.SolidBoxList.Count()}");
 
                 //找出已經回收成功的box
                 var recycledBoxes = from x in z.WaitForRecycleBoxList
