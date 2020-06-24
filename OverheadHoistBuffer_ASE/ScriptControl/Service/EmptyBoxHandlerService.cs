@@ -87,7 +87,9 @@ namespace com.mirle.ibg3k0.sc.Service
             //2020/06/22 Hsinyu Chang
             //A. 高水位檢查: 30秒一次
             //A1: zone內有沒有已經標記成待退的空box，有則跳過這次檢查
-            //A2: 檢查是否達緊急水位，有則強制送往STK，沒有STK就送往OHCV
+            //A2: 檢查是否達緊急水位，有則強制送往STK
+            // A2-1: 如果沒有STK可以送，就送往其他OHB
+            // A2-2: 連其他OHB也送不過去，呼叫MCS幫忙(to A3)
             //A3: 檢查是否達高水位，是則請求MCS幫退空box
             //B. 低水位檢查: 2分鐘一次
             //B1: 先確認目前的line 上shelf的空box 是否夠用(目前標準為AGV station 數量)
@@ -107,7 +109,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     //已達緊急水位，產生往Loop or STK的manual command退box
                     emptyBoxLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") +
                         $"{zoneData.ZoneID} reaches emergency water level: {zoneData.ZoneSize * emergencyWaterLevel}, force to send empty box to STK or OHCV...");
-                    //TODO: 第二個parameter填入out mode下的STK port，沒有就找out mode下的OHCV port
+                    //找out mode下的STK port，沒有就找out mode下的OHCV port
                     string dest = scApp.TransferService.GetSTKorOHCV_OutModePortName();
                     if (string.IsNullOrWhiteSpace(dest) == false)
                     {
@@ -170,88 +172,6 @@ namespace com.mirle.ibg3k0.sc.Service
                     }
                 }
             }
-
-            //2020/06/22 deprecated
-            //先確認目前的line 上shelf的空box 是否夠用(目前標準為AGV station 數量)
-            //var emptyBox = GetTotalEmptyBoxNumber();
-            //if (emptyBox.isSuccess == true)
-            //{
-            //    int requriedBoxAGV;
-            //    List<CassetteData> emptyBoxList = new List<CassetteData>(emptyBox.emptyBox);
-            //    var isEnoughEmptyBox = CheckIsEnoughEmptyBox(emptyBoxList.Count, out requriedBoxAGV);
-            //    emptyBoxLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + $"AGV ST needs {requriedBoxAGV} box(es), now has {emptyBoxList.Count}");
-            //    if (isEnoughEmptyBox.isSuccess == true)
-            //    {
-            //        //A20.05.28.0
-            //        //夠用，則確認目前總水位是否過高，若過高則退掉多餘Empty Box到 CV上。
-            //        //2020/06/15: 如果未達緊急水位，就只向MCS要求退空box，然後等待MCS S2F49搬出(ref: Mirle E88 spec v1.1 P79 "Empty Box Recycling")
-            //        //如果已達緊急水位，Line直接送到Loop，Loop直接送到Stocker(TODO)
-            //        if (isEnoughEmptyBox.isEnough == true)
-            //        {
-            //            foreach (var zoneData in zoneDatas)
-            //            {
-            //                if (CheckIfTooMuchBox(zoneData, out int boxCount))
-            //                {
-            //                    emptyBoxLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") +
-            //                        $"{zoneData.ZoneID} has {boxCount} box(es), reaches high water level: {zoneData.HighWaterMark}, recycling empty box...");
-            //                    if (boxCount > zoneBLL.GetZoneTotalSize(zoneData.ZoneID) * emergencyWaterLevel)
-            //                    {
-            //                        //已達緊急水位，產生往Loop or STK的manual command退box
-            //                        emptyBoxLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") +
-            //                            $"{zoneData.ZoneID} reaches emergency water level: {zoneBLL.GetZoneTotalSize(zoneData.ZoneID) * emergencyWaterLevel}, force to send empty box to STK or OHCV...");
-            //                        //TODO: 第二個parameter填入out mode下的STK port，沒有就找out mode下的OHCV port
-
-            //                        string dest = scApp.TransferService.GetSTKorOHCV_OutModePortName();
-
-            //                        if(string.IsNullOrWhiteSpace(dest) == false)
-            //                        {
-            //                            scApp.TransferService.Manual_InsertCmd(emptyBox.emptyBox.FirstOrDefault().Carrier_LOC, dest);
-            //                        }
-            //                        else
-            //                        {
-            //                            //沒有找到STK、OHCV為OutMode
-            //                        }
-            //                    }
-            //                    else
-            //                    {
-            //                        //還沒到緊急水位走這邊
-            //                        //過多box，呼叫MCS退掉(優先退空的)
-            //                        emptyBoxLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") +
-            //                            $"{zoneData.ZoneID} do not reach emergency water level, just notice MCS and wait transfer command to recycling...");
-            //                        //多幾個，就退幾次
-            //                        for (int i = boxCount; i > zoneData.HighWaterMark; i--)
-            //                        {
-            //                            CassetteData recycledBox = emptyBoxList.FirstOrDefault();
-            //                            if (recycledBox != null)
-            //                            {
-            //                                DoSendPopEmptyBoxToMCS(recycledBox.BOXID);
-            //                                emptyBoxList.Remove(recycledBox);
-            //                            }
-            //                            else
-            //                            {
-            //                                //已退光所有空box
-            //                                break;
-            //                            }
-            //                        }
-            //                    }
-            //                }
-            //                else if (CheckIfBoxNotEnough(zoneData, out int emptyBoxCount))
-            //                {
-            //                    emptyBoxLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") +
-            //                        $"{zoneData.ZoneID} has {emptyBoxCount} empty box(es), reaches low water level: {zoneData.LowWaterMark}, request for empty box...");
-            //                    //空box不足，呼叫MCS補充
-            //                    DoSendRequireEmptyBoxToMCS(zoneData.ZoneID, (int)(zoneData.LowWaterMark - emptyBoxCount));
-            //                }
-            //            }
-            //        }
-            //        else //空box不夠，要補
-            //        {
-            //            emptyBoxLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") +
-            //                $"Not enough empty box for AGV ST use, request for empty box...");
-            //            DoSendRequireEmptyBoxToMCS(zoneDatas.FirstOrDefault().ZoneID, requriedBoxAGV);
-            //        }
-            //    }
-            //}
         }
 
         private void RecycleBoxByMCS(ZoneDef zoneData, int boxCount)
