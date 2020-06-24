@@ -40,7 +40,7 @@ namespace com.mirle.ibg3k0.sc.Service
         private ShelfDefBLL shelfDefBLL = null;
         private ZoneDefBLL zoneBLL = null;
         private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        private NLog.Logger emptyBoxLogger = NLog.LogManager.GetLogger("EmptyBoxHandlerServiceLogger");
+        private NLog.Logger emptyBoxLogger = NLog.LogManager.GetLogger("EmptyBoxHandlerLogger");
 
         private static int lowLevelCheckCount = 0;
         private static bool initializedFlag = false;
@@ -52,7 +52,7 @@ namespace com.mirle.ibg3k0.sc.Service
 
         public void start(SCApplication _app)
         {
-            emptyBoxLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "===== EmptyBoxHandlerService start =====");
+            emptyBoxLogger.Info("===== EmptyBoxHandlerService start =====");
             scApp = _app;
             cassette_dataBLL = _app.CassetteDataBLL;
             shelfDefBLL = _app.ShelfDefBLL;
@@ -62,7 +62,7 @@ namespace com.mirle.ibg3k0.sc.Service
         #region Use for check the empty box number and transport for empty box
         public void CheckTheEmptyBoxStockLevel()
         {
-            emptyBoxLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "[CheckTheEmptyBoxStockLevel]");
+            emptyBoxLogger.Info("[CheckTheEmptyBoxStockLevel]");
 
             zoneDatas = zoneBLL.loadZoneData();
             boxDatas = cassette_dataBLL.loadCassetteData();
@@ -78,7 +78,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     zoneCache.WaitForRecycleBoxList = new List<string>();
                 }
                 initializedFlag = true;
-                emptyBoxLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "===== EmptyBoxHandlerService initialized =====");
+                emptyBoxLogger.Info("===== EmptyBoxHandlerService initialized =====");
             }
 
             //更新zone內的空箱實箱列表
@@ -107,8 +107,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 if (zoneData.BoxCount > zoneData.ZoneSize * emergencyWaterLevel)
                 {
                     //已達緊急水位，產生往Loop or STK的manual command退box
-                    emptyBoxLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") +
-                        $"{zoneData.ZoneID} reaches emergency water level: {zoneData.ZoneSize * emergencyWaterLevel}, force to send empty box to STK or OHCV...");
+                    emptyBoxLogger.Info($"{zoneData.ZoneID} reaches emergency water level: {zoneData.ZoneSize * emergencyWaterLevel}, force to send empty box to STK or OHCV...");
                     //找out mode下的STK port，沒有就找out mode下的OHCV port
                     string dest = scApp.TransferService.GetSTKorOHCV_OutModePortName();
                     if (string.IsNullOrWhiteSpace(dest) == false)
@@ -119,8 +118,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     else
                     {
                         //沒有找到STK、OHCV為OutMode => 請求MCS幫退
-                        emptyBoxLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") +
-                            $"No port is avaliable for recycling box directly, notice MCS and wait transfer command to recycling...");
+                        emptyBoxLogger.Info($"No port is avaliable for recycling box directly, notice MCS and wait transfer command to recycling...");
                         RecycleBoxByMCS(zoneData, zoneData.BoxCount);
                     }
                 }
@@ -129,8 +127,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 {
                     //還沒到緊急水位走這邊
                     //過多box，呼叫MCS退掉(優先退空的)
-                    emptyBoxLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") +
-                        $"{zoneData.ZoneID} do not reach emergency water level, just notice MCS and wait transfer command to recycling...");
+                    emptyBoxLogger.Info($"{zoneData.ZoneID} do not reach emergency water level, just notice MCS and wait transfer command to recycling...");
                     RecycleBoxByMCS(zoneData, zoneData.BoxCount);
                 }
             }
@@ -152,8 +149,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     var isEnoughEmptyBox = CheckIsEnoughEmptyBox(emptyBoxList.Count, out requriedBoxAGV);
                     if (isEnoughEmptyBox.isEnough == false)
                     {
-                        emptyBoxLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") +
-                            $"Not enough empty box for AGV ST use, request for empty box...");
+                        emptyBoxLogger.Info($"Not enough empty box for AGV ST use, request for empty box...");
                         DoSendRequireEmptyBoxToMCS(zoneCacheDatas.FirstOrDefault().ZoneID, requriedBoxAGV);
                     }
                     else
@@ -161,10 +157,9 @@ namespace com.mirle.ibg3k0.sc.Service
                         //B2: 檢查各個zone是否需要補空box
                         foreach (ZoneDef zoneData in zoneCacheDatas)
                         {
-                            if (zoneData.BoxCount < zoneData.LowWaterMark)
+                            if (zoneData.EmptyBoxList.Count() < zoneData.LowWaterMark)
                             {
-                                emptyBoxLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") +
-                                    $"{zoneData.ZoneID} has {zoneData.EmptyBoxList.Count()} empty box(es), reaches low water level: {zoneData.LowWaterMark}, request for empty box...");
+                                emptyBoxLogger.Info($"{zoneData.ZoneID} has {zoneData.EmptyBoxList.Count()} empty box(es), reaches low water level: {zoneData.LowWaterMark}, request for empty box...");
                                 //空box不足，呼叫MCS補充
                                 DoSendRequireEmptyBoxToMCS(zoneData.ZoneID, (int)(zoneData.LowWaterMark - zoneData.EmptyBoxList.Count()));
                             }
@@ -176,14 +171,16 @@ namespace com.mirle.ibg3k0.sc.Service
 
         private void RecycleBoxByMCS(ZoneDef zoneData, int boxCount)
         {
+            List<string> emptyBoxList = new List<string>(zoneData.EmptyBoxList);
             //多幾個，就退幾次
             for (int i = boxCount; i > zoneData.HighWaterMark; i--)
             {
-                string recycledBox = zoneData.EmptyBoxList.FirstOrDefault();
+                string recycledBox = emptyBoxList.FirstOrDefault();
                 if (recycledBox != null)
                 {
                     DoSendPopEmptyBoxToMCS(recycledBox);
                     zoneData.WaitForRecycleBoxList.Add(recycledBox);    //加入待回收box清單
+                    emptyBoxList.Remove(recycledBox);
                 }
                 else
                 {
@@ -213,7 +210,7 @@ namespace com.mirle.ibg3k0.sc.Service
             catch (Exception ex)
             {
                 logger.Error(ex, "Exception:");
-                emptyBoxLogger.Error(ex, DateTime.Now.ToString("HH:mm:ss.fff ") + "[GetTotalEmptyBoxNumber]");
+                emptyBoxLogger.Error(ex, "[GetTotalEmptyBoxNumber]");
             }
             return (emptyBox_, isSuccess_);
         }
@@ -241,7 +238,7 @@ namespace com.mirle.ibg3k0.sc.Service
             catch (Exception ex)
             {
                 logger.Error(ex, "Exception:");
-                emptyBoxLogger.Error(ex, DateTime.Now.ToString("HH:mm:ss.fff ") + "[CheckIsEnoughEmptyBox]");
+                emptyBoxLogger.Error(ex, "[CheckIsEnoughEmptyBox]");
             }
             return (isEnough_, isSuccess_);
         }
@@ -299,7 +296,7 @@ namespace com.mirle.ibg3k0.sc.Service
             catch (Exception ex)
             {
                 logger.Error(ex, "Exception:");
-                emptyBoxLogger.Error(ex, DateTime.Now.ToString("HH:mm:ss.fff ") + "[CheckIfBoxNotEnough]");
+                emptyBoxLogger.Error(ex, "[CheckIfBoxNotEnough]");
                 boxCount = 0;
                 return false;
             }
@@ -318,7 +315,7 @@ namespace com.mirle.ibg3k0.sc.Service
             catch (Exception ex)
             {
                 logger.Error(ex, "Exception:");
-                emptyBoxLogger.Error(ex, DateTime.Now.ToString("HH:mm:ss.fff ") + "[CheckIfTooMuchBox]");
+                emptyBoxLogger.Error(ex, "[CheckIfTooMuchBox]");
                 return false;
             }
         }
@@ -333,7 +330,7 @@ namespace com.mirle.ibg3k0.sc.Service
             catch (Exception ex)
             {
                 logger.Error(ex, "Exception:");
-                emptyBoxLogger.Error(ex, DateTime.Now.ToString("HH:mm:ss.fff ") + "[IsBelongsZone]");
+                emptyBoxLogger.Error(ex, "[IsBelongsZone]");
                 return false;
             }
         }
@@ -373,8 +370,9 @@ namespace com.mirle.ibg3k0.sc.Service
                                  select b.BOXID;
                 z.EmptyBoxList = emptyBoxes.ToList();
                 z.SolidBoxList = solidBoxes.ToList();
-                emptyBoxLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") +
-                    $"{z.ZoneID} Size = {z.ZoneSize}, empty box count = {z.EmptyBoxList.Count()}, solid box count = {z.SolidBoxList.Count()}");
+                emptyBoxLogger.Info($"{z.ZoneID} Size = {z.ZoneSize}, empty box count = {z.EmptyBoxList.Count()}, solid box count = {z.SolidBoxList.Count()}");
+                emptyBoxLogger.Info($"{z.ZoneID} Low waterlevel = {z.LowWaterMark}, high waterlevel = {z.HighWaterMark}," +
+                    $" emergency waterlevel = {z.ZoneSize * emergencyWaterLevel}");
 
                 //找出已經回收成功的box
                 var recycledBoxes = from x in z.WaitForRecycleBoxList
@@ -383,8 +381,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 //把已經回收的box移出待回收列表
                 foreach (var box in recycledBoxes)
                 {
-                    emptyBoxLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") +
-                        $"Box ID {box} is already recycled from {z.ZoneID}");
+                    emptyBoxLogger.Info($"Box ID {box} is already recycled from {z.ZoneID}");
                     z.WaitForRecycleBoxList.Remove(box);
                 }
             }
