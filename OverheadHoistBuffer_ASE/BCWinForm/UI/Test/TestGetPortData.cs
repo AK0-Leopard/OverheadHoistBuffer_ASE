@@ -41,6 +41,7 @@ namespace com.mirle.ibg3k0.bc.winform
                 if(transferService.isCVPort(v.PLCPortID))
                 {
                     comboBox1.Items.Add(v.PLCPortID);
+
                 }
             }
 
@@ -451,6 +452,26 @@ namespace com.mirle.ibg3k0.bc.winform
         private void button29_Click(object sender, EventArgs e)
         {
             transferService.Manual_CloseAGV_State(comboBox3.Text);
+        }
+
+        private void button30_Click(object sender, EventArgs e)
+        {
+            BCApp.SCApplication.TransferService.AlliniPortData();
+            List<PortDef> portDefList = BCApp.SCApplication.PortDefBLL.GetOHB_CVPortData(line.LINE_ID);
+            foreach (PortDef portDefData in portDefList)
+            {
+                if (portDefData.State == E_PORT_STATUS.InService)
+                {
+                    BCApp.SCApplication.ReportBLL.ReportPortInService(portDefData.PLCPortID);
+                }
+                else if (portDefData.State == E_PORT_STATUS.OutOfService)
+                {
+                    BCApp.SCApplication.ReportBLL.ReportPortOutOfService(portDefData.PLCPortID);
+                }
+            }
+            dataGridView1.DataSource = portDefList;
+            dataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
         }
     }
 }

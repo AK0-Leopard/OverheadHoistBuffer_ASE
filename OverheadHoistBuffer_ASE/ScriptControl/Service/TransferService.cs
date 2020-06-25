@@ -629,7 +629,7 @@ namespace com.mirle.ibg3k0.sc.Service
 
                     bool sourcePortType = false;
                     bool destPortType = false;
-                    string source = "";
+                    //string source = "";
                     #region 檢查來源狀態
                     if (string.IsNullOrWhiteSpace(mcsCmd.RelayStation))  //檢查命令是否先搬到中繼站
                     {
@@ -649,13 +649,24 @@ namespace com.mirle.ibg3k0.sc.Service
                         else
                         {
                             sourcePortType = AreSourceEnable(mcsCmd.HOSTSOURCE);
-                            source = mcsCmd.HOSTSOURCE;
+                        }
+
+                        CassetteData sourceCstData = cassette_dataBLL.loadCassetteDataByLoc(mcsCmd.HOSTSOURCE);
+
+                        if(sourceCstData == null)
+                        {
+                            TransferServiceLogger.Info
+                            (
+                                DateTime.Now.ToString("HH:mm:ss.fff ")
+                                + "OHB >> OHB| 命令來源: " + mcsCmd.HOSTSOURCE  + " 找不到帳，刪除命令 "
+                            );
+                            Manual_DeleteCmd(mcsCmd.CMD_ID, "命令來源找不到帳");
                         }
                     }
                     else
                     {
                         sourcePortType = AreSourceEnable(mcsCmd.RelayStation);
-                        source = mcsCmd.RelayStation;
+                        mcsCmd.HOSTSOURCE = mcsCmd.RelayStation;
                     }
                     #endregion
                     #region 檢查目的狀態
@@ -682,7 +693,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     {
                         OHT_TransportRequest(mcsCmd);
                     }
-                    else if (sourcePortType && isCVPort(source) && destPortType == false && isCVPort(mcsCmd.HOSTDESTINATION))
+                    else if (sourcePortType && isCVPort(mcsCmd.HOSTSOURCE) && destPortType == false && isCVPort(mcsCmd.HOSTDESTINATION))
                     {
                         //來源目的都是 CV Port 且 目的不能搬，觸發將卡匣送至中繼站
                         PortPLCInfo plcInfo = GetPLC_PortData(mcsCmd.HOSTDESTINATION);
@@ -893,54 +904,45 @@ namespace com.mirle.ibg3k0.sc.Service
 
                     if (sourcePort != null)
                     {
-                        CassetteData portCstData = cassette_dataBLL.loadCassetteDataByLoc(sourceName);
-
-                        if (portCstData != null)
+                        if (sourcePort.OpAutoMode)
                         {
-                            if (sourcePort.OpAutoMode)
+                            if (sourcePort.IsReadyToUnload)
                             {
-                                if (sourcePort.IsReadyToUnload)
+                                if (isUnitType(sourceName, UnitType.AGV))
                                 {
-                                    if (isUnitType(sourceName, UnitType.AGV))
+                                    sourcePortType = true;
+                                }
+                                else
+                                {
+                                    if (sourcePort.IsInputMode)
                                     {
                                         sourcePortType = true;
                                     }
                                     else
                                     {
-                                        if (sourcePort.IsInputMode)
+                                        if (sourcePort.IsModeChangable)
                                         {
-                                            sourcePortType = true;
-                                        }
-                                        else
-                                        {
-                                            if (sourcePort.IsModeChangable)
+                                            string cmdID = "PortTypeChange-" + sourcePort.EQ_ID.Trim() + ">>" + E_PortType.In;
+
+                                            if (cmdBLL.getCMD_MCSByID(cmdID) == null)
                                             {
-                                                string cmdID = "PortTypeChange-" + sourcePort.EQ_ID.Trim() + ">>" + E_PortType.In;
-
-                                                if (cmdBLL.getCMD_MCSByID(cmdID) == null)
-                                                {
-                                                    //若來源流向錯誤且沒有流向切換命令，就新建
-                                                    SetPortTypeCmd(sourcePort.EQ_ID.Trim(), E_PortType.In);  //要測時，把註解拿掉
-                                                }
+                                                //若來源流向錯誤且沒有流向切換命令，就新建
+                                                SetPortTypeCmd(sourcePort.EQ_ID.Trim(), E_PortType.In);  //要測時，把註解拿掉
                                             }
-
-                                            sourceState = sourceState + " IsInputMode:" + sourcePort.IsInputMode;
                                         }
+
+                                        sourceState = sourceState + " IsInputMode:" + sourcePort.IsInputMode;
                                     }
-                                }
-                                else
-                                {
-                                    sourceState = sourceState + " IsReadyToUnload:" + sourcePort.IsReadyToUnload;
                                 }
                             }
                             else
                             {
-                                sourceState = sourceState + " OpAutoMode:" + sourcePort.OpAutoMode;
+                                sourceState = sourceState + " IsReadyToUnload:" + sourcePort.IsReadyToUnload;
                             }
                         }
                         else
                         {
-                            OHBC_InsertCassette(sourcePort.CassetteID, sourcePort.BoxID, sourcePort.EQ_ID, "來源沒有帳");
+                            sourceState = sourceState + " OpAutoMode:" + sourcePort.OpAutoMode;
                         }
                     }
                     else
@@ -3105,6 +3107,10 @@ namespace com.mirle.ibg3k0.sc.Service
                     if (dbCstData != null)
                     {
                         BoxMovCmd(dbCstData, plcInfo.EQ_ID, UnitType.AGV);
+                    }
+                    else
+                    {
+                        //reportBLL.ReportEmptyBoxSupply("1", portData.EQ_ID);
                     }
                 }
             }

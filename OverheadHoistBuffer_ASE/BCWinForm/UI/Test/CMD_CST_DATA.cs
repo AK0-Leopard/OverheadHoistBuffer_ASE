@@ -66,6 +66,12 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Test
                 comboBox3.Items.Add(v.ShelfID);
             }
 
+            foreach (var v in BCApp.SCApplication.ZoneDefBLL.loadZoneData())
+            {
+                comboBox4.Items.Add(v.ZoneID.Trim());
+                comboBox4.SelectedIndex = 0;
+            }
+
             dateTimePicker1.Value = DateTime.Now.AddHours(-1);
             dateTimePicker2.Value = DateTime.Now;
 
@@ -276,6 +282,35 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Test
                     BCApp.SCApplication.TransferService.OHBC_InsertCassette(cstID, boxID, loc, lotID, "測試用 CMD_CST_DATA");
                 }
                 UpDate_CstData();
+            }
+        }
+
+        private void button30_Click(object sender, EventArgs e)
+        {
+            BCApp.SCApplication.ReportBLL.ReportEmptyBoxSupply(numericUpDown1.Value.ToString(), comboBox4.Text);
+        }
+
+        private void button18_Click(object sender, EventArgs e)
+        {
+            DialogResult result;
+
+            result = MessageBox.Show("確定像 MCS 退掉所選的空BOX?", "退空 BOX 確認", MessageBoxButtons.YesNo);
+
+            if (result == System.Windows.Forms.DialogResult.Yes)
+            {
+                List<int> listInt = new List<int>();
+
+                foreach (DataGridViewCell v in dataGridView2.SelectedCells)
+                {
+                    string cstID = dataGridView2.Rows[v.RowIndex].Cells["CSTID"].Value.ToString();
+                    string boxID = dataGridView2.Rows[v.RowIndex].Cells["BOXID"].Value.ToString();
+
+                    if(string.IsNullOrWhiteSpace(cstID) && listInt.Contains(v.RowIndex) == false)
+                    {
+                        BCApp.SCApplication.ReportBLL.ReportEmptyBoxRecycling(boxID);
+                        listInt.Add(v.RowIndex);
+                    }
+                }
             }
         }
     }
