@@ -447,7 +447,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
 
                                 if (s2f50.HCACK == SECSConst.HCACK_Confirm)
                                 {
-                                    isCreatScuess &= scApp.SysExcuteQualityBLL.creatSysExcuteQuality(cmdID, cstID, source, dest);
+                                    //isCreatScuess &= scApp.SysExcuteQualityBLL.creatSysExcuteQuality(cmdID, cstID, source, dest);//取消對於SystemQuality的紀錄
                                 }
 
                                 if (isCreatScuess)

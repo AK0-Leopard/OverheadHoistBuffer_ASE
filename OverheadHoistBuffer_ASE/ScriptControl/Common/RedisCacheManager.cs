@@ -151,6 +151,14 @@ namespace com.mirle.ibg3k0.sc.Common
         }
 
 
+        public bool stringCommonSetAsync(string key, RedisValue set_object, TimeSpan? timeOut = null, When when = When.Always)
+        {
+            IDatabase db = Database();
+            if (db == null) return false;
+            db.StringSetAsync(key, set_object, timeOut, when);
+            UsingCount();
+            return true;
+        }
         public bool stringSetAsync(string key, RedisValue set_object, TimeSpan? timeOut = null, When when = When.Always)
         {
             IDatabase db = Database();
@@ -190,6 +198,15 @@ namespace com.mirle.ibg3k0.sc.Common
             return true;
         }
 
+
+        public RedisValue StringCommonGet(string key)
+        {
+            IDatabase db = Database();
+            if (db == null) return string.Empty;
+            UsingCount();
+            var value = db.StringGet(key);
+            return value;
+        }
 
         public RedisValue StringGet(string key)
         {
