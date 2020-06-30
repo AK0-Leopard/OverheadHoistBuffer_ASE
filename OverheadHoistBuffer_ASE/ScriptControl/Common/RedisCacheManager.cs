@@ -150,6 +150,14 @@ namespace com.mirle.ibg3k0.sc.Common
             return db.KeyDelete(key);
         }
 
+        public bool keyCommonDeleteAsync(string key)
+        {
+            IDatabase db = Database();
+            if (db == null) return false;
+            db.KeyDeleteAsync(key);
+            UsingCount();
+            return true;
+        }
 
         public bool stringCommonSetAsync(string key, RedisValue set_object, TimeSpan? timeOut = null, When when = When.Always)
         {

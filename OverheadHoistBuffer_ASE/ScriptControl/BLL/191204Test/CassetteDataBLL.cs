@@ -609,13 +609,39 @@ namespace com.mirle.ibg3k0.sc.BLL
             TimeSpan BOXID_WITH_CSTID_OF_TIME_OUT = new TimeSpan(0, 30, 0);
             public void setBoxIDWithCSTID(string boxID, string cstID)
             {
-                redisCacheManager.stringCommonSetAsync(boxID, cstID, BOXID_WITH_CSTID_OF_TIME_OUT);
+                try
+                {
+                    redisCacheManager.stringCommonSetAsync(boxID, cstID, BOXID_WITH_CSTID_OF_TIME_OUT);
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex, "Exception");
+                }
             }
 
             public (bool hasExist, string cstID) tryGetCSTIDByBoxID(string boxID)
             {
-                var get_result = redisCacheManager.StringCommonGet(boxID);
-                return (get_result.HasValue, (string)get_result);
+                try
+                {
+                    var get_result = redisCacheManager.StringCommonGet(boxID);
+                    return (get_result.HasValue, (string)get_result);
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex, "Exception");
+                    return (false, "");
+                }
+            }
+            public void deleteCSTIDByBoxID(string boxID)
+            {
+                try
+                {
+                    var get_result = redisCacheManager.keyCommonDeleteAsync(boxID);
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex, "Exception");
+                }
             }
         }
     }
