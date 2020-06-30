@@ -1070,6 +1070,13 @@ namespace com.mirle.ibg3k0.sc.BLL
 
             return AMCSREPORTQUEUEs;
         }
+
+        public bool ReportQueryLotID(string cstID, List<AMCSREPORTQUEUE> reportQueues = null)
+        {
+            bool isSuccsess = true;
+            isSuccsess = isSuccsess && iBSEMDriver.S6F11SendQueryLotID(cstID, reportQueues);
+            return isSuccsess;
+        }
         #endregion MCS SXFY Report
 
 

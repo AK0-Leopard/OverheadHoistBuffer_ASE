@@ -313,5 +313,29 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Test
                 }
             }
         }
+
+        private void button19_Click(object sender, EventArgs e)
+        {
+            DialogResult result;
+
+            result = MessageBox.Show("確定像 MCS 詢問LOTID?", "詢問LOTID", MessageBoxButtons.YesNo);
+
+            if (result == System.Windows.Forms.DialogResult.Yes)
+            {
+                List<int> listInt = new List<int>();
+
+                foreach (DataGridViewCell v in dataGridView2.SelectedCells)
+                {
+                    string cstID = dataGridView2.Rows[v.RowIndex].Cells["CSTID"].Value.ToString();
+                    //string boxID = dataGridView2.Rows[v.RowIndex].Cells["BOXID"].Value.ToString();
+
+                    if (listInt.Contains(v.RowIndex) == false)
+                    {
+                        BCApp.SCApplication.ReportBLL.ReportQueryLotID(cstID);
+                        listInt.Add(v.RowIndex);
+                    }
+                }
+            }
+        }
     }
 }
