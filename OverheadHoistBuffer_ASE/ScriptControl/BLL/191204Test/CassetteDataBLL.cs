@@ -56,6 +56,13 @@ namespace com.mirle.ibg3k0.sc.BLL
                         DateTime.Now.ToString("HH:mm:ss.fff ")
                         + "OHB >> DB|卡匣新增成功：" + scApp.TransferService.GetCstLog(datainfo)
                     );
+
+                    if (scApp.TransferService.isUnitType(datainfo.Carrier_LOC, Service.UnitType.AGV)
+                     || scApp.TransferService.isUnitType(datainfo.Carrier_LOC, Service.UnitType.NTB)
+                      )
+                    {
+                        scApp.TransferService.Redis_AddCstBox(datainfo);
+                    }
                 }
             }
             catch (Exception ex)
@@ -239,11 +246,11 @@ namespace com.mirle.ibg3k0.sc.BLL
 
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
-                    switch(timeType)
+                    switch (timeType)
                     {
                         case UpdateCassetteTimeType.StoreDT:
                             cassettedataDao.LoadCassetteDataByBoxID(con, boxid).StoreDT = time;
-                            break;                        
+                            break;
                         case UpdateCassetteTimeType.WaitOutOPDT:
                             cassettedataDao.LoadCassetteDataByBoxID(con, boxid).WaitOutOPDT = time;
                             break;
@@ -297,6 +304,21 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
         }
 
+        public List<CassetteData> LoadCassetteDataByCSTID_UNK()
+        {
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    return cassettedataDao.LoadCassetteDataByCSTID_UNK(con);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return null;
+            }
+        }
         public List<CassetteData> LoadCassetteDataByNotCompleted()
         {
             try
@@ -449,7 +471,7 @@ namespace com.mirle.ibg3k0.sc.BLL
         {
             try
             {
-                if(scApp.TransferService.isLocExist(shiefid))
+                if (scApp.TransferService.isLocExist(shiefid))
                 {
                     return scApp.TransferService.portINIData[shiefid].ZoneName;
                 }
@@ -474,7 +496,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
                     CassetteData cstData = con.CassetteData.Where(data => data.BOXID == boxid).FirstOrDefault();
-                    if(cstData != null)
+                    if (cstData != null)
                     {
                         cstLoc = cstData.Carrier_LOC;
                     }
@@ -529,6 +551,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                         scApp.ShelfDefBLL.updateStatus(csidData.Carrier_LOC, ShelfDef.E_ShelfState.EmptyShelf);
                     }
 
+                    scApp.TransferService.Redis_DeleteCstBox(csidData);
                 }
             }
             catch (Exception ex)

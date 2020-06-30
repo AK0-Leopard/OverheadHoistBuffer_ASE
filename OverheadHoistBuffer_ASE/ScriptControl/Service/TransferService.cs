@@ -653,12 +653,12 @@ namespace com.mirle.ibg3k0.sc.Service
 
                         CassetteData sourceCstData = cassette_dataBLL.loadCassetteDataByLoc(mcsCmd.HOSTSOURCE);
 
-                        if(sourceCstData == null)
+                        if (sourceCstData == null)
                         {
                             TransferServiceLogger.Info
                             (
                                 DateTime.Now.ToString("HH:mm:ss.fff ")
-                                + "OHB >> OHB| 命令來源: " + mcsCmd.HOSTSOURCE  + " 找不到帳，刪除命令 "
+                                + "OHB >> OHB| 命令來源: " + mcsCmd.HOSTSOURCE + " 找不到帳，刪除命令 "
                             );
                             Manual_DeleteCmd(mcsCmd.CMD_ID, "命令來源找不到帳");
                         }
@@ -4139,14 +4139,19 @@ namespace com.mirle.ibg3k0.sc.Service
         }
         public bool ase_ID_Check(string str)    //ASE CST BOX 帳料命名規則
         {
-            bool b = false;
-            string str12 = str.Substring(0, 2); //1、2碼為數字
-            string str34 = str.Substring(2, 2); //3、4碼為英文
-            string str58 = str.Substring(4, 4); //5~8碼為數字 + 英文混合
 
-            if (IsNumber(str12) && IsEnglish(str34) && IsEnglish_Number(str58) && IsEnglish_Number(str))
+            bool b = false;
+
+            if (str.Length == 8)
             {
-                b = true;
+                string str12 = str.Substring(0, 2); //1、2碼為數字
+                string str34 = str.Substring(2, 2); //3、4碼為英文
+                string str58 = str.Substring(4, 4); //5~8碼為數字 + 英文混合
+
+                if (IsNumber(str12) && IsEnglish(str34) && IsEnglish_Number(str58) && IsEnglish_Number(str))
+                {
+                    b = true;
+                }
             }
 
             return b;
@@ -5239,7 +5244,32 @@ namespace com.mirle.ibg3k0.sc.Service
             }
         }
         #endregion
-
+        #region Redis 新增刪除查詢CSTID
+        public void Redis_AddCstBox(CassetteData addRedisCstData)   //  20/06/30 SCC+ 建帳的時候去建立 BOX 跟 CST 的關係
+        {
+            if (ase_ID_Check(addRedisCstData.CSTID) && ase_ID_Check(addRedisCstData.BOXID))
+            {
+                //ADDRedis API
+            }
+        }
+        public void Redis_DeleteCstBox(CassetteData deleteRedisCstData)
+        {
+            if( isUnitType(deleteRedisCstData.Carrier_LOC, UnitType.AGV)
+             || isUnitType(deleteRedisCstData.Carrier_LOC, UnitType.NTB)
+             || isUnitType(deleteRedisCstData.Carrier_LOC, UnitType.STK)
+              )
+            {
+                //ADDRedis API
+            }
+        }
+        public void Redis_UpdateCstBox()
+        {
+            foreach(CassetteData unkCstData in cassette_dataBLL.LoadCassetteDataByCSTID_UNK())
+            {
+                //ADDRedis API
+            }
+        }
+        #endregion
         #endregion
 
         #region 人員手動操作
