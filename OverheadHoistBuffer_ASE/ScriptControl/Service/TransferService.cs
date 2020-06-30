@@ -2712,6 +2712,8 @@ namespace com.mirle.ibg3k0.sc.Service
                         //PLC_Report_AGV_PortInOutService(dbData.Carrier_LOC, E_PORT_STATUS.OutOfService);
                         #endregion
                     }
+
+                    Redis_DeleteCstBox(dbData);
                 }
             }
             catch (Exception ex)
@@ -5269,7 +5271,7 @@ namespace com.mirle.ibg3k0.sc.Service
         {
             if( isUnitType(deleteRedisCstData.Carrier_LOC, UnitType.AGV))
             {
-                //ADDRedis API
+                cassette_dataBLL.redis.deleteCSTIDByBoxID(deleteRedisCstData.BOXID);
             }
         }
 

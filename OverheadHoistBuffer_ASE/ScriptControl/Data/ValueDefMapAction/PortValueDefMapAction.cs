@@ -883,7 +883,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                         datainfo.CSTID = function.CassetteID.Trim();        //填CSTID
                         datainfo.BOXID = function.BoxID.Trim();        //填BOXID
                         datainfo.Carrier_LOC = function.EQ_ID.Trim();  //填Port 名稱
-                        scApp.TransferService.PortCarrierRemoved(datainfo, function.IsAGVMode, "PortRemove");
+                        scApp.TransferService.PortCarrierRemoved(datainfo, function.IsAGVMode, "PortRemove");                        
                     }                    
                 }
             }

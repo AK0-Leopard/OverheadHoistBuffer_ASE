@@ -558,8 +558,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
                     CassetteData csidData = con.CassetteData.Where(data => data.CSTID.Trim() == cstid.Trim() && data.BOXID.Trim() == boxid.Trim()).First();
-                    scApp.TransferService.Redis_DeleteCstBox(csidData);
-
+                    
                     cassettedataDao.DeleteCassetteData(con, csidData);
 
                     TransferServiceLogger.Info
