@@ -25,27 +25,6 @@ namespace com.mirle.ibg3k0.sc.BLL
             sysExeQualityDAO = scApp.SysExcuteQualityDao;
         }
 
-        public bool creatSysExcuteQuality(ACMD_MCS cmd_mcs)
-        {
-            bool isSuccess = true;
-            string cmd_id = cmd_mcs.CMD_ID;
-            string cst_id = cmd_mcs.CARRIER_ID;
-            string source = cmd_mcs.HOSTSOURCE;
-            string destn = cmd_mcs.HOSTDESTINATION;
-            int total_act_vh = scApp.VehicleBLL.getActVhCount();
-            int total_idle_vh = scApp.VehicleBLL.getIdleVhCount();
-            int total_parking_vh = scApp.VehicleBLL.getParkingVhCount();
-            int total_cycling_vh = scApp.VehicleBLL.getCyclingVhCount();
-
-
-            ASYSEXCUTEQUALITY sysExcuteQuality =
-                buildSysExcuteQualityObj(cmd_id, cst_id,
-                source, destn,
-                total_act_vh, total_idle_vh, total_parking_vh, total_cycling_vh);
-            addSysExcuteQuality(sysExcuteQuality);
-            return isSuccess;
-
-        }
 
         public bool creatSysExcuteQuality(string cmd_id, string cstID, string source, string destination)
         {

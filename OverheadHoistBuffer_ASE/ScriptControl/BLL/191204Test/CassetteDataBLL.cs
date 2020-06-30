@@ -8,6 +8,7 @@ using NLog;
 using com.mirle.ibg3k0.bcf.App;
 using com.mirle.ibg3k0.sc.Data;
 using com.mirle.ibg3k0.sc.App;
+using com.mirle.ibg3k0.sc.Common;
 
 namespace com.mirle.ibg3k0.sc.BLL
 {
@@ -25,8 +26,11 @@ namespace com.mirle.ibg3k0.sc.BLL
         CassetteDataDao cassettedataDao = null;
         ZoneDefDao zonedefDao = null;
         ShelfDefDao shelfdefDao = null;
+        Redis redis = null;
         private static Logger logger = LogManager.GetCurrentClassLogger();
         private static Logger TransferServiceLogger = LogManager.GetLogger("TransferServiceLogger");
+
+
 
         public void start(SCApplication scApp)
         {
@@ -34,6 +38,7 @@ namespace com.mirle.ibg3k0.sc.BLL
             cassettedataDao = scApp.CassetteDataDao;
             zonedefDao = scApp.ZoneDefDao;
             shelfdefDao = scApp.ShelfDefDao;
+            redis = new Redis(scApp.getRedisCacheManager());
         }
         public bool insertCassetteData(CassetteData datainfo)
         {
@@ -576,6 +581,26 @@ namespace com.mirle.ibg3k0.sc.BLL
             {
                 logger.Error(ex, "Exception");
                 return null;
+            }
+        }
+
+        public class Redis
+        {
+            RedisCacheManager redisCacheManager = null;
+            public Redis(RedisCacheManager _redisCacheManager)
+            {
+                redisCacheManager = _redisCacheManager;
+            }
+            TimeSpan BOXID_WITH_CSTID_OF_TIME_OUT = new TimeSpan(0, 30, 0);
+            public void setBoxIDWithCSTID(string boxID, string cstID)
+            {
+                redisCacheManager.stringCommonSetAsync(boxID, cstID, BOXID_WITH_CSTID_OF_TIME_OUT);
+            }
+
+            public (bool hasExist, string cstID) tryGetCSTIDByBoxID(string boxID)
+            {
+                var get_result = redisCacheManager.StringCommonGet(boxID);
+                return (get_result.HasValue, (string)get_result);
             }
         }
     }
