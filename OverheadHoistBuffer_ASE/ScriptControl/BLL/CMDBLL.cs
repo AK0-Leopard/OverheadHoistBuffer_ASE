@@ -657,16 +657,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 if (cmd_mcs.CMDTYPE != CmdType.PortTypeChange.ToString())
                 {
                     scApp.TransferService.ShelfReserved(cmd_mcs.HOSTSOURCE, cmd_mcs.HOSTDESTINATION);
-                }
-
-                if(scApp.TransferService.isUnitType(cmd_mcs.HOSTSOURCE, Service.UnitType.STK))
-                {
-                    CassetteData sourceSTKcstData = new CassetteData();
-                    sourceSTKcstData.CSTID = cmd_mcs.CARRIER_ID;
-                    sourceSTKcstData.BOXID = cmd_mcs.BOX_ID;
-                    sourceSTKcstData.Carrier_LOC = cmd_mcs.HOSTSOURCE;
-                    scApp.TransferService.Redis_AddCstBox(sourceSTKcstData);
-                }                
+                }    
             }
             catch (Exception ex)
             {
@@ -968,8 +959,6 @@ namespace com.mirle.ibg3k0.sc.BLL
                         {
                             scApp.TransferService.PortCommanding(cmd.HOSTDESTINATION, false);
                         }
-
-                        scApp.TransferService.Redis_UpdateCstBox();
                     }
 
                     TransferServiceLogger.Info

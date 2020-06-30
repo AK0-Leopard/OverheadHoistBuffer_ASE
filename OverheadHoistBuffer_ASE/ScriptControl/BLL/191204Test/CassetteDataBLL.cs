@@ -26,7 +26,7 @@ namespace com.mirle.ibg3k0.sc.BLL
         CassetteDataDao cassettedataDao = null;
         ZoneDefDao zonedefDao = null;
         ShelfDefDao shelfdefDao = null;
-        Redis redis = null;
+        public Redis redis = null;
         private static Logger logger = LogManager.GetCurrentClassLogger();
         private static Logger TransferServiceLogger = LogManager.GetLogger("TransferServiceLogger");
 
@@ -62,9 +62,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                         + "OHB >> DB|卡匣新增成功：" + scApp.TransferService.GetCstLog(datainfo)
                     );
 
-                    if (scApp.TransferService.isUnitType(datainfo.Carrier_LOC, Service.UnitType.AGV)
-                     || scApp.TransferService.isUnitType(datainfo.Carrier_LOC, Service.UnitType.NTB)
-                      )
+                    if (scApp.TransferService.isUnitType(datainfo.Carrier_LOC, Service.UnitType.AGV))
                     {
                         scApp.TransferService.Redis_AddCstBox(datainfo);
                     }
@@ -183,6 +181,8 @@ namespace com.mirle.ibg3k0.sc.BLL
                     {
                         scApp.ShelfDefBLL.updateStatus(loc, ShelfDef.E_ShelfState.Stored);
                         cstData.StoreDT = time;
+
+                        scApp.TransferService.QueryLotID(cstData);
                     }
                     else if (scApp.TransferService.isCVPort(loc))
                     {
@@ -340,6 +340,21 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
         }
 
+        public List<CassetteData> LoadCassetteDataByCstAndEmptyLotID()  //取得有 CSID 但沒有LOTID 所有資料
+        {
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    return cassettedataDao.LoadCassetteDataByCSTID_UNK(con);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return null;
+            }
+        }
         public List<CassetteData> loadCassetteDataIsUnfinished()
         {
             try
@@ -543,6 +558,8 @@ namespace com.mirle.ibg3k0.sc.BLL
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
                     CassetteData csidData = con.CassetteData.Where(data => data.CSTID.Trim() == cstid.Trim() && data.BOXID.Trim() == boxid.Trim()).First();
+                    scApp.TransferService.Redis_DeleteCstBox(csidData);
+
                     cassettedataDao.DeleteCassetteData(con, csidData);
 
                     TransferServiceLogger.Info
@@ -555,8 +572,6 @@ namespace com.mirle.ibg3k0.sc.BLL
                     {
                         scApp.ShelfDefBLL.updateStatus(csidData.Carrier_LOC, ShelfDef.E_ShelfState.EmptyShelf);
                     }
-
-                    scApp.TransferService.Redis_DeleteCstBox(csidData);
                 }
             }
             catch (Exception ex)

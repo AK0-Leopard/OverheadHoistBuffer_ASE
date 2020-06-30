@@ -97,6 +97,21 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                 throw;
             }
         }
+        public List<CassetteData> LoadCassetteDataByCstAndEmptyLotID(DBConnection_EF conn)
+        {
+            try
+            {
+                var port = from a in conn.CassetteData
+                           where string.IsNullOrWhiteSpace(a.CSTID) == false && string.IsNullOrWhiteSpace(a.LotID)
+                           select a;
+                return port.ToList();
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex);
+                throw;
+            }
+        }
         public List<CassetteData> LoadCassetteDataByNotCompleted(DBConnection_EF conn)  //原本打算是要取得除了在 shelf 的所有帳
         {
             try

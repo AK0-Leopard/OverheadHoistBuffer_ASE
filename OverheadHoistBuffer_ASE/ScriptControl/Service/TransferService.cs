@@ -4356,6 +4356,16 @@ namespace com.mirle.ibg3k0.sc.Service
 
             return readData;
         }
+        public void QueryLotID(CassetteData cstData)
+        {
+            if(cstData != null)
+            {
+                if (ase_ID_Check(cstData.CSTID) && string.IsNullOrWhiteSpace(cstData.LotID))
+                {
+                    reportBLL.ReportQueryLotID(cstData.CSTID);
+                }
+            }      
+        }
         #region 異常流程
         public void HaveAccountHaveReal(CassetteData dbData, CassetteData bcrcsid, IDreadStatus idRead)      //有帳有料
         {
@@ -4584,6 +4594,9 @@ namespace com.mirle.ibg3k0.sc.Service
                         cassette_dataBLL.insertCassetteData(datainfo);
                         reportBLL.ReportCarrierInstallCompleted(datainfo);
                     }
+
+                    QueryLotID(datainfo);
+                    Redis_UpdateCstID(datainfo);
                 }
                 else if (vehicle != null)
                 {
@@ -5249,24 +5262,32 @@ namespace com.mirle.ibg3k0.sc.Service
         {
             if (ase_ID_Check(addRedisCstData.CSTID) && ase_ID_Check(addRedisCstData.BOXID))
             {
-                //ADDRedis API
+                cassette_dataBLL.redis.setBoxIDWithCSTID(addRedisCstData.CSTID, addRedisCstData.BOXID);
             }
         }
         public void Redis_DeleteCstBox(CassetteData deleteRedisCstData)
         {
-            if( isUnitType(deleteRedisCstData.Carrier_LOC, UnitType.AGV)
-             || isUnitType(deleteRedisCstData.Carrier_LOC, UnitType.NTB)
-             || isUnitType(deleteRedisCstData.Carrier_LOC, UnitType.STK)
-              )
+            if( isUnitType(deleteRedisCstData.Carrier_LOC, UnitType.AGV))
             {
                 //ADDRedis API
             }
         }
-        public void Redis_UpdateCstBox()
+
+        public void Redis_UpdateCstID(CassetteData unkCstData)
         {
-            foreach(CassetteData unkCstData in cassette_dataBLL.LoadCassetteDataByCSTID_UNK())
+            if(unkCstData != null)
             {
-                //ADDRedis API
+                if (ase_ID_Check(unkCstData.BOXID) && unkCstData.CSTID.Contains("UNK"))
+                {
+                    var redis = cassette_dataBLL.redis.tryGetCSTIDByBoxID(unkCstData.BOXID);
+
+                    if (redis.hasExist)
+                    {
+                        string cstID = redis.cstID;
+
+                        cassette_dataBLL.UpdateCSTID(unkCstData.Carrier_LOC, unkCstData.BOXID, cstID.Trim(), unkCstData.LotID);
+                    }
+                }
             }
         }
         #endregion

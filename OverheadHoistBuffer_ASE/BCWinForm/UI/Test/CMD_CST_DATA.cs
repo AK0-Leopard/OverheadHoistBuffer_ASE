@@ -322,18 +322,37 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Test
 
             if (result == System.Windows.Forms.DialogResult.Yes)
             {
-                List<int> listInt = new List<int>();
-
-                foreach (DataGridViewCell v in dataGridView2.SelectedCells)
+                foreach (CassetteData emptyLotIDdata in BCApp.SCApplication.CassetteDataBLL.LoadCassetteDataByCstAndEmptyLotID())
                 {
-                    string cstID = dataGridView2.Rows[v.RowIndex].Cells["CSTID"].Value.ToString();
-                    //string boxID = dataGridView2.Rows[v.RowIndex].Cells["BOXID"].Value.ToString();
+                    BCApp.SCApplication.TransferService.QueryLotID(emptyLotIDdata);
+                }
 
-                    if (listInt.Contains(v.RowIndex) == false)
-                    {
-                        BCApp.SCApplication.ReportBLL.ReportQueryLotID(cstID);
-                        listInt.Add(v.RowIndex);
-                    }
+                //List<int> listInt = new List<int>();
+                //foreach (DataGridViewCell v in dataGridView2.SelectedCells)
+                //{
+                //    string cstID = dataGridView2.Rows[v.RowIndex].Cells["CSTID"].Value.ToString();
+                //    //string boxID = dataGridView2.Rows[v.RowIndex].Cells["BOXID"].Value.ToString();
+
+                //    if (listInt.Contains(v.RowIndex) == false)
+                //    {
+                //        BCApp.SCApplication.ReportBLL.ReportQueryLotID(cstID);
+                //        listInt.Add(v.RowIndex);
+                //    }
+                //}
+            }
+        }
+
+        private void button20_Click(object sender, EventArgs e)
+        {
+            DialogResult result;
+
+            result = MessageBox.Show("確定像 Redis 詢問 CSTID?", "詢問 CSTID", MessageBoxButtons.YesNo);
+
+            if (result == System.Windows.Forms.DialogResult.Yes)
+            {
+                foreach (CassetteData unkCstData in BCApp.SCApplication.CassetteDataBLL.LoadCassetteDataByCSTID_UNK())
+                {
+                    BCApp.SCApplication.TransferService.Redis_UpdateCstID(unkCstData);
                 }
             }
         }
