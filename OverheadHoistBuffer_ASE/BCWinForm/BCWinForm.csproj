@@ -849,29 +849,6 @@
     <None Include="Image\single_4.png" />
     <None Include="Image\single_5.png" />
     <Content Include="Image\OHxC icon.png" />
-    <Content Include="MapFile\ASE_K21_LINE1\Sql\ase_k21_20200109_a.sql" />
-    <Content Include="MapFile\ASE_K21_LINE1\Sql\ase_k21_20200109_b.sql" />
-    <Content Include="MapFile\ASE_K21_LINE1\Sql\ase_k21_20200113.sql" />
-    <Content Include="MapFile\ASE_K21_LINE1\Sql\ase_k21_20200117.sql" />
-    <Content Include="MapFile\ASE_K21_LINE1\Sql\ase_k21_20200130.sql" />
-    <Content Include="MapFile\ASE_K21_LINE1\Sql\ase_k21_20200205.sql" />
-    <Content Include="MapFile\ASE_K21_LINE1\Sql\ase_k21_20200207_b.sql" />
-    <Content Include="MapFile\ASE_K21_LINE1\Sql\ase_k21_20200210.sql" />
-    <Content Include="MapFile\ASE_K21_LINE1\Sql\ase_k21_20200210_b.sql" />
-    <Content Include="MapFile\ASE_K21_LINE1\Sql\ase_k21_20200218.sql" />
-    <Content Include="MapFile\ASE_K21_LINE1\Sql\ASE_K21_Line1_0212.sql" />
-    <Content Include="MapFile\ASE_K21_LINE1\Sql\ACMD_MCS.Table_200604.sql" />
-    <Content Include="MapFile\ASE_K21_LINE1\Sql\OHBC_ASE_K21_200203.sql" />
-    <Content Include="MapFile\ASE_K21_LINE1\Sql\OHBC_ASE_K21_200207.sql" />
-    <Content Include="MapFile\ASE_K21_LINE1\Sql\OHBC_ASE_K21_200216.sql" />
-    <Content Include="MapFile\ASE_K21_LINE1\Sql\OHBC_ASE_K21_200224.sql" />
-    <Content Include="MapFile\ASE_K21_LINE1\Sql\OHBC_ASE_K21_200305.sql" />
-    <Content Include="MapFile\ASE_K21_LINE2\ACMD_MCS.Table_200604.sql" />
-    <Content Include="MapFile\ASE_K21_LINE2\OHBC_ASE_K21_LINE2.sql" />
-    <Content Include="MapFile\ASE_K21_LINE3\ACMD_MCS.Table_200604.sql" />
-    <Content Include="MapFile\ASE_K21_LINE3\OHBC_ASE_K21_LINE3_200305.sql" />
-    <Content Include="MapFile\ASE_K21_LOOP\Sql\ACMD_MCS.Table_200604.sql" />
-    <Content Include="MapFile\ASE_K21_LOOP\Sql\OHBC_ASE_K21_LOOP_20200217.sql" />
     <Content Include="OHxC.ico" />
     <Content Include="ResGen.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -882,6 +859,7 @@
     <None Include="Config\MAINALARM.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="MapFile\DB_0623.7z" />
     <None Include="packages.config" />
     <None Include="Properties\DataSources\com.mirle.ibg3k0.bc.winform.ObjectRelay.SectionObjToShow.datasource" />
     <None Include="Properties\DataSources\com.mirle.ibg3k0.sc.ObjectRelay.CMD_MCSObjToShow.datasource" />
