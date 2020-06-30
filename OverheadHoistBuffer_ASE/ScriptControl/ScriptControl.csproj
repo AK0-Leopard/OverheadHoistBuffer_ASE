@@ -774,6 +774,7 @@
     <Compile Include="Data\SECS\SECSDriver\IBSEMDriver.cs" />
     <Compile Include="Data\SECS\SECSDriver\SEMDriver.cs" />
     <Compile Include="Data\TcpIp\MsgStructure.cs" />
+    <Compile Include="Data\TimerAction\EmptyBoxHandlerTimer.cs" />
     <Compile Include="Data\TimerAction\OHCVAliveTimer.cs" />
     <Compile Include="Data\TimerAction\OHxCAliveTimer.cs" />
     <Compile Include="Data\TimerAction\PLCAliveTimer.cs" />
@@ -824,6 +825,7 @@
     <Compile Include="Data\VO\PartialVo\PortDef.cs" />
     <Compile Include="Data\VO\PartialVo\ShelfDef.cs" />
     <Compile Include="Data\VO\PartialVo\CassetteData.cs" />
+    <Compile Include="Data\VO\PartialVo\ZoneDef.cs" />
     <Compile Include="Data\VO\ReserveEnhanceInfo.cs" />
     <Compile Include="Data\VO\ReturnCodeMap.cs" />
     <Compile Include="Data\VO\AlarmMap.cs" />

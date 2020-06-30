@@ -222,7 +222,7 @@ namespace com.mirle.ibg3k0.sc.Data.SECS.ASE
         public const string CPNAME_PortunitType = "PORTUNITTYPE";
         public const string CPNAME_ErrorID = "ERRORID";
         public const string CPNAME_ShelfID = "SHELFID";
-        public const string CPNAME_LotID = "LOTID";
+        public const string CPNAME_LotID = "LOT_ID";
 
         public const string CPNAME_SourcePort = "SOURCEPORT";
         public const string CPNAME_DestPort = "DESTPORT";
@@ -362,6 +362,7 @@ namespace com.mirle.ibg3k0.sc.Data.SECS.ASE
         //
         public const string CEID_Port_Out_Of_Service = "260";
         public const string CEID_Port_In_Service = "261";
+        public const string CEID_QueryLotID = "264";
         //
         public const string CEID_Load_Req = "602";
         public const string CEID_Unload_Req = "603";

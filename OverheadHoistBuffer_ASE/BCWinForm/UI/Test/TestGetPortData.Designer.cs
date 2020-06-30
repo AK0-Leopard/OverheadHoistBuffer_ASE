@@ -59,9 +59,13 @@
             this.label4 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.dataGridView3 = new System.Windows.Forms.DataGridView();
+            this.label5 = new System.Windows.Forms.Label();
             this.dataGridView4 = new System.Windows.Forms.DataGridView();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.button29 = new System.Windows.Forms.Button();
+            this.button28 = new System.Windows.Forms.Button();
             this.button20 = new System.Windows.Forms.Button();
+            this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.button21 = new System.Windows.Forms.Button();
@@ -71,6 +75,7 @@
             this.button25 = new System.Windows.Forms.Button();
             this.button26 = new System.Windows.Forms.Button();
             this.button27 = new System.Windows.Forms.Button();
+            this.button30 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
@@ -379,10 +384,14 @@
             this.panel1.Controls.Add(this.dataGridView3);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.label3);
+            this.panel1.Controls.Add(this.label5);
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.dataGridView4);
             this.panel1.Controls.Add(this.dataGridView2);
+            this.panel1.Controls.Add(this.button29);
+            this.panel1.Controls.Add(this.button28);
             this.panel1.Controls.Add(this.button20);
+            this.panel1.Controls.Add(this.comboBox3);
             this.panel1.Location = new System.Drawing.Point(10, 140);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1340, 426);
@@ -401,6 +410,16 @@
             this.dataGridView3.RowTemplate.Height = 24;
             this.dataGridView3.Size = new System.Drawing.Size(411, 346);
             this.dataGridView3.TabIndex = 9;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label5.Location = new System.Drawing.Point(852, 391);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(89, 16);
+            this.label5.TabIndex = 3;
+            this.label5.Text = "AGVZone：";
             // 
             // dataGridView4
             // 
@@ -430,6 +449,28 @@
             this.dataGridView2.Size = new System.Drawing.Size(340, 346);
             this.dataGridView2.TabIndex = 9;
             // 
+            // button29
+            // 
+            this.button29.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.button29.Location = new System.Drawing.Point(1179, 386);
+            this.button29.Name = "button29";
+            this.button29.Size = new System.Drawing.Size(67, 27);
+            this.button29.TabIndex = 7;
+            this.button29.Text = "關閉";
+            this.button29.UseVisualStyleBackColor = true;
+            this.button29.Click += new System.EventHandler(this.button29_Click);
+            // 
+            // button28
+            // 
+            this.button28.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.button28.Location = new System.Drawing.Point(1106, 386);
+            this.button28.Name = "button28";
+            this.button28.Size = new System.Drawing.Size(67, 27);
+            this.button28.TabIndex = 7;
+            this.button28.Text = "開啟";
+            this.button28.UseVisualStyleBackColor = true;
+            this.button28.Click += new System.EventHandler(this.button28_Click);
+            // 
             // button20
             // 
             this.button20.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
@@ -440,6 +481,15 @@
             this.button20.Text = "WaitIn";
             this.button20.UseVisualStyleBackColor = true;
             this.button20.Click += new System.EventHandler(this.button20_Click);
+            // 
+            // comboBox3
+            // 
+            this.comboBox3.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.comboBox3.FormattingEnabled = true;
+            this.comboBox3.Location = new System.Drawing.Point(947, 387);
+            this.comboBox3.Name = "comboBox3";
+            this.comboBox3.Size = new System.Drawing.Size(153, 24);
+            this.comboBox3.TabIndex = 5;
             // 
             // groupBox1
             // 
@@ -547,6 +597,17 @@
             this.button27.UseVisualStyleBackColor = true;
             this.button27.Click += new System.EventHandler(this.button27_Click);
             // 
+            // button30
+            // 
+            this.button30.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.button30.Location = new System.Drawing.Point(1175, 570);
+            this.button30.Name = "button30";
+            this.button30.Size = new System.Drawing.Size(197, 27);
+            this.button30.TabIndex = 7;
+            this.button30.Text = "重新上報所有 Port 狀態";
+            this.button30.UseVisualStyleBackColor = true;
+            this.button30.Click += new System.EventHandler(this.button30_Click);
+            // 
             // TestGetPortData
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -571,6 +632,7 @@
             this.Controls.Add(this.button10);
             this.Controls.Add(this.button16);
             this.Controls.Add(this.button15);
+            this.Controls.Add(this.button30);
             this.Controls.Add(this.button14);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button25);
@@ -639,5 +701,10 @@
         private System.Windows.Forms.Button button25;
         private System.Windows.Forms.Button button26;
         private System.Windows.Forms.Button button27;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button button29;
+        private System.Windows.Forms.Button button28;
+        private System.Windows.Forms.ComboBox comboBox3;
+        private System.Windows.Forms.Button button30;
     }
 }

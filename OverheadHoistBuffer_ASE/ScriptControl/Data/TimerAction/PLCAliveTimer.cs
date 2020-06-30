@@ -1,4 +1,18 @@
-﻿using System;
+﻿//*********************************************************************************
+//      PLCAliveTimer.cs
+//*********************************************************************************
+// File Name: PLCAliveTimer.cs
+// Description: 讓PLC知道現在的連線狀態
+// Reference: ASRS ←→PC 通訊手冊 v3.29
+//
+//(c) Copyright 2020, MIRLE Automation Corporation
+//
+// Date          Author         Request No.    Tag          Description
+// ------------- -------------  -------------  ------       -----------------------------
+// 2020/06/23    Hsinyu Chang   N/A            2020.6.23    加入MCS online signal
+//**********************************************************************************
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -48,24 +62,14 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
 
                     if (IntervalMilliSec > 0)
                     {
-                        //lastAliveSignal = aliveSignal;
-                        //aliveSignal = systemInfoMapAction.PLCHeartbeatSignal;
-                        //if (lastAliveSignal == aliveSignal)
-                        //{
-                        //    retryCount++;
-                        //    if (retryCount > retryCountThl)
-                        //    {
-                        //        //TODO: PLC disconnected
-                        //    }
-                        //}
-                        //else
-                        //{
-                        //    retryCount = 0;
-                        //}
-                        //systemInfoMapAction.PLC_SetHeartbeat(!aliveSignal);
                         aliveSignal = !aliveSignal;
                         systemInfoMapAction.PLC_SetHeartbeat(aliveSignal);
+
+                        //2020.6.23 MCS online
+                        bool MCSonline = (scApp.getEQObjCacheManager().getLine().Secs_Link_Stat == SCAppConstants.LinkStatus.LinkOK);
+                        systemInfoMapAction.PLC_SetMCSOnline(MCSonline);
                     }
+
                 }
                 finally
                 {

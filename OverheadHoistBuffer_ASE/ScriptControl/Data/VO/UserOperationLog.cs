@@ -26,5 +26,6 @@ namespace com.mirle.ibg3k0.sc.Data.VO
         public string OperateData { get; set; }
         public string DataChange { get; set; }
         public string Remark { get; set; }
+	public string Index => "OperationInfo";
     }
 }

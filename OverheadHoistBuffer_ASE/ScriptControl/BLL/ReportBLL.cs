@@ -291,11 +291,6 @@ namespace com.mirle.ibg3k0.sc.BLL
 
         #region MCS SXFY Report
 
-
-
-
-
-
         public bool ReportEquiptmentOffLine()
         {
             bool isSuccsess = true;
@@ -1074,6 +1069,13 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
 
             return AMCSREPORTQUEUEs;
+        }
+
+        public bool ReportQueryLotID(string cstID, List<AMCSREPORTQUEUE> reportQueues = null)
+        {
+            bool isSuccsess = true;
+            isSuccsess = isSuccsess && iBSEMDriver.S6F11SendQueryLotID(cstID, reportQueues);
+            return isSuccsess;
         }
         #endregion MCS SXFY Report
 
