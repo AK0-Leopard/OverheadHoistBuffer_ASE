@@ -2132,6 +2132,12 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
 
 
+            public List<AVEHICLE> loadHasCmdVh()
+            {
+                var vhs = eqObjCacheManager.getAllVehicle();
+                return vhs.Where(vh => !SCUtility.isEmpty(vh.OHTC_CMD)).
+                           ToList();
+            }
 
 
         }

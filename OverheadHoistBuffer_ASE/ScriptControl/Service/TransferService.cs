@@ -71,10 +71,7 @@ namespace com.mirle.ibg3k0.sc.Service
         #region CV_Port 才有用到的屬性
 
         public int Stage { get; set; }
-        public int nowStage { get; set; }
-        public bool openAGV_Station { get; set; }
-        public bool openAGV_AutoPortType { get; set; }
-        public bool movebackBOXsleep { get; set; }      //0601 士偉提出 AGV 在 OutMode 的時候判斷退BOX時，先延遲300毫秒再檢查一次，若還是退BOX結果再退
+        public int nowStage { get; set; }        
         public string IgnoreModeChange { get; set; }    // Y = 忽略 PLC 訊號，一律 Port 當，N = 讀取 PLC 正常上報
 
         #endregion
@@ -83,7 +80,14 @@ namespace com.mirle.ibg3k0.sc.Service
         public int timeOutForAutoUD { get; set; }   //卡匣停在 Port 或 車上 的停留時間超過幾秒，就自動搬到儲位
         public string timeOutForAutoInZone { get; set; }    //timeOutForAutoUD 超過時間自動搬到哪個 Zone
 
-        #endregion        
+        #endregion 
+        #region AGV Port 才有用到的屬性
+
+        public bool openAGV_Station { get; set; }
+        public bool openAGV_AutoPortType { get; set; }
+        public bool movebackBOXsleep { get; set; }      //0601 士偉提出 AGV 在 OutMode 的時候判斷退BOX時，先延遲300毫秒再檢查一次，若還是退BOX結果再退
+        
+        #endregion
         #region AGVZone_Port 才有用到的屬性
 
         public E_PORT_STATUS openAGVZone { get; set; }
@@ -151,6 +155,8 @@ namespace com.mirle.ibg3k0.sc.Service
         public Dictionary<string, WaitInOutLog> waitOutLog = new Dictionary<string, WaitInOutLog>();
         public int cstIdle = 600;       //卡匣停在 Port上或車上，超過 30 秒沒搬，自動搬往儲位
 
+        public bool requireEmptyBox = false;
+
         #endregion
 
         #region 初始化
@@ -195,8 +201,10 @@ namespace com.mirle.ibg3k0.sc.Service
                         data.UnitType = v.UnitType.Trim();
                         data.ZoneName = v.PLCPortID.Trim();
                         data.Stage = (int)v.Stage;
+
                         data.openAGV_Station = false;
                         data.openAGV_AutoPortType = false;
+
                         data.nowStage = i;
                         data.movebackBOXsleep = false;
                         data.timeOutForAutoUD = (int)v.TimeOutForAutoUD;
@@ -219,21 +227,6 @@ namespace com.mirle.ibg3k0.sc.Service
                         {
                             OpenAGVZone(data.PortName, data.openAGVZone);
                         }
-
-                        //if (v.UnitType.Trim() == UnitType.AGV.ToString())
-                        //{
-                        //    if (portINIData.ContainsKey(v.ZoneName) == false)
-                        //    {
-                        //        PortINIData agvdata = new PortINIData();
-                        //        agvdata.PortName = v.ZoneName.Trim();
-                        //        agvdata.UnitType = UnitType.AGVZONE.ToString();
-                        //        agvdata.ZoneName = v.ZoneName.Trim();
-                        //        agvdata.Stage = 1;
-
-                        //        AddPortINIData(data);
-                        //    }
-                        //}
-
                     }
                 }
 
@@ -364,11 +357,98 @@ namespace com.mirle.ibg3k0.sc.Service
                     PLC_ReportPortInOutService(portValue);
                     #endregion
                     #region Port卡匣資料處理
-
-                    if (portValue.OpAutoMode && portValue.PortWaitIn)
+                    if(portValue.OpAutoMode)
                     {
-                        PLC_ReportPortWaitIn(portValue, "iniPortData");
+                        if (portValue.IsInputMode)
+                        {
+                            if (portValue.LoadPosition1)
+                            {
+                                if (portValue.PortWaitIn)
+                                {
+                                    PLC_ReportPortWaitIn(portValue, "iniPortData");
+                                }
+                                else
+                                {
+                                    if(isUnitType(portValue.EQ_ID, UnitType.AGV) && portValue.IsCSTPresence == false)
+                                    {
+                                        CassetteData portCstData = cassette_dataBLL.loadCassetteDataByLoc(portValue.EQ_ID);
+
+                                        if (portCstData != null)
+                                        {
+                                            DeleteCst(portCstData.CSTID, portCstData.BOXID, "iniPortData");
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                CassetteData portCstData = cassette_dataBLL.loadCassetteDataByLoc(portValue.EQ_ID);
+
+                                if (portCstData != null)
+                                {
+                                    DeleteCst(portCstData.CSTID, portCstData.BOXID, "iniPortData");
+                                }
+                            }
+                        }
+                        else if (portValue.IsOutputMode)
+                        {
+                            if (portValue.LoadPosition1)
+                            {
+                                CassetteData portCstData = cassette_dataBLL.loadCassetteDataByLoc(portValue.EQ_ID);
+
+                                if (portCstData == null)
+                                {
+                                    string cstID = "";
+                                    string boxID = "";
+                                    string loc = "";
+
+                                    if (isUnitType(portValue.EQ_ID, UnitType.AGV) || isUnitType(portValue.EQ_ID, UnitType.NTB))
+                                    {
+                                        cstID = portValue.CassetteID.Trim();
+                                    }
+                                    else
+                                    {
+                                        cstID = CarrierReadFail(portValue.EQ_ID);
+                                    }
+
+                                    boxID = portValue.BoxID.Trim();
+                                    loc = GetPositionName(portValue.EQ_ID, 1);
+                                    OHBC_InsertCassette(cstID, boxID, loc, "iniPortData");
+                                }
+                            }
+
+                            if (portValue.LoadPosition2)
+                            {
+
+                            }
+
+                            if (portValue.LoadPosition3)
+                            {
+
+                            }
+
+                            if (portValue.LoadPosition4)
+                            {
+
+                            }
+
+                            if (portValue.LoadPosition5)
+                            {
+
+                            }
+
+                            if (portValue.LoadPosition6)
+                            {
+
+                            }
+
+                            if (portValue.LoadPosition7)
+                            {
+
+                            }
+                        }
                     }
+                    
                     #endregion
                 }
 
@@ -775,7 +855,9 @@ namespace com.mirle.ibg3k0.sc.Service
 
                 if (isCVPort(zoneName))
                 {
-                    if (GetPLC_PortData(zoneName).IsInputMode)
+                    PortPLCInfo plcInfo = GetPLC_PortData(zoneName);
+
+                    if (plcInfo.IsInputMode && plcInfo.OpAutoMode && plcInfo.LoadPosition1)
                     {
                         success = true;
                     }
@@ -818,7 +900,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                 string cmdDest = "";
                                 cmdDest = shelfID;
 
-                                Manual_InsertCmd(cmdSource, cmdDest, "", 5, "cstTimeOut", CmdType.OHBC);
+                                Manual_InsertCmd(cmdSource, cmdDest, 5, "cstTimeOut", CmdType.OHBC);
                             }
                         }
                     }
@@ -920,24 +1002,27 @@ namespace com.mirle.ibg3k0.sc.Service
                                     }
                                     else
                                     {
-                                        if (sourcePort.IsModeChangable)
-                                        {
-                                            string cmdID = "PortTypeChange-" + sourcePort.EQ_ID.Trim() + ">>" + E_PortType.In;
-
-                                            if (cmdBLL.getCMD_MCSByID(cmdID) == null)
-                                            {
-                                                //若來源流向錯誤且沒有流向切換命令，就新建
-                                                SetPortTypeCmd(sourcePort.EQ_ID.Trim(), E_PortType.In);  //要測時，把註解拿掉
-                                            }
-                                        }
-
                                         sourceState = sourceState + " IsInputMode:" + sourcePort.IsInputMode;
                                     }
                                 }
                             }
                             else
                             {
-                                sourceState = sourceState + " IsReadyToUnload:" + sourcePort.IsReadyToUnload;
+                                if (isUnitType(sourceName, UnitType.AGV) == false 
+                                    && sourcePort.IsInputMode == false
+                                    && sourcePort.IsModeChangable
+                                   )
+                                {
+                                    string cmdID = "PortTypeChange-" + sourcePort.EQ_ID.Trim() + ">>" + E_PortType.In;
+
+                                    if (cmdBLL.getCMD_MCSByID(cmdID) == null)
+                                    {
+                                        //若來源流向錯誤且沒有流向切換命令，就新建
+                                        SetPortTypeCmd(sourcePort.EQ_ID.Trim(), E_PortType.In);  //要測時，把註解拿掉
+                                    }
+                                }
+
+                                sourceState = sourceState + " IsReadyToUnload: " + sourcePort.IsReadyToUnload + " IsInputMode: " + sourcePort.IsInputMode;
                             }
                         }
                         else
@@ -1013,6 +1098,14 @@ namespace com.mirle.ibg3k0.sc.Service
                 #region 檢查目的 Port 流向                
                 if (isCVPort(destName))
                 {
+                    if (portINIData[destName].Stage == 1)    //200701 SCC+ MCS 士偉、冠皚提出，目的 Port 只有 1 節時，出現目前命令到相同的 Port 不要執行
+                    {
+                        if (cmdBLL.GetCmdDataByDest(destName).Where(data => data.TRANSFERSTATE == E_TRAN_STATUS.Transferring).Count() != 0)
+                        {
+                            return false;
+                        }
+                    }
+
                     PortPLCInfo destPort = GetPLC_PortData(destName);
 
                     if (destPort != null)
@@ -1033,23 +1126,26 @@ namespace com.mirle.ibg3k0.sc.Service
                                     }
                                     else
                                     {
-                                        if (destPort.IsModeChangable)
-                                        {
-                                            string cmdID = "PortTypeChange-" + destPort.EQ_ID.Trim() + ">>" + E_PortType.Out;
-
-                                            if (cmdBLL.getCMD_MCSByID(cmdID) == null)
-                                            {
-                                                SetPortTypeCmd(destPort.EQ_ID.Trim(), E_PortType.Out);    //要測時，把註解拿掉
-                                            }
-                                        }
-
                                         destState = destState + " IsOutputMode:" + destPort.IsOutputMode;
                                     }
                                 }
                             }
                             else
                             {
-                                destState = destState + " IsReadyToLoad: " + destPort.IsReadyToLoad;
+                                if (isUnitType(destName, UnitType.AGV) == false 
+                                    && destPort.IsOutputMode == false
+                                    && destPort.IsModeChangable
+                                   )
+                                {
+                                    string cmdID = "PortTypeChange-" + destPort.EQ_ID.Trim() + ">>" + E_PortType.Out;
+
+                                    if (cmdBLL.getCMD_MCSByID(cmdID) == null)
+                                    {
+                                        SetPortTypeCmd(destPort.EQ_ID.Trim(), E_PortType.Out);    //要測時，把註解拿掉
+                                    }
+                                }
+
+                                destState = destState + " IsReadyToLoad: " + destPort.IsReadyToLoad + " IsOutputMode: " + destPort.IsOutputMode;
                             }
                         }
                         else
@@ -1881,7 +1977,6 @@ namespace com.mirle.ibg3k0.sc.Service
                     {
                         unLoadCstData.Carrier_LOC = GetPositionName(unLoadCstData.Carrier_LOC, 1);
                         cassette_dataBLL.UpdateCSTLoc(unLoadCstData.BOXID, unLoadCstData.Carrier_LOC, 1);
-
                     }
                     else if (isUnitType(dest, UnitType.SHELF))
                     {
@@ -2134,13 +2229,13 @@ namespace com.mirle.ibg3k0.sc.Service
                 TransferServiceLogger.Info
                 (
                     DateTime.Now.ToString("HH:mm:ss.fff ")
-                    + "PLC >> OHB|PortPositionWaitOut 誰呼叫:" + sourceCmd
+                    + "PLC >> OHB|PortPositionWaitOut 誰呼叫:" + sourceCmd + " outStage: " + outStage
                     + GetCstLog(datainfo)
                 );
 
                 datainfo.Carrier_LOC = datainfo.Carrier_LOC.Trim();
 
-                UPStage(datainfo, outStage);
+                UPStage(datainfo, outStage, "PortPositionWaitOut");
             }
             catch (Exception ex)
             {
@@ -2167,6 +2262,18 @@ namespace com.mirle.ibg3k0.sc.Service
                 PortCarrierRemoved(datainfo, plcInfo.IsAGVMode, "PortPositionOFF");
             }
         }
+        public void PortCstPositionOFF(PortPLCInfo plcInfo) 
+        {
+            if(isUnitType(plcInfo.EQ_ID.Trim(), UnitType.AGV))
+            {
+                CassetteData datainfo = new CassetteData();
+                datainfo.CSTID = plcInfo.CassetteID.Trim();        //填CSTID
+                datainfo.BOXID = plcInfo.BoxID.Trim();        //填BOXID
+                datainfo.Carrier_LOC = plcInfo.EQ_ID.Trim();  //填Port 名稱
+
+                PortCarrierRemoved(datainfo, plcInfo.IsAGVMode, "PortCstPositionOFF");
+            }
+        }
         public void PortWaitOut(CassetteData cstData)
         {
             try
@@ -2185,14 +2292,14 @@ namespace com.mirle.ibg3k0.sc.Service
                     + "    CSTID:" + cstData?.CSTID ?? ""
                 );
 
-                UPStage(cstData, outStage);
+                UPStage(cstData, outStage, "PortWaitOut (Demo)");
             }
             catch (Exception ex)
             {
                 TransferServiceLogger.Error(ex, "AGVPortWaitOut");
             }
         }
-        public bool UPStage(CassetteData outData, int outStage)
+        public bool UPStage(CassetteData outData, int outStage, string sourceCmd)
         {
             try
             {
@@ -2209,6 +2316,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 (
                     DateTime.Now.ToString("HH:mm:ss.fff ") +
                     "PLC >> OHB|UPStage PortID:" + outData.Carrier_LOC
+                    + " 誰呼叫:" + sourceCmd
                     + " outStage:" + outStage
                     + " outData :" + GetCstLog(outData)
                 );
@@ -2220,9 +2328,8 @@ namespace com.mirle.ibg3k0.sc.Service
                 if (dbData == null)
                 {
                     //如果沒找到PLC給的BOX卡匣，就依序搬入順序來找卡匣
-                    dbData = dbDataList
-                        .Where(cst => cst.Stage < outStage)
-                        .OrderByDescending(cst => cst.Stage).FirstOrDefault();
+                    dbData = dbDataList.Where(cst => cst.Stage < outStage)
+                                       .OrderByDescending(cst => cst.Stage).FirstOrDefault();
 
                     if (dbData != null)
                     {
@@ -2234,7 +2341,19 @@ namespace com.mirle.ibg3k0.sc.Service
                     }
                     else
                     {
-                        OHTtoPort(outData.Carrier_LOC, outStage, "UPStage");
+                        if(outStage == 1)
+                        {
+                            OHTtoPort(outData.Carrier_LOC, outStage, "UPStage");
+                        }
+                        else
+                        {
+                            TransferServiceLogger.Info
+                            (
+                                DateTime.Now.ToString("HH:mm:ss.fff ") 
+                                + outData.Carrier_LOC + "第 2 節後不在去找車子"
+                            );
+                        }
+
                         return true;
                     }
                 }
@@ -2282,7 +2401,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 TransferServiceLogger.Info
                 (
                     DateTime.Now.ToString("HH:mm:ss.fff ") +
-                    "PLC >> OHB|UPStage：PortID:" + portInI.PortName + "    portStage:" + portStage
+                    "PLC >> OHB|UPStage：PortID:" + portInI.PortName + " 此 CV 節數:" + portStage
                     + " dbData CSTID:" + dbData.BOXID + "  BOXID:" + dbData.BOXID + "  LOC:" + dbData.Carrier_LOC + "  卡匣目前節數:" + dbData.Stage
                 );
 
@@ -2434,6 +2553,7 @@ namespace com.mirle.ibg3k0.sc.Service
 
                 portName = portName.Trim();
                 string ohtName = scApp.VehicleService.GetVehicleIDByPortID(portName);    //取得停在 Port 前的 OHT
+                string agvZone = portINIData[portName].Group;
 
                 string log = "OHB >> OHB|";
 
@@ -2456,7 +2576,9 @@ namespace com.mirle.ibg3k0.sc.Service
                 #region 先用車子找命令
                 List<ACMD_MCS> ohtCmdList = cmdBLL.getCMD_ByOHTName(ohtName);
                 log = log + " OHTName: " + ohtName + " 執行: " + ohtCmdList.Count() + " 筆命令";
-                cmd = ohtCmdList.Where(data => data.HOSTDESTINATION == portName && data.TRANSFERSTATE == E_TRAN_STATUS.Transferring).FirstOrDefault();
+
+                cmd = ohtCmdList.Where(data => (data.HOSTDESTINATION == portName || data.HOSTDESTINATION == agvZone)
+                                               && data.TRANSFERSTATE == E_TRAN_STATUS.Transferring).FirstOrDefault();
 
                 if (cmd != null)
                 {
@@ -2466,7 +2588,13 @@ namespace com.mirle.ibg3k0.sc.Service
                 #region 車子找不到命令，找命令目的，第二道防護，發生車子回報位置導致找不到停在 Port 前面
                 else
                 {
-                    List<ACMD_MCS> cmdByDest = cmdBLL.GetCmdDataByDest(portName)
+                    //foreach(var vehicle in vehicleBLL.cache.loadHasCmdVh())
+                    //{
+                    //    cmdBLL.getCMD_OHTCByID(vehicle.OHTC_CMD);
+                    //}
+                    //vehicleBLL.cache.loadHasCmdVh().Where(data => data.ToAdr
+
+                    List <ACMD_MCS> cmdByDest = cmdBLL.GetCmdDataByDest(portName)
                                                         .Where(data => data.TRANSFERSTATE == E_TRAN_STATUS.Transferring)
                                                         .ToList();
 
@@ -2518,6 +2646,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 #endregion
 
                 #region 找卡匣
+                log = log + "\n 開始找卡匣在哪";
 
                 dbData = cassette_dataBLL.loadCassetteDataByLoc(ohtName);
 
@@ -2603,6 +2732,7 @@ namespace com.mirle.ibg3k0.sc.Service
                             reportBLL.ReportZoneCapacityChange(cmd.HOSTSOURCE, null);
                         }
                     }
+
                     ACMD_OHTC ohtData = cmdBLL.getCMD_OHTCByMCScmdID(cmd.CMD_ID);
 
                     OHT_UnLoadCompleted(ohtData, dbData, "OHTtoPort");
@@ -2612,11 +2742,10 @@ namespace com.mirle.ibg3k0.sc.Service
                     #region 過帳處理
                     if (dbData != null)
                     {
-                        cassette_dataBLL.UpdateCSTLoc(dbData.BOXID, portName, 0);
-                        dbData.Carrier_LOC = portName;
-                        dbData.Stage = 1;
+                        dbData.Carrier_LOC = GetPositionName(dbData.Carrier_LOC, 1);
+                        cassette_dataBLL.UpdateCSTLoc(dbData.BOXID, dbData.Carrier_LOC, 1);
 
-                        UPStage(dbData, outStage);
+                        reportBLL.ReportCarrierWaitOut(dbData, "1");
                     }
                     #endregion
                 }
@@ -2845,6 +2974,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                         if (agvStationCmd.TRANSFERSTATE == E_TRAN_STATUS.Queue)
                                         {
                                             Manual_DeleteCmd(agvStationCmd.CMD_ID, "AGV 狀態 InService，取消退空 BOX 命令");
+                                            DeleteCst(agvStationCmd.CARRIER_ID, agvStationCmd.BOX_ID, "AGV 狀態 InService，取消退空 BOX 命令");
                                         }
                                     }
                                 }
@@ -2872,7 +3002,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                     }
                                 }
                             }
-
+                            
                             reportBLL.ReportPortInService(portName);
                         }
                         else if (service == E_PORT_STATUS.OutOfService)
@@ -2882,7 +3012,20 @@ namespace com.mirle.ibg3k0.sc.Service
 
                         if (isUnitType(portDB.PLCPortID, UnitType.AGV))
                         {
-                            PLC_AGVZone_InOutService(portDB.ZoneName);
+                            string AGVZone = portINIData[portName].Group;
+
+                            if (service == E_PORT_STATUS.InService)
+                            {
+                                if (isAGVZone(AGVZone))  //200701 SCC+ AGV Port 狀態正確時，將自動退補關掉
+                                {
+                                    if (portINIData[AGVZone].openAGVZone == E_PORT_STATUS.InService)
+                                    {
+                                        OpenAGV_Station(portName, false);
+                                    }
+                                }
+                            }
+
+                            PLC_AGVZone_InOutService(AGVZone);
                         }
                     }
                     else
@@ -3243,19 +3386,6 @@ namespace com.mirle.ibg3k0.sc.Service
                         return;
                     }
 
-                    //if (portINIData[plcInfo.EQ_ID.Trim()].movebackBOXsleep == false)
-                    //{
-                    //    TransferServiceLogger.Info
-                    //    (
-                    //        DateTime.Now.ToString("HH:mm:ss.fff ") +
-                    //        "OHB >> AGV|OutMode 退BOX 延遲 300 毫秒再檢查一次 " + plcInfo.EQ_ID
-                    //    );
-                    //    portINIData[plcInfo.EQ_ID.Trim()].movebackBOXsleep = true;
-                    //    Thread.Sleep(300);
-                    //    PLC_AGV_Station_OutMode(GetPLC_PortData(plcInfo.EQ_ID));
-                    //    return;
-                    //}
-
                     TransferServiceLogger.Info
                     (
                         DateTime.Now.ToString("HH:mm:ss.fff ") + movebackBOXLog
@@ -3263,8 +3393,6 @@ namespace com.mirle.ibg3k0.sc.Service
 
                     MovebackBOX(plcInfo.CassetteID, plcInfo.BoxID, plcInfo.EQ_ID, plcInfo.IsCSTPresence);
                 }
-
-                //portINIData[plcInfo.EQ_ID.Trim()].movebackBOXsleep = false;
             }
             catch (Exception ex)
             {
@@ -3293,15 +3421,6 @@ namespace com.mirle.ibg3k0.sc.Service
             if (agvZone.State != agvZoneInOutService)
             {
                 PortInOutService(agvZone.PLCPortID, agvZoneInOutService, "PLC_AGVZone_InOutService");
-
-                //if (agvZoneInOutService == E_PORT_STATUS.InService)
-                //{
-                //    reportBLL.ReportPortInService(agvZone.PLCPortID);
-                //}
-                //else if (agvZoneInOutService == E_PORT_STATUS.OutOfService)
-                //{
-                //    reportBLL.ReportPortOutOfService(agvZone.PLCPortID);
-                //}
             }
         }
         #region 補BOX、退BOX，控制處理
@@ -3721,7 +3840,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         reportBLL.ReportPortTypeOutput(cmdDest);
                     }
 
-                    Manual_InsertCmd(cmdSource, cmdDest, "", 5, "BoxMovCmd", CmdType.AGVStation);
+                    Manual_InsertCmd(cmdSource, cmdDest, 99, "BoxMovCmd", CmdType.AGVStation);
                 }
                 catch (Exception ex)
                 {
@@ -4133,7 +4252,7 @@ namespace com.mirle.ibg3k0.sc.Service
         }
         public string CarrierReadFail(string loc)   //卡匣讀不到
         {
-            return "UNKF" + loc + GetStDate() + string.Format("{0:00}", DateTime.Now.Second);
+            return "UNKF" + loc.Trim() + GetStDate() + string.Format("{0:00}", DateTime.Now.Second);
         }
         public string CarrierReadduplicate(string bcrcsid)  //卡匣重複
         {
@@ -4360,13 +4479,13 @@ namespace com.mirle.ibg3k0.sc.Service
         }
         public void QueryLotID(CassetteData cstData)
         {
-            if(cstData != null)
+            if (cstData != null)
             {
                 if (ase_ID_Check(cstData.CSTID) && string.IsNullOrWhiteSpace(cstData.LotID))
                 {
                     reportBLL.ReportQueryLotID(cstData.CSTID);
                 }
-            }      
+            }
         }
         #region 異常流程
         public void HaveAccountHaveReal(CassetteData dbData, CassetteData bcrcsid, IDreadStatus idRead)      //有帳有料
@@ -4407,6 +4526,8 @@ namespace com.mirle.ibg3k0.sc.Service
                     {
                         newData.BOXID = bcrcsid.BOXID;
                         newData.CSTID = CarrierReadFail(newData.Carrier_LOC.Trim());
+                        
+                        //newData.CSTID = cassette_dataBLL.loadCassetteDataByLoc(newData.Carrier_LOC.Trim()).CSTID;
                     }
 
                     if (newData.BOXID.Contains("UNKF") && isUnitType(dbData.Carrier_LOC, UnitType.CRANE)
@@ -4491,14 +4612,14 @@ namespace com.mirle.ibg3k0.sc.Service
         #endregion
         #region 卡匣建帳、刪帳
 
-        public string OHBC_InsertCassette(string cstid, string boxid, string loc, string sourceAPI, string lotID = "")
+        public string OHBC_InsertCassette(string cstid, string boxid, string loc, string sourceAPI)
         {
             try
             {
                 loc = loc.Trim();
                 cstid = cstid.Trim();
                 boxid = boxid.Trim();
-                lotID = lotID.Trim();
+                //lotID = lotID.Trim();
 
                 #region Log
                 TransferServiceLogger.Info
@@ -4523,10 +4644,10 @@ namespace com.mirle.ibg3k0.sc.Service
                 CassetteData datainfo = new CassetteData();
 
                 datainfo.StockerID = "1";
-                datainfo.CSTID = cstid;
+                datainfo.CSTID = Redis_GetCstID(cstid);
                 datainfo.BOXID = boxid;
                 datainfo.Carrier_LOC = loc;
-                datainfo.LotID = lotID;
+                datainfo.LotID = "";
                 datainfo.CSTState = E_CSTState.Installed;
                 datainfo.CSTInDT = DateTime.Now.ToString("yy/MM/dd HH:mm:ss");
                 datainfo.TrnDT = DateTime.Now.ToString("yy/MM/dd HH:mm:ss");
@@ -4598,7 +4719,6 @@ namespace com.mirle.ibg3k0.sc.Service
                     }
 
                     QueryLotID(datainfo);
-                    Redis_UpdateCstID(datainfo);
                 }
                 else if (vehicle != null)
                 {
@@ -5262,35 +5382,74 @@ namespace com.mirle.ibg3k0.sc.Service
         #region Redis 新增刪除查詢CSTID
         public void Redis_AddCstBox(CassetteData addRedisCstData)   //  20/06/30 SCC+ 建帳的時候去建立 BOX 跟 CST 的關係
         {
-            if (ase_ID_Check(addRedisCstData.CSTID) && ase_ID_Check(addRedisCstData.BOXID))
+            try
             {
-                cassette_dataBLL.redis.setBoxIDWithCSTID(addRedisCstData.CSTID, addRedisCstData.BOXID);
+                if (ase_ID_Check(addRedisCstData.CSTID) && ase_ID_Check(addRedisCstData.BOXID))
+                {
+                    cassette_dataBLL.redis.setBoxIDWithCSTID(addRedisCstData.BOXID, addRedisCstData.CSTID); //2020/07/01 修改 交換順序 for 正確的key值
+                }
+            }
+            catch (Exception ex)
+            {
+                TransferServiceLogger.Error(ex, "Redis_AddCstBox" + GetCstLog(addRedisCstData));
             }
         }
         public void Redis_DeleteCstBox(CassetteData deleteRedisCstData)
         {
-            if( isUnitType(deleteRedisCstData.Carrier_LOC, UnitType.AGV))
+            try
             {
-                cassette_dataBLL.redis.deleteCSTIDByBoxID(deleteRedisCstData.BOXID);
+                if (isUnitType(deleteRedisCstData.Carrier_LOC, UnitType.AGV))
+                {
+                    cassette_dataBLL.redis.deleteCSTIDByBoxID(deleteRedisCstData.BOXID);
+                }
+            }
+            catch (Exception ex)
+            {
+                TransferServiceLogger.Error(ex, "Redis_DeleteCstBox" + GetCstLog(deleteRedisCstData));
             }
         }
 
         public void Redis_UpdateCstID(CassetteData unkCstData)
         {
-            if(unkCstData != null)
+            try
             {
-                if (ase_ID_Check(unkCstData.BOXID) && unkCstData.CSTID.Contains("UNK"))
+                if (unkCstData != null)
                 {
-                    var redis = cassette_dataBLL.redis.tryGetCSTIDByBoxID(unkCstData.BOXID);
-
-                    if (redis.hasExist)
+                    if (ase_ID_Check(unkCstData.BOXID) && unkCstData.CSTID.Contains("UNKF"))
                     {
-                        string cstID = redis.cstID;
+                        var redis = cassette_dataBLL.redis.tryGetCSTIDByBoxID(unkCstData.BOXID);
 
-                        cassette_dataBLL.UpdateCSTID(unkCstData.Carrier_LOC, unkCstData.BOXID, cstID.Trim(), unkCstData.LotID);
+                        if (redis.hasExist)
+                        {
+                            string cstID = redis.cstID;
+                            unkCstData.CSTID = cstID;
+                            cassette_dataBLL.UpdateCSTID(unkCstData.Carrier_LOC, unkCstData.BOXID, cstID.Trim(), unkCstData.LotID);
+                        }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                TransferServiceLogger.Error(ex, "Redis_UpdateCstID" + GetCstLog(unkCstData));
+            }
+        }
+        public string Redis_GetCstID(string cstID)
+        {
+            string redisCstID = cstID;
+
+            if (cstID.Contains("UNKF"))
+            {
+                var redis = cassette_dataBLL.redis.tryGetCSTIDByBoxID(cstID);
+
+                if (redis.hasExist)
+                {
+                    if(string.IsNullOrWhiteSpace(redis.cstID) == false)
+                    {
+                        redisCstID = redis.cstID;
+                    }
+                }
+            }
+            return redisCstID;
         }
         #endregion
         #endregion
@@ -5362,7 +5521,7 @@ namespace com.mirle.ibg3k0.sc.Service
 
         #endregion
         #region 命令操作
-        public string Manual_InsertCmd(string source, string dest, string lot_id = "", int priority = 5, string sourceCmd = "UI", CmdType cmdType = CmdType.Manual)   //手動搬送，sourceCmd : 誰呼叫
+        public string Manual_InsertCmd(string source, string dest, int priority = 5, string sourceCmd = "UI", CmdType cmdType = CmdType.Manual)   //手動搬送，sourceCmd : 誰呼叫
         {
             try
             {
@@ -5371,8 +5530,9 @@ namespace com.mirle.ibg3k0.sc.Service
                 (
                     DateTime.Now.ToString("HH:mm:ss.fff ") +
                     "OHB >> CMD|Manual_InsertCmd"
-                    + " 來源" + source
-                    + " 目的" + dest
+                    + " 來源: " + source
+                    + " 目的: " + dest
+                    + " 誰呼叫: " + sourceCmd
                 );
                 #endregion
 
@@ -5523,7 +5683,7 @@ namespace com.mirle.ibg3k0.sc.Service
         }
         #endregion
         #region 卡匣操作
-        public string Manual_InsertCassette(string cstid, string boxid, string loc, string lotID = "")  //手動建帳
+        public string Manual_InsertCassette(string cstid, string boxid, string loc)  //手動建帳
         {
             if (string.IsNullOrWhiteSpace(cstid) == false)
             {
@@ -5569,10 +5729,10 @@ namespace com.mirle.ibg3k0.sc.Service
             TransferServiceLogger.Info
             (
                 DateTime.Now.ToString("HH:mm:ss.fff ") +
-                "OHB >> OHB|Manual_InsertCassette CSTID: " + cstid + "  BOXID:" + boxid + "   LOC:" + loc + "   LOTID:" + lotID
+                "OHB >> OHB|Manual_InsertCassette CSTID: " + cstid + "  BOXID:" + boxid + "   LOC:" + loc
             );
 
-            return OHBC_InsertCassette(cstid, boxid, loc, lotID);
+            return OHBC_InsertCassette(cstid, boxid, loc, "Manual_InsertCassette");
         }
         public string Manual_DeleteCst(string cstID, string boxID)
         {
@@ -5914,14 +6074,21 @@ namespace com.mirle.ibg3k0.sc.Service
                 foreach (PortINIData agvPortData in agvZoneData)
                 {
                     PortPLCInfo agvInfo = GetPLC_PortData(agvPortData.PortName);
-                    if (agvInfo.IsOutputMode
-                        && agvInfo.IsReadyToLoad
-                        && agvInfo.OpAutoMode
-                        && agvInfo.LoadPosition1 == false
-                      )
+
+                    if (agvInfo.IsOutputMode && AreDestEnable(agvPortData.PortName))
                     {
                         agvPortName = agvPortData.PortName;
                     }
+
+                    //PortPLCInfo agvInfo = GetPLC_PortData(agvPortData.PortName);
+                    //if (agvInfo.IsOutputMode
+                    //    && agvInfo.IsReadyToLoad
+                    //    && agvInfo.OpAutoMode
+                    //    && agvInfo.LoadPosition1 == false
+                    //  )
+                    //{
+                    //    agvPortName = agvPortData.PortName;
+                    //}
                 }
             }
 
@@ -6191,7 +6358,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 if (scApp.PortDefBLL.GetPortData(AGVStationID).State == E_PORT_STATUS.OutOfService) //此AGVStation虛擬port是 Out of service 一律回復NG
                 {
                     isOK = false;
-                    AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 此AGVStation虛擬port是 Out of service 一律回復NG ");
+                    AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " 是 Out of service 一律回復NG ");
                     return isOK;
                 }
 
@@ -6218,8 +6385,13 @@ namespace com.mirle.ibg3k0.sc.Service
 
                 //目前先默認取前2個，確認port上Box數量(空與實皆要)
                 int emptyBoxNumber, fullBoxNumber;
+                bool success;
                 AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " Enter the Count Box number for AGV port.");
-                (emptyBoxNumber, fullBoxNumber) = CountAGVStationBoxInfo(accessAGVPortDatas);
+                (emptyBoxNumber, fullBoxNumber, success) = CountAGVStationBoxInfo(accessAGVPortDatas);
+                if(success == false)
+                {
+                    return isOK;
+                }
                 AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " emptyBoxNumber = " + emptyBoxNumber + ", fullBoxNumber = " + fullBoxNumber);
 
                 //若有實box 則先默認為NG，會稍微影響效率(在一AGV對多個Station時)
@@ -6391,13 +6563,27 @@ namespace com.mirle.ibg3k0.sc.Service
         /// 計算目前的AGVStation 前2個port 上有多少個空Box 與實Box
         /// </summary>
         /// <param name="AGVStationData">A20.06.15.0 新增</param>
-        private (int emptyBoxNumber, int fullBoxNumber) CountAGVStationBoxInfo(List<PortDef> AGVStationData)
+        private (int emptyBoxNumber, int fullBoxNumber, bool success) CountAGVStationBoxInfo(List<PortDef> AGVStationData)
         {
             int _emptyBoxNumber = 0;
             int _fullBoxNumber = 0;
             int AGVStationNumber = 0;
+            bool _success = true;
             foreach (PortDef AgvPortData in AGVStationData)
             {
+                if (GetPLC_PortData(AgvPortData.PLCPortID).LoadPosition1 == true) 
+                {
+                    //若LoadPosition On 
+                    if(GetPLC_PortData(AgvPortData.PLCPortID).AGVPortReady == true)
+                    {
+
+                    }
+                    else
+                    {
+                        _success = false;
+                        return (_emptyBoxNumber, _fullBoxNumber, _success);
+                    }
+                }
                 AGVStationNumber = AGVStationNumber + 1;
                 if (GetPLC_PortData(AgvPortData.PLCPortID).LoadPosition1 == true && GetPLC_PortData(AgvPortData.PLCPortID).IsCSTPresence == false)
                 {
@@ -6413,7 +6599,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     break;
                 }
             }
-            return (_emptyBoxNumber, _fullBoxNumber);
+            return (_emptyBoxNumber, _fullBoxNumber, _success);
         }
 
         /// <summary>
@@ -6428,10 +6614,10 @@ namespace com.mirle.ibg3k0.sc.Service
             int cmdNumber = 0;
             foreach (PortDef AGVPortData in AGVStationData)
             {
-                List<ACMD_MCS> cmdData_PortID = cmdBLL.GetCmdDataByDest(AGVPortData.PLCPortID); //A01 A02
+                List<ACMD_MCS> cmdData_PortID = cmdBLL.GetCmdDataByDestAndByPassManaul(AGVPortData.PLCPortID); //A01 A02
                 cmdNumber = cmdNumber + cmdData_PortID.Count();
             }
-            List<ACMD_MCS> cmdData_StationID = cmdBLL.GetCmdDataByDest(AGVStationID); //ST01
+            List<ACMD_MCS> cmdData_StationID = cmdBLL.GetCmdDataByDestAndByPassManaul(AGVStationID); //ST01
             cmdNumber = cmdNumber + cmdData_StationID.Count();
             return cmdNumber;
         }
@@ -6531,8 +6717,8 @@ namespace com.mirle.ibg3k0.sc.Service
                         {
                             //呼叫退補空box 流程。 先將特定port 開啟自動退補，產生完命令後再關閉。
                             portINIData[portPLCStatus.EQ_ID].openAGV_Station = true;
-                            PLC_AGV_Station_InMode(portPLCStatus);
-                            portINIData[portPLCStatus.EQ_ID].openAGV_Station = false;
+                            //PLC_AGV_Station_InMode(portPLCStatus);
+                            //portINIData[portPLCStatus.EQ_ID].openAGV_Station = false;
                         }
                     }
                     Thread.Sleep(1000);
@@ -6583,8 +6769,8 @@ namespace com.mirle.ibg3k0.sc.Service
                         {
                             //呼叫退補空box 流程。 先將特定port 開啟自動退補，產生完命令後再關閉。
                             portINIData[portPLCStatus.EQ_ID].openAGV_Station = true;
-                            PLC_AGV_Station_OutMode(portPLCStatus);
-                            portINIData[portPLCStatus.EQ_ID].openAGV_Station = false;
+                            //PLC_AGV_Station_OutMode(portPLCStatus);
+                            //portINIData[portPLCStatus.EQ_ID].openAGV_Station = false;
                         }
                     }
                     Thread.Sleep(1000);

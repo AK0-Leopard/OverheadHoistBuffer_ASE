@@ -1433,8 +1433,8 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             
             if (cstID_item != null && lotID_item != null)
             {
-                cstID = cstID_item.CPVAL;
-                lotID = lotID_item.CPVAL;
+                cstID = cstID_item.CPVAL?.Trim() ?? "";
+                lotID = lotID_item.CPVAL?.Trim() ?? "";
 
                 CassetteData cstData = scApp.CassetteDataBLL.loadCassetteDataByCSTID(cstID);
 
@@ -2557,17 +2557,17 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             {
                 VIDCollection Vids = new VIDCollection();
                 ACMD_MCS cmd = scApp.CMDBLL.getCMD_MCSByID(cmd_id);
-                CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByCSTID(cmd.CARRIER_ID);
+                CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByBoxID(cmd.BOX_ID);
                 string cstID = cassette?.CSTID ?? "";
                 string boxID = cassette?.BOXID ?? "";
                 string loc = cassette?.Carrier_LOC ?? "";
                 string zonename = scApp.CassetteDataBLL.GetZoneName(loc);
 
                 Vids.VIDITEM_58_DVVAL_CommandID.COMMAND_ID = cmd.CMD_ID;
-                Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cmd.CARRIER_ID;
+                Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cstID;
                 Vids.VIDITEM_56_DVVAL_CarrierLoc.CARRIER_LOC = loc;
                 Vids.VIDITEM_370_DVVAL_CarrierZoneName.CARRIER_ZONE_NAME = zonename;
-                Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = cmd.BOX_ID;
+                Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = boxID;
                 AMCSREPORTQUEUE mcs_queue = S6F11BulibMessage(SECSConst.CEID_Transfer_Abort_Completed, Vids);
                 if (reportQueues == null)
                 {
@@ -2599,10 +2599,11 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 string zonename = scApp.CassetteDataBLL.GetZoneName(loc);
 
                 Vids.VIDITEM_58_DVVAL_CommandID.COMMAND_ID = cmd.CMD_ID;
-                Vids.VIDITEM_54_SV_CarrierID.CARRIER_ID = cmd.CARRIER_ID;
+                Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cstID;
                 Vids.VIDITEM_56_DVVAL_CarrierLoc.CARRIER_LOC = loc;
                 Vids.VIDITEM_370_DVVAL_CarrierZoneName.CARRIER_ZONE_NAME = zonename;
-                Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = cmd.BOX_ID;
+                Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = boxID;
+
                 AMCSREPORTQUEUE mcs_queue = S6F11BulibMessage(SECSConst.CEID_Transfer_Abort_Failed, Vids);
                 if (reportQueues == null)
                 {
@@ -2627,17 +2628,18 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             {
                 VIDCollection Vids = new VIDCollection();
                 ACMD_MCS cmd = scApp.CMDBLL.getCMD_MCSByID(cmd_id);
-                CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByCSTID(cmd.CARRIER_ID);
+
+                CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByBoxID(cmd.BOX_ID);
                 string cstID = cassette?.CSTID ?? "";
                 string boxID = cassette?.BOXID ?? "";
                 string loc = cassette?.Carrier_LOC ?? "";
                 string zonename = scApp.CassetteDataBLL.GetZoneName(loc);
 
                 Vids.VIDITEM_58_DVVAL_CommandID.COMMAND_ID = cmd.CMD_ID;
-                Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cmd.CARRIER_ID;
+                Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cstID;
                 Vids.VIDITEM_56_DVVAL_CarrierLoc.CARRIER_LOC = loc;
                 Vids.VIDITEM_370_DVVAL_CarrierZoneName.CARRIER_ZONE_NAME = zonename;
-                Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = cmd.BOX_ID;
+                Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = boxID;
                 AMCSREPORTQUEUE mcs_queue = S6F11BulibMessage(SECSConst.CEID_Transfer_Abort_Initiated, Vids);
                 if (reportQueues == null)
                 {
@@ -2661,22 +2663,18 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             {
                 VIDCollection Vids = new VIDCollection();
                 ACMD_MCS cmd = scApp.CMDBLL.getCMD_MCSByID(cmd_id);
-                CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByCSTID(cmd.CARRIER_ID);
 
-                string cstLoc = "";
-                string zonename = "";
-
-                if (cassette != null)
-                {
-                    cstLoc = cassette.Carrier_LOC;
-                    zonename = scApp.CassetteDataBLL.GetZoneName(cassette.Carrier_LOC);
-                }
+                CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByBoxID(cmd.BOX_ID);
+                string cstID = cassette?.CSTID ?? "";
+                string boxID = cassette?.BOXID ?? "";
+                string loc = cassette?.Carrier_LOC ?? "";
+                string zonename = scApp.CassetteDataBLL.GetZoneName(loc);
 
                 Vids.VIDITEM_58_DVVAL_CommandID.COMMAND_ID = cmd.CMD_ID;
-                Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cmd.CARRIER_ID;
-                Vids.VIDITEM_56_DVVAL_CarrierLoc.CARRIER_LOC = cstLoc;
+                Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cstID;
+                Vids.VIDITEM_56_DVVAL_CarrierLoc.CARRIER_LOC = loc;
                 Vids.VIDITEM_370_DVVAL_CarrierZoneName.CARRIER_ZONE_NAME = zonename;
-                Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = cmd.BOX_ID;
+                Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = boxID;
 
                 AMCSREPORTQUEUE mcs_queue = S6F11BulibMessage(SECSConst.CEID_Transfer_Cancel_Completed, Vids);
                 if (reportQueues == null)
@@ -2702,14 +2700,18 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             {
                 VIDCollection Vids = new VIDCollection();
                 ACMD_MCS cmd = scApp.CMDBLL.getCMD_MCSByID(cmd_id);
-                CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByCSTID(cmd.CARRIER_ID);
-                string zonename = scApp.CassetteDataBLL.GetZoneName(cassette.Carrier_LOC);
+
+                CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByBoxID(cmd.BOX_ID);
+                string cstID = cassette?.CSTID ?? "";
+                string boxID = cassette?.BOXID ?? "";
+                string loc = cassette?.Carrier_LOC ?? "";
+                string zonename = scApp.CassetteDataBLL.GetZoneName(loc);
 
                 Vids.VIDITEM_58_DVVAL_CommandID.COMMAND_ID = cmd.CMD_ID;
-                Vids.VIDITEM_54_SV_CarrierID.CARRIER_ID = cmd.CARRIER_ID;
-                Vids.VIDITEM_56_DVVAL_CarrierLoc.CARRIER_LOC = cassette.Carrier_LOC;
+                Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cstID;
+                Vids.VIDITEM_56_DVVAL_CarrierLoc.CARRIER_LOC = loc;
                 Vids.VIDITEM_370_DVVAL_CarrierZoneName.CARRIER_ZONE_NAME = zonename;
-                Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = cmd.BOX_ID;
+                Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = boxID;
                 AMCSREPORTQUEUE mcs_queue = S6F11BulibMessage(SECSConst.CEID_Transfer_Cancel_Failed, Vids);
                 if (reportQueues == null)
                 {
@@ -2735,22 +2737,27 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             {
                 VIDCollection Vids = new VIDCollection();
                 ACMD_MCS cmd = scApp.CMDBLL.getCMD_MCSByID(cmd_id);
-                CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByCSTID(cmd.CARRIER_ID);
+                CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByBoxID(cmd.BOX_ID);
 
+                string cstID = "";
+                string boxID = "";
                 string cstLoc = "";
                 string zonename = "";
 
                 if (cassette != null)
                 {
+                    cstID = cassette.CSTID.Trim();
+                    boxID = cassette.BOXID.Trim();
                     cstLoc = cassette.Carrier_LOC;
                     zonename = scApp.CassetteDataBLL.GetZoneName(cassette.Carrier_LOC);
                 }
 
                 Vids.VIDITEM_58_DVVAL_CommandID.COMMAND_ID = cmd.CMD_ID;
-                Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cmd.CARRIER_ID;
+                Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cstID;
                 Vids.VIDITEM_56_DVVAL_CarrierLoc.CARRIER_LOC = cstLoc;
                 Vids.VIDITEM_370_DVVAL_CarrierZoneName.CARRIER_ZONE_NAME = zonename;
-                Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = cmd.BOX_ID;
+                Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = boxID;
+
                 AMCSREPORTQUEUE mcs_queue = S6F11BulibMessage(SECSConst.CEID_Transfer_Cancel_Initiated, Vids);
                 if (reportQueues == null)
                 {
@@ -2868,14 +2875,19 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             {
                 VIDCollection Vids = new VIDCollection();
                 ACMD_MCS cmd = scApp.CMDBLL.getCMD_MCSByID(cmd_id);
-                CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByCSTID(cmd.CARRIER_ID);
-                string zonename = scApp.CassetteDataBLL.GetZoneName(cassette.Carrier_LOC);
+
+                CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByBoxID(cmd.BOX_ID);
+                string cstID = cassette?.CSTID ?? "";
+                string boxID = cassette?.BOXID ?? "";
+                string loc = cassette?.Carrier_LOC ?? "";
+                string zonename = scApp.CassetteDataBLL.GetZoneName(loc);
 
                 Vids.VIDITEM_58_DVVAL_CommandID.COMMAND_ID = cmd.CMD_ID;
-                Vids.VIDITEM_54_SV_CarrierID.CARRIER_ID = cmd.CARRIER_ID;
-                Vids.VIDITEM_56_DVVAL_CarrierLoc.CARRIER_LOC = cassette.Carrier_LOC;
+                Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cstID;
+                Vids.VIDITEM_56_DVVAL_CarrierLoc.CARRIER_LOC = loc;
                 Vids.VIDITEM_370_DVVAL_CarrierZoneName.CARRIER_ZONE_NAME = zonename;
-                Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = cmd.BOX_ID;
+                Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = boxID;
+
                 AMCSREPORTQUEUE mcs_queue = S6F11BulibMessage(SECSConst.CEID_Transfer_Pause, Vids);
                 if (reportQueues == null)
                 {
@@ -2901,14 +2913,19 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             {
                 VIDCollection Vids = new VIDCollection();
                 ACMD_MCS cmd = scApp.CMDBLL.getCMD_MCSByID(cmd_id);
-                CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByCSTID(cmd.CARRIER_ID);
-                string zonename = scApp.CassetteDataBLL.GetZoneName(cassette.Carrier_LOC);
+
+                CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByBoxID(cmd.BOX_ID);
+                string cstID = cassette?.CSTID ?? "";
+                string boxID = cassette?.BOXID ?? "";
+                string loc = cassette?.Carrier_LOC ?? "";
+                string zonename = scApp.CassetteDataBLL.GetZoneName(loc);
 
                 Vids.VIDITEM_58_DVVAL_CommandID.COMMAND_ID = cmd.CMD_ID;
-                Vids.VIDITEM_54_SV_CarrierID.CARRIER_ID = cmd.CARRIER_ID;
-                Vids.VIDITEM_56_DVVAL_CarrierLoc.CARRIER_LOC = cassette.Carrier_LOC;
+                Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cstID;
+                Vids.VIDITEM_56_DVVAL_CarrierLoc.CARRIER_LOC = loc;
                 Vids.VIDITEM_370_DVVAL_CarrierZoneName.CARRIER_ZONE_NAME = zonename;
-                Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = cmd.BOX_ID;
+                Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = boxID;
+
                 AMCSREPORTQUEUE mcs_queue = S6F11BulibMessage(SECSConst.CEID_Transfer_Resumed, Vids);
                 if (reportQueues == null)
                 {
@@ -3066,14 +3083,18 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 ACMD_MCS cmd = scApp.CMDBLL.getCMD_MCSByID(cmd_id);
                 //ACMD_OHTC cmd_oht = scApp.CMDBLL.getCMD_OHTCByID(cmd_id);
                 //CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByCSTID(cmd.CARRIER_ID);
+
                 CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByBoxID(cmd.BOX_ID);
-                //ACMD_OHTC ohtc = scApp.CMD_OHTCDao.get
-                string zonename = scApp.CassetteDataBLL.GetZoneName(cassette.Carrier_LOC);
+                string cstID = cassette?.CSTID ?? "";
+                string boxID = cassette?.BOXID ?? "";
+                string loc = cassette?.Carrier_LOC ?? "";
+                string zonename = scApp.CassetteDataBLL.GetZoneName(loc);
 
                 Vids.VIDITEM_58_DVVAL_CommandID.COMMAND_ID = cmd.CMD_ID;
-                Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cmd.CARRIER_ID;
-                Vids.VIDITEM_56_DVVAL_CarrierLoc.CARRIER_LOC = cassette.Carrier_LOC;
+                Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cstID;
+                Vids.VIDITEM_56_DVVAL_CarrierLoc.CARRIER_LOC = loc;
                 Vids.VIDITEM_370_DVVAL_CarrierZoneName.CARRIER_ZONE_NAME = zonename;
+
                 //Vids.VIDITEM_60_DVVAL_DestPort.DESTINATION_ID = cmd.HOSTDESTINATION;
 
                 if (scApp.ShelfDefBLL.isExist(cmd.HOSTDESTINATION))
@@ -3613,15 +3634,22 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 VIDCollection Vids = new VIDCollection();
                 ACMD_MCS cmd = scApp.CMDBLL.getCMD_MCSByID(cmd_id);
                 ACMD_OHTC cmd_oht = scApp.CMDBLL.getCMD_OHTCByID(cmd_id);
-                CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByCSTID(cmd.CARRIER_ID);
-                string zonename = scApp.CassetteDataBLL.GetZoneName(cassette.Carrier_LOC);
 
-                Vids.VIDITEM_58_DVVAL_CommandID.COMMAND_ID = cmd_id;
-                Vids.VIDITEM_80_DVVAL_CommandType.COMMAND_TYPE = cmd_type;
-                Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cmd.CARRIER_ID;
-                Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = cmd.BOX_ID;
+                CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByBoxID(cmd.BOX_ID);
+                string cstID = cassette?.CSTID ?? "";
+                string boxID = cassette?.BOXID ?? "";
+                string loc = cassette?.Carrier_LOC ?? "";
+                string zonename = scApp.CassetteDataBLL.GetZoneName(loc);
+
+                Vids.VIDITEM_58_DVVAL_CommandID.COMMAND_ID = cmd.CMD_ID;                
+                Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cstID;
+                Vids.VIDITEM_56_DVVAL_CarrierLoc.CARRIER_LOC = loc;
+                Vids.VIDITEM_370_DVVAL_CarrierZoneName.CARRIER_ZONE_NAME = zonename;
+
                 Vids.VIDITEM_65_DVVAL_SourceID.SOURCE_ID = cmd.HOSTSOURCE;
                 Vids.VIDITEM_60_DVVAL_DestPort.DESTINATION_ID = cmd.HOSTDESTINATION;
+                Vids.VIDITEM_80_DVVAL_CommandType.COMMAND_TYPE = cmd_type;
+                Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = boxID;
 
                 //if (scApp.TransferService.isShelfPort(cmd.HOSTDESTINATION))
                 //{

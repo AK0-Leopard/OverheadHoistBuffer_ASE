@@ -286,7 +286,7 @@ namespace com.mirle.ibg3k0.sc.WebAPI
                 string source = Request.Query.source.Value ?? Request.Form.source.Value ?? string.Empty;
                 string dest = Request.Query.dest.Value ?? Request.Form.dest.Value ?? string.Empty;
                 string lot_id = Request.Query.lot_id.Value ?? Request.Form.lot_id.Value ?? string.Empty;
-                result = scApp.TransferService.Manual_InsertCmd(source, dest, lot_id);
+                result = scApp.TransferService.Manual_InsertCmd(source, dest, 5);
 
                 var response = (Response)result;
                 response.ContentType = restfulContentType;

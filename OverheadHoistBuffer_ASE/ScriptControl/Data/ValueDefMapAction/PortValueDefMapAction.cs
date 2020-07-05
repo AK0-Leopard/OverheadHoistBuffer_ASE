@@ -41,11 +41,11 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 ValueRead vr = null;
                 if (bcfApp.tryGetReadValueEventstring(port.EqptObjectCate, port.PORT_ID, "WAIT_IN", out vr))
                 {
-                    vr.afterValueChange += (_sender, _e) => Port_onWaitInOut(_sender, _e);
+                    vr.afterValueChange += (_sender, _e) => Port_onWaitIn(_sender, _e);
                 }
                 if (bcfApp.tryGetReadValueEventstring(port.EqptObjectCate, port.PORT_ID, "WAIT_OUT", out vr))
                 {
-                    vr.afterValueChange += (_sender, _e) => Port_onWaitInOut(_sender, _e);
+                    vr.afterValueChange += (_sender, _e) => Port_onWaitOut(_sender, _e);
                 }
                 if (bcfApp.tryGetReadValueEventstring(port.EqptObjectCate, port.PORT_ID, "NOW_INPUT_MODE", out vr))
                 {
@@ -327,15 +327,15 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                     + " IsReadyToLoad: " + function.IsReadyToLoad
                     + " IsReadyToUnload:" + function.IsReadyToUnload
                     + " IsCSTPresence:" + function.IsCSTPresence
+                    + " IsInputMode:" + function.IsInputMode
+                    + " IsOutputMode:" + function.IsOutputMode
+                    + " PortWaitIn:" + function.PortWaitIn
+                    + " PortWaitOut:" + function.PortWaitOut
                 );
 
-                if (function.IsCSTPresence == true)
+                if (function.IsCSTPresence == false)
                 {
-                    //TODO
-                }
-                else
-                {
-
+                    //scApp.TransferService.PortCstPositionOFF(function);
                 }
             }
             catch (Exception ex)
@@ -525,11 +525,11 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             ValueRead vr = null;
             if (bcfApp.tryGetReadValueEventstring(port.EqptObjectCate, port.PORT_ID, "WAIT_IN", out vr))
             {
-                Port_onWaitInOut(vr, null);
+                Port_onWaitIn(vr, null);
             }
             if (bcfApp.tryGetReadValueEventstring(port.EqptObjectCate, port.PORT_ID, "WAIT_OUT", out vr))
             {
-                Port_onWaitInOut(vr, null);
+                Port_onWaitOut(vr, null);
             }
             if (bcfApp.tryGetReadValueEventstring(port.EqptObjectCate, port.PORT_ID, "NOW_INPUT_MODE", out vr))
             {
@@ -637,7 +637,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             //not implement
         }
 
-        public virtual void Port_onWaitInOut(object sender, ValueChangedEventArgs args)
+        public virtual void Port_onWaitIn(object sender, ValueChangedEventArgs args)
         {
             var function = scApp.getFunBaseObj<PortPLCInfo>(port.PORT_ID) as PortPLCInfo;
             try
@@ -658,7 +658,6 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                     "PLC >> OHB|Port_onWaitInOut"
                     + " PORT_ID:" + port.PORT_ID
                     + " PortWaitIn:" + function.PortWaitIn
-                    + " PortWaitOut:" + function.PortWaitOut
                 );
 
                 if (scApp.TransferService.GetIgnoreModeChange(function))
@@ -666,7 +665,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                     return;
                 }
 
-                if (function.PortWaitIn == true)
+                if (function.PortWaitIn)
                 {
                     Console.WriteLine("wait in");
                     //TODO: wait in
@@ -680,27 +679,17 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                         scApp.TransferService.TransferServiceLogger.Info
                         (
                             DateTime.Now.ToString("HH:mm:ss.fff ") +
-                            "PLC >> OHB|Port 狀態錯誤，不能報WaitIn "
+                            "PLC >> OHB|Port 狀態錯誤，不能報 WaitIn "
                             + " PORT_ID:" + port.PORT_ID
                             + " Run:" + function.OpAutoMode
                         );
                     }
                 }
 
-                if (function.PortWaitOut == true)
-                {
-                    CassetteData datainfo = new CassetteData();
-                    datainfo.CSTID = function.CassetteID.Trim();        //填CSTID
-                    datainfo.BOXID = function.BoxID.Trim();        //填BOXID
-                    datainfo.Carrier_LOC = port.PORT_ID.Trim();  //填Port 名稱
-
-                    //scApp.TransferService.AGVPortWaitOut(datainfo);  //OP wait out
-                    //scApp.TransferService.PortWaitOut(datainfo);
-                }
             }
             catch (Exception ex)
             {
-                scApp.TransferService.TransferServiceLogger.Error(ex, "Port_onWaitInOut\n");
+                scApp.TransferService.TransferServiceLogger.Error(ex, "Port_onWaitIn");
                 logger.Error(ex, "Exception");
             }
             finally
@@ -708,7 +697,60 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 scApp.putFunBaseObj<PortPLCInfo>(function);
             }
         }
+        public virtual void Port_onWaitOut(object sender, ValueChangedEventArgs args)
+        {
+            var function = scApp.getFunBaseObj<PortPLCInfo>(port.PORT_ID) as PortPLCInfo;
+            try
+            {
+                //1.建立各個Function物件
+                function.Read(bcfApp, port.EqptObjectCate, port.PORT_ID);
+                //2.read log
+                //function.Timestamp = DateTime.Now;
+                //LogManager.GetLogger("com.mirle.ibg3k0.sc.Common.LogHelper").Info(function.ToString());
+                NLog.LogManager.GetCurrentClassLogger().Info(function.ToString());
+                //LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(EQStatusReport), Device: DEVICE_NAME_MTL,
+                //    XID: eqpt.EQPT_ID, Data: function.ToString());
+                //3.logical (include db save)
 
+                scApp.TransferService.TransferServiceLogger.Info
+                (
+                    DateTime.Now.ToString("HH:mm:ss.fff ") +
+                    "PLC >> OHB|Port_onWaitInOut"
+                    + " PORT_ID:" + port.PORT_ID
+                    + " PortWaitOut:" + function.PortWaitOut
+                );
+
+                if (scApp.TransferService.GetIgnoreModeChange(function))
+                {
+                    return;
+                }
+
+                if (function.PortWaitOut)
+                {
+
+                }
+                else
+                {
+                    //if (scApp.TransferService.isUnitType(function.EQ_ID, Service.UnitType.AGV))
+                    //{
+                    //    CassetteData datainfo = new CassetteData();
+                    //    datainfo.CSTID = function.CassetteID.Trim();        //填CSTID
+                    //    datainfo.BOXID = function.BoxID.Trim();        //填BOXID
+                    //    datainfo.Carrier_LOC = function.EQ_ID.Trim();  //填Port 名稱
+                    //    scApp.TransferService.PortCarrierRemoved(datainfo, function.IsAGVMode, "PortWaitOutOFF");
+                    //}
+                }
+            }
+            catch (Exception ex)
+            {
+                scApp.TransferService.TransferServiceLogger.Error(ex, "Port_onWaitOut");
+                logger.Error(ex, "Exception");
+            }
+            finally
+            {
+                scApp.putFunBaseObj<PortPLCInfo>(function);
+            }
+        }
         public virtual void Port_onDirectionStatusChangeToInput(object sender, ValueChangedEventArgs args)
         {
             var function = scApp.getFunBaseObj<PortPLCInfo>(port.PORT_ID) as PortPLCInfo;
@@ -732,6 +774,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 if (function.IsInputMode)
                 {
                     scApp.TransferService.ReportPortType(port.PORT_ID, E_PortType.In, "PLC");
+                    //scApp.TransferService.DeleteOHCVPortCst(port.PORT_ID);
                 }
             }
             catch (Exception ex)
@@ -767,6 +810,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 if (function.IsOutputMode)
                 {
                     scApp.TransferService.ReportPortType(port.PORT_ID, E_PortType.Out, "PLC");
+                    //scApp.TransferService.DeleteOHCVPortCst(port.PORT_ID);
                 }
             }
             catch (Exception ex)
@@ -825,22 +869,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                             + " IsCSTPresence:" + function.IsCSTPresence
                             + " PortWaitOut:" + function.PortWaitOut
                         );
-                    }
-                    
-                    if (function.OpAutoMode == false 
-                        && function.PortWaitOut 
-                        && function.IsCSTPresence == false
-                        && scApp.TransferService.isUnitType(function.EQ_ID, Service.UnitType.AGV)
-                       ) 
-                    {
-                        //AGV 不在線上，將卡匣拿走，將卡匣移除
-                        CassetteData datainfo = new CassetteData();
-                        datainfo.CSTID = function.CassetteID.Trim();        //填CSTID
-                        datainfo.BOXID = function.BoxID.Trim();        //填BOXID
-                        datainfo.Carrier_LOC = function.EQ_ID.Trim();  //填Port 名稱
-
-                        scApp.TransferService.PortCarrierRemoved(datainfo, function.IsAGVMode, "AGV 離線，發現沒有卡匣");
-                    }
+                    }                    
                 }
             }
             catch (Exception ex)
@@ -875,16 +904,14 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
 
                 if (function.CstRemoveCheck)
                 {
-                    //TODO
-                    
-                    if(scApp.TransferService.isUnitType(function.EQ_ID, Service.UnitType.AGV))
+                    if (scApp.TransferService.isUnitType(function.EQ_ID, Service.UnitType.AGV))
                     {
                         CassetteData datainfo = new CassetteData();
                         datainfo.CSTID = function.CassetteID.Trim();        //填CSTID
                         datainfo.BOXID = function.BoxID.Trim();        //填BOXID
                         datainfo.Carrier_LOC = function.EQ_ID.Trim();  //填Port 名稱
-                        scApp.TransferService.PortCarrierRemoved(datainfo, function.IsAGVMode, "PortRemove");                        
-                    }                    
+                        scApp.TransferService.PortCarrierRemoved(datainfo, function.IsAGVMode, "PortRemove");
+                    }
                 }
             }
             catch (Exception ex)

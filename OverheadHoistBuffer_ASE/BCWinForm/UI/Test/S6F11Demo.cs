@@ -155,7 +155,7 @@ namespace com.mirle.ibg3k0.bc.winform
 
         private void button28_Click(object sender, EventArgs e)
         {
-            BCApp.SCApplication.TransferService.Manual_InsertCmd(comboBox4.Text, comboBox5.Text, "");
+            BCApp.SCApplication.TransferService.Manual_InsertCmd(comboBox4.Text, comboBox5.Text);
         }
 
         private void button30_Click(object sender, EventArgs e)
@@ -230,7 +230,7 @@ namespace com.mirle.ibg3k0.bc.winform
             datainfo.Carrier_LOC = comboBox5.Text;
             datainfo.BOXID = textBox2.Text;
 
-            BCApp.SCApplication.TransferService.PortWaitOut(datainfo);
+            //BCApp.SCApplication.TransferService.PortWaitOut(datainfo);
         }
 
         private void button8_Click(object sender, EventArgs e)
