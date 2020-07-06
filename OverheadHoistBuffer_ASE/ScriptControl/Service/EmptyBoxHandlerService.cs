@@ -113,7 +113,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     if (string.IsNullOrWhiteSpace(dest) == false)
                     {
                         string recycleBoxLoc = cassette_dataBLL.GetCassetteLocByBoxID(zoneData.EmptyBoxList.FirstOrDefault());
-                        scApp.TransferService.Manual_InsertCmd(recycleBoxLoc, dest);
+                        scApp.TransferService.Manual_InsertCmd(recycleBoxLoc, dest, 5,"CheckTheEmptyBoxStockLevel", ACMD_MCS.CmdType.OHBC);
                     }
                     else
                     {
@@ -259,7 +259,11 @@ namespace com.mirle.ibg3k0.sc.Service
             //紀錄log 因此處為實際執行命令之處
             //呼叫MCS需要空box
             //若能指定補到哪個zone 則指定。
-            scApp.ReportBLL.ReportEmptyBoxSupply(requireBox.ToString(), zoneID);
+
+            if (scApp.TransferService.requireEmptyBox)
+            {
+                scApp.ReportBLL.ReportEmptyBoxSupply(requireBox.ToString(), zoneID);
+            }
         }
 
         //*******************
@@ -268,7 +272,11 @@ namespace com.mirle.ibg3k0.sc.Service
         {
             //紀錄log 因此處為實際執行命令之處
             //此部分需先確認目前沒有可執行的MCS命令，才進行要求退BOX動作。
-            scApp.ReportBLL.ReportEmptyBoxRecycling(boxID);
+
+            if(scApp.TransferService.requireEmptyBox)
+            {
+                scApp.ReportBLL.ReportEmptyBoxRecycling(boxID);
+            }
         }
 
         //******************

@@ -146,7 +146,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Test
         }
         private void button6_Click(object sender, EventArgs e)
         {
-            label5.Text = BCApp.SCApplication.TransferService.Manual_InsertCmd(comboBox1.Text, comboBox2.Text, "");
+            label5.Text = BCApp.SCApplication.TransferService.Manual_InsertCmd(comboBox1.Text, comboBox2.Text);
             UpDate_CmdData();
         }
         private void button9_Click(object sender, EventArgs e)
@@ -191,22 +191,16 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Test
         }
         private void button8_Click(object sender, EventArgs e)
         {
-            label10.Text = BCApp.SCApplication.TransferService.Manual_InsertCassette(textBox1.Text, textBox2.Text, comboBox3.Text, textBox3.Text);
+            label10.Text = BCApp.SCApplication.TransferService.Manual_InsertCassette(textBox1.Text, textBox2.Text, comboBox3.Text);
             UpDate_CstData();
         }
         private void button14_Click(object sender, EventArgs e) //刪除OHCV所有帳
         {
-            foreach (var v in BCApp.SCApplication.CassetteDataBLL.loadCassetteData())
+            foreach(var v in BCApp.SCApplication.TransferService.GetCVPort())
             {
-                string zone = BCApp.SCApplication.CassetteDataBLL.GetZoneName(v.Carrier_LOC);
-                if (BCApp.SCApplication.TransferService.isUnitType(zone, UnitType.OHCV)
-                    || BCApp.SCApplication.TransferService.isUnitType(zone, UnitType.NTB)
-                    || BCApp.SCApplication.TransferService.isUnitType(zone, UnitType.STK)
-                   )
-                {
-                    BCApp.SCApplication.TransferService.Manual_DeleteCst(v.CSTID, v.BOXID);
-                }
+                BCApp.SCApplication.TransferService.DeleteOHCVPortCst(v.PortName);
             }
+
             UpDate_CstData();
         }
         private void button16_Click(object sender, EventArgs e) //SCAN 既有帳
@@ -278,8 +272,8 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Test
                     string cstID = dataGridView2.Rows[v.RowIndex].Cells["CSTID"].Value?.ToString() ?? "";
                     string boxID = dataGridView2.Rows[v.RowIndex].Cells["BOXID"].Value.ToString();
                     string loc = dataGridView2.Rows[v.RowIndex].Cells["Carrier_LOC"].Value.ToString();
-                    string lotID = dataGridView2.Rows[v.RowIndex].Cells["LotID"].Value.ToString();
-                    BCApp.SCApplication.TransferService.OHBC_InsertCassette(cstID, boxID, loc, lotID, "測試用 CMD_CST_DATA");
+                    //string lotID = dataGridView2.Rows[v.RowIndex].Cells["LotID"].Value.ToString();
+                    BCApp.SCApplication.TransferService.OHBC_InsertCassette(cstID, boxID, loc, "測試用 CMD_CST_DATA");
                 }
                 UpDate_CstData();
             }
@@ -355,6 +349,16 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Test
                     BCApp.SCApplication.TransferService.Redis_UpdateCstID(unkCstData);
                 }
             }
+        }
+
+        private void button21_Click(object sender, EventArgs e)
+        {
+            BCApp.SCApplication.TransferService.requireEmptyBox = true;
+        }
+
+        private void button22_Click(object sender, EventArgs e)
+        {
+            BCApp.SCApplication.TransferService.requireEmptyBox = false;
         }
     }
 }

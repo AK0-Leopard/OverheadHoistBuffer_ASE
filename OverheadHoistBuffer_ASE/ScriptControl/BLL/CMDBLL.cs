@@ -211,6 +211,25 @@ namespace com.mirle.ibg3k0.sc.BLL
                 return null;
             }
         }
+        public List<ACMD_MCS> GetCmdDataByDestAndByPassManaul(string portName) //取得目的為AGV Port的命令
+        {
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    //A20.06.15.0
+                    return cmd_mcsDao.LoadCmdData_WithoutComplete(con).Where(cmdData => cmdData.HOSTDESTINATION.Trim() == portName.Trim()
+                                                                                        && cmdData.TRANSFERSTATE != E_TRAN_STATUS.TransferCompleted
+                                                                                        && !cmdData.CMD_ID.Contains("MANAUL")).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return null;
+            }
+        }
+
 
         public ACMD_MCS GetCmdDataByAGVtoSHELF(string SourcePortName)  //取得退BOX的命令
         {
@@ -307,7 +326,8 @@ namespace com.mirle.ibg3k0.sc.BLL
 
                     return SECSConst.HCACK_Rejected;
                 }
-                var cmdbyBox = scApp.CMDBLL.getByCstBoxID(cstData.CSTID ,cstData.BOXID);
+
+                var cmdbyBox = scApp.CMDBLL.getCMD_ByBoxID(cstData.BOXID);//.getByCstBoxID(cstData.CSTID ,cstData.BOXID);
 
                 if (cmdbyBox != null)
                 {
@@ -318,11 +338,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                         TransferServiceLogger.Info
                         (
                             DateTime.Now.ToString("HH:mm:ss.fff ")
-                            + "MCS >> OHB|S2F50: BOXID: " + cstData.BOXID + " 已有命令在執行\n"
-                            + " CmdID:" + cmdbyBox.CMD_ID
-                            + " 狀態:" + cmdbyBox.TRANSFERSTATE
-                            + " 來源:" + cmdbyBox.HOSTSOURCE
-                            + " 目的:" + cmdbyBox.HOSTDESTINATION
+                            + "MCS >> OHB|S2F50: BOXID: " + cstData.BOXID + " 已有命令在執行 " + scApp.TransferService.GetCmdLog(cmdbyBox)
                         );
 
                         if (SCUtility.isMatche(cstData.Carrier_LOC, cmdbyBox.HOSTSOURCE))
@@ -347,6 +363,14 @@ namespace com.mirle.ibg3k0.sc.BLL
                 {
                     TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|S2F50: 來源Port: " + HostSource + " 不存在");
                     return SECSConst.HCACK_Obj_Not_Exist;
+                }
+
+                if(scApp.TransferService.isCVPort(HostSource))
+                {
+                    if(HostSource.Trim() != cstData.Carrier_LOC.Trim())
+                    {
+                        return SECSConst.HCACK_Not_Able_Execute;
+                    }
                 }
 
                 if (SourceDestExist(HostDestination) == false)
