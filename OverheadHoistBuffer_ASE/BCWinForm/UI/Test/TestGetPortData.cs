@@ -473,5 +473,15 @@ namespace com.mirle.ibg3k0.bc.winform
             dataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
         }
+
+        private void button32_Click(object sender, EventArgs e)
+        {
+            transferService.agvZone_ConnectedRealAGVPortRunDown = true;
+        }
+
+        private void button33_Click(object sender, EventArgs e)
+        {
+            transferService.agvZone_ConnectedRealAGVPortRunDown = false;
+        }
     }
 }

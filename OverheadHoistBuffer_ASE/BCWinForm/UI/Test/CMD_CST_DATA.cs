@@ -118,8 +118,19 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Test
 
             if (result == System.Windows.Forms.DialogResult.Yes)
             {
+                List<int> listInt = new List<int>();
+
                 foreach (DataGridViewCell v in dataGridView1.SelectedCells)
                 {
+                    if (listInt.Contains(v.RowIndex))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        listInt.Add(v.RowIndex);
+                    }
+
                     string cmdID = dataGridView1.Rows[v.RowIndex].Cells["CMD_ID"].Value.ToString();
                     BCApp.SCApplication.TransferService.LocalCmdCancel(cmdID, "命令結束(本機)");
                 }
@@ -136,8 +147,19 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Test
 
             if (result == System.Windows.Forms.DialogResult.Yes)
             {
+                List<int> listInt = new List<int>();
+
                 foreach (DataGridViewCell v in dataGridView1.SelectedCells)
                 {
+                    if (listInt.Contains(v.RowIndex))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        listInt.Add(v.RowIndex);
+                    }
+
                     string cmdID = dataGridView1.Rows[v.RowIndex].Cells["CMD_ID"].Value.ToString();
                     BCApp.SCApplication.TransferService.Manual_DeleteCmd(cmdID, "命令結束(車子)");
                 }
@@ -172,8 +194,19 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Test
 
             if (result == System.Windows.Forms.DialogResult.Yes)
             {
+                List<int> listInt = new List<int>();
+                
                 foreach (DataGridViewCell v in dataGridView2.SelectedCells)
                 {
+                    if (listInt.Contains(v.RowIndex))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        listInt.Add(v.RowIndex);
+                    }
+
                     string cstID = dataGridView2.Rows[v.RowIndex].Cells["CSTID"].Value.ToString();
                     string boxID = dataGridView2.Rows[v.RowIndex].Cells["BOXID"].Value.ToString();
                     label10.Text = BCApp.SCApplication.TransferService.Manual_DeleteCst(cstID, boxID);
@@ -359,6 +392,16 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Test
         private void button22_Click(object sender, EventArgs e)
         {
             BCApp.SCApplication.TransferService.requireEmptyBox = false;
+        }
+
+        private void button23_Click(object sender, EventArgs e)
+        {
+            BCApp.SCApplication.TransferService.redisEnable = true;
+        }
+
+        private void button24_Click(object sender, EventArgs e)
+        {
+            BCApp.SCApplication.TransferService.redisEnable = false;
         }
     }
 }

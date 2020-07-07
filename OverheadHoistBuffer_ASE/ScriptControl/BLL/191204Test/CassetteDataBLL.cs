@@ -571,6 +571,11 @@ namespace com.mirle.ibg3k0.sc.BLL
                     {
                         scApp.ShelfDefBLL.updateStatus(csidData.Carrier_LOC, ShelfDef.E_ShelfState.EmptyShelf);
                     }
+
+                    if (scApp.TransferService.isUnitType(csidData.Carrier_LOC, Service.UnitType.AGV))
+                    {
+                        scApp.TransferService.Redis_DeleteCstBox(csidData);
+                    }
                 }
             }
             catch (Exception ex)

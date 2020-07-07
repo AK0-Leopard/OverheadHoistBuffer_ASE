@@ -51,7 +51,8 @@ namespace com.mirle.ibg3k0.sc.Service
         OHT_INTERLOCK_ERROR = 100010,
         OHT_VEHICLE_ABORT = 100011,
         OHT_BCR_READ_FAIL = 100012,
-        EQ_BCR_READ_FAIL = 100013,
+        PORT_BOXID_READ_FAIL = 100013,
+        PORT_CSTID_READ_FAIL = 100014,
     }
     public class VehicleService : IDynamicMetaObjectProvider
     {
