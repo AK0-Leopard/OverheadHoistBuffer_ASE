@@ -518,6 +518,7 @@ namespace com.mirle.ibg3k0.sc.App
             public class PLC_Issue
             {
                 public const string FireAlarm = "70000";
+                public const string MasterDisconnedted = "70001";
             }
         }
         #endregion Alarm

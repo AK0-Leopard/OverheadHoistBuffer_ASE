@@ -35,6 +35,8 @@ namespace com.mirle.ibg3k0.sc
         public TSCStateMachine TSC_state_machine;
 
         public event EventHandler<EventArgs> LineStatusChange;
+        public event EventHandler<EventArgs> OnLocalDisconnection;
+        public event EventHandler<EventArgs> OnLocalConnection;
 
         #region MCS Online Check Item
         private bool alarmSetChecked = false;
@@ -445,6 +447,17 @@ namespace com.mirle.ibg3k0.sc
                 {
                     mTLConnectionSuccess = value;
                     OnPropertyChanged(BCFUtility.getPropertyName(() => this.MTLConnectionSuccess));
+
+                    if (value == false)
+                    {
+                        //TODO: alarm set
+                        OnLocalDisconnection?.Invoke("PLC", null);
+                    }
+                    else
+                    {
+                        //TODO: alarm clear
+                        OnLocalConnection?.Invoke("PLC", null);
+                    }
                 }
             }
         }

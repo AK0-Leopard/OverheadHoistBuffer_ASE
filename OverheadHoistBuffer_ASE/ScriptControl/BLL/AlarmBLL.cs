@@ -114,7 +114,7 @@ namespace com.mirle.ibg3k0.sc.BLL
             lock (lock_obj_alarm)
             {
                 if (IsAlarmExist(eq_id, error_code)) return null;
-                string alarmUnitType = "OHCV";
+                string alarmUnitType = "LINE";
 
                 if(scApp.TransferService.isUnitType(eq_id, Service.UnitType.AGV))
                 {
@@ -124,6 +124,11 @@ namespace com.mirle.ibg3k0.sc.BLL
                 if (scApp.TransferService.isUnitType(eq_id, Service.UnitType.CRANE))
                 {
                     alarmUnitType = "CRANE";
+                }
+
+                if (scApp.TransferService.isUnitType(eq_id, Service.UnitType.OHCV))
+                {
+                    alarmUnitType = "OHCV";
                 }
 
                 AlarmMap alarmMap = alarmMapDao.getAlarmMap(alarmUnitType, error_code);
