@@ -19,6 +19,7 @@
 // 2020/06/12    Jason Wu       N/A            A20.06.12.0  新增CanExcuteUnloadTransferAGVStationFromAGVC()處理判定切換Mode Type流程及觸發命令派送。
 // 2020/06/15    Jason Wu       N/A            A20.06.15.0  新增新增CanExcuteUnloadTransferAGVStationFromAGVC()後續處理流程。
 // 2020/06/16    Jason Wu       N/A            A20.06.16.0  新增確認該AGVport是否可用的優先流程FilterOfAGVPort()。
+// 2020/07/07    Hsinyu Chang   N/A            2020.07.07   Master PLC斷線時發alarm
 //**********************************************************************************
 
 using com.mirle.ibg3k0.bcf.Common;
@@ -184,6 +185,9 @@ namespace com.mirle.ibg3k0.sc.Service
             line.addEventHandler(nameof(ConnectionInfoService), nameof(line.MCSCommandAutoAssign), PublishTransferInfo);
 
             initPublish(line);
+
+            line.OnLocalDisconnection += OnLocalDisconnected;
+            line.OnLocalConnection += OnLocalConnected;
 
             TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "TransferService >> 初始化結束------------------------------------");
         }
@@ -6827,6 +6831,20 @@ namespace com.mirle.ibg3k0.sc.Service
                 TransferServiceLogger.Error(ex, "CheckForChangeAGVPortMode");
             }
         }
+        #endregion
+
+        #region disconnection alarm handler
+        //2020.07.07
+        private void OnLocalDisconnected(object sender, EventArgs e)
+        {
+            //OHBC_AlarmSet(line.LINE_ID, SCAppConstants.SystemAlarmCode.PLC_Issue.MasterDisconnedted);
+        }
+
+        private void OnLocalConnected(object sender, EventArgs e)
+        {
+            //OHBC_AlarmCleared(line.LINE_ID, SCAppConstants.SystemAlarmCode.PLC_Issue.MasterDisconnedted);
+        }
+
         #endregion
     }
 }

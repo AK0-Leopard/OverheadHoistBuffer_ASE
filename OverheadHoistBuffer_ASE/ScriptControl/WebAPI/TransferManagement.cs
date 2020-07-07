@@ -298,14 +298,14 @@ namespace com.mirle.ibg3k0.sc.WebAPI
                 SCApplication scApp = SCApplication.getInstance();
                 //string queue_count = 0;
                 string agv_station_id = p.AGVStationID;
-                string excute_count= Request.Query.unfinishCmdCount.Value ?? Request.Form.unfinishCmdCount.Value ?? string.Empty;
-                string is_emergency= Request.Query.isEmergency.Value ?? Request.Form.isEmergency.Value ?? string.Empty;
+                string excute_count = Request.Query.unfinishCmdCount.Value ?? Request.Form.unfinishCmdCount.Value ?? string.Empty;
+                string is_emergency = Request.Query.isEmergency.Value ?? Request.Form.isEmergency.Value ?? string.Empty;
                 bool emergency = false;
-                if (is_emergency=="true")
+                if (is_emergency == "true")
                 {
                     emergency = true;
                 }
-                else if(is_emergency == "false")
+                else if (is_emergency == "false")
                 {
                     emergency = false;
                 }
