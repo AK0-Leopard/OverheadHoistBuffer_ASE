@@ -126,7 +126,10 @@ namespace com.mirle.ibg3k0.sc.BLL
                     alarmUnitType = "CRANE";
                 }
 
-                if (scApp.TransferService.isUnitType(eq_id, Service.UnitType.OHCV))
+                if (scApp.TransferService.isUnitType(eq_id, Service.UnitType.OHCV)
+                   || scApp.TransferService.isUnitType(eq_id, Service.UnitType.NTB)
+                   || scApp.TransferService.isUnitType(eq_id, Service.UnitType.STK)
+                   )
                 {
                     alarmUnitType = "OHCV";
                 }

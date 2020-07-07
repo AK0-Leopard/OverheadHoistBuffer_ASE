@@ -1458,6 +1458,7 @@ CRANE,412010,1,InterLockNG Before BUSY turn ON
 CRANE,412011,1,Port error with Passive equipment HO_AVBL signal
 CRANE,412012,1,Carrier was not detected/removed within specified time.[TP3 Timeout]
 CRANE,412013,1,BUSY signal did not turn OFF within specified time.[TP4 Timeout]
+LINE,70001,2,Master PLC is offline
 OHCV,100013,1,PORT_BOXID_READ_FAIL
 OHCV,100014,1,PORT_CSTID_READ_FAIL
 AGV STATION,100013,1,PORT_BOXID_READ_FAIL
