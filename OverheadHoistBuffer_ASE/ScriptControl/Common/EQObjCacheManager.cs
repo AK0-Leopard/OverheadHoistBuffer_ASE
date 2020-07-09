@@ -1086,7 +1086,7 @@ namespace com.mirle.ibg3k0.sc.Common
         }
         public List<AVEHICLE> getAllVehicle()
         {
-            return vhList;
+            return vhList.OrderBy(data => data.VEHICLE_ID).ToList();
         }
 
         /// <summary>

@@ -56,6 +56,12 @@ namespace com.mirle.ibg3k0.sc.Service
         TWO_EMPTY_BOX = 2
     }
 
+    public enum PortTypeNum
+    {
+        No_Change = 0,
+        Input_Mode = 1,
+        OutPut_Mode = 2,
+    }
     public class PortINIData
     {
         #region 共有屬性
@@ -92,6 +98,7 @@ namespace com.mirle.ibg3k0.sc.Service
         #region AGVZone_Port 才有用到的屬性
 
         public E_PORT_STATUS openAGVZone { get; set; }
+        public bool forceRejectAGVCTrigger { get; set; }
 
         #endregion
     }
@@ -114,6 +121,7 @@ namespace com.mirle.ibg3k0.sc.Service
         CRANE,
         ZONE,
         AGVZONE,
+        LINE,
     }
     public enum reportMCSCommandType
     {
@@ -159,6 +167,9 @@ namespace com.mirle.ibg3k0.sc.Service
         public bool requireEmptyBox = false;
         public bool redisEnable = false;
         public bool agvZone_ConnectedRealAGVPortRunDown = true;
+        public string agvcTriggerResult_ST01 = "無";
+        public string agvcTriggerResult_ST02 = "無";
+        public string agvcTriggerResult_ST03 = "無";
         #endregion
 
         #region 初始化
@@ -197,6 +208,12 @@ namespace com.mirle.ibg3k0.sc.Service
             {
                 portINIData = new Dictionary<string, PortINIData>();
                 portINIData.Clear();
+                PortINIData lineData = new PortINIData();
+
+                lineData.PortName = line.LINE_ID;
+                lineData.UnitType = UnitType.LINE.ToString();
+                AddPortINIData(lineData);
+
                 foreach (var v in portDefBLL.GetOHB_CVPortData(line.LINE_ID))
                 {
                     for (int i = 1; i <= (int)v.Stage; i++)
@@ -231,6 +248,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         if (isAGVZone(data.PortName))
                         {
                             OpenAGVZone(data.PortName, data.openAGVZone);
+                            data.forceRejectAGVCTrigger = false;
                         }
                     }
                 }
@@ -6380,13 +6398,16 @@ namespace com.mirle.ibg3k0.sc.Service
         /// <returns></returns>
         public bool CanExcuteUnloadTransferAGVStationFromAGVC(string AGVStationID, int AGVCFromEQToStationCmdNum, bool isEmergency)
         {
+            PortTypeNum portTypeNum = PortTypeNum.No_Change;
             bool isOK = false;
             try
             {
                 if (scApp.PortDefBLL.GetPortData(AGVStationID).State == E_PORT_STATUS.OutOfService) //此AGVStation虛擬port是 Out of service 一律回復NG
                 {
                     isOK = false;
+                    portTypeNum = PortTypeNum.No_Change;
                     AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " 是 Out of service 一律回復NG ");
+                    RewriteTheResultOfAGVCTrigger(AGVStationID, portTypeNum , isOK);
                     return isOK;
                 }
 
@@ -6402,7 +6423,9 @@ namespace com.mirle.ibg3k0.sc.Service
                 if (haveCmdFromAGVPort == true)
                 {
                     isOK = false;
+                    portTypeNum = PortTypeNum.No_Change;
                     AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " Return NG. Due to there is cmd from target AGV Station Port.");
+                    RewriteTheResultOfAGVCTrigger(AGVStationID, portTypeNum, isOK);
                     return isOK;
                 }
 
@@ -6418,6 +6441,10 @@ namespace com.mirle.ibg3k0.sc.Service
                 (emptyBoxNumber, fullBoxNumber, success) = CountAGVStationBoxInfo(accessAGVPortDatas);
                 if (success == false)
                 {
+                    isOK = false;
+                    portTypeNum = PortTypeNum.No_Change;
+                    AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " Return NG. Due to the AGV port is not ready.");
+                    RewriteTheResultOfAGVCTrigger(AGVStationID, portTypeNum, isOK);
                     return isOK;
                 }
                 AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " emptyBoxNumber = " + emptyBoxNumber + ", fullBoxNumber = " + fullBoxNumber);
@@ -6425,29 +6452,47 @@ namespace com.mirle.ibg3k0.sc.Service
                 //若有實box 則先默認為NG，會稍微影響效率(在一AGV對多個Station時)
                 if (fullBoxNumber > 0)
                 {
-                    //可針對特定細節做特化處理
+                    //可針對特定細節做特化處理，可進一步優化
                     isOK = false;
+                    portTypeNum = PortTypeNum.No_Change;
+                    AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " Return NG. Due to there is full box on AGV port.");
+                    RewriteTheResultOfAGVCTrigger(AGVStationID, portTypeNum, isOK);
                     return isOK;
                 }
-                //若無實Box 再行判斷空Box 數量。
-                switch (emptyBoxNumber)
+                //判斷是否強制讓貨出去
+                if (portINIData[AGVStationID].forceRejectAGVCTrigger == true)
                 {
-                    case (int)EmptyBoxNumber.NO_EMPTY_BOX:
-                        //若沒有空box，則執行OHBC優先判定。
-                        AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " Enter the NO_EMPTY_BOX method");
-                        isOK = CheckForChangeAGVPortMode_OHBC(AGVCFromEQToStationCmdNum, accessAGVPortDatas, AGVStationID);
-                        break;
-                    case (int)EmptyBoxNumber.ONE_EMPTY_BOX:
-                        //目前先以執行AGVC優先判定為主，因為若有Cst卡在AGV上並無其餘可去之處。
-                        AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " Enter the ONE_EMPTY_BOX method");
-                        isOK = CheckForChangeAGVPortMode_AGVC(AGVCFromEQToStationCmdNum, accessAGVPortDatas, AGVStationID);
-                        break;
-                    case (int)EmptyBoxNumber.TWO_EMPTY_BOX:
-                        //若有2空box，則執行AGVC優先判定。
-                        AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " Enter the TWO_EMPTY_BOX method");
-                        isOK = CheckForChangeAGVPortMode_AGVC(AGVCFromEQToStationCmdNum, accessAGVPortDatas, AGVStationID);
-                        break;
-
+                    AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " Enter the forceRejectAGVCTrigger狀態");
+                    AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " 是 forceRejectAGVCTrigger狀態一律回復NG，並轉為OutPut");
+                    //若forceRejectAGVCTrigger狀態，則執行轉至Output Mode 狀態。
+                    OutputModeChange(accessAGVPortDatas);
+                    isOK = false;
+                    portTypeNum = PortTypeNum.OutPut_Mode;
+                    RewriteTheResultOfAGVCTrigger(AGVStationID, portTypeNum, isOK);
+                    return isOK;
+                }
+                else
+                {
+                    //若無實Box，且判斷是否強制讓貨出去後再行判斷空Box 數量。
+                    switch (emptyBoxNumber)
+                    {
+                        case (int)EmptyBoxNumber.NO_EMPTY_BOX:
+                            //若沒有空box，則執行OHBC優先判定。
+                            AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " Enter the NO_EMPTY_BOX method");
+                            (portTypeNum, isOK) = CheckForChangeAGVPortMode_OHBC(AGVCFromEQToStationCmdNum, accessAGVPortDatas, AGVStationID);
+                            break;
+                        case (int)EmptyBoxNumber.ONE_EMPTY_BOX:
+                            //目前先以執行AGVC優先判定為主，因為若有Cst卡在AGV上並無其餘可去之處。
+                            AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " Enter the ONE_EMPTY_BOX method");
+                            (portTypeNum, isOK) = CheckForChangeAGVPortMode_AGVC(AGVCFromEQToStationCmdNum, accessAGVPortDatas, AGVStationID);
+                            break;
+                        case (int)EmptyBoxNumber.TWO_EMPTY_BOX:
+                            //若有2空box，則執行AGVC優先判定。
+                            AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " Enter the TWO_EMPTY_BOX method");
+                            (portTypeNum, isOK) = CheckForChangeAGVPortMode_AGVC(AGVCFromEQToStationCmdNum, accessAGVPortDatas, AGVStationID);
+                            break;
+                    }
+                    RewriteTheResultOfAGVCTrigger(AGVStationID, portTypeNum, isOK);
                 }
             }
             catch (Exception ex)
@@ -6514,31 +6559,35 @@ namespace com.mirle.ibg3k0.sc.Service
         /// <param name="AGVStationData"></param>
         /// <param name="AGVStationID"></param>
         /// <returns></returns>
-        private bool CheckForChangeAGVPortMode_AGVC(int AGVCFromEQToStationCmdNum, List<PortDef> AGVStationData, string AGVStationID)
+        private (PortTypeNum portTypeNum_Result, bool isOK_Result) CheckForChangeAGVPortMode_AGVC(int AGVCFromEQToStationCmdNum, List<PortDef> AGVStationData, string AGVStationID)
         {
-            bool isOK = false;
+            bool _isOK_Result = false;
+            PortTypeNum _portTypeNum_Result = PortTypeNum.No_Change;
             try
             {
                 if (AGVCFromEQToStationCmdNum > 0)
                 {
-                    isOK = true;
+                    _isOK_Result = true;
                     bool isSuccess = InputModeChange(AGVStationData);
+                    _portTypeNum_Result = PortTypeNum.Input_Mode;
                     if (isSuccess == false)
                     {
-                        isOK = false;
+                        _isOK_Result = false;
                     }
                 }
                 else
                 {
-                    isOK = false;
+                    _isOK_Result = false;
                     int OHBCCmdNumber = GetToThisAGVStationMCSCmdNum(AGVStationData, AGVStationID);
                     if (OHBCCmdNumber > 0)
                     {
                         OutputModeChange(AGVStationData);
+                        _portTypeNum_Result = PortTypeNum.OutPut_Mode;
                     }
                     else
                     {
                         InputModeChange(AGVStationData);
+                        _portTypeNum_Result = PortTypeNum.Input_Mode;
                     }
                 }
             }
@@ -6546,7 +6595,7 @@ namespace com.mirle.ibg3k0.sc.Service
             {
                 TransferServiceLogger.Error(ex, "CheckForChangeAGVPortMode");
             }
-            return isOK;
+            return (_portTypeNum_Result, _isOK_Result);
         }
 
         /// <summary>
@@ -6557,32 +6606,36 @@ namespace com.mirle.ibg3k0.sc.Service
         /// <param name="AGVStationData"></param>
         /// <param name="AGVStationID"></param>
         /// <returns></returns>
-        private bool CheckForChangeAGVPortMode_OHBC(int AGVCFromEQToStationCmdNum, List<PortDef> AGVStationData, string AGVStationID)
+        private (PortTypeNum portTypeNum_Result, bool isOK_Result) CheckForChangeAGVPortMode_OHBC(int AGVCFromEQToStationCmdNum, List<PortDef> AGVStationData, string AGVStationID)
         {
-            bool isOK = false;
+            bool _isOK_Result = false;
+            PortTypeNum _portTypeNum_Result = PortTypeNum.No_Change;
             try
             {
                 int OHBCCmdNumber = GetToThisAGVStationMCSCmdNum(AGVStationData, AGVStationID);
                 if (OHBCCmdNumber > 0)
                 {
-                    isOK = false;
+                    _isOK_Result = false;
                     OutputModeChange(AGVStationData);
+                    _portTypeNum_Result = PortTypeNum.OutPut_Mode;
                 }
                 else
                 {
                     if (AGVCFromEQToStationCmdNum > 0)
                     {
-                        isOK = true;
+                        _isOK_Result = true;
                         bool isSuccess = InputModeChange(AGVStationData);
+                        _portTypeNum_Result = PortTypeNum.Input_Mode;
                         if (isSuccess == false) // 若port type 的port mode changeable 為 false 則回false
                         {
-                            isOK = false;
+                            _isOK_Result = false;
                         }
                     }
                     else
                     {
-                        isOK = false;
+                        _isOK_Result = false;
                         OutputModeChange(AGVStationData);
+                        _portTypeNum_Result = PortTypeNum.OutPut_Mode;
                     }
                 }
             }
@@ -6590,7 +6643,8 @@ namespace com.mirle.ibg3k0.sc.Service
             {
                 TransferServiceLogger.Error(ex, "CheckForChangeAGVPortMode");
             }
-            return isOK;
+
+            return (_portTypeNum_Result , _isOK_Result);
         }
 
         /// <summary>
@@ -6831,18 +6885,65 @@ namespace com.mirle.ibg3k0.sc.Service
                 TransferServiceLogger.Error(ex, "CheckForChangeAGVPortMode");
             }
         }
+
+        /// <summary>
+        /// 判斷該寫入畫面的數值
+        /// </summary>
+        /// <param name="AGVStationName"></param>
+        /// <param name="portTypeNum"></param>
+        /// <param name="result"></param>
+        private void RewriteTheResultOfAGVCTrigger(String AGVStationName, PortTypeNum portTypeNum, bool result)
+        {
+            switch (portTypeNum)
+            {
+                case PortTypeNum.No_Change:
+                    TargetAGVStationRewrite(AGVStationName, "No Change", result);
+                    break;
+                case PortTypeNum.Input_Mode:
+                    TargetAGVStationRewrite(AGVStationName, "Input Change", result);
+                    break;
+                case PortTypeNum.OutPut_Mode:
+                    TargetAGVStationRewrite(AGVStationName, "OutPut Change", result);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// 寫入畫面更新時使用之String位置
+        /// </summary>
+        /// <param name="AGVStationName"></param>
+        /// <param name="portChangeResult"></param>
+        /// <param name="result"></param>
+        private void TargetAGVStationRewrite(String AGVStationName, string portChangeResult, bool result)
+        {
+            string lastNumOfAGVStation = AGVStationName[AGVStationName.Length-1].ToString();
+            switch (lastNumOfAGVStation)
+            {
+                case ("1"):
+                    agvcTriggerResult_ST01 = DateTime.Now.ToString("HH:mm:ss.fff ") + " " + portChangeResult + " " + result.ToString();
+                    break;
+                case ("2"):
+                    agvcTriggerResult_ST02 = DateTime.Now.ToString("HH:mm:ss.fff ") + " " + portChangeResult + " " + result.ToString();
+                    break;
+                case ("3"):
+                    agvcTriggerResult_ST03 = DateTime.Now.ToString("HH:mm:ss.fff ") + " " + portChangeResult + " " + result.ToString();
+                    break;
+            }
+        }
         #endregion
 
         #region disconnection alarm handler
         //2020.07.07
         private void OnLocalDisconnected(object sender, EventArgs e)
         {
-            //OHBC_AlarmSet(line.LINE_ID, SCAppConstants.SystemAlarmCode.PLC_Issue.MasterDisconnedted);
+            string ohtName = vehicleBLL.cache.loadVhs().FirstOrDefault().VEHICLE_ID;
+            OHBC_AlarmSet(ohtName, SCAppConstants.SystemAlarmCode.PLC_Issue.MasterDisconnedted);
         }
 
         private void OnLocalConnected(object sender, EventArgs e)
         {
-            //OHBC_AlarmCleared(line.LINE_ID, SCAppConstants.SystemAlarmCode.PLC_Issue.MasterDisconnedted);
+            string ohtName = vehicleBLL.cache.loadVhs().FirstOrDefault().VEHICLE_ID;
+            OHBC_AlarmCleared(ohtName, SCAppConstants.SystemAlarmCode.PLC_Issue.MasterDisconnedted);
         }
 
         #endregion
