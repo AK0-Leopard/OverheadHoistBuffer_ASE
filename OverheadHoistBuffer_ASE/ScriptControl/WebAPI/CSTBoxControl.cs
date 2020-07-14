@@ -316,6 +316,11 @@ namespace com.mirle.ibg3k0.sc.WebAPI
 							result = isSuccess ? "OK" : "Reset AGV BCR Read failed.";
 							break;
 
+						case "rereadBCR":
+							isSuccess = true; // todo Reread BCR
+							result = isSuccess ? "OK" : "Reread BCR failed.";
+							break;
+
 						case "AGVOpenBox":
 							isSuccess = scApp.TransferService.SetAGV_PortOpenBOX(port_id);
 							result = isSuccess ? "OK" : "Open AGV Box failed.";
@@ -332,18 +337,18 @@ namespace com.mirle.ibg3k0.sc.WebAPI
 							isSuccess = scApp.TransferService.doUpdateTimeOutForAutoInZone(port_id, timeOutForAutoInZone);
 							result = isSuccess ? "OK" : "Update Port TimeOutForAutoInZone failed.";
 							break;
+
 						case "BlockPort":
-							//isSuccess = true; // todo block
                             isSuccess = scApp.TransferService.UpdateIgnoreModeChange(port_id, "Y");
                             result = isSuccess ? "OK" : "Block Port failed.";
 							break;
+
 						case "UnblockPort":
-							//isSuccess = true; // todo block
                             isSuccess = scApp.TransferService.UpdateIgnoreModeChange(port_id, "N");
                             result = isSuccess ? "OK" : "Unblock Port failed.";
 							break;
+
 						case "ClearAlarmPort":
-							//isSuccess = true; // todo ClearAlarmPort
                             isSuccess = scApp.TransferService.PortAlarrmReset(port_id);
                             result = isSuccess ? "OK" : "Clear Alarm Port failed.";
 							break;

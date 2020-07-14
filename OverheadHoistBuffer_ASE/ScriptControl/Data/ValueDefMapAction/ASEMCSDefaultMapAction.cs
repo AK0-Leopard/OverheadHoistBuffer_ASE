@@ -1204,7 +1204,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
 
             if (carrier_id_item != null && Box_item != null)
             {
-                CarrierID = carrier_id_item.CPVAL;
+                CarrierID = carrier_id_item.CPVAL?.ToString() ?? "";
                 BoxID = Box_item.CPVAL;
 
                 CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByCstBoxID(CarrierID, BoxID);
@@ -1219,7 +1219,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
 
                     has_carrier = false;
                     //check_result = SECSConst.HCACK_Obj_Not_Exist;
-                    check_result = SECSConst.HCACK_Confirm;
+                    check_result = SECSConst.HCACK_Obj_Not_Exist;
                     is_ok = false;
                 }
                 else

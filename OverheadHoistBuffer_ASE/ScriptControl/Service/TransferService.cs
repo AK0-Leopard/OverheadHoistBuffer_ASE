@@ -565,6 +565,13 @@ namespace com.mirle.ibg3k0.sc.Service
                 }
             }
 
+            if (vehicle.ACT_STATUS == VHActionStatus.NoCommand && string.IsNullOrWhiteSpace(vehicle.MCS_CMD) == false)
+            {
+                Task.Run(() =>
+                {
+                    cmdBLL.forceUpdataCmdStatus2FnishByVhID(craneName); // Force finish Cmd
+                });
+            }
             #endregion
 
             #region 卡匣
