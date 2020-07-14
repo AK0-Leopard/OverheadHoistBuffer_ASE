@@ -21,6 +21,8 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Test
         List<ShelfDef> shelfDefs = null;
         List<AVEHICLE> avehicle = null;
 
+        DateTime openTime = new DateTime();
+
         public CMD_CST_DATA()
         {
             InitializeComponent();
@@ -78,6 +80,8 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Test
             UpDate_CmdData();
             UpDate_CstData();
             UpDate_AlarmData();
+
+            openTime = DateTime.Now;
         }
         private void button2_Click(object sender, EventArgs e)
         {
@@ -231,7 +235,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Test
         {
             foreach(var v in BCApp.SCApplication.TransferService.GetCVPort())
             {
-                BCApp.SCApplication.TransferService.DeleteOHCVPortCst(v.PortName);
+                BCApp.SCApplication.TransferService.DeleteOHCVPortCst(v.PortName, "UI: CMD_CST_DATA");
             }
 
             UpDate_CstData();
@@ -403,5 +407,6 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Test
         {
             BCApp.SCApplication.TransferService.redisEnable = false;
         }
+
     }
 }

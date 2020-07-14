@@ -21,6 +21,7 @@ namespace com.mirle.ibg3k0.bc.winform
         PortPLCInfo portData = new PortPLCInfo();
 
         TransferService transferService = null;
+        DateTime openTime = new DateTime();
 
         public TestGetPortData()
         {
@@ -41,7 +42,6 @@ namespace com.mirle.ibg3k0.bc.winform
                 if(transferService.isCVPort(v.PLCPortID))
                 {
                     comboBox1.Items.Add(v.PLCPortID);
-
                 }
             }
 
@@ -127,6 +127,7 @@ namespace com.mirle.ibg3k0.bc.winform
             #endregion
 
             GetPortData();
+            openTime = DateTime.Now;
         }
         public void SetApp(App.BCApplication app)
         {
@@ -242,8 +243,39 @@ namespace com.mirle.ibg3k0.bc.winform
             //    ;
             #endregion
 
-            //BCApp.SCApplication.getNatsManager().PublishAsync
-            //        (string.Format(sc.App.SCAppConstants.NATS_SUBJECT_Port_INFO_0, vh.VEHICLE_ID.Trim()), vh_Serialize);
+            label6.Text = "關聯實際狀態： " + transferService.agvZone_ConnectedRealAGVPortRunDown.ToString();
+
+            if (transferService.isAGVZone(comboBox3.Text))
+            {
+                label7.Text = "強制讓貨先出去: " + transferService.portINIData[comboBox3.Text].forceRejectAGVCTrigger.ToString();
+            }
+            else
+            {
+                label7.Text = "AGV Zone 名稱輸入錯誤";
+            }
+
+            label8.Text = "ST01: " + transferService.agvcTriggerResult_ST01;
+            label9.Text = "ST02: " + transferService.agvcTriggerResult_ST02;
+            label10.Text = "ST03: " + transferService.agvcTriggerResult_ST03;
+
+            dataGridView5.DataSource = BCApp.SCApplication.VehicleBLL.cache.loadVhs().Select(data => 
+                                    new { data.VEHICLE_ID
+                                        , data.HAS_CST
+                                        , data.BOX_ID
+                                        , data.CST_ID
+                                        , data.ACT_STATUS
+                                        , data.MCS_CMD
+                                        , data.CMD_CST_ID 
+                                        }
+                                                                                            ).ToList() ;
+
+            TimeSpan timeOut = DateTime.Now - openTime;
+
+            if (timeOut.Minutes > 5)
+            {
+                timer1.Enabled = false;
+                this.Close();
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -347,12 +379,12 @@ namespace com.mirle.ibg3k0.bc.winform
 
         private void button31_Click(object sender, EventArgs e)
         {
-            transferService.OpenAGV_Station(comboBox1.Text, true);
+            transferService.OpenAGV_Station(comboBox1.Text, true, "UI_TestGetPortData");
         }
 
         private void button19_Click(object sender, EventArgs e)
         {
-            transferService.OpenAGV_Station(comboBox1.Text, false);
+            transferService.OpenAGV_Station(comboBox1.Text, false, "UI_TestGetPortData");
         }
 
         private void button17_Click(object sender, EventArgs e)
@@ -361,7 +393,7 @@ namespace com.mirle.ibg3k0.bc.winform
             {
                 if(transferService.isUnitType(v.PLCPortID, sc.Service.UnitType.AGV))
                 {
-                    transferService.OpenAGV_Station(v.PLCPortID, true);
+                    transferService.OpenAGV_Station(v.PLCPortID, true, "UI_TestGetPortData");
                 }
             }
         }
@@ -372,7 +404,7 @@ namespace com.mirle.ibg3k0.bc.winform
             {
                 if (transferService.isUnitType(v.PLCPortID, sc.Service.UnitType.AGV))
                 {
-                    transferService.OpenAGV_Station(v.PLCPortID, false);
+                    transferService.OpenAGV_Station(v.PLCPortID, false, "UI_TestGetPortData");
                 }
             }
         }
@@ -417,11 +449,6 @@ namespace com.mirle.ibg3k0.bc.winform
                     transferService.OpenAGV_AutoPortType(v.PLCPortID, false);
                 }
             }
-        }
-
-        private void button25_Click(object sender, EventArgs e)
-        {
-            transferService.GetCVPortHelp(comboBox1.Text);
         }
 
         private void button26_Click(object sender, EventArgs e)
@@ -482,6 +509,47 @@ namespace com.mirle.ibg3k0.bc.winform
         private void button33_Click(object sender, EventArgs e)
         {
             transferService.agvZone_ConnectedRealAGVPortRunDown = false;
+        }
+
+        private void button34_Click(object sender, EventArgs e)
+        {
+            if (transferService.isAGVZone(comboBox3.Text))
+            {
+                transferService.portINIData[comboBox3.Text].forceRejectAGVCTrigger = true;
+            }            
+        }
+
+        private void button35_Click(object sender, EventArgs e)
+        {
+            if (transferService.isAGVZone(comboBox3.Text))
+            {
+                transferService.portINIData[comboBox3.Text].forceRejectAGVCTrigger = false;
+            }
+        }
+
+        private void button36_Click(object sender, EventArgs e)
+        {
+            if(transferService.portINIData[comboBox3.Text].forceRejectAGVCTrigger == true)
+            {
+                transferService.TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " forceRejectAGVCTrigger 觸發按鍵點選。");
+                transferService.CanExcuteUnloadTransferAGVStationFromAGVC(comboBox3.Text.Trim(), 0, false);
+            }
+        }
+
+        private void button25_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                foreach (DataGridViewCell v in dataGridView5.SelectedCells)
+                {
+                    string portName = dataGridView5.Rows[v.RowIndex].Cells["VEHICLE_ID"].Value.ToString();
+                    transferService.iniOHTData(portName, "UI_TestGetPortData");
+                }
+            }
+            catch
+            {
+
+            }
         }
     }
 }

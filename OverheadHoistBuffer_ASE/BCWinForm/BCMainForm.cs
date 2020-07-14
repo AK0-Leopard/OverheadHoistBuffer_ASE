@@ -996,6 +996,7 @@ namespace com.mirle.ibg3k0.bc.winform
             demo.SetApp(BCApp);
             ShowFrom(demo, null);
         }
+        
         private void waitInOutLogToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WaitInOutLog demo = new WaitInOutLog();

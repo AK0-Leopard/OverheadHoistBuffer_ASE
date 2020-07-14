@@ -300,11 +300,6 @@ namespace com.mirle.ibg3k0.sc.BLL
                     TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|S2F50: BOXID: " + box_id + " 不存在");
                     return SECSConst.HCACK_Obj_Not_Exist;
                 }
-                else
-                {
-                    //為什麼要用Carrier Loc當作查詢條件?? Kevin A:是用 cstData.Carrier_LOC, cstData.BOXID 來更新，主要怕找錯位置
-                    scApp.CassetteDataBLL.UpdateCSTID(cstData.Carrier_LOC, cstData.BOXID, cstID.Trim(), lotID.Trim());
-                }
                 #endregion
                 #region 確認命令ID是否重複 
                 var cmd_obj = scApp.CMDBLL.getCMD_MCSByID(command_id);
@@ -587,7 +582,16 @@ namespace com.mirle.ibg3k0.sc.BLL
 
 
             //ACMD_MCS mcs_com = creatCommand_MCS(command_id, ipriority, carrier_id, HostSource, HostDestination, checkcode);
+            
             creatCommand_MCS(command_id, ipriority, ireplace, carrier_id, HostSource, HostDestination, Box_ID, LOT_ID, box_Loc, checkcode, isFromVh);
+
+            CassetteData cstData = scApp.CassetteDataBLL.loadCassetteDataByBoxID(Box_ID);
+
+            if(cstData != null)
+            {
+                scApp.CassetteDataBLL.UpdateCSTID(cstData.Carrier_LOC, cstData.BOXID, carrier_id.Trim(), LOT_ID.Trim());
+            }
+
             //if (mcs_com != null)
             //{
             //    isSuccess = true;
@@ -596,6 +600,7 @@ namespace com.mirle.ibg3k0.sc.BLL
             //    scApp.ReportBLL.doReportTransferInitial(command_id);
             //    checkMCS_TransferCommand();
             //}
+
             return isSuccess;
 
         }
@@ -1646,6 +1651,21 @@ namespace com.mirle.ibg3k0.sc.BLL
 
 
         }
+        public List<ACMD_MCS> loadMcsCmd_ByTransferring()
+        {
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    return cmd_mcsDao.loadCMD_ByTransferring(con);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return null;
+            }
+        }
         public List<ACMD_MCS> loadMCS_Command_Queue()
         {
             try
@@ -1659,8 +1679,6 @@ namespace com.mirle.ibg3k0.sc.BLL
                 logger.Error(ex, "Exception");
                 return null;
             }
-
-
         }
         private List<ACMD_MCS> list()
         {

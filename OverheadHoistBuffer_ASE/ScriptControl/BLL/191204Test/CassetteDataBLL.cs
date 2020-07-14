@@ -181,8 +181,6 @@ namespace com.mirle.ibg3k0.sc.BLL
                     {
                         scApp.ShelfDefBLL.updateStatus(loc, ShelfDef.E_ShelfState.Stored);
                         cstData.StoreDT = time;
-
-                        scApp.TransferService.QueryLotID(cstData);
                     }
                     else if (scApp.TransferService.isCVPort(loc))
                     {
@@ -316,6 +314,26 @@ namespace com.mirle.ibg3k0.sc.BLL
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
                     return cassettedataDao.LoadCassetteDataByCSTID_UNK(con);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return null;
+            }
+        }
+        /// <summary>
+        /// 找出是UNK 但不是UNKU且在shelf 上的CST
+        /// </summary>
+        /// <param name="conn"></param>
+        /// <returns></returns>
+        public List<CassetteData> LoadCassetteDataByCSTID_UNKandOnShelf()
+        {
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    return cassettedataDao.LoadCassetteDataByCSTID_UNKandOnShelf(con);
                 }
             }
             catch (Exception ex)

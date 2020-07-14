@@ -58,6 +58,7 @@ namespace com.mirle.ibg3k0.sc.Service
     {
         public const string DEVICE_NAME_OHx = "OHx";
         Logger logger = LogManager.GetCurrentClassLogger();
+        TransferService transferService = null;
         SCApplication scApp = null;
 
 
@@ -85,6 +86,8 @@ namespace com.mirle.ibg3k0.sc.Service
                 vh.LongTimeNoCommuncation += Vh_LongTimeNoCommuncation;
                 vh.TimerActionStart();
             }
+
+            transferService = app.TransferService;
         }
 
 
@@ -1100,7 +1103,9 @@ namespace com.mirle.ibg3k0.sc.Service
         public bool doCancelOrAbortCommandByMCSCmdID(string cancel_abort_mcs_cmd_id, CMDCancelType actType)
         {
             ACMD_MCS mcs_cmd = scApp.CMDBLL.getCMD_MCSByID(cancel_abort_mcs_cmd_id);
+
             bool is_success = true;
+
             switch (actType)
             {
                 case CMDCancelType.CmdCancel:
@@ -1142,33 +1147,63 @@ namespace com.mirle.ibg3k0.sc.Service
                     }
                     break;
                 case CMDCancelType.CmdAbort:
+                    bool localDelete = false;
+                    string log = "對命令: " + cancel_abort_mcs_cmd_id + " 強制結束";
+
                     if (mcs_cmd.TRANSFERSTATE == E_TRAN_STATUS.Queue)
                     {
-                        scApp.CMDBLL.updateCMD_MCS_TranStatus(cancel_abort_mcs_cmd_id, E_TRAN_STATUS.TransferCompleted);
-                        scApp.ReportBLL.ReportTransferAbortInitiated(cancel_abort_mcs_cmd_id);
-                        scApp.ReportBLL.ReportTransferAbortCompleted(cancel_abort_mcs_cmd_id);
+                        localDelete = true;
+                        log = log + " mcs_cmd.TRANSFERSTATE:" + mcs_cmd.TRANSFERSTATE;
                     }
                     else
                     {
-                        AVEHICLE crane = scApp.VehicleBLL.getVehicleByID(mcs_cmd.CRANE.Trim());
+                        AVEHICLE crane = GetVehicleDataByVehicleID(mcs_cmd.CRANE.Trim());
 
                         if (crane.isTcpIpConnect)
                         {
-                            is_success = scApp.VehicleService.cancleOrAbortCommandByMCSCmdID(cancel_abort_mcs_cmd_id, ProtocolFormat.OHTMessage.CMDCancelType.CmdAbort);
-                            if (is_success)
+                            if(crane.MCS_CMD.Trim() == mcs_cmd.CMD_ID.Trim())
                             {
-                                scApp.ReportBLL.ReportTransferAbortInitiated(cancel_abort_mcs_cmd_id);
-                                scApp.CMDBLL.updateCMD_MCS_TranStatus(cancel_abort_mcs_cmd_id, E_TRAN_STATUS.Aborting);
+                                is_success = cancleOrAbortCommandByMCSCmdID(cancel_abort_mcs_cmd_id, ProtocolFormat.OHTMessage.CMDCancelType.CmdAbort);
+                                if (is_success)
+                                {
+                                    scApp.ReportBLL.ReportTransferAbortInitiated(cancel_abort_mcs_cmd_id);
+                                    scApp.CMDBLL.updateCMD_MCS_TranStatus(cancel_abort_mcs_cmd_id, E_TRAN_STATUS.Aborting);
+                                }
+                                else
+                                {
+                                    scApp.ReportBLL.newReportTransferAbortFailed(cancel_abort_mcs_cmd_id, null);
+                                }
                             }
                             else
                             {
-                                scApp.ReportBLL.newReportTransferAbortFailed(cancel_abort_mcs_cmd_id, null);
+                                log = log + " 命令ID不一樣";
+                                localDelete = true;                                
                             }
                         }
                         else
                         {
-                            scApp.TransferService.LocalCmdCancel(cancel_abort_mcs_cmd_id, "車子不在線上");
+                            log = log + " " +  crane.VEHICLE_ID + " 連線狀態(isTcpIpConnect) : " + crane.isTcpIpConnect;
+                            localDelete = true;
                         }
+                    }
+
+                    if(localDelete)
+                    {
+                        transferService.TransferServiceLogger.Info
+                        (DateTime.Now.ToString("HH:mm:ss.fff ") 
+                            + log + "\n" 
+                            + transferService.GetCmdLog(mcs_cmd)
+                        );
+
+                        scApp.CMDBLL.updateCMD_MCS_TranStatus(cancel_abort_mcs_cmd_id, E_TRAN_STATUS.TransferCompleted);
+                        scApp.ReportBLL.ReportTransferAbortInitiated(cancel_abort_mcs_cmd_id);
+                        scApp.ReportBLL.ReportTransferAbortCompleted(cancel_abort_mcs_cmd_id);
+
+                        //自動 Force finish cmd 可以加在這
+                        Task.Run(() =>
+                        {
+                            scApp.CMDBLL.forceUpdataCmdStatus2FnishByVhID(mcs_cmd.CRANE.Trim()); // Force finish Cmd
+                        });
                     }
                     break;
             }
@@ -5008,6 +5043,8 @@ namespace com.mirle.ibg3k0.sc.Service
             //clear the connection alarm code 99999
             scApp.TransferService.OHBC_AlarmCleared(vh.VEHICLE_ID,
                 SCAppConstants.SystemAlarmCode.OHT_Issue.OHTAccidentOfflineWarning);
+
+            scApp.TransferService.iniOHTData(vh.VEHICLE_ID, "OHT_Connection");
         }
         [ClassAOPAspect]
         public void Disconnection(BCFApplication bcfApp, AVEHICLE vh)

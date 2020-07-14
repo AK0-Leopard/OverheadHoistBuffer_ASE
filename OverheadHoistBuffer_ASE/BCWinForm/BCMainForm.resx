@@ -480,29 +480,32 @@
   <data name="engineerToolStripMenuItem1.Text" xml:space="preserve">
     <value>Engineer</value>
   </data>
+  <data name="搬送模擬ToolStripMenuItem.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft JhengHei, 14.25pt</value>
+  </data>
   <data name="搬送模擬ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>200, 26</value>
+    <value>213, 28</value>
   </data>
   <data name="搬送模擬ToolStripMenuItem.Text" xml:space="preserve">
     <value>搬送模擬</value>
   </data>
+  <data name="port內容值ToolStripMenuItem.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft JhengHei, 14.25pt</value>
+  </data>
   <data name="port內容值ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>200, 26</value>
+    <value>213, 28</value>
   </data>
   <data name="port內容值ToolStripMenuItem.Text" xml:space="preserve">
-    <value>Port內容值</value>
+    <value>Port 內容值</value>
+  </data>
+  <data name="命令卡匣資料ToolStripMenuItem.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft JhengHei, 14.25pt</value>
   </data>
   <data name="命令卡匣資料ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>200, 26</value>
+    <value>213, 28</value>
   </data>
   <data name="命令卡匣資料ToolStripMenuItem.Text" xml:space="preserve">
     <value>命令、卡匣資料</value>
-  </data>
-  <data name="waitInOutLogToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>200, 26</value>
-  </data>
-  <data name="waitInOutLogToolStripMenuItem.Text" xml:space="preserve">
-    <value>WaitInOutLog</value>
   </data>
   <data name="testToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>76, 26</value>
@@ -1440,12 +1443,6 @@
     <value>命令卡匣資料ToolStripMenuItem</value>
   </data>
   <data name="&gt;&gt;命令卡匣資料ToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;waitInOutLogToolStripMenuItem.Name" xml:space="preserve">
-    <value>waitInOutLogToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;waitInOutLogToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">

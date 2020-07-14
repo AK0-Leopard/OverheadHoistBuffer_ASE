@@ -107,7 +107,6 @@ namespace com.mirle.ibg3k0.bc.winform
             this.搬送模擬ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.port內容值ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.命令卡匣資料ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.waitInOutLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.CMS_OnLineMode.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -476,34 +475,27 @@ namespace com.mirle.ibg3k0.bc.winform
             this.testToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.搬送模擬ToolStripMenuItem,
             this.port內容值ToolStripMenuItem,
-            this.命令卡匣資料ToolStripMenuItem,
-            this.waitInOutLogToolStripMenuItem});
+            this.命令卡匣資料ToolStripMenuItem});
             this.testToolStripMenuItem.Name = "testToolStripMenuItem";
             resources.ApplyResources(this.testToolStripMenuItem, "testToolStripMenuItem");
             // 
             // 搬送模擬ToolStripMenuItem
             // 
-            this.搬送模擬ToolStripMenuItem.Name = "搬送模擬ToolStripMenuItem";
             resources.ApplyResources(this.搬送模擬ToolStripMenuItem, "搬送模擬ToolStripMenuItem");
+            this.搬送模擬ToolStripMenuItem.Name = "搬送模擬ToolStripMenuItem";
             this.搬送模擬ToolStripMenuItem.Click += new System.EventHandler(this.搬送模擬ToolStripMenuItem_Click);
             // 
             // port內容值ToolStripMenuItem
             // 
-            this.port內容值ToolStripMenuItem.Name = "port內容值ToolStripMenuItem";
             resources.ApplyResources(this.port內容值ToolStripMenuItem, "port內容值ToolStripMenuItem");
+            this.port內容值ToolStripMenuItem.Name = "port內容值ToolStripMenuItem";
             this.port內容值ToolStripMenuItem.Click += new System.EventHandler(this.port內容值ToolStripMenuItem_Click);
             // 
             // 命令卡匣資料ToolStripMenuItem
             // 
-            this.命令卡匣資料ToolStripMenuItem.Name = "命令卡匣資料ToolStripMenuItem";
             resources.ApplyResources(this.命令卡匣資料ToolStripMenuItem, "命令卡匣資料ToolStripMenuItem");
+            this.命令卡匣資料ToolStripMenuItem.Name = "命令卡匣資料ToolStripMenuItem";
             this.命令卡匣資料ToolStripMenuItem.Click += new System.EventHandler(this.命令卡匣資料ToolStripMenuItem_Click);
-            // 
-            // waitInOutLogToolStripMenuItem
-            // 
-            this.waitInOutLogToolStripMenuItem.Name = "waitInOutLogToolStripMenuItem";
-            resources.ApplyResources(this.waitInOutLogToolStripMenuItem, "waitInOutLogToolStripMenuItem");
-            this.waitInOutLogToolStripMenuItem.Click += new System.EventHandler(this.waitInOutLogToolStripMenuItem_Click);
             // 
             // BCMainForm
             // 
@@ -660,7 +652,6 @@ namespace com.mirle.ibg3k0.bc.winform
         private System.Windows.Forms.ToolStripMenuItem 搬送模擬ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem port內容值ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 命令卡匣資料ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem waitInOutLogToolStripMenuItem;
     }
 
     /// <summary>

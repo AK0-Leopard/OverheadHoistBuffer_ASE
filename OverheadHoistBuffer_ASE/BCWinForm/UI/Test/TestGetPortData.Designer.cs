@@ -58,12 +58,19 @@
             this.button17 = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.button36 = new System.Windows.Forms.Button();
             this.dataGridView3 = new System.Windows.Forms.DataGridView();
             this.label6 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.dataGridView4 = new System.Windows.Forms.DataGridView();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.button35 = new System.Windows.Forms.Button();
             this.button33 = new System.Windows.Forms.Button();
+            this.button34 = new System.Windows.Forms.Button();
             this.button32 = new System.Windows.Forms.Button();
             this.button29 = new System.Windows.Forms.Button();
             this.button28 = new System.Windows.Forms.Button();
@@ -75,10 +82,12 @@
             this.button22 = new System.Windows.Forms.Button();
             this.button23 = new System.Windows.Forms.Button();
             this.button24 = new System.Windows.Forms.Button();
-            this.button25 = new System.Windows.Forms.Button();
             this.button26 = new System.Windows.Forms.Button();
             this.button27 = new System.Windows.Forms.Button();
             this.button30 = new System.Windows.Forms.Button();
+            this.label14 = new System.Windows.Forms.Label();
+            this.dataGridView5 = new System.Windows.Forms.DataGridView();
+            this.button25 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
@@ -86,6 +95,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView5)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -100,6 +110,7 @@
             // 
             // comboBox1
             // 
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox1.Font = new System.Drawing.Font("PMingLiU", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Location = new System.Drawing.Point(99, 16);
@@ -109,7 +120,7 @@
             // 
             // timer1
             // 
-            this.timer1.Interval = 500;
+            this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // label2
@@ -168,6 +179,7 @@
             // 
             // comboBox2
             // 
+            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox2.Font = new System.Drawing.Font("PMingLiU", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.comboBox2.FormattingEnabled = true;
             this.comboBox2.Location = new System.Drawing.Point(307, 103);
@@ -189,7 +201,7 @@
             // button6
             // 
             this.button6.Font = new System.Drawing.Font("PMingLiU", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.button6.Location = new System.Drawing.Point(550, 55);
+            this.button6.Location = new System.Drawing.Point(1005, 3);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(98, 29);
             this.button6.TabIndex = 8;
@@ -200,7 +212,7 @@
             // button7
             // 
             this.button7.Font = new System.Drawing.Font("PMingLiU", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.button7.Location = new System.Drawing.Point(654, 55);
+            this.button7.Location = new System.Drawing.Point(1109, 3);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(98, 29);
             this.button7.TabIndex = 8;
@@ -212,7 +224,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("PMingLiU", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label3.Location = new System.Drawing.Point(432, 9);
+            this.label3.Location = new System.Drawing.Point(417, 9);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(88, 16);
             this.label3.TabIndex = 3;
@@ -254,7 +266,7 @@
             // button11
             // 
             this.button11.Font = new System.Drawing.Font("PMingLiU", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.button11.Location = new System.Drawing.Point(550, 95);
+            this.button11.Location = new System.Drawing.Point(514, 56);
             this.button11.Name = "button11";
             this.button11.Size = new System.Drawing.Size(98, 29);
             this.button11.TabIndex = 7;
@@ -265,7 +277,7 @@
             // button12
             // 
             this.button12.Font = new System.Drawing.Font("PMingLiU", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.button12.Location = new System.Drawing.Point(758, 55);
+            this.button12.Location = new System.Drawing.Point(1213, 3);
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(98, 29);
             this.button12.TabIndex = 7;
@@ -276,7 +288,7 @@
             // button13
             // 
             this.button13.Font = new System.Drawing.Font("PMingLiU", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.button13.Location = new System.Drawing.Point(654, 95);
+            this.button13.Location = new System.Drawing.Point(618, 56);
             this.button13.Name = "button13";
             this.button13.Size = new System.Drawing.Size(98, 29);
             this.button13.TabIndex = 7;
@@ -375,7 +387,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("PMingLiU", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label4.Location = new System.Drawing.Point(849, 9);
+            this.label4.Location = new System.Drawing.Point(822, 9);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(154, 16);
             this.label4.TabIndex = 3;
@@ -384,15 +396,25 @@
             // panel1
             // 
             this.panel1.AutoScroll = true;
+            this.panel1.Controls.Add(this.label10);
+            this.panel1.Controls.Add(this.label9);
+            this.panel1.Controls.Add(this.button36);
             this.panel1.Controls.Add(this.dataGridView3);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.label3);
+            this.panel1.Controls.Add(this.button7);
+            this.panel1.Controls.Add(this.button6);
             this.panel1.Controls.Add(this.label6);
+            this.panel1.Controls.Add(this.label8);
+            this.panel1.Controls.Add(this.button12);
+            this.panel1.Controls.Add(this.label7);
             this.panel1.Controls.Add(this.label5);
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.dataGridView4);
             this.panel1.Controls.Add(this.dataGridView2);
+            this.panel1.Controls.Add(this.button35);
             this.panel1.Controls.Add(this.button33);
+            this.panel1.Controls.Add(this.button34);
             this.panel1.Controls.Add(this.button32);
             this.panel1.Controls.Add(this.button29);
             this.panel1.Controls.Add(this.button28);
@@ -400,8 +422,39 @@
             this.panel1.Controls.Add(this.comboBox3);
             this.panel1.Location = new System.Drawing.Point(10, 152);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1340, 462);
+            this.panel1.Size = new System.Drawing.Size(1362, 462);
             this.panel1.TabIndex = 30;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("PMingLiU", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label10.Location = new System.Drawing.Point(822, 311);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(77, 16);
+            this.label10.TabIndex = 12;
+            this.label10.Text = "ST03訊息:";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("PMingLiU", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label9.Location = new System.Drawing.Point(822, 280);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(77, 16);
+            this.label9.TabIndex = 11;
+            this.label9.Text = "ST02訊息:";
+            // 
+            // button36
+            // 
+            this.button36.Font = new System.Drawing.Font("PMingLiU", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.button36.Location = new System.Drawing.Point(1020, 388);
+            this.button36.Name = "button36";
+            this.button36.Size = new System.Drawing.Size(80, 29);
+            this.button36.TabIndex = 10;
+            this.button36.Text = "手動觸發";
+            this.button36.UseVisualStyleBackColor = true;
+            this.button36.Click += new System.EventHandler(this.button36_Click);
             // 
             // dataGridView3
             // 
@@ -410,28 +463,48 @@
             this.dataGridView3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView3.Location = new System.Drawing.Point(435, 37);
+            this.dataGridView3.Location = new System.Drawing.Point(420, 37);
             this.dataGridView3.Name = "dataGridView3";
             this.dataGridView3.ReadOnly = true;
             this.dataGridView3.RowTemplate.Height = 24;
-            this.dataGridView3.Size = new System.Drawing.Size(411, 375);
+            this.dataGridView3.Size = new System.Drawing.Size(394, 375);
             this.dataGridView3.TabIndex = 9;
             // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("PMingLiU", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label6.Location = new System.Drawing.Point(980, 432);
+            this.label6.Location = new System.Drawing.Point(822, 428);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(120, 16);
             this.label6.TabIndex = 3;
             this.label6.Text = "關聯實際狀態：";
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("PMingLiU", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label8.Location = new System.Drawing.Point(822, 249);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(77, 16);
+            this.label8.TabIndex = 3;
+            this.label8.Text = "ST01訊息:";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("PMingLiU", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label7.Location = new System.Drawing.Point(822, 393);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(124, 16);
+            this.label7.TabIndex = 3;
+            this.label7.Text = "強制讓貨先出去:";
+            // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("PMingLiU", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label5.Location = new System.Drawing.Point(852, 397);
+            this.label5.Location = new System.Drawing.Point(822, 358);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(89, 16);
             this.label5.TabIndex = 3;
@@ -444,11 +517,11 @@
             this.dataGridView4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView4.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView4.Location = new System.Drawing.Point(852, 37);
+            this.dataGridView4.Location = new System.Drawing.Point(820, 37);
             this.dataGridView4.Name = "dataGridView4";
             this.dataGridView4.ReadOnly = true;
             this.dataGridView4.RowTemplate.Height = 24;
-            this.dataGridView4.Size = new System.Drawing.Size(394, 348);
+            this.dataGridView4.Size = new System.Drawing.Size(387, 185);
             this.dataGridView4.TabIndex = 9;
             // 
             // dataGridView2
@@ -462,13 +535,24 @@
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.ReadOnly = true;
             this.dataGridView2.RowTemplate.Height = 24;
-            this.dataGridView2.Size = new System.Drawing.Size(340, 375);
+            this.dataGridView2.Size = new System.Drawing.Size(325, 375);
             this.dataGridView2.TabIndex = 9;
+            // 
+            // button35
+            // 
+            this.button35.Font = new System.Drawing.Font("PMingLiU", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.button35.Location = new System.Drawing.Point(1179, 388);
+            this.button35.Name = "button35";
+            this.button35.Size = new System.Drawing.Size(67, 29);
+            this.button35.TabIndex = 7;
+            this.button35.Text = "關閉";
+            this.button35.UseVisualStyleBackColor = true;
+            this.button35.Click += new System.EventHandler(this.button35_Click);
             // 
             // button33
             // 
             this.button33.Font = new System.Drawing.Font("PMingLiU", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.button33.Location = new System.Drawing.Point(1179, 426);
+            this.button33.Location = new System.Drawing.Point(1179, 423);
             this.button33.Name = "button33";
             this.button33.Size = new System.Drawing.Size(67, 29);
             this.button33.TabIndex = 7;
@@ -476,10 +560,21 @@
             this.button33.UseVisualStyleBackColor = true;
             this.button33.Click += new System.EventHandler(this.button33_Click);
             // 
+            // button34
+            // 
+            this.button34.Font = new System.Drawing.Font("PMingLiU", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.button34.Location = new System.Drawing.Point(1106, 388);
+            this.button34.Name = "button34";
+            this.button34.Size = new System.Drawing.Size(67, 29);
+            this.button34.TabIndex = 7;
+            this.button34.Text = "開啟";
+            this.button34.UseVisualStyleBackColor = true;
+            this.button34.Click += new System.EventHandler(this.button34_Click);
+            // 
             // button32
             // 
             this.button32.Font = new System.Drawing.Font("PMingLiU", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.button32.Location = new System.Drawing.Point(1106, 426);
+            this.button32.Location = new System.Drawing.Point(1106, 423);
             this.button32.Name = "button32";
             this.button32.Size = new System.Drawing.Size(67, 29);
             this.button32.TabIndex = 7;
@@ -490,7 +585,7 @@
             // button29
             // 
             this.button29.Font = new System.Drawing.Font("PMingLiU", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.button29.Location = new System.Drawing.Point(1179, 391);
+            this.button29.Location = new System.Drawing.Point(1179, 353);
             this.button29.Name = "button29";
             this.button29.Size = new System.Drawing.Size(67, 29);
             this.button29.TabIndex = 7;
@@ -501,7 +596,7 @@
             // button28
             // 
             this.button28.Font = new System.Drawing.Font("PMingLiU", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.button28.Location = new System.Drawing.Point(1106, 391);
+            this.button28.Location = new System.Drawing.Point(1106, 353);
             this.button28.Name = "button28";
             this.button28.Size = new System.Drawing.Size(67, 29);
             this.button28.TabIndex = 7;
@@ -512,7 +607,7 @@
             // button20
             // 
             this.button20.Font = new System.Drawing.Font("PMingLiU", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.button20.Location = new System.Drawing.Point(748, 418);
+            this.button20.Location = new System.Drawing.Point(716, 418);
             this.button20.Name = "button20";
             this.button20.Size = new System.Drawing.Size(98, 29);
             this.button20.TabIndex = 7;
@@ -522,11 +617,12 @@
             // 
             // comboBox3
             // 
+            this.comboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox3.Font = new System.Drawing.Font("PMingLiU", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Location = new System.Drawing.Point(947, 392);
+            this.comboBox3.Location = new System.Drawing.Point(917, 354);
             this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(153, 24);
+            this.comboBox3.Size = new System.Drawing.Size(183, 24);
             this.comboBox3.TabIndex = 5;
             // 
             // groupBox1
@@ -536,7 +632,7 @@
             this.groupBox1.Controls.Add(this.button17);
             this.groupBox1.Controls.Add(this.button19);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft JhengHei", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.groupBox1.Location = new System.Drawing.Point(862, 20);
+            this.groupBox1.Location = new System.Drawing.Point(830, 20);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(237, 126);
             this.groupBox1.TabIndex = 31;
@@ -550,7 +646,7 @@
             this.groupBox2.Controls.Add(this.button23);
             this.groupBox2.Controls.Add(this.button24);
             this.groupBox2.Font = new System.Drawing.Font("Microsoft JhengHei", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.groupBox2.Location = new System.Drawing.Point(1105, 20);
+            this.groupBox2.Location = new System.Drawing.Point(1073, 20);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(237, 126);
             this.groupBox2.TabIndex = 31;
@@ -602,18 +698,6 @@
             this.button24.UseVisualStyleBackColor = true;
             this.button24.Click += new System.EventHandler(this.button24_Click);
             // 
-            // button25
-            // 
-            this.button25.Font = new System.Drawing.Font("PMingLiU", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.button25.Location = new System.Drawing.Point(515, 14);
-            this.button25.Name = "button25";
-            this.button25.Size = new System.Drawing.Size(133, 29);
-            this.button25.TabIndex = 6;
-            this.button25.Text = "取得狀態說明";
-            this.button25.UseVisualStyleBackColor = true;
-            this.button25.Visible = false;
-            this.button25.Click += new System.EventHandler(this.button25_Click);
-            // 
             // button26
             // 
             this.button26.Font = new System.Drawing.Font("PMingLiU", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
@@ -647,34 +731,67 @@
             this.button30.UseVisualStyleBackColor = true;
             this.button30.Click += new System.EventHandler(this.button30_Click);
             // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("PMingLiU", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label14.Location = new System.Drawing.Point(13, 857);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(246, 21);
+            this.label14.TabIndex = 36;
+            this.label14.Text = "AVEHICLE.Cache_DATA";
+            // 
+            // dataGridView5
+            // 
+            this.dataGridView5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridView5.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
+            this.dataGridView5.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView5.Location = new System.Drawing.Point(12, 890);
+            this.dataGridView5.Name = "dataGridView5";
+            this.dataGridView5.ReadOnly = true;
+            this.dataGridView5.RowTemplate.Height = 24;
+            this.dataGridView5.Size = new System.Drawing.Size(1259, 129);
+            this.dataGridView5.TabIndex = 35;
+            // 
+            // button25
+            // 
+            this.button25.Font = new System.Drawing.Font("PMingLiU", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.button25.Location = new System.Drawing.Point(265, 855);
+            this.button25.Name = "button25";
+            this.button25.Size = new System.Drawing.Size(171, 29);
+            this.button25.TabIndex = 7;
+            this.button25.Text = "對所選車子做初始化";
+            this.button25.UseVisualStyleBackColor = true;
+            this.button25.Click += new System.EventHandler(this.button25_Click);
+            // 
             // TestGetPortData
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(1384, 861);
+            this.Controls.Add(this.label14);
+            this.Controls.Add(this.dataGridView5);
             this.Controls.Add(this.button26);
             this.Controls.Add(this.button27);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.dataGridView1);
-            this.Controls.Add(this.button7);
-            this.Controls.Add(this.button6);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button9);
             this.Controls.Add(this.button8);
-            this.Controls.Add(this.button12);
             this.Controls.Add(this.button13);
             this.Controls.Add(this.button11);
             this.Controls.Add(this.button10);
             this.Controls.Add(this.button16);
+            this.Controls.Add(this.button25);
             this.Controls.Add(this.button15);
             this.Controls.Add(this.button30);
             this.Controls.Add(this.button14);
             this.Controls.Add(this.button3);
-            this.Controls.Add(this.button25);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.comboBox2);
@@ -691,6 +808,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView5)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -737,7 +855,6 @@
         private System.Windows.Forms.Button button22;
         private System.Windows.Forms.Button button23;
         private System.Windows.Forms.Button button24;
-        private System.Windows.Forms.Button button25;
         private System.Windows.Forms.Button button26;
         private System.Windows.Forms.Button button27;
         private System.Windows.Forms.Label label5;
@@ -748,5 +865,15 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button button33;
         private System.Windows.Forms.Button button32;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Button button35;
+        private System.Windows.Forms.Button button34;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Button button36;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.DataGridView dataGridView5;
+        private System.Windows.Forms.Button button25;
     }
 }

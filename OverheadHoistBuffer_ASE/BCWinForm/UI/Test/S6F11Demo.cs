@@ -117,6 +117,10 @@ namespace com.mirle.ibg3k0.bc.winform
             dataGridView1.DataSource = BCApp.SCApplication.TransferService.portINIData.Values.ToList();
             dataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+
+            label7.Text = "目前狀態:" + BCApp.SCApplication.TransferService.agvWaitOutOpenBox.ToString();
+            label17.Text = "目前狀態:" + BCApp.SCApplication.TransferService.portTypeChangeOK_CVPort_CstRemove.ToString();
+            label18.Text = "自動救帳狀態:" + BCApp.SCApplication.TransferService.autoRemarkBOXCSTData.ToString();
         }
 
         public void UPStage()
@@ -409,6 +413,42 @@ namespace com.mirle.ibg3k0.bc.winform
             portPLCInfo.BoxID = textBox2.Text;
             portPLCInfo.EQ_ID = comboBox3.Text;
             BCApp.SCApplication.TransferService.PLC_ReportPortWaitIn(portPLCInfo, "S6F11 Demo");
+        }
+
+        private void button16_Click(object sender, EventArgs e)
+        {
+            BCApp.SCApplication.TransferService.portTypeChangeOK_CVPort_CstRemove = true;
+            label17.Text = "目前狀態:" + BCApp.SCApplication.TransferService.portTypeChangeOK_CVPort_CstRemove.ToString();
+        }
+
+        private void button19_Click(object sender, EventArgs e)
+        {
+            BCApp.SCApplication.TransferService.portTypeChangeOK_CVPort_CstRemove = false;
+            label17.Text = "目前狀態:" + BCApp.SCApplication.TransferService.portTypeChangeOK_CVPort_CstRemove.ToString();
+        }
+
+        private void button31_Click(object sender, EventArgs e)
+        {
+            BCApp.SCApplication.TransferService.agvWaitOutOpenBox = true;
+            label7.Text = "目前狀態:" + BCApp.SCApplication.TransferService.agvWaitOutOpenBox.ToString();
+        }
+
+        private void button34_Click(object sender, EventArgs e)
+        {
+            BCApp.SCApplication.TransferService.agvWaitOutOpenBox = false;
+            label7.Text = "目前狀態:" + BCApp.SCApplication.TransferService.agvWaitOutOpenBox.ToString();
+        }
+
+        private void button35_Click(object sender, EventArgs e)
+        {
+            BCApp.SCApplication.TransferService.autoRemarkBOXCSTData = true;
+            label18.Text = "自動救帳狀態:" + BCApp.SCApplication.TransferService.autoRemarkBOXCSTData.ToString();
+        }
+
+        private void button36_Click(object sender, EventArgs e)
+        {
+            BCApp.SCApplication.TransferService.autoRemarkBOXCSTData = false ;
+            label18.Text = "自動救帳狀態:" + BCApp.SCApplication.TransferService.autoRemarkBOXCSTData.ToString();
         }
     }
 }

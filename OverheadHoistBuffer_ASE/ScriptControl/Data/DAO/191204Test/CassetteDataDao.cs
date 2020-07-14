@@ -97,6 +97,30 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                 throw;
             }
         }
+        /// <summary>
+        /// 找出是UNK 但不是UNKU且在shelf 上的CST
+        /// </summary>
+        /// <param name="conn"></param>
+        /// <returns></returns>
+        public List<CassetteData> LoadCassetteDataByCSTID_UNKandOnShelf(DBConnection_EF conn)
+        {
+            try
+            {
+                var port = from a in conn.CassetteData
+                           where a.CSTID.Contains("UNK") && !a.CSTID.Contains("UNKU") 
+                           &&  (a.Carrier_LOC.StartsWith("10") ||
+                               a.Carrier_LOC.StartsWith("11") ||
+                               a.Carrier_LOC.StartsWith("21") ||
+                               a.Carrier_LOC.StartsWith("20"))
+                           select a;
+                return port.ToList();
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex);
+                throw;
+            }
+        }
         public List<CassetteData> LoadCassetteDataByCstAndEmptyLotID(DBConnection_EF conn)
         {
             try

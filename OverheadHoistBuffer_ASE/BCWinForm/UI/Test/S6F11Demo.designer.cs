@@ -51,7 +51,16 @@
             this.button3 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
             this.comboBox10 = new System.Windows.Forms.ComboBox();
+            this.button36 = new System.Windows.Forms.Button();
+            this.button34 = new System.Windows.Forms.Button();
+            this.button35 = new System.Windows.Forms.Button();
+            this.button19 = new System.Windows.Forms.Button();
+            this.button31 = new System.Windows.Forms.Button();
+            this.button16 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.button12 = new System.Windows.Forms.Button();
             this.button11 = new System.Windows.Forms.Button();
@@ -164,7 +173,7 @@
             // button25
             // 
             this.button25.Font = new System.Drawing.Font("PMingLiU", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.button25.Location = new System.Drawing.Point(40, 164);
+            this.button25.Location = new System.Drawing.Point(9, 133);
             this.button25.Name = "button25";
             this.button25.Size = new System.Drawing.Size(127, 25);
             this.button25.TabIndex = 3;
@@ -287,7 +296,7 @@
             // button7
             // 
             this.button7.Font = new System.Drawing.Font("PMingLiU", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.button7.Location = new System.Drawing.Point(74, 356);
+            this.button7.Location = new System.Drawing.Point(10, 226);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(163, 25);
             this.button7.TabIndex = 15;
@@ -310,9 +319,18 @@
             this.groupBox1.Controls.Add(this.button6);
             this.groupBox1.Controls.Add(this.button5);
             this.groupBox1.Controls.Add(this.button25);
+            this.groupBox1.Controls.Add(this.label17);
+            this.groupBox1.Controls.Add(this.label18);
+            this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.comboBox10);
             this.groupBox1.Controls.Add(this.label4);
+            this.groupBox1.Controls.Add(this.button36);
             this.groupBox1.Controls.Add(this.label5);
+            this.groupBox1.Controls.Add(this.button34);
+            this.groupBox1.Controls.Add(this.button35);
+            this.groupBox1.Controls.Add(this.button19);
+            this.groupBox1.Controls.Add(this.button31);
+            this.groupBox1.Controls.Add(this.button16);
             this.groupBox1.Controls.Add(this.button7);
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.button4);
@@ -330,7 +348,7 @@
             // button3
             // 
             this.button3.Font = new System.Drawing.Font("PMingLiU", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.button3.Location = new System.Drawing.Point(173, 165);
+            this.button3.Location = new System.Drawing.Point(173, 133);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(124, 25);
             this.button3.TabIndex = 22;
@@ -341,7 +359,7 @@
             // button6
             // 
             this.button6.Font = new System.Drawing.Font("PMingLiU", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.button6.Location = new System.Drawing.Point(74, 325);
+            this.button6.Location = new System.Drawing.Point(10, 195);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(163, 25);
             this.button6.TabIndex = 19;
@@ -352,13 +370,43 @@
             // button5
             // 
             this.button5.Font = new System.Drawing.Font("PMingLiU", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.button5.Location = new System.Drawing.Point(74, 294);
+            this.button5.Location = new System.Drawing.Point(10, 164);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(163, 25);
             this.button5.TabIndex = 18;
             this.button5.Text = "TransferCompleted";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Font = new System.Drawing.Font("Microsoft JhengHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label17.Location = new System.Drawing.Point(6, 422);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(78, 21);
+            this.label17.TabIndex = 1;
+            this.label17.Text = "目前狀態:";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Font = new System.Drawing.Font("Microsoft JhengHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label18.Location = new System.Drawing.Point(9, 290);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(78, 21);
+            this.label18.TabIndex = 1;
+            this.label18.Text = "目前狀態:";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft JhengHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label7.Location = new System.Drawing.Point(6, 361);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(78, 21);
+            this.label7.TabIndex = 1;
+            this.label7.Text = "目前狀態:";
             // 
             // comboBox10
             // 
@@ -368,6 +416,72 @@
             this.comboBox10.Name = "comboBox10";
             this.comboBox10.Size = new System.Drawing.Size(55, 21);
             this.comboBox10.TabIndex = 21;
+            // 
+            // button36
+            // 
+            this.button36.Font = new System.Drawing.Font("PMingLiU", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.button36.Location = new System.Drawing.Point(179, 314);
+            this.button36.Name = "button36";
+            this.button36.Size = new System.Drawing.Size(163, 25);
+            this.button36.TabIndex = 15;
+            this.button36.Text = "關閉:自動救帳狀態";
+            this.button36.UseVisualStyleBackColor = true;
+            this.button36.Click += new System.EventHandler(this.button36_Click);
+            // 
+            // button34
+            // 
+            this.button34.Font = new System.Drawing.Font("PMingLiU", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.button34.Location = new System.Drawing.Point(176, 385);
+            this.button34.Name = "button34";
+            this.button34.Size = new System.Drawing.Size(163, 25);
+            this.button34.TabIndex = 15;
+            this.button34.Text = "關閉:AGV_WaitOut開蓋";
+            this.button34.UseVisualStyleBackColor = true;
+            this.button34.Click += new System.EventHandler(this.button34_Click);
+            // 
+            // button35
+            // 
+            this.button35.Font = new System.Drawing.Font("PMingLiU", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.button35.Location = new System.Drawing.Point(10, 314);
+            this.button35.Name = "button35";
+            this.button35.Size = new System.Drawing.Size(163, 25);
+            this.button35.TabIndex = 15;
+            this.button35.Text = "打開:自動救帳狀態";
+            this.button35.UseVisualStyleBackColor = true;
+            this.button35.Click += new System.EventHandler(this.button35_Click);
+            // 
+            // button19
+            // 
+            this.button19.Font = new System.Drawing.Font("PMingLiU", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.button19.Location = new System.Drawing.Point(175, 446);
+            this.button19.Name = "button19";
+            this.button19.Size = new System.Drawing.Size(163, 25);
+            this.button19.TabIndex = 15;
+            this.button19.Text = "轉流向刪除卡匣：關";
+            this.button19.UseVisualStyleBackColor = true;
+            this.button19.Click += new System.EventHandler(this.button19_Click);
+            // 
+            // button31
+            // 
+            this.button31.Font = new System.Drawing.Font("PMingLiU", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.button31.Location = new System.Drawing.Point(7, 385);
+            this.button31.Name = "button31";
+            this.button31.Size = new System.Drawing.Size(163, 25);
+            this.button31.TabIndex = 15;
+            this.button31.Text = "打開:AGV_WaitOut開蓋";
+            this.button31.UseVisualStyleBackColor = true;
+            this.button31.Click += new System.EventHandler(this.button31_Click);
+            // 
+            // button16
+            // 
+            this.button16.Font = new System.Drawing.Font("PMingLiU", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.button16.Location = new System.Drawing.Point(6, 446);
+            this.button16.Name = "button16";
+            this.button16.Size = new System.Drawing.Size(163, 25);
+            this.button16.TabIndex = 15;
+            this.button16.Text = "轉流向刪除卡匣：開";
+            this.button16.UseVisualStyleBackColor = true;
+            this.button16.Click += new System.EventHandler(this.button16_Click);
             // 
             // label3
             // 
@@ -1027,5 +1141,14 @@
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.ComboBox comboBox14;
         private System.Windows.Forms.ComboBox comboBox13;
+        private System.Windows.Forms.Button button19;
+        private System.Windows.Forms.Button button16;
+        private System.Windows.Forms.Button button34;
+        private System.Windows.Forms.Button button31;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Button button36;
+        private System.Windows.Forms.Button button35;
     }
 }

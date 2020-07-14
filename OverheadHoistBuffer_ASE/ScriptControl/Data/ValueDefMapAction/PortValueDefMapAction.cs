@@ -327,6 +327,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                     + " IsReadyToLoad: " + function.IsReadyToLoad
                     + " IsReadyToUnload:" + function.IsReadyToUnload
                     + " IsCSTPresence:" + function.IsCSTPresence
+                    + " CstRemoveCheck:" + function.CstRemoveCheck
                     + " IsInputMode:" + function.IsInputMode
                     + " IsOutputMode:" + function.IsOutputMode
                     + " PortWaitIn:" + function.PortWaitIn
@@ -773,8 +774,20 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
 
                 if (function.IsInputMode)
                 {
-                    scApp.TransferService.ReportPortType(port.PORT_ID, E_PortType.In, "PLC");
-                    //scApp.TransferService.DeleteOHCVPortCst(port.PORT_ID);
+                    scApp.TransferService.ReportPortType(function.EQ_ID, E_PortType.In, "PLC");
+
+                    bool cstDelete = scApp.TransferService.portTypeChangeOK_CVPort_CstRemove;
+                    string log = "PLC IsInputMode: " + function.IsInputMode.ToString();
+
+                    if (cstDelete)
+                    {
+                        scApp.TransferService.DeleteOHCVPortCst(function.EQ_ID, log);
+                    }
+
+                    if (scApp.TransferService.isUnitType(function.EQ_ID, Service.UnitType.AGV))
+                    {
+                        scApp.TransferService.PLC_AGV_Station(function, log);
+                    }
                 }
             }
             catch (Exception ex)
@@ -809,8 +822,20 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
 
                 if (function.IsOutputMode)
                 {
-                    scApp.TransferService.ReportPortType(port.PORT_ID, E_PortType.Out, "PLC");
-                    //scApp.TransferService.DeleteOHCVPortCst(port.PORT_ID);
+                    scApp.TransferService.ReportPortType(function.EQ_ID, E_PortType.Out, "PLC");
+
+                    bool cstDelete = scApp.TransferService.portTypeChangeOK_CVPort_CstRemove;
+                    string log = "PLC IsOutputMode:" + function.IsOutputMode.ToString();
+
+                    if (cstDelete)
+                    {
+                        scApp.TransferService.DeleteOHCVPortCst(function.EQ_ID, log);
+                    }
+
+                    if (scApp.TransferService.isUnitType(function.EQ_ID, Service.UnitType.AGV))
+                    {
+                        scApp.TransferService.PLC_AGV_Station(function, log);
+                    }
                 }
             }
             catch (Exception ex)

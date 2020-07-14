@@ -1391,6 +1391,8 @@ CRANE,111020,2,The start section do not match the section now
 CRANE,111021,2,Fail to calculate the positon correction
 CRANE,111022,2,The positon correction is too long
 CRANE,111023,2,Jaws does not ready to be used
+CRANE,111024,2,OHBC reply nothing for event report
+CRANE,111025,2,Fail to get the Sick barcode
 CRANE,111099,2,Exception in the moving process
 CRANE,121001,2,Area sensor parameter does not exist
 CRANE,121002,2,Fail to set the area sensor parameter
@@ -1398,14 +1400,20 @@ CRANE,121003,2,Fail in the back area sensor process
 CRANE,121004,2,Fail to check the front area sensor state
 CRANE,121005,2,Fail in the front area sensor process
 CRANE,121006,2,Fail to check the back area sensor state
-CRANE,121007,2,Area sensor actived
-CRANE,121008,2,Area sensor actived
-CRANE,121009,2,Area sensor actived
-CRANE,121010,2,Area sensor actived
-CRANE,121011,2,Area sensor actived
-CRANE,121012,2,Area sensor actived
-CRANE,121013,2,Area sensor actived
+CRANE,121007,2,Area sensor actived & Fail to stop (Emergency) 
+CRANE,121008,2,Area sensor actived & Fail to stop (Common)
+CRANE,121009,2,Area sensor actived & Timeout for stop
+CRANE,121010,2,Area sensor actived & Fail to reduce the velocity
+CRANE,121011,2,Area sensor actived & Fail to stop the motor (Emergency) 
+CRANE,121012,2,Area sensor actived & Fail to stop the motor (Common)
+CRANE,121013,2,Area sensor actived & Fail to change the motor velocity
 CRANE,121014,2,Fail to set the area sensor IO parameter
+CRANE,121015,2,High Temputre alarm for moving motor
+CRANE,121016,2,High Temputre alarm for moving driver
+CRANE,121017,2,High Temputre alarm for hoisting motor
+CRANE,122015,1,High Temputre memo for moving motor
+CRANE,122016,1,High Temputre memo for moving driver
+CRANE,122017,1,High Temputre memo for hoisting motor
 CRANE,121099,2,Exception in the area sensor process
 CRANE,131001,2,System emergency stop
 CRANE,131002,2,The motor used for moving was abnormal
@@ -1413,38 +1421,39 @@ CRANE,131003,2,The motor used for jaws lateral moving were abnormal
 CRANE,131004,2,The motor used for jaws hoist moving were abnormal
 CRANE,131005,2,The motor used for jaws grabbing were abnormal
 CRANE,131099,2,Exception in the command handling process
-CRANE,311001,2,Timeout for threwing out the anti-dropping device 
+CRANE,311001,2,Error in the vehicle mounted station
 CRANE,311002,2,A foreign object in the anti-dropping detecting process
-CRANE,311003,2,Timeout for taking back the anti-dropping device
-CRANE,312001,2,Error in the vehicle mounted station
-CRANE,312002,2,Error in the carrier position before the hoist going
-CRANE,312003,2,Timeout for lateraling excursion
-CRANE,312004,2,Timeout for hoisting
-CRANE,312005,2,Error in check box sensors before the jaws going
-CRANE,312006,2,Timeout for jaws closing
-CRANE,312007,2,Timeout for jaws opening
-CRANE,312008,2,Fail to getting hoist in position
-CRANE,312010,2,Error in carrier position before lateraling excursion
-CRANE,322001,2,There is a belt rewind
-CRANE,322002,2,vehicle mounted station's runout sensors turn ON
-CRANE,322003,2,Error in 1-1 belt tension
-CRANE,322004,2,Error in 1-2 belt tension
-CRANE,322005,2,Error in 2 belt tension
-CRANE,322006,2,Error in jaws accross the box
-CRANE,322007,2,Error in checking box sensor turns ON 
-CRANE,332001,2,Fail to threw out the back anti-dropping device
-CRANE,332002,2,Fail to threw out the front anti-dropping device
-CRANE,332003,2,Fail to take back the back anti-dropping device
-CRANE,332004,2,Fail to take back the front anti-dropping device
-CRANE,332005,2,Fail to getting lateraling excursion in position
-CRANE,332007,2,Fail to control the Z-axis
-CRANE,332008,2,Fail to going jaws
-CRANE,332010,1,Error in OHB box detecter(Load
-CRANE,332011,1,Error in OHB box detecter(Load
-CRANE,332012,2,Fail to run the lateral excursion
+CRANE,311003,2,Jaws isn't in the home position
+CRANE,311004,2,Error in the carrier position before hoist moving
+CRANE,311005,2,Timeout for lateraling excursion
+CRANE,311006,2,Timeout for hoisting
+CRANE,311007,2,Error in check box sensors before the jaws going
+CRANE,311008,2,Timeout for jaws closing
+CRANE,311009,2,Timeout for jaws opening
+CRANE,311010,2,Fail to getting hoist in position
+CRANE,311011,2,Error Position while Loading
+CRANE,311012,2,Error Position while Unloading
+CRANE,311013,2,Error in the carrier position before lateral moving
+CRANE,321001,2,There is a belt rewind
+CRANE,321002,2,X129_vehicle mounted station's runout sensors turn ON
+CRANE,321003,2,X400/X405_Error in belt tension
+CRANE,321007,2,X401/X404_Error in checking box sensor turns ON
+CRANE,331001,2,X114_ail to threw out the back anti-dropping device
+CRANE,331002,2,X117_Fail to threw out the front anti-dropping device
+CRANE,331003,2,X115_Fail to take back the back anti-dropping device
+CRANE,331004,2,X118_Fail to take back the front anti-dropping device
+CRANE,331005,2,Fail to getting lateraling excursion in position
+CRANE,331007,2,Fail to control the Z-axis
+CRANE,331008,2,Fail to going jaws
+CRANE,331012,2,Fail to run the lateral excursion
+CRANE,332007,1,X407_Warning in checking box sensor turns ON
+CRANE,332010,1,EmptyRetrieval[Error in OHB box detecter]
+CRANE,332011,1,DoubleStorage[Error in OHB box detecter]
 CRANE,411001,2,HPIO setting error for ID/CH
-CRANE,411002,2,L_REQ/U_REQ turn ON before VALID turn ON
 CRANE,411003,2,Emergency Stop with Passive equipment ES signal
+CRANE,411004,2,CS0/CS1 signal did not turn ON
+CRANE,411012,2,Carrier was not detected/removed within specified time.[TP3 Timeout]
+CRANE,411013,2,BUSY signal did not turn OFF within specified time.[TP4 Timeout]
 CRANE,412001,1,VALID signal did not turn ON within specified time.[TD0 Timeout]
 CRANE,412002,1,L_REQ/U_REQ signal did not turn ON within specified time.[TA1 timeout]
 CRANE,412003,1,TR_REQ signal did not turn ON within specified time.[TP1 Timeout]
@@ -1453,12 +1462,12 @@ CRANE,412005,1,BUSY signal did not turn ON within specified time.[TP2 Timeout]
 CRANE,412006,1,READY signal did not turn OFF within specified time.[TA3 Timeout]
 CRANE,412007,1,VALID signal did not turn OFF within specified time.[TP5 Timeout]
 CRANE,412008,1,VALID signal did not turn ON within specified time.[TD1 Timeout]
-CRANE,412009,1,CS signal did not turn ON
+CRANE,412009,1,GO signal did not turn ON within specified time.
 CRANE,412010,1,InterLockNG Before BUSY turn ON
 CRANE,412011,1,Port error with Passive equipment HO_AVBL signal
-CRANE,412012,1,Carrier was not detected/removed within specified time.[TP3 Timeout]
-CRANE,412013,1,BUSY signal did not turn OFF within specified time.[TP4 Timeout]
-LINE,70001,2,Master PLC is offline
+CRANE,412012,1,L_REQ/U_REQ turn ON before VALID turn ON
+CRANE,412014,1,Fail to change the PIO signals
+CRANE,70001,2,Master PLC network request timed out
 OHCV,100013,1,PORT_BOXID_READ_FAIL
 OHCV,100014,1,PORT_CSTID_READ_FAIL
 AGV STATION,100013,1,PORT_BOXID_READ_FAIL
