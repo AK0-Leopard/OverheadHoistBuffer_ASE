@@ -4714,7 +4714,37 @@ namespace com.mirle.ibg3k0.sc.Service
 
             if ((duCarrierID != null && string.IsNullOrWhiteSpace(readData.CSTID) == false) || duBoxID != null)
             {
-                idReadStatus = IDreadStatus.duplicate;
+                bool insertCassetteDuCst = true;
+
+                ACMD_MCS nowCmd = cmdBLL.getCMD_ByBoxID(cstData.BOXID);
+                if(nowCmd != null)
+                {
+                    if (nowCmd.TRANSFERSTATE == E_TRAN_STATUS.Queue)
+                    {
+                        Manual_DeleteCmd(nowCmd.CMD_ID, "WaitIn 卡匣或 BOX ID 發生重複");
+                    }
+                    else
+                    {
+                        if (duCarrierID != null && string.IsNullOrWhiteSpace(cstData.CSTID) == false)
+                        {
+                            TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "搬送中 CSTID 重複 " + GetCstLog(cstData));
+                            readData.CSTID = CarrierReadduplicate(cstData.CSTID);
+                        }
+
+                        if (duBoxID != null)
+                        {
+                            TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "搬送中 BOXID 重複 " + GetCstLog(cstData));
+                            readData.BOXID = CarrierReadduplicate(cstData.BOXID);
+                        }
+
+                        insertCassetteDuCst = false;
+                    }
+                }
+                
+                if (insertCassetteDuCst)
+                {
+                    idReadStatus = IDreadStatus.duplicate;
+                }
             }
 
             #endregion
