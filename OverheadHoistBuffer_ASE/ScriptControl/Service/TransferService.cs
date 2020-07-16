@@ -913,6 +913,26 @@ namespace com.mirle.ibg3k0.sc.Service
                     #region 檢查來源狀態
                     if (string.IsNullOrWhiteSpace(mcsCmd.RelayStation))  //檢查命令是否先搬到中繼站
                     {
+                        #region 檢查是否有帳
+                        if (mcsCmd.CMD_ID.Contains("SCAN") == false)
+                        {
+                            CassetteData sourceCstData = cassette_dataBLL.loadCassetteDataByLoc(mcsCmd.HOSTSOURCE);
+
+                            if (sourceCstData == null)
+                            {
+                                sourcePortType = false;
+                                TransferServiceLogger.Info
+                                (
+                                    DateTime.Now.ToString("HH:mm:ss.fff ")
+                                    + "OHB >> OHB| 命令來源: " + mcsCmd.HOSTSOURCE + " 找不到帳，刪除命令 "
+                                );
+                                Manual_DeleteCmd(mcsCmd.CMD_ID, "命令來源找不到帳");
+
+                                return false;
+                            }
+                        }
+                        #endregion
+
                         if (isAGVZone(mcsCmd.HOSTSOURCE)) //檢查來源是不是AGVZONE
                         {
                             string agvPortName = GetAGV_InModeInServicePortName(mcsCmd.HOSTSOURCE);
@@ -929,22 +949,6 @@ namespace com.mirle.ibg3k0.sc.Service
                         else
                         {
                             sourcePortType = AreSourceEnable(mcsCmd.HOSTSOURCE);
-                        }
-
-                        if(mcsCmd.CMD_ID.Contains("SCAN") == false)
-                        {
-                            CassetteData sourceCstData = cassette_dataBLL.loadCassetteDataByLoc(mcsCmd.HOSTSOURCE);
-
-                            if (sourceCstData == null)
-                            {
-                                sourcePortType = false;
-                                TransferServiceLogger.Info
-                                (
-                                    DateTime.Now.ToString("HH:mm:ss.fff ")
-                                    + "OHB >> OHB| 命令來源: " + mcsCmd.HOSTSOURCE + " 找不到帳，刪除命令 "
-                                );
-                                Manual_DeleteCmd(mcsCmd.CMD_ID, "命令來源找不到帳");
-                            }
                         }
                     }
                     else
@@ -1264,6 +1268,10 @@ namespace com.mirle.ibg3k0.sc.Service
                         if (ohtCST != null)
                         {
                             DeleteCst(ohtCST.CSTID, ohtCST.BOXID, "車子上沒料");
+
+                            //ACMD_MCS cmd = cmdBLL.getByCstBoxID(ohtCST.CSTID, ohtCST.BOXID);
+
+                            //cmdBLL.DeleteCmd(cmd.CMD_ID);
                         }
                     }
                 }
@@ -5429,6 +5437,7 @@ namespace com.mirle.ibg3k0.sc.Service
                  || portINIData[portName].UnitType == UnitType.NTB.ToString()
                  || portINIData[portName].UnitType == UnitType.AGV.ToString()
                  || portINIData[portName].UnitType == UnitType.STK.ToString()
+                 || isAGVZone(portName)
                    )
                 {
                     return true;
