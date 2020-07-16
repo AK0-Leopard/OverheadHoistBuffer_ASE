@@ -852,6 +852,12 @@ message Timestamp {
        string BoxID = 31;
        string CassetteID = 32;
        string PortID = 33;
+       string LoadPositionBOX1 = 34;
+       string LoadPositionBOX2 = 35;
+       string LoadPositionBOX3 = 36;
+       string LoadPositionBOX4 = 37;
+       string LoadPositionBOX5 = 38;
+       bool FireAlarm = 39;
   }
 
    enum LinkStatus

@@ -1135,17 +1135,17 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                         check_result = SECSConst.HCACK_Not_Able_Execute;
                         is_ok = false;
                     }
-                    //else
-                    //{
-                    //    if (port_item.PortType == (E_PortType)port_type)
-                    //    {
-                    //        check_result = SECSConst.HCACK_Rejected_Already_Requested;
-                    //        is_ok = false;
-                    //        LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
-                    //           Data: $"Process mcs command [PortTypeChg] can't excute, because mcs command id:{port_id} current transfer status:{port_item.PortType},ohtc reply:{check_result}",
-                    //           XID: port_id);
-                    //    }
-                    //}
+                    else
+                    {
+                        if (port_item.PortType == (E_PortType)port_type)    //20/07/16 美微說，流向一樣要回5
+                        {
+                            check_result = SECSConst.HCACK_Rejected_Already_Requested;
+                            is_ok = false;
+                            //LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
+                            //   Data: $"Process mcs command [PortTypeChg] can't excute, because mcs command id:{port_id} current transfer status:{port_item.PortType},ohtc reply:{check_result}",
+                            //   XID: port_id);
+                        }
+                    }
                 }
                 else
                 {
@@ -2564,10 +2564,10 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 string zonename = scApp.CassetteDataBLL.GetZoneName(loc);
 
                 Vids.VIDITEM_58_DVVAL_CommandID.COMMAND_ID = cmd.CMD_ID;
-                Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cstID;
+                Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cmd.CARRIER_ID;    //20/07/16 美微說 AbortInitiated、AbortCompleted，所帶的 CARRIER_ID、BOX 是填CMD的
                 Vids.VIDITEM_56_DVVAL_CarrierLoc.CARRIER_LOC = loc;
                 Vids.VIDITEM_370_DVVAL_CarrierZoneName.CARRIER_ZONE_NAME = zonename;
-                Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = boxID;
+                Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = cmd.BOX_ID;
                 AMCSREPORTQUEUE mcs_queue = S6F11BulibMessage(SECSConst.CEID_Transfer_Abort_Completed, Vids);
                 if (reportQueues == null)
                 {
@@ -2636,10 +2636,10 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 string zonename = scApp.CassetteDataBLL.GetZoneName(loc);
 
                 Vids.VIDITEM_58_DVVAL_CommandID.COMMAND_ID = cmd.CMD_ID;
-                Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cstID;
+                Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cmd.CARRIER_ID;
                 Vids.VIDITEM_56_DVVAL_CarrierLoc.CARRIER_LOC = loc;
                 Vids.VIDITEM_370_DVVAL_CarrierZoneName.CARRIER_ZONE_NAME = zonename;
-                Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = boxID;
+                Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = cmd.BOX_ID;
                 AMCSREPORTQUEUE mcs_queue = S6F11BulibMessage(SECSConst.CEID_Transfer_Abort_Initiated, Vids);
                 if (reportQueues == null)
                 {

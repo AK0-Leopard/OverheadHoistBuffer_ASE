@@ -7,6 +7,7 @@ using System.Data;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage;
 
 namespace com.mirle.ibg3k0.bc.winform
 {
@@ -304,6 +305,7 @@ namespace com.mirle.ibg3k0.bc.winform
             if (datainfo != null)
             {
                 BCApp.SCApplication.CMDBLL.updateCMD_MCS_BCROnCrane(datainfo.CMD_ID, textBox3.Text);
+                BCApp.SCApplication.TransferService.OHT_IDRead(datainfo.CMD_ID, datainfo.CRANE, textBox3.Text, BCRReadResult.BcrMisMatch);
             }
         }
 

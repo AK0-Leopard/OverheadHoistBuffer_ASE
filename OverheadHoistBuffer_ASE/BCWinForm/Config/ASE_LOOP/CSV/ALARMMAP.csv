@@ -1364,8 +1364,8 @@ AGV STATION,8632,2,[m28632]Busy On->CARRIER檢測 TP3愈
 AGV STATION,8633,2,[m28633]U_REQ OFF->Busy OFF TP4愈
 AGV STATION,8634,2,[m28634]Ready OFF->Valid OFF TP5愈
 AGV STATION,8635,2,[m28635]Valid OFF->VALID OFF TP6愈
-CRANE,89000,2,Double Storage
-CRANE,89001,2,Empty Retrieval
+CRANE,89000,1,Double Storage
+CRANE,89001,1,Empty Retrieval
 CRANE,99999,2,OHT is offline
 CRANE,99990,2,OHT rejects command repeatedly
 CRANE,111001,2,Fail to initial motor command position

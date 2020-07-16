@@ -316,7 +316,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                     vh.VEHICLE_ID = vh_id;
                     con.AVEHICLE.Attach(vh);
                     vh.CST_ID = cstID;
-                    //vh.BOX_ID = boxID;       //A0.02
+                    vh.BOX_ID = boxID;       //A0.02
                     vh.MODE_STATUS = mode_status;
                     vh.ACT_STATUS = act_status;
                     vh.BLOCK_PAUSE = block_pause;
@@ -326,7 +326,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                     vh.ERROR = error_status;
                     vh.HAS_CST = (int)load_cst_status;
                     con.Entry(vh).Property(p => p.CST_ID).IsModified = true;
-                    //con.Entry(vh).Property(p => p.BOX_ID).IsModified = true;  //A0.02
+                    con.Entry(vh).Property(p => p.BOX_ID).IsModified = true;  //A0.02
                     con.Entry(vh).Property(p => p.MODE_STATUS).IsModified = true;
                     con.Entry(vh).Property(p => p.ACT_STATUS).IsModified = true;
                     con.Entry(vh).Property(p => p.BLOCK_PAUSE).IsModified = true;

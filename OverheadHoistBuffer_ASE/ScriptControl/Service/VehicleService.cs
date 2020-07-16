@@ -685,7 +685,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 VhLoadCarrierStatus loadBOXStatus = receive_gpp.HasBox;
                 if (loadBOXStatus == VhLoadCarrierStatus.Exist) //B0.05
                 {
-                    vh.BOX_ID = receive_gpp.BOXID;
+                    vh.BOX_ID = receive_gpp.CarBoxID;
                 }
                 //VhGuideStatus leftGuideStat = recive_str.LeftGuideLockStatus;
                 //VhGuideStatus rightGuideStat = recive_str.RightGuideLockStatus;
@@ -2649,6 +2649,8 @@ namespace com.mirle.ibg3k0.sc.Service
                 scApp.ReportBLL.insertMCSReport(reportqueues);
                 scApp.ReportBLL.newSendMCSMessage(reportqueues);
             }
+
+            scApp.TransferService.OHT_IDRead(eqpt.MCS_CMD, eqpt.VEHICLE_ID, read_carrier_id, bCRReadResult);
         }
 
         private static bool CheckIsNeedReportInstall2MCS(AVEHICLE eqpt, AVIDINFO vid_info)
@@ -4129,7 +4131,7 @@ namespace com.mirle.ibg3k0.sc.Service
             VhLoadCarrierStatus loadBOXStatus = recive_str.HasBox;
             if (loadBOXStatus == VhLoadCarrierStatus.Exist) //B0.05
             {
-                eqpt.BOX_ID = recive_str.BOXID;
+                eqpt.BOX_ID = recive_str.CarBoxID;
             }
 
             //VhGuideStatus leftGuideStat = recive_str.LeftGuideLockStatus;
@@ -5041,8 +5043,8 @@ namespace com.mirle.ibg3k0.sc.Service
                 vh.getDisconnectionIntervalTime(bcfApp));
 
             //clear the connection alarm code 99999
-            scApp.TransferService.OHBC_AlarmCleared(vh.VEHICLE_ID,
-                SCAppConstants.SystemAlarmCode.OHT_Issue.OHTAccidentOfflineWarning);
+            //scApp.TransferService.OHBC_AlarmCleared(vh.VEHICLE_ID,
+            //    SCAppConstants.SystemAlarmCode.OHT_Issue.OHTAccidentOfflineWarning);
 
             scApp.TransferService.iniOHTData(vh.VEHICLE_ID, "OHT_Connection");
         }

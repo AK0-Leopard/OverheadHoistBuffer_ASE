@@ -787,6 +787,9 @@ namespace com.mirle.ibg3k0.sc.BLL
         //  doSortMCSCmdDataByDistanceFromHostSourceToVehicle()
         //   先確認哪台車為no command 後，以該車到基準點的值及各命令的source到基準點的值加上priority 去計算出每一命令的distance的值，
         //   再以此值對 MCS cmd 的 list 進行sort。
+        
+        string oldBeforeSortingLog = "";
+        string oldAfterSortingLog = "";
         public List<ACMD_MCS> doSortMCSCmdDataByDistanceFromHostSourceToVehicle(List<ACMD_MCS> originMCSCmdData, List<AVEHICLE> vehicleData)
         {
             try
@@ -795,7 +798,13 @@ namespace com.mirle.ibg3k0.sc.BLL
                 //A20.05.27
                 string cmdMCSSort = "";
                 cmdMCSSort = scApp.CMDBLL.CombineMCSLogData(originMCSCmdData);
-                TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> DB|MCS排序前 前 5 筆: " + cmdMCSSort);
+
+                if(cmdMCSSort != oldBeforeSortingLog)
+                {
+                    TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> DB|MCS排序前 前 5 筆: " + cmdMCSSort);
+                    oldBeforeSortingLog = cmdMCSSort;
+                }
+
                 #region Deep clone the origin list to the new list
                 //List<ACMD_MCS> sortedMCSData = new List<ACMD_MCS>();
                 //2020/05/28 Hsinyu Chang: 這行就可以deep clone list
@@ -850,7 +859,13 @@ namespace com.mirle.ibg3k0.sc.BLL
                 #endregion
 
                 cmdMCSSort = scApp.CMDBLL.CombineMCSLogData(sortedMCSData);
-                TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> DB|MCS排序後 前 5 筆: " + cmdMCSSort);
+
+                if(cmdMCSSort != oldAfterSortingLog)
+                {
+                    TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> DB|MCS排序後 前 5 筆: " + cmdMCSSort);
+                    oldAfterSortingLog = cmdMCSSort;
+                }
+                
                 return sortedMCSData;
             }
             catch (Exception ex)
