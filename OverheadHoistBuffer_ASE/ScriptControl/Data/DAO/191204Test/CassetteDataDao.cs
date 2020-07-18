@@ -200,9 +200,15 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
         {
             try
             {
-                var result = conn.CassetteData.Where(x => x.CSTID.Trim() == cstid.Trim()).FirstOrDefault();
-
-                return result;
+                if(string.IsNullOrWhiteSpace(cstid))
+                {
+                    return null;
+                }
+                else
+                {
+                    var result = conn.CassetteData.Where(x => x.CSTID.Trim() == cstid.Trim()).FirstOrDefault();
+                    return result;
+                }
             }
             catch (Exception ex)
             {

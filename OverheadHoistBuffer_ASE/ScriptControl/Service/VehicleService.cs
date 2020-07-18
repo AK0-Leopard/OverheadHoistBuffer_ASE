@@ -685,7 +685,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 VhLoadCarrierStatus loadBOXStatus = receive_gpp.HasBox;
                 if (loadBOXStatus == VhLoadCarrierStatus.Exist) //B0.05
                 {
-                    vh.BOX_ID = receive_gpp.BOXID;
+                    vh.BOX_ID = receive_gpp.CarBoxID;
                 }
                 //VhGuideStatus leftGuideStat = recive_str.LeftGuideLockStatus;
                 //VhGuideStatus rightGuideStat = recive_str.RightGuideLockStatus;
@@ -2649,6 +2649,8 @@ namespace com.mirle.ibg3k0.sc.Service
                 scApp.ReportBLL.insertMCSReport(reportqueues);
                 scApp.ReportBLL.newSendMCSMessage(reportqueues);
             }
+
+            scApp.TransferService.OHT_IDRead(eqpt.MCS_CMD, eqpt.VEHICLE_ID, read_carrier_id, bCRReadResult);
         }
 
         private static bool CheckIsNeedReportInstall2MCS(AVEHICLE eqpt, AVIDINFO vid_info)
@@ -3382,10 +3384,10 @@ namespace com.mirle.ibg3k0.sc.Service
                                     eqpt.VEHICLE_ID, ACMD_MCS.COMMAND_STATUS_BIT_INDEX_UNLOAD_COMPLETE);
                             scApp.VehicleBLL.doUnloadComplete(eqpt.VEHICLE_ID);
 
-                            SpinWait.SpinUntil(() => false, 100);
+                            //SpinWait.SpinUntil(() => false, 100);
                             //Report this for the Wait out signal for MCS
-                            scApp.TransferService.OHT_TransferStatus(ohtcCmdID,
-                                            eqpt.VEHICLE_ID, ACMD_MCS.COMMAND_STATUS_BIT_INDEX_COMMNAD_FINISH);
+                            //scApp.TransferService.OHT_TransferStatus(ohtcCmdID,
+                            //                eqpt.VEHICLE_ID, ACMD_MCS.COMMAND_STATUS_BIT_INDEX_COMMNAD_FINISH);
                         }
                         else //if the dest isn't shelf
                         {
@@ -3400,10 +3402,10 @@ namespace com.mirle.ibg3k0.sc.Service
                                     eqpt.VEHICLE_ID, ACMD_MCS.COMMAND_STATUS_BIT_INDEX_UNLOAD_COMPLETE);
                         scApp.VehicleBLL.doUnloadComplete(eqpt.VEHICLE_ID);
 
-                        SpinWait.SpinUntil(() => false, 100);
+                        //SpinWait.SpinUntil(() => false, 100);
                         //Report this for the Wait out signal for MCS
-                        scApp.TransferService.OHT_TransferStatus(eqpt.OHTC_CMD,
-                                        eqpt.VEHICLE_ID, ACMD_MCS.COMMAND_STATUS_BIT_INDEX_COMMNAD_FINISH);
+                        //scApp.TransferService.OHT_TransferStatus(eqpt.OHTC_CMD,
+                        //                eqpt.VEHICLE_ID, ACMD_MCS.COMMAND_STATUS_BIT_INDEX_COMMNAD_FINISH);
                     }
                     break;
             }
@@ -4129,7 +4131,7 @@ namespace com.mirle.ibg3k0.sc.Service
             VhLoadCarrierStatus loadBOXStatus = recive_str.HasBox;
             if (loadBOXStatus == VhLoadCarrierStatus.Exist) //B0.05
             {
-                eqpt.BOX_ID = recive_str.BOXID;
+                eqpt.BOX_ID = recive_str.CarBoxID;
             }
 
             //VhGuideStatus leftGuideStat = recive_str.LeftGuideLockStatus;
@@ -4378,12 +4380,12 @@ namespace com.mirle.ibg3k0.sc.Service
                 scApp.TransferService.OHBC_AlarmCleared(eqpt.VEHICLE_ID, ((int)AlarmLst.OHT_VEHICLE_ABORT).ToString());
                 //
             }
-            else if (recive_str.CmpStatus == CompleteStatus.CmpStatusLoadunload || recive_str.CmpStatus == CompleteStatus.CmpStatusUnload)
-            {
-                // Change the report time to the 136 unloadcomplete
-                //scApp.TransferService.OHT_TransferStatus(finish_ohxc_cmd,
-                //eqpt.VEHICLE_ID, ACMD_MCS.COMMAND_STATUS_BIT_INDEX_COMMNAD_FINISH);
-            }
+            //else if (recive_str.CmpStatus == CompleteStatus.CmpStatusLoadunload || recive_str.CmpStatus == CompleteStatus.CmpStatusUnload)
+            //{
+            //    // Change the report time to the 136 unloadcomplete
+            //    //scApp.TransferService.OHT_TransferStatus(finish_ohxc_cmd,
+            //    //eqpt.VEHICLE_ID, ACMD_MCS.COMMAND_STATUS_BIT_INDEX_COMMNAD_FINISH);
+            //}
             else
             {
                 scApp.TransferService.OHT_TransferStatus(finish_ohxc_cmd,
@@ -5041,8 +5043,8 @@ namespace com.mirle.ibg3k0.sc.Service
                 vh.getDisconnectionIntervalTime(bcfApp));
 
             //clear the connection alarm code 99999
-            scApp.TransferService.OHBC_AlarmCleared(vh.VEHICLE_ID,
-                SCAppConstants.SystemAlarmCode.OHT_Issue.OHTAccidentOfflineWarning);
+            //scApp.TransferService.OHBC_AlarmCleared(vh.VEHICLE_ID,
+            //    SCAppConstants.SystemAlarmCode.OHT_Issue.OHTAccidentOfflineWarning);
 
             scApp.TransferService.iniOHTData(vh.VEHICLE_ID, "OHT_Connection");
         }

@@ -856,8 +856,8 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
 
         private (bool isOK, string checkResult, string cstID, string boxID, string loc) checkHostCommandScan(S2F41_Scan s2F41)
         {
-            bool is_ok = true;
-            string check_result = SECSConst.HCACK_Confirm;
+            bool is_ok = false;
+            string check_result = SECSConst.HCACK_Param_Invalid;
             //string command_id = string.Empty;
             //var command_id_item = s2F41.REPITEMS.Where(item => SCUtility.isMatche(item.CPNAME, SECSConst.CPNAME_CommandID)).FirstOrDefault();
 
@@ -870,37 +870,18 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             if (!string.IsNullOrWhiteSpace(loc))
             {
                 cstData = scApp.CassetteDataBLL.loadCassetteDataByLoc(loc);
-                ShelfDef shelfData = scApp.ShelfDefBLL.loadShelfDataByID(loc);
 
-                if (shelfData != null)
+                if (cstData != null)
                 {
-                    if (shelfData.Enable.Trim() != "Y")
-                    {
-                        is_ok = false;
-                    }
-                }
-
-                if (!scApp.CMDBLL.SourceDestExist(loc))
-                {
-                    is_ok = false;
-                }
-                else
-                {
-                    if (cstData != null)
-                    {
-                        boxID = cstData.BOXID;
-                        cstID = cstData.CSTID;
-                    }
+                    boxID = cstData.BOXID;
+                    cstID = cstData.CSTID;
                 }
             }
             else if (!string.IsNullOrWhiteSpace(boxID))
             {
                 cstData = scApp.CassetteDataBLL.loadCassetteDataByBoxID(boxID);
-                if (cstData == null)
-                {
-                    is_ok = false;
-                }
-                else
+
+                if (cstData != null)
                 {
                     loc = cstData.Carrier_LOC;
                     cstID = cstData.CSTID;
@@ -908,30 +889,41 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             }
             else if (!string.IsNullOrWhiteSpace(cstID))
             {
-                cstData = scApp.CassetteDataBLL.loadCassetteDataByCSTID(cstID);
-                if (cstData == null)
+                if(string.IsNullOrWhiteSpace(cstID) == false)
                 {
-                    is_ok = false;
-                }
-                else
-                {
-                    loc = cstData.Carrier_LOC;
-                    boxID = cstData.BOXID;
+                    cstData = scApp.CassetteDataBLL.loadCassetteDataByCSTID(cstID);
+
+                    if (cstData != null)
+                    {
+                        loc = cstData.Carrier_LOC;
+                        boxID = cstData.BOXID;
+                    }
                 }
             }
             else //位置對象都沒有，不能判斷要scan誰
             {
-                is_ok = false;
                 check_result = SECSConst.HCACK_Param_Invalid;
                 return (is_ok, check_result, cstID, boxID, loc);
             }
-
-            if(scApp.TransferService.isUnitType(loc, Service.UnitType.SHELF) == false)  //SCAN 只能針對儲位
+            
+            if (scApp.TransferService.isShelfPort(loc))  //SCAN 只能針對儲位
             {
-                is_ok = false;
-            }
+                ShelfDef shelfData = scApp.ShelfDefBLL.loadShelfDataByID(loc);
 
-            if (is_ok == false)
+                if (shelfData != null)
+                {
+                    if (shelfData.Enable.Trim() == "Y")
+                    {
+                        is_ok = true;
+                        check_result = SECSConst.HCACK_Confirm;
+                    }
+                    else
+                    {
+                        check_result = SECSConst.HCACK_Not_Able_Execute;
+                    }
+                }
+            }
+            else
             {
                 check_result = SECSConst.HCACK_Obj_Not_Exist;
             }
@@ -1135,17 +1127,17 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                         check_result = SECSConst.HCACK_Not_Able_Execute;
                         is_ok = false;
                     }
-                    //else
-                    //{
-                    //    if (port_item.PortType == (E_PortType)port_type)
-                    //    {
-                    //        check_result = SECSConst.HCACK_Rejected_Already_Requested;
-                    //        is_ok = false;
-                    //        LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
-                    //           Data: $"Process mcs command [PortTypeChg] can't excute, because mcs command id:{port_id} current transfer status:{port_item.PortType},ohtc reply:{check_result}",
-                    //           XID: port_id);
-                    //    }
-                    //}
+                    else
+                    {
+                        if (port_item.PortType == (E_PortType)port_type)    //20/07/16 美微說，流向一樣要回5
+                        {
+                            check_result = SECSConst.HCACK_Rejected_Already_Requested;
+                            is_ok = false;
+                            //LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
+                            //   Data: $"Process mcs command [PortTypeChg] can't excute, because mcs command id:{port_id} current transfer status:{port_item.PortType},ohtc reply:{check_result}",
+                            //   XID: port_id);
+                        }
+                    }
                 }
                 else
                 {
@@ -1204,7 +1196,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
 
             if (carrier_id_item != null && Box_item != null)
             {
-                CarrierID = carrier_id_item.CPVAL;
+                CarrierID = carrier_id_item.CPVAL?.ToString() ?? "";
                 BoxID = Box_item.CPVAL;
 
                 CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByCstBoxID(CarrierID, BoxID);
@@ -1219,7 +1211,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
 
                     has_carrier = false;
                     //check_result = SECSConst.HCACK_Obj_Not_Exist;
-                    check_result = SECSConst.HCACK_Confirm;
+                    check_result = SECSConst.HCACK_Obj_Not_Exist;
                     is_ok = false;
                 }
                 else
@@ -2564,10 +2556,10 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 string zonename = scApp.CassetteDataBLL.GetZoneName(loc);
 
                 Vids.VIDITEM_58_DVVAL_CommandID.COMMAND_ID = cmd.CMD_ID;
-                Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cstID;
+                Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cmd.CARRIER_ID;    //20/07/16 美微說 AbortInitiated、AbortCompleted，所帶的 CARRIER_ID、BOX 是填CMD的
                 Vids.VIDITEM_56_DVVAL_CarrierLoc.CARRIER_LOC = loc;
                 Vids.VIDITEM_370_DVVAL_CarrierZoneName.CARRIER_ZONE_NAME = zonename;
-                Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = boxID;
+                Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = cmd.BOX_ID;
                 AMCSREPORTQUEUE mcs_queue = S6F11BulibMessage(SECSConst.CEID_Transfer_Abort_Completed, Vids);
                 if (reportQueues == null)
                 {
@@ -2636,10 +2628,10 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 string zonename = scApp.CassetteDataBLL.GetZoneName(loc);
 
                 Vids.VIDITEM_58_DVVAL_CommandID.COMMAND_ID = cmd.CMD_ID;
-                Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cstID;
+                Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cmd.CARRIER_ID;
                 Vids.VIDITEM_56_DVVAL_CarrierLoc.CARRIER_LOC = loc;
                 Vids.VIDITEM_370_DVVAL_CarrierZoneName.CARRIER_ZONE_NAME = zonename;
-                Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = boxID;
+                Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = cmd.BOX_ID;
                 AMCSREPORTQUEUE mcs_queue = S6F11BulibMessage(SECSConst.CEID_Transfer_Abort_Initiated, Vids);
                 if (reportQueues == null)
                 {
