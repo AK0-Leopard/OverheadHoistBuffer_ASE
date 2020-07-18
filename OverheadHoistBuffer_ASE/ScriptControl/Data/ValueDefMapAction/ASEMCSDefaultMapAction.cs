@@ -856,8 +856,8 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
 
         private (bool isOK, string checkResult, string cstID, string boxID, string loc) checkHostCommandScan(S2F41_Scan s2F41)
         {
-            bool is_ok = true;
-            string check_result = SECSConst.HCACK_Confirm;
+            bool is_ok = false;
+            string check_result = SECSConst.HCACK_Param_Invalid;
             //string command_id = string.Empty;
             //var command_id_item = s2F41.REPITEMS.Where(item => SCUtility.isMatche(item.CPNAME, SECSConst.CPNAME_CommandID)).FirstOrDefault();
 
@@ -870,37 +870,18 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             if (!string.IsNullOrWhiteSpace(loc))
             {
                 cstData = scApp.CassetteDataBLL.loadCassetteDataByLoc(loc);
-                ShelfDef shelfData = scApp.ShelfDefBLL.loadShelfDataByID(loc);
 
-                if (shelfData != null)
+                if (cstData != null)
                 {
-                    if (shelfData.Enable.Trim() != "Y")
-                    {
-                        is_ok = false;
-                    }
-                }
-
-                if (!scApp.CMDBLL.SourceDestExist(loc))
-                {
-                    is_ok = false;
-                }
-                else
-                {
-                    if (cstData != null)
-                    {
-                        boxID = cstData.BOXID;
-                        cstID = cstData.CSTID;
-                    }
+                    boxID = cstData.BOXID;
+                    cstID = cstData.CSTID;
                 }
             }
             else if (!string.IsNullOrWhiteSpace(boxID))
             {
                 cstData = scApp.CassetteDataBLL.loadCassetteDataByBoxID(boxID);
-                if (cstData == null)
-                {
-                    is_ok = false;
-                }
-                else
+
+                if (cstData != null)
                 {
                     loc = cstData.Carrier_LOC;
                     cstID = cstData.CSTID;
@@ -908,30 +889,41 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             }
             else if (!string.IsNullOrWhiteSpace(cstID))
             {
-                cstData = scApp.CassetteDataBLL.loadCassetteDataByCSTID(cstID);
-                if (cstData == null)
+                if(string.IsNullOrWhiteSpace(cstID) == false)
                 {
-                    is_ok = false;
-                }
-                else
-                {
-                    loc = cstData.Carrier_LOC;
-                    boxID = cstData.BOXID;
+                    cstData = scApp.CassetteDataBLL.loadCassetteDataByCSTID(cstID);
+
+                    if (cstData != null)
+                    {
+                        loc = cstData.Carrier_LOC;
+                        boxID = cstData.BOXID;
+                    }
                 }
             }
             else //位置對象都沒有，不能判斷要scan誰
             {
-                is_ok = false;
                 check_result = SECSConst.HCACK_Param_Invalid;
                 return (is_ok, check_result, cstID, boxID, loc);
             }
-
-            if(scApp.TransferService.isUnitType(loc, Service.UnitType.SHELF) == false)  //SCAN 只能針對儲位
+            
+            if (scApp.TransferService.isShelfPort(loc))  //SCAN 只能針對儲位
             {
-                is_ok = false;
-            }
+                ShelfDef shelfData = scApp.ShelfDefBLL.loadShelfDataByID(loc);
 
-            if (is_ok == false)
+                if (shelfData != null)
+                {
+                    if (shelfData.Enable.Trim() == "Y")
+                    {
+                        is_ok = true;
+                        check_result = SECSConst.HCACK_Confirm;
+                    }
+                    else
+                    {
+                        check_result = SECSConst.HCACK_Not_Able_Execute;
+                    }
+                }
+            }
+            else
             {
                 check_result = SECSConst.HCACK_Obj_Not_Exist;
             }

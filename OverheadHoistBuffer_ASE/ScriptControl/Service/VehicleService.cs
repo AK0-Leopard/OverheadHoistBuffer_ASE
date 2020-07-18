@@ -3384,10 +3384,10 @@ namespace com.mirle.ibg3k0.sc.Service
                                     eqpt.VEHICLE_ID, ACMD_MCS.COMMAND_STATUS_BIT_INDEX_UNLOAD_COMPLETE);
                             scApp.VehicleBLL.doUnloadComplete(eqpt.VEHICLE_ID);
 
-                            SpinWait.SpinUntil(() => false, 100);
+                            //SpinWait.SpinUntil(() => false, 100);
                             //Report this for the Wait out signal for MCS
-                            scApp.TransferService.OHT_TransferStatus(ohtcCmdID,
-                                            eqpt.VEHICLE_ID, ACMD_MCS.COMMAND_STATUS_BIT_INDEX_COMMNAD_FINISH);
+                            //scApp.TransferService.OHT_TransferStatus(ohtcCmdID,
+                            //                eqpt.VEHICLE_ID, ACMD_MCS.COMMAND_STATUS_BIT_INDEX_COMMNAD_FINISH);
                         }
                         else //if the dest isn't shelf
                         {
@@ -3402,10 +3402,10 @@ namespace com.mirle.ibg3k0.sc.Service
                                     eqpt.VEHICLE_ID, ACMD_MCS.COMMAND_STATUS_BIT_INDEX_UNLOAD_COMPLETE);
                         scApp.VehicleBLL.doUnloadComplete(eqpt.VEHICLE_ID);
 
-                        SpinWait.SpinUntil(() => false, 100);
+                        //SpinWait.SpinUntil(() => false, 100);
                         //Report this for the Wait out signal for MCS
-                        scApp.TransferService.OHT_TransferStatus(eqpt.OHTC_CMD,
-                                        eqpt.VEHICLE_ID, ACMD_MCS.COMMAND_STATUS_BIT_INDEX_COMMNAD_FINISH);
+                        //scApp.TransferService.OHT_TransferStatus(eqpt.OHTC_CMD,
+                        //                eqpt.VEHICLE_ID, ACMD_MCS.COMMAND_STATUS_BIT_INDEX_COMMNAD_FINISH);
                     }
                     break;
             }
@@ -4380,12 +4380,12 @@ namespace com.mirle.ibg3k0.sc.Service
                 scApp.TransferService.OHBC_AlarmCleared(eqpt.VEHICLE_ID, ((int)AlarmLst.OHT_VEHICLE_ABORT).ToString());
                 //
             }
-            else if (recive_str.CmpStatus == CompleteStatus.CmpStatusLoadunload || recive_str.CmpStatus == CompleteStatus.CmpStatusUnload)
-            {
-                // Change the report time to the 136 unloadcomplete
-                //scApp.TransferService.OHT_TransferStatus(finish_ohxc_cmd,
-                //eqpt.VEHICLE_ID, ACMD_MCS.COMMAND_STATUS_BIT_INDEX_COMMNAD_FINISH);
-            }
+            //else if (recive_str.CmpStatus == CompleteStatus.CmpStatusLoadunload || recive_str.CmpStatus == CompleteStatus.CmpStatusUnload)
+            //{
+            //    // Change the report time to the 136 unloadcomplete
+            //    //scApp.TransferService.OHT_TransferStatus(finish_ohxc_cmd,
+            //    //eqpt.VEHICLE_ID, ACMD_MCS.COMMAND_STATUS_BIT_INDEX_COMMNAD_FINISH);
+            //}
             else
             {
                 scApp.TransferService.OHT_TransferStatus(finish_ohxc_cmd,
