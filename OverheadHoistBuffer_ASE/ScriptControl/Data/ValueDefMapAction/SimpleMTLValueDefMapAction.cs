@@ -66,7 +66,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 switch (runLevel)
                 {
                     case BCFAppConstants.RUN_LEVEL.ZERO:
-                        MTLTrackClosedChange(null,null);
+                        MTLTrackClosedChange(null, null);
                         break;
                     case BCFAppConstants.RUN_LEVEL.ONE:
                         break;
@@ -113,6 +113,15 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(SimpleMTLValueDefMapAction), Device: DEVICE_NAME_MTL,
                          Data: $"MTL of Track Single:{is_closed}",
                          VehicleID: eqpt.EQPT_ID);
+                if(is_closed == true)
+                {
+                    return;
+                }
+                List<AVEHICLE> vhs = scApp.VehicleBLL.cache.loadVhs();
+                foreach (AVEHICLE vh in vhs)
+                {
+                    scApp.VehicleService.PauseRequest(vh.VEHICLE_ID, ProtocolFormat.OHTMessage.PauseEvent.Pause, SCAppConstants.OHxCPauseType.Safty);
+                }
             }
             catch (Exception ex)
             {
