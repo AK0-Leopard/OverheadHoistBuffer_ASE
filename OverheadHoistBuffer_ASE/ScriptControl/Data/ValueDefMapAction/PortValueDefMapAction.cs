@@ -1385,7 +1385,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
 
         public void Port_WriteBoxCstID(CassetteData cassetteData)
         {
-            var function = scApp.getFunBaseObj<PortPLCControl>(port.PORT_ID) as PortPLCControl;
+            var function = scApp.getFunBaseObj<PortPLCControl_CSTID_BOXID>(port.PORT_ID) as PortPLCControl_CSTID_BOXID;
             try
             {
                 //1.建立各個Function物件
@@ -1418,7 +1418,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             }
             finally
             {
-                scApp.putFunBaseObj<PortPLCControl>(function);
+                scApp.putFunBaseObj<PortPLCControl_CSTID_BOXID>(function);
             }
         }
 

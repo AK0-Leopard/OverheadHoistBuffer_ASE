@@ -62,6 +62,17 @@ namespace com.mirle.ibg3k0.sc.Data.PLC_Functions
 
     }
 
+    class PortPLCControl_CSTID_BOXID : PLC_FunBase
+    {
+        public DateTime Timestamp;
+        [PLCElement(ValueName = "ASSIGN_BOX_ID")]
+        public string AssignBoxID;
+        [PLCElement(ValueName = "ASSIGN_CST_ID")]
+        public string AssignCassetteID;
+
+    }
+
+
     class PortPLCControl_PortRunStop : PLC_FunBase
     {
         public DateTime Timestamp;

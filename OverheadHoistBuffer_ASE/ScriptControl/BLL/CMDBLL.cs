@@ -380,31 +380,31 @@ namespace com.mirle.ibg3k0.sc.BLL
                     HostSource = cstData.Carrier_LOC;
                 }
                 #region 目的是Zone，判斷Zone有沒有空的的Shelf
-                if (isZone(HostDestination))
-                {
-                    string zoneID = HostDestination;
+                //if (isZone(HostDestination))
+                //{
+                //    string zoneID = HostDestination;
 
-                    List<ShelfDef> shelfData = scApp.ShelfDefBLL.GetEmptyAndEnableShelfByZone(zoneID);//Modify by Kevin
+                //    List<ShelfDef> shelfData = scApp.ShelfDefBLL.GetEmptyAndEnableShelfByZone(zoneID);//Modify by Kevin
 
-                    if (shelfData == null)
-                    {
-                        check_result = $"MCS command of source port:{HostSource} and destination port:{HostDestination} is same.";
-                        TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|S2F50: 目的 Zone: " + HostDestination + " 沒有位置");
-                        //return SECSConst.HCACK_Rejected;//add by Kevin
-                    }
-                    else
-                    {
-                        TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|S2F50: 目的 Zone: " + HostDestination + " 可用儲位數量: " + shelfData.Count);
+                //    if (shelfData == null)
+                //    {
+                //        check_result = $"MCS command of source port:{HostSource} and destination port:{HostDestination} is same.";
+                //        TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|S2F50: 目的 Zone: " + HostDestination + " 沒有位置");
+                //        //return SECSConst.HCACK_Rejected;//add by Kevin
+                //    }
+                //    else
+                //    {
+                //        TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|S2F50: 目的 Zone: " + HostDestination + " 可用儲位數量: " + shelfData.Count);
 
-                        string shelfID = scApp.TransferService.GetShelfRecentLocation(shelfData, HostSource);
+                //        string shelfID = scApp.TransferService.GetShelfRecentLocation(shelfData, HostSource);
                         
-                        if(string.IsNullOrWhiteSpace(shelfID) == false)
-                        {
-                            TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|S2F50: 目的 Zone: " + HostDestination + " 找到 " + shelfID);
-                            HostDestination = shelfID;
-                        }
-                    }
-                }
+                //        if(string.IsNullOrWhiteSpace(shelfID) == false)
+                //        {
+                //            TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|S2F50: 目的 Zone: " + HostDestination + " 找到 " + shelfID);
+                //            HostDestination = shelfID;
+                //        }
+                //    }
+                //}
                 #endregion
                 #endregion
                 bool isSuccess = true;
@@ -1057,6 +1057,48 @@ namespace com.mirle.ibg3k0.sc.BLL
                 {
                     ACMD_MCS cmd = cmd_mcsDao.getByID(con, cmd_id);
                     cmd.RelayStation = relayStation;
+                    cmd_mcsDao.update(con, cmd);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                isSuccess = false;
+            }
+
+            return isSuccess;
+        }
+        public bool updateCMD_MCS_Source(string cmd_id, string Source)
+        {
+            bool isSuccess = true;
+
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    ACMD_MCS cmd = cmd_mcsDao.getByID(con, cmd_id);
+                    cmd.HOSTSOURCE = Source;
+                    cmd_mcsDao.update(con, cmd);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                isSuccess = false;
+            }
+
+            return isSuccess;
+        }
+        public bool updateCMD_MCS_Dest(string cmd_id, string Dest)
+        {
+            bool isSuccess = true;
+
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    ACMD_MCS cmd = cmd_mcsDao.getByID(con, cmd_id);
+                    cmd.HOSTDESTINATION = Dest;
                     cmd_mcsDao.update(con, cmd);
                 }
             }
@@ -2115,17 +2157,17 @@ namespace com.mirle.ibg3k0.sc.BLL
                             cmd_type = E_CMD_TYPE.LoadUnload;
                         }
 
-                        if (isZone(hostdest))   //hsinyuchang	2020/4/30 15:32:36	搬送目的為zone時，計算搬送到哪個shelf的methos
-                        {
-                            List<ShelfDef> shelfData = scApp.ShelfDefBLL.GetEmptyAndEnableShelfByZone(hostdest);
-                            string shelfID = scApp.TransferService.GetShelfRecentLocation(shelfData, hostsource);
-                            hostdest = shelfID;
-                            //hostdest = getEmptyShelfForMoveIn(hostdest);
-                        }
-                        if (hostdest == null)
-                        {
-                            return false;   //沒有空shelf，暫緩執行
-                        }
+                        //if (isZone(hostdest))   //hsinyuchang	2020/4/30 15:32:36	搬送目的為zone時，計算搬送到哪個shelf的methos
+                        //{
+                        //    List<ShelfDef> shelfData = scApp.ShelfDefBLL.GetEmptyAndEnableShelfByZone(hostdest);
+                        //    string shelfID = scApp.TransferService.GetShelfRecentLocation(shelfData, hostsource);
+                        //    hostdest = shelfID;
+                        //    //hostdest = getEmptyShelfForMoveIn(hostdest);
+                        //}
+                        //if (hostdest == null)
+                        //{
+                        //    return false;   //沒有空shelf，暫緩執行
+                        //}
 
                         scApp.MapBLL.getAddressID(hostdest, out to_adr);
 
