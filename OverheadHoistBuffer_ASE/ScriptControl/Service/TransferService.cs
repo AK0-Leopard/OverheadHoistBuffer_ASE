@@ -124,6 +124,7 @@ namespace com.mirle.ibg3k0.sc.Service
         AGVZONE,
         LINE,
     }
+
     public enum reportMCSCommandType
     {
         Cancel = 0,
@@ -873,7 +874,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 }
                 PortPLCInfo targetPortPLCStatus = GetPLC_PortData(targetAGVport.PLCPortID.Trim());
                 /**若為空盒造成沒有mismatch 自動搬回**/
-                if (targetPortPLCStatus.IsInputMode && targetPortPLCStatus.IsReadyToUnload &&
+                if (targetPortPLCStatus.IsInputMode && targetPortPLCStatus.IsReadyToUnload && targetPortPLCStatus.OpAutoMode &&
                     (targetPortPLCStatus.CSTPresenceMismatch || targetPortPLCStatus.AGVPortReady))
                 {
                     MovebackBOX(targetPortPLCStatus.CassetteID, targetPortPLCStatus.BoxID, targetPortPLCStatus.EQ_ID, targetPortPLCStatus.IsCSTPresence, "AutoReMarkCSTBOXDataFromAGVPort");
@@ -1593,12 +1594,22 @@ namespace com.mirle.ibg3k0.sc.Service
                     return true;
                 }
                 #endregion
+
+                isCreatScuess &= cmdBLL.updateCMD_MCS_CmdStatus(cmd.CMD_ID, status);
+
                 if (cmd.TRANSFERSTATE == E_TRAN_STATUS.TransferCompleted)
                 {
                     TransferServiceLogger.Info
                     (
                         "此筆命令已完成  " + GetCmdLog(cmd)
                     );
+
+                    if(status == COMMAND_STATUS_BIT_INDEX_COMMNAD_FINISH)
+                    {
+                        reportBLL.ReportCraneIdle(ohtName, cmd.CMD_ID);
+                    }
+
+                    return true;
                 }
                 if (cmd.CRANE != ohtName)
                 {
@@ -1628,8 +1639,6 @@ namespace com.mirle.ibg3k0.sc.Service
                     #endregion
                     return true;
                 }
-
-                isCreatScuess &= cmdBLL.updateCMD_MCS_CmdStatus(cmd.CMD_ID, status);
 
                 if (cmd.CMD_ID.Contains("SCAN-"))
                 {
