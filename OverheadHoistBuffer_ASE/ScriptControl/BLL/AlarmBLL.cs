@@ -115,10 +115,10 @@ namespace com.mirle.ibg3k0.sc.BLL
             {
                 if (IsAlarmExist(eq_id, error_code)) return null;
                 string alarmUnitType = "LINE";
-
+                
                 if(scApp.TransferService.isUnitType(eq_id, Service.UnitType.AGV))
                 {
-                    alarmUnitType = "AGV STATION";
+                    alarmUnitType = "AGV";
                 }
 
                 if (scApp.TransferService.isUnitType(eq_id, Service.UnitType.CRANE))
@@ -126,12 +126,25 @@ namespace com.mirle.ibg3k0.sc.BLL
                     alarmUnitType = "CRANE";
                 }
 
+                if (scApp.TransferService.isUnitType(eq_id, Service.UnitType.NTB))
+                {
+                    alarmUnitType = "NTB";
+                }
+
                 if (scApp.TransferService.isUnitType(eq_id, Service.UnitType.OHCV)
-                   || scApp.TransferService.isUnitType(eq_id, Service.UnitType.NTB)
                    || scApp.TransferService.isUnitType(eq_id, Service.UnitType.STK)
                    )
                 {
-                    alarmUnitType = "OHCV";
+                    int stage = scApp.TransferService.portINIData[eq_id].Stage;
+
+                    if(stage == 7)
+                    {
+                        alarmUnitType = "OHCV_7";
+                    }
+                    else
+                    {
+                        alarmUnitType = "OHCV_5";
+                    }
                 }
 
                 AlarmMap alarmMap = alarmMapDao.getAlarmMap(alarmUnitType, error_code);

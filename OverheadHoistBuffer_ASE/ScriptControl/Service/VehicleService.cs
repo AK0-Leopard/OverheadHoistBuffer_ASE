@@ -53,6 +53,7 @@ namespace com.mirle.ibg3k0.sc.Service
         OHT_BCR_READ_FAIL = 100012,
         PORT_BOXID_READ_FAIL = 100013,
         PORT_CSTID_READ_FAIL = 100014,
+        OHT_IDLE_HasCMD_TimeOut = 100015,
     }
     public class VehicleService : IDynamicMetaObjectProvider
     {

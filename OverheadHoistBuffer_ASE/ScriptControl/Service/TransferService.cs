@@ -154,12 +154,16 @@ namespace com.mirle.ibg3k0.sc.Service
 
         int ohtCmdTimeOut = 0;  //詢問 OHT 命令被拒絕記錄LOG，1分鐘記錄一次
         int ohtIdleTimeOut = 0;
+        int cmdIdleTimeOut = 1; //分鐘
 
         bool iniStatus = false; //初始化旗標
         bool iniSetPortINIData = false;
+        bool cmdFail = false;
+        bool cmdFailAlarmSet = true;
 
         DateTime updateTime;    //定時更新狀態
         DateTime ohtTimeout;    //AVEHICLE 裡面沒有閒置的車輛，無法執行1分鐘紀錄Log
+        DateTime cmdTimeOut;
 
         public Dictionary<string, PortINIData> portINIData = null;
         public Dictionary<string, WaitInOutLog> waitInLog = new Dictionary<string, WaitInOutLog>();
@@ -675,12 +679,14 @@ namespace com.mirle.ibg3k0.sc.Service
                             //iniOHTData();
 
                             updateTime = DateTime.Now;
+                            cmdTimeOut = DateTime.Now;
 
                             TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "TransferService >> Port資料初始化結束------------------------------------");
 
                             iniStatus = true;
                             #endregion
                         }
+                        return;
                     }
 
                     #region Port狀態處理
@@ -748,6 +754,11 @@ namespace com.mirle.ibg3k0.sc.Service
                             #endregion
 
                             transferCmdData = scApp.CMDBLL.doSortMCSCmdDataByDistanceFromHostSourceToVehicle(transferCmdData, vehicleData);
+                            
+                            if (transferCmdData.Count != 0)
+                            {
+                                cmdFail = true;
+                            }
 
                             foreach (var v in transferCmdData)
                             {
@@ -771,6 +782,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                 #region 搬送命令
                                 if (TransferCommandHandler(v))
                                 {
+                                    cmdFail = false;
                                     break;
                                 }
                                 #endregion
@@ -804,6 +816,33 @@ namespace com.mirle.ibg3k0.sc.Service
                                 }
                                 #endregion
                             }
+
+                            if(cmdFail)
+                            {
+                                cmdFail = false;
+
+                                TimeSpan timeSpan = DateTime.Now - cmdTimeOut;
+
+                                if (timeSpan.TotalMinutes >= cmdIdleTimeOut)
+                                {
+                                    cmdTimeOut = DateTime.Now;
+
+                                    TransferServiceLogger.Info
+                                    (
+                                        DateTime.Now.ToString("HH:mm:ss.fff ")
+                                        + "OHB >> OHB| 車子閒置、有命令，超時 " + cmdIdleTimeOut + " 分鐘，報異常"
+                                    );
+                                    string ohtName = scApp.VehicleBLL.cache.loadVhs().FirstOrDefault().VEHICLE_ID;
+                                    OHBC_AlarmSet(ohtName, ((int)AlarmLst.OHT_IDLE_HasCMD_TimeOut).ToString());
+                                    cmdFailAlarmSet = true;
+                                }
+                            }
+                            else
+                            {
+                                cmdTimeOut = DateTime.Now;
+
+                                OHBC_OHT_IDLE_HasCMD_TimeOutCleared();
+                            }
                         }
                         else
                         {
@@ -822,6 +861,8 @@ namespace com.mirle.ibg3k0.sc.Service
                                 AutoReMarkCSTBOXDataFromAGVPort();
                             }
                             #endregion
+
+                            OHBC_OHT_IDLE_HasCMD_TimeOutCleared();
                         }
                         ohtTimeout = DateTime.Now;
                         ohtIdleTimeOut = 0;
@@ -1604,7 +1645,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         "此筆命令已完成  " + GetCmdLog(cmd)
                     );
 
-                    if(status == COMMAND_STATUS_BIT_INDEX_COMMNAD_FINISH)
+                    if (status == COMMAND_STATUS_BIT_INDEX_COMMNAD_FINISH)
                     {
                         reportBLL.ReportCraneIdle(ohtName, cmd.CMD_ID);
                     }
@@ -2085,55 +2126,54 @@ namespace com.mirle.ibg3k0.sc.Service
                         + "OHT_LoadCompleted 誰呼叫:" + sourceCmd + " " + ohtName + " Loading:" + portINIData[ohtName].craneLoading
                     );
 
-                    CassetteData dbCstData = cassette_dataBLL.loadCassetteDataByLoc(ohtName);
-
-                    if (dbCstData != null)
+                    if(cassette_dataBLL.UpdateCSTLoc(loadCstData.BOXID, ohtName, 1))
                     {
-                        if (dbCstData.BOXID.Trim() == ohtCmd.BOX_ID.Trim())
+                        cassette_dataBLL.UpdateCSTState(loadCstData.BOXID, (int)E_CSTState.Transferring);
+
+                        ACMD_MCS cmd = cmdBLL.GetCmdIDFromCmd(ohtCmd.CMD_ID_MCS.Trim());
+
+                        if (cmd != null)
+                        {
+                            if (isUnitType(loadCstData.Carrier_LOC, UnitType.CRANE) == false)
+                            {
+                                loadCstData.Carrier_LOC = ohtName;
+                                reportBLL.ReportCarrierTransferring(cmd, loadCstData, ohtName);
+                            }
+
+                            if (shelfDefBLL.isExist(cmd.HOSTSOURCE))
+                            {
+                                reportBLL.ReportZoneCapacityChange(cmd.HOSTSOURCE, null);
+                            }
+                        }
+                        else
                         {
                             TransferServiceLogger.Info
                             (
                                 DateTime.Now.ToString("HH:mm:ss.fff ")
-                                + "OHT_LoadCompleted 發現卡匣已在車上 " + GetCstLog(dbCstData)
+                                + "OHT_LoadCompleted MCS_CMD = Null"
                             );
-                            return;
                         }
-                    }
-
-                    cassette_dataBLL.UpdateCSTLoc(loadCstData.BOXID, ohtName, 1);
-                    cassette_dataBLL.UpdateCSTState(loadCstData.BOXID, (int)E_CSTState.Transferring);
-
-                    ACMD_MCS cmd = cmdBLL.GetCmdIDFromCmd(ohtCmd.CMD_ID_MCS.Trim());
-
-                    if (cmd != null)
-                    {
-                        if (isUnitType(loadCstData.Carrier_LOC, UnitType.CRANE) == false)
-                        {
-                            loadCstData.Carrier_LOC = ohtName;
-                            reportBLL.ReportCarrierTransferring(cmd, loadCstData, ohtName);
-                        }
-
-                        if (shelfDefBLL.isExist(cmd.HOSTSOURCE))
-                        {
-                            reportBLL.ReportZoneCapacityChange(cmd.HOSTSOURCE, null);
-                        }
-                    }
-                    else
-                    {
-                        TransferServiceLogger.Info
-                        (
-                            DateTime.Now.ToString("HH:mm:ss.fff ")
-                            + "OHT_LoadCompleted MCS_CMD = Null 或 loadCstData = Null"
-                        );
                     }
                 }
                 else
                 {
-                    TransferServiceLogger.Info
-                    (
-                        DateTime.Now.ToString("HH:mm:ss.fff ")
-                        + "OHT_LoadCompleted ohtCmd = Null OHT_CMDID:" + ohtCmd.CMD_ID
-                    );
+                    if (ohtCmd == null)
+                    {
+                        TransferServiceLogger.Info
+                        (
+                            DateTime.Now.ToString("HH:mm:ss.fff ")
+                            + "OHT_LoadCompleted ohtCmd = Null"
+                        );
+                    }
+
+                    if (loadCstData == null)
+                    {
+                        TransferServiceLogger.Info
+                        (
+                            DateTime.Now.ToString("HH:mm:ss.fff ")
+                            + "OHT_LoadCompleted loadCstData = Null"
+                        );
+                    }
                 }
             }
             catch (Exception ex)
@@ -2444,17 +2484,37 @@ namespace com.mirle.ibg3k0.sc.Service
                         "PLC >> OHB|此位置已有帳 " + GetCstLog(dbCSTData)
                     );
 
-                    if (dbCSTData.BOXID == dbCSTData.BOXID)
+                    if (dbCSTData.BOXID == cstData.BOXID)
                     {
-                        TransferServiceLogger.Info
-                        (
-                            DateTime.Now.ToString("HH:mm:ss.fff ")
-                            + "PLC >> OHB|BOXID 相同跳出："
-                            + "\ndatainfo " + GetCstLog(cstData)
-                            + "\ndbCSTData" + GetCstLog(dbCSTData)
-                        );
+                        if (isUnitType(cstData.Carrier_LOC, UnitType.AGV)
+                         || isUnitType(cstData.Carrier_LOC, UnitType.NTB)
+                          )
+                        {
+                            if (dbCSTData.CSTID == cstData.CSTID)
+                            {
+                                TransferServiceLogger.Info
+                                (
+                                    DateTime.Now.ToString("HH:mm:ss.fff ")
+                                    + "PLC >> OHB|CSTID、BOXID 相同跳出 PortWaitIn："
+                                    + "\ndatainfo " + GetCstLog(cstData)
+                                    + "\ndbCSTData" + GetCstLog(dbCSTData)
+                                );
 
-                        return;
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            TransferServiceLogger.Info
+                            (
+                                DateTime.Now.ToString("HH:mm:ss.fff ")
+                                + "PLC >> OHB|BOXID 相同跳出 PortWaitIn："
+                                + "\ndatainfo " + GetCstLog(cstData)
+                                + "\ndbCSTData" + GetCstLog(dbCSTData)
+                            );
+
+                            return;
+                        }
                     }
 
                     ACMD_MCS dbMcsdata = cmdBLL.getCMD_ByBoxID(dbCSTData.BOXID);
@@ -3134,6 +3194,17 @@ namespace com.mirle.ibg3k0.sc.Service
                     HandoffType = "1";
                 }
 
+                ACMD_MCS cmd = cmdBLL.getByCstBoxID(dbData.CSTID, dbData.BOXID);    //0727 發生AGV Port 退BOX，BOX 在席滅掉，OHT再報入料完成，發生刪錯帳
+                if (cmd != null)
+                {
+                    TransferServiceLogger.Info
+                    (
+                        DateTime.Now.ToString("HH:mm:ss.fff ") +
+                        "PLC >> OHB|PortCarrierRemoved  刪帳失敗，有命令再執行:" + GetCmdLog(cmd)
+                    );
+                    return;
+                }
+
                 reportBLL.ReportCarrierRemovedFromPort(dbData, HandoffType);
 
                 cassette_dataBLL.DeleteCSTbyCstBoxID(dbData.CSTID, dbData.BOXID);
@@ -3484,6 +3555,13 @@ namespace com.mirle.ibg3k0.sc.Service
                             else
                             {
                                 status = E_PORT_STATUS.InService;
+
+                                CassetteData dbCSTData = cassette_dataBLL.loadCassetteDataByLoc(plcInfo.EQ_ID.Trim());
+
+                                if(dbCSTData != null)
+                                {
+                                    DeleteCst(dbCSTData.CSTID, dbCSTData.BOXID, "AGV_Port_InMode_空 BOX 不留帳");
+                                }
                             }
                         }
                         else
@@ -3658,6 +3736,13 @@ namespace com.mirle.ibg3k0.sc.Service
                 {
                     movebackBOX = false;
                     status = E_PORT_STATUS.InService;
+
+                    CassetteData dbCSTData = cassette_dataBLL.loadCassetteDataByLoc(plcInfo.EQ_ID.Trim());
+
+                    if (dbCSTData != null)
+                    {
+                        DeleteCst(dbCSTData.CSTID, dbCSTData.BOXID, "AGV_Port_OutMode_BOX 在席沒亮，刪除殘帳");
+                    }
                 }
 
                 PortInOutService(plcInfo.EQ_ID, status, "PLC_AGV_Station_OutMode");
@@ -5693,7 +5778,15 @@ namespace com.mirle.ibg3k0.sc.Service
                         if (alarm.ALAM_LVL == E_ALARM_LVL.Error)
                         {
                             reportBLL.ReportAlarmHappend(ErrorStatus.ErrSet, alarm.ALAM_CODE, alarm.ALAM_DESC);
-                            reportBLL.ReportAlarmSet(mcsCmdData, alarm, alarm.UnitID, alarm.UnitState, "ABORT");
+
+                            if (alarm.ALAM_CODE.Trim() != ((int)AlarmLst.OHT_IDLE_HasCMD_TimeOut).ToString())
+                            {
+                                reportBLL.ReportAlarmSet(mcsCmdData, alarm, alarm.UnitID, alarm.UnitState, "ABORT");
+                            }
+                            else
+                            {
+                                reportBLL.ReportAlarmSet(mcsCmdData, alarm, "", alarm.UnitState, "ABORT");
+                            }
                         }
                         else if (alarm.ALAM_LVL == E_ALARM_LVL.Warn)
                         {
@@ -5752,7 +5845,15 @@ namespace com.mirle.ibg3k0.sc.Service
                     {
                         if (alarm.ALAM_LVL == E_ALARM_LVL.Error)
                         {
-                            reportBLL.ReportAlarmCleared(mcsCmdData, alarm, alarm.UnitID.Trim(), alarm.UnitState.Trim());
+                            if (alarm.ALAM_CODE.Trim() != ((int)AlarmLst.OHT_IDLE_HasCMD_TimeOut).ToString())
+                            {
+                                reportBLL.ReportAlarmCleared(mcsCmdData, alarm, alarm.UnitID.Trim(), alarm.UnitState.Trim());
+                            }
+                            else
+                            {
+                                reportBLL.ReportAlarmCleared(mcsCmdData, alarm, "", alarm.UnitState.Trim());                                
+                            }
+
                             scApp.ReportBLL.ReportAlarmHappend(ErrorStatus.ErrReset, alarm.ALAM_CODE.Trim(), alarm.ALAM_DESC.Trim());
                         }
                         else if (alarm.ALAM_LVL == E_ALARM_LVL.Warn)
@@ -5810,6 +5911,16 @@ namespace com.mirle.ibg3k0.sc.Service
             {
                 TransferServiceLogger.Error(ex, "OHT_AlarmAllCleared");
                 return false;
+            }
+        }
+
+        public void OHBC_OHT_IDLE_HasCMD_TimeOutCleared()
+        {
+            if (cmdFailAlarmSet)
+            {
+                string ohtName = scApp.VehicleBLL.cache.loadVhs().FirstOrDefault().VEHICLE_ID;
+                OHBC_AlarmCleared(ohtName, ((int)AlarmLst.OHT_IDLE_HasCMD_TimeOut).ToString());
+                cmdFailAlarmSet = false;
             }
         }
         #endregion
