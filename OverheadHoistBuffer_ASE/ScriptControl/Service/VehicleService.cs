@@ -54,6 +54,9 @@ namespace com.mirle.ibg3k0.sc.Service
         PORT_BOXID_READ_FAIL = 100013,
         PORT_CSTID_READ_FAIL = 100014,
         OHT_IDLE_HasCMD_TimeOut = 100015,
+        OHT_QueueCmdTimeOut = 100016,
+        AGV_HasCmdsAccessTimeOut = 100017,
+        AGVStation_DontHaveEnoughEmptyBox = 100018,
     }
     public class VehicleService : IDynamicMetaObjectProvider
     {

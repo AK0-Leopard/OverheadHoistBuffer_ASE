@@ -2423,7 +2423,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 Vids.VIDITEM_56_DVVAL_CarrierLoc.CARRIER_LOC = cstLoc;
                 Vids.VIDITEM_81_DVVAL_AlarmID.ALARM_ID = ALARM.ALAM_CODE;
                 Vids.VIDITEM_82_DVVAL_AlarmText.ALARM_TEXT = ALARM.ALAM_DESC;
-                Vids.VIDITEM_63_DVVAL_ErrorId.ERRORID = ALARM.ERROR_ID;
+                Vids.VIDITEM_63_DVVAL_ErrorId.ERRORID = ""; //ALARM.ERROR_ID
                 Vids.VIDITEM_72_SV_UnitInfo.UNITID = new S6F11.RPTINFO.RPTITEM.VIDITEM_83_DVVAL();
                 Vids.VIDITEM_72_SV_UnitInfo.UNITID.UNIT_ID = unitid;
                 Vids.VIDITEM_72_SV_UnitInfo.UNITSTATE = new S6F11.RPTINFO.RPTITEM.VIDITEM_74_DVVAL();
@@ -2450,7 +2450,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 Vids.VIDITEM_56_DVVAL_CarrierLoc.CARRIER_LOC = cstLoc;
                 Vids.VIDITEM_81_DVVAL_AlarmID.ALARM_ID = ALARM.ALAM_CODE;
                 Vids.VIDITEM_82_DVVAL_AlarmText.ALARM_TEXT = ALARM.ALAM_DESC;
-                Vids.VIDITEM_63_DVVAL_ErrorId.ERRORID = ALARM.ERROR_ID;
+                Vids.VIDITEM_63_DVVAL_ErrorId.ERRORID = ""; //ALARM.ERROR_ID
                 Vids.VIDITEM_72_SV_UnitInfo.UNITID = new S6F11.RPTINFO.RPTITEM.VIDITEM_83_DVVAL();
                 Vids.VIDITEM_72_SV_UnitInfo.UNITID.UNIT_ID = unitid;
                 Vids.VIDITEM_72_SV_UnitInfo.UNITSTATE = new S6F11.RPTINFO.RPTITEM.VIDITEM_74_DVVAL();

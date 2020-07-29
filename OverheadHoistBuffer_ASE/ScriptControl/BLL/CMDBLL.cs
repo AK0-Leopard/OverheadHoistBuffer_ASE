@@ -360,9 +360,9 @@ namespace com.mirle.ibg3k0.sc.BLL
                     return SECSConst.HCACK_Obj_Not_Exist;
                 }
 
-                if(scApp.TransferService.isCVPort(HostSource))
+                if (scApp.TransferService.isCVPort(HostSource))
                 {
-                    if(HostSource.Trim() != cstData.Carrier_LOC.Trim())
+                    if (HostSource.Trim() != cstData.Carrier_LOC.Trim())
                     {
                         return SECSConst.HCACK_Not_Able_Execute;
                     }
@@ -397,7 +397,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 //        TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|S2F50: 目的 Zone: " + HostDestination + " 可用儲位數量: " + shelfData.Count);
 
                 //        string shelfID = scApp.TransferService.GetShelfRecentLocation(shelfData, HostSource);
-                        
+
                 //        if(string.IsNullOrWhiteSpace(shelfID) == false)
                 //        {
                 //            TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|S2F50: 目的 Zone: " + HostDestination + " 找到 " + shelfID);
@@ -556,7 +556,7 @@ namespace com.mirle.ibg3k0.sc.BLL
             string cmdMCSSort = "";
             foreach (var v in cmdMCSData.Take(5).ToList())
             {
-                cmdMCSSort = cmdMCSSort + v.CMD_ID + " Source ：" + v.HOSTSOURCE + " Priority_SUM ：" + v.PRIORITY_SUM + " distance：" + v.DistanceFromVehicleToHostSource +"，";
+                cmdMCSSort = cmdMCSSort + v.CMD_ID + " Source ：" + v.HOSTSOURCE + " Priority_SUM ：" + v.PRIORITY_SUM + " distance：" + v.DistanceFromVehicleToHostSource + "，";
             }
 
             return cmdMCSSort;
@@ -582,12 +582,12 @@ namespace com.mirle.ibg3k0.sc.BLL
 
 
             //ACMD_MCS mcs_com = creatCommand_MCS(command_id, ipriority, carrier_id, HostSource, HostDestination, checkcode);
-            
+
             creatCommand_MCS(command_id, ipriority, ireplace, carrier_id, HostSource, HostDestination, Box_ID, LOT_ID, box_Loc, checkcode, isFromVh);
 
             CassetteData cstData = scApp.CassetteDataBLL.loadCassetteDataByBoxID(Box_ID);
 
-            if(cstData != null)
+            if (cstData != null)
             {
                 scApp.CassetteDataBLL.UpdateCSTID(cstData.Carrier_LOC, cstData.BOXID, carrier_id.Trim(), LOT_ID.Trim());
             }
@@ -686,7 +686,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 if (cmd_mcs.CMDTYPE != CmdType.PortTypeChange.ToString())
                 {
                     scApp.TransferService.ShelfReserved(cmd_mcs.HOSTSOURCE, cmd_mcs.HOSTDESTINATION);
-                }    
+                }
             }
             catch (Exception ex)
             {
@@ -787,7 +787,7 @@ namespace com.mirle.ibg3k0.sc.BLL
         //  doSortMCSCmdDataByDistanceFromHostSourceToVehicle()
         //   先確認哪台車為no command 後，以該車到基準點的值及各命令的source到基準點的值加上priority 去計算出每一命令的distance的值，
         //   再以此值對 MCS cmd 的 list 進行sort。
-        
+
         string oldBeforeSortingLog = "";
         string oldAfterSortingLog = "";
         public List<ACMD_MCS> doSortMCSCmdDataByDistanceFromHostSourceToVehicle(List<ACMD_MCS> originMCSCmdData, List<AVEHICLE> vehicleData)
@@ -799,7 +799,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 string cmdMCSSort = "";
                 cmdMCSSort = scApp.CMDBLL.CombineMCSLogData(originMCSCmdData);
 
-                if(cmdMCSSort != oldBeforeSortingLog)
+                if (cmdMCSSort != oldBeforeSortingLog)
                 {
                     TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> DB|MCS排序前 前 5 筆: " + cmdMCSSort);
                     oldBeforeSortingLog = cmdMCSSort;
@@ -860,12 +860,12 @@ namespace com.mirle.ibg3k0.sc.BLL
 
                 cmdMCSSort = scApp.CMDBLL.CombineMCSLogData(sortedMCSData);
 
-                if(cmdMCSSort != oldAfterSortingLog)
+                if (cmdMCSSort != oldAfterSortingLog)
                 {
                     TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> DB|MCS排序後 前 5 筆: " + cmdMCSSort);
                     oldAfterSortingLog = cmdMCSSort;
                 }
-                
+
                 return sortedMCSData;
             }
             catch (Exception ex)
@@ -961,56 +961,59 @@ namespace com.mirle.ibg3k0.sc.BLL
 
             try
             {
+                ACMD_MCS cmd = null;
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
-                    ACMD_MCS cmd = cmd_mcsDao.getByID(con, cmd_id);
+                    cmd = cmd_mcsDao.getByID(con, cmd_id);
                     cmd.TRANSFERSTATE = status;
                     cmd.CMD_FINISH_TIME = DateTime.Now;
                     cmd_mcsDao.update(con, cmd);
+                }
 
-                    if (status == E_TRAN_STATUS.TransferCompleted)
+                if (status == E_TRAN_STATUS.TransferCompleted)
+                {
+                    if (scApp.TransferService.isUnitType(cmd.HOSTSOURCE, Service.UnitType.SHELF))
                     {
-                        if (scApp.TransferService.isUnitType(cmd.HOSTSOURCE, Service.UnitType.SHELF))
+                        if (scApp.CassetteDataBLL.loadCassetteDataByLoc(cmd.HOSTSOURCE) != null)
                         {
-                            if (scApp.CassetteDataBLL.loadCassetteDataByLoc(cmd.HOSTSOURCE) != null)
-                            {
-                                scApp.ShelfDefBLL.updateStatus(cmd.HOSTSOURCE, ShelfDef.E_ShelfState.Stored);
-                            }
-                            else
-                            {
-                                ACMD_MCS destCmd = GetCmdDataByDest(cmd.HOSTSOURCE).FirstOrDefault();
-
-                                if(destCmd == null)
-                                {
-                                    scApp.ShelfDefBLL.updateStatus(cmd.HOSTSOURCE, ShelfDef.E_ShelfState.EmptyShelf);
-                                }
-                            }
+                            scApp.ShelfDefBLL.updateStatus(cmd.HOSTSOURCE, ShelfDef.E_ShelfState.Stored);
                         }
-
-                        if (scApp.TransferService.isUnitType(cmd.HOSTDESTINATION, Service.UnitType.SHELF))
+                        else
                         {
-                            if (scApp.CassetteDataBLL.loadCassetteDataByLoc(cmd.HOSTDESTINATION) != null)
-                            {
-                                scApp.ShelfDefBLL.updateStatus(cmd.HOSTDESTINATION, ShelfDef.E_ShelfState.Stored);
-                            }
-                            else
-                            {
-                                scApp.ShelfDefBLL.updateStatus(cmd.HOSTDESTINATION, ShelfDef.E_ShelfState.EmptyShelf);
-                            }
-                        }
+                            ACMD_MCS destCmd = GetCmdDataByDest(cmd.HOSTSOURCE).FirstOrDefault();
 
-                        if (scApp.TransferService.isCVPort(cmd.HOSTDESTINATION))
-                        {
-                            scApp.TransferService.PortCommanding(cmd.HOSTDESTINATION, false);
+                            if (destCmd == null)
+                            {
+                                scApp.ShelfDefBLL.updateStatus(cmd.HOSTSOURCE, ShelfDef.E_ShelfState.EmptyShelf);
+                            }
                         }
                     }
 
-                    TransferServiceLogger.Info
-                    (
-                        DateTime.Now.ToString("HH:mm:ss.fff ")
-                        + "OHB >> DB|updateCMD_MCS_TranStatus cmd_id: " + cmd_id + " status:" + status
-                    );
+                    if (scApp.TransferService.isUnitType(cmd.HOSTDESTINATION, Service.UnitType.SHELF))
+                    {
+                        if (scApp.CassetteDataBLL.loadCassetteDataByLoc(cmd.HOSTDESTINATION) != null)
+                        {
+                            scApp.ShelfDefBLL.updateStatus(cmd.HOSTDESTINATION, ShelfDef.E_ShelfState.Stored);
+                        }
+                        else
+                        {
+                            scApp.ShelfDefBLL.updateStatus(cmd.HOSTDESTINATION, ShelfDef.E_ShelfState.EmptyShelf);
+                        }
+                    }
+
+                    if (scApp.TransferService.isCVPort(cmd.HOSTDESTINATION))
+                    {
+                        scApp.TransferService.PortCommanding(cmd.HOSTDESTINATION, false);
+                    }
+
+                    scApp.TransferService.OHBC_OHT_QueueCmdTimeOutCmdIDCleared(cmd.CMD_ID);
                 }
+
+                TransferServiceLogger.Info
+                (
+                    DateTime.Now.ToString("HH:mm:ss.fff ")
+                    + "OHB >> DB|updateCMD_MCS_TranStatus cmd_id: " + cmd_id + " status:" + status
+                );
             }
             catch (Exception ex)
             {
@@ -1044,7 +1047,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 logger.Error(ex, "Exception");
                 isSuccess = false;
             }
-            
+
             return isSuccess;
         }
         public bool updateCMD_MCS_RelayStation(string cmd_id, string relayStation)
@@ -1605,7 +1608,7 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
             return has_cmd_in_queue;
         }
-        
+
         public List<ACMD_MCS> GetMCSCmdQueue()
         {
             List<ACMD_MCS> MCS_Cmd_Queue = new List<ACMD_MCS>();
@@ -3221,7 +3224,7 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
 
         }
-                
+
         public bool isCMD_OHTCQueueByVh(string vh_id)
         {
             int count = 0;

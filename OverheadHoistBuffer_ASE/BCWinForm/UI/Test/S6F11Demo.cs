@@ -34,8 +34,11 @@ namespace com.mirle.ibg3k0.bc.winform
             portList = BCApp.SCApplication.PortDefBLL.GetOHB_PortData(line.LINE_ID);
             shelfDefs = BCApp.SCApplication.ShelfDefBLL.LoadEnableShelf();
             avehicle = BCApp.SCApplication.VehicleBLL.loadAllVehicle();
-
+            
             int selindex = 0;
+
+            comboBox11.Items.Add(line.LINE_ID);
+
             foreach (var s in portList)
             {
                 if (s.UnitType == "OHCV")

@@ -113,26 +113,29 @@ namespace com.mirle.ibg3k0.sc.BLL
         {
             lock (lock_obj_alarm)
             {
-                if (IsAlarmExist(eq_id, error_code)) return null;
+                string alarmEq = eq_id;
+                if (scApp.TransferService.isUnitType(eq_id, Service.UnitType.AGVZONE))
+                {
+                    alarmEq = eq_id.Remove(0, 12);
+                }
+
+                if (IsAlarmExist(alarmEq, error_code)) return null;
                 string alarmUnitType = "LINE";
-                
-                if(scApp.TransferService.isUnitType(eq_id, Service.UnitType.AGV))
+
+                if (scApp.TransferService.isUnitType(eq_id, Service.UnitType.AGV))
                 {
                     alarmUnitType = "AGV";
                 }
-
-                if (scApp.TransferService.isUnitType(eq_id, Service.UnitType.CRANE))
+                else if (scApp.TransferService.isUnitType(eq_id, Service.UnitType.CRANE))
                 {
                     alarmUnitType = "CRANE";
                 }
-
-                if (scApp.TransferService.isUnitType(eq_id, Service.UnitType.NTB))
+                else if (scApp.TransferService.isUnitType(eq_id, Service.UnitType.NTB))
                 {
                     alarmUnitType = "NTB";
                 }
-
-                if (scApp.TransferService.isUnitType(eq_id, Service.UnitType.OHCV)
-                   || scApp.TransferService.isUnitType(eq_id, Service.UnitType.STK)
+                else if (scApp.TransferService.isUnitType(eq_id, Service.UnitType.OHCV)
+                      || scApp.TransferService.isUnitType(eq_id, Service.UnitType.STK)
                    )
                 {
                     int stage = scApp.TransferService.portINIData[eq_id].Stage;
@@ -145,6 +148,12 @@ namespace com.mirle.ibg3k0.sc.BLL
                     {
                         alarmUnitType = "OHCV_5";
                     }
+                }
+                else if (scApp.TransferService.isUnitType(eq_id, Service.UnitType.AGVZONE))
+                {
+                    //B7_OHBLINE1_ST01
+                    alarmUnitType = "LINE";
+                    eq_id = eq_id.Remove(0, 12);
                 }
 
                 AlarmMap alarmMap = alarmMapDao.getAlarmMap(alarmUnitType, error_code);
@@ -168,11 +177,12 @@ namespace com.mirle.ibg3k0.sc.BLL
                     ALAM_CODE = error_code,
                     ALAM_LVL = alarmMap == null ? E_ALARM_LVL.Warn : alarmMap.ALARM_LVL,
                     ALAM_STAT = ProtocolFormat.OHTMessage.ErrorStatus.ErrSet,
-                    ALAM_DESC = alarmMap == null ? $"unknow alarm code:{error_code}" : $"{alarmMap.ALARM_DESC}(error code:{error_code})",
+                    ALAM_DESC = alarmMap == null ? $"unknow alarm code:{error_code}" : $"{eq_id} {alarmMap.ALARM_DESC}(error code:{error_code})",
                     ERROR_ID = error_code,  //alarmMap?.ALARM_ID ?? "0",
                     UnitID = eq_id,
                     UnitState = "1",
                 };
+                
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
                     alarmDao.insertAlarm(con, alarm);
@@ -407,7 +417,13 @@ namespace com.mirle.ibg3k0.sc.BLL
                 return alarmDao.loadSetAlarm(con);
             }
         }
-
+        public List<ALARM> loadSetAlarmListByEqName(string eqName)
+        {
+            using (DBConnection_EF con = DBConnection_EF.GetUContext())
+            {
+                return alarmDao.loadSetAlarmByEqName(con, eqName);
+            }
+        }
         public ALARM loadAlarmByAlarmID(string eqid, string alarmId)
         {
             using (DBConnection_EF con = DBConnection_EF.GetUContext())

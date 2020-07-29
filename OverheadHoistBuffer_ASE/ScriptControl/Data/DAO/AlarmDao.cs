@@ -156,6 +156,22 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                 throw;
             }
         }
+        public List<ALARM> loadSetAlarmByEqName(DBConnection_EF conn, string eqName)
+        {
+            try
+            {
+                var alarm = from a in conn.ALARM
+                            where a.ALAM_STAT == ProtocolFormat.OHTMessage.ErrorStatus.ErrSet
+                                && a.EQPT_ID == eqName
+                            select a;
+                return alarm.ToList();
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex);
+                throw;
+            }
+        }
         public int GetSetAlarmErrorCount(DBConnection_EF conn)
         {
             try
