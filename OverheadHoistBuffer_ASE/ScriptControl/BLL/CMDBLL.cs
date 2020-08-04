@@ -962,11 +962,18 @@ namespace com.mirle.ibg3k0.sc.BLL
             try
             {
                 ACMD_MCS cmd = null;
+
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
                     cmd = cmd_mcsDao.getByID(con, cmd_id);
                     cmd.TRANSFERSTATE = status;
                     cmd.CMD_FINISH_TIME = DateTime.Now;
+
+                    if(status == E_TRAN_STATUS.Queue)
+                    {
+                        cmd.COMMANDSTATE = 0;
+                    }
+
                     cmd_mcsDao.update(con, cmd);
                 }
 
@@ -1008,7 +1015,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
                     scApp.TransferService.OHBC_OHT_QueueCmdTimeOutCmdIDCleared(cmd.CMD_ID);
                 }
-
+                else 
                 TransferServiceLogger.Info
                 (
                     DateTime.Now.ToString("HH:mm:ss.fff ")

@@ -39,7 +39,7 @@ namespace com.mirle.ibg3k0.bc.winform
 
             foreach (var v in portList)
             {
-                if(transferService.isCVPort(v.PLCPortID))
+                if(transferService.isCVPort(v.PLCPortID) && transferService.isAGVZone(v.PLCPortID) == false)
                 {
                     comboBox1.Items.Add(v.PLCPortID);
                 }

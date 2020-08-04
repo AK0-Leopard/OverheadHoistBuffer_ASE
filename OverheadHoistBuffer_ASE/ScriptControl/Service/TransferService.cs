@@ -1120,7 +1120,11 @@ namespace com.mirle.ibg3k0.sc.Service
 
                     if (sourcePortType && destPortType)
                     {
-                        TransferIng = OHT_TransportRequest(mcsCmd);
+                        if(OHT_TransportRequest(mcsCmd))
+                        {
+                            TransferIng = true;
+                            cmdBLL.updateCMD_MCS_Dest(mcsCmd.CMD_ID, mcsCmd.HOSTDESTINATION);
+                        }
                     }
                     else if (sourcePortType && isCVPort(mcsCmd.HOSTSOURCE) && destPortType == false && isCVPort(mcsCmd.HOSTDESTINATION))
                     {
@@ -1128,7 +1132,15 @@ namespace com.mirle.ibg3k0.sc.Service
 
                         if (isAGVZone(mcsCmd.HOSTDESTINATION))
                         {
-                            string agvName = GetAGVPort(mcsCmd.HOSTDESTINATION).FirstOrDefault().PortName;
+                            string agvName = "";
+
+                            foreach (var v in GetAGVPort(mcsCmd.HOSTDESTINATION))
+                            {
+                                if (GetPLC_PortData(v.PortName).IsOutputMode)
+                                {
+                                    agvName = v.PortName.Trim();
+                                }
+                            }
 
                             if (string.IsNullOrWhiteSpace(agvName))
                             {
@@ -1141,7 +1153,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         PortPLCInfo plcInfoSource = GetPLC_PortData(mcsCmd.HOSTSOURCE);
                         PortPLCInfo plcInfoDest = GetPLC_PortData(mcsCmd.HOSTDESTINATION);
 
-                        if (plcInfoDest.OpAutoMode == false && plcInfoDest.IsOutputMode && plcInfoSource.IsInputMode)
+                        if (plcInfoDest.IsReadyToLoad == false && plcInfoDest.IsOutputMode && plcInfoSource.IsInputMode)
                         {
                             ACMD_MCS cmdRelay = mcsCmd.Clone();
 
@@ -1166,7 +1178,7 @@ namespace com.mirle.ibg3k0.sc.Service
                             TransferServiceLogger.Info
                             (
                                 DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB| 觸發將卡匣送至中繼站失敗: "
-                                + " plcInfo_Dest.OpAutoMode 要 false 實際是" + plcInfoDest.OpAutoMode
+                                + " plcInfo_Dest.IsReadyToLoad 要 false 實際是" + plcInfoDest.IsReadyToLoad
                                 + " plcInfo_Dest.IsOutputMode 要 True 實際是" + plcInfoDest.IsOutputMode
                                 + " plcInfo_Source.IsInputMode 要 True 實際是" + plcInfoSource.IsInputMode
                             );
@@ -1227,7 +1239,7 @@ namespace com.mirle.ibg3k0.sc.Service
             {
                 foreach (var cst in cstDataList)
                 {
-                    if( cst.CSTState == E_CSTState.WaitIn)
+                    if (cst.CSTState == E_CSTState.WaitIn)
                     {
                         int cstTimeOut = portINIData[cst.Carrier_LOC.Trim()].timeOutForAutoUD;
                         string zoneName = portINIData[cst.Carrier_LOC.Trim()].ZoneName;
@@ -1317,10 +1329,10 @@ namespace com.mirle.ibg3k0.sc.Service
                         if (cstTimeSpan.TotalMinutes >= portWaitOutTimeOut)
                         {
                             cassette_dataBLL.UpdateCST_DateTime(cst.BOXID, UpdateCassetteTimeType.TrnDT);
-                            OHBC_AlarmSet(cst.Carrier_LOC, ((int)AlarmLst.PORT_WaitOutTimeOut).ToString());   
+                            OHBC_AlarmSet(cst.Carrier_LOC, ((int)AlarmLst.PORT_WaitOutTimeOut).ToString());
                         }
                     }
-                    
+
                 }
             }
             catch (Exception ex)
@@ -1353,8 +1365,7 @@ namespace com.mirle.ibg3k0.sc.Service
 
                 cmdBLL.updateCMD_MCS_TranStatus(cmd.CMD_ID, E_TRAN_STATUS.Transferring);
                 //cmdBLL.updateCMD_MCS_Source(cmd.CMD_ID, cmd.HOSTSOURCE);
-                cmdBLL.updateCMD_MCS_Dest(cmd.CMD_ID, cmd.HOSTDESTINATION);
-
+                
                 ohtCmdTimeOut = 0;
 
                 if (isUnitType(cmd.HOSTSOURCE, UnitType.SHELF) && string.IsNullOrWhiteSpace(cmd.RelayStation) == false)
@@ -1939,7 +1950,12 @@ namespace com.mirle.ibg3k0.sc.Service
                             scApp.ReportBLL.ReportTransferAbortCompleted(cmd.CMD_ID);
                             break;
                         }
-
+                        else if (cmd.TRANSFERSTATE == E_TRAN_STATUS.Queue && string.IsNullOrWhiteSpace(cmd.RelayStation) == false)
+                        {
+                            cmdBLL.updateCMD_MCS_CmdStatus(cmd.CMD_ID, 0);
+                            break;
+                        }
+                        
                         if (cmd.COMMANDSTATE == COMMAND_STATUS_BIT_INDEX_LOAD_COMPLETE)
                         {
                             cmdBLL.updateCMD_MCS_TranStatus(cmd.CMD_ID, E_TRAN_STATUS.TransferCompleted);
@@ -2488,7 +2504,7 @@ namespace com.mirle.ibg3k0.sc.Service
             {
                 if (ohtBoxData.BOXID != dbCstData.BOXID)
                 {
-                    if(isCVPort(cmd.HOSTSOURCE.Trim()))
+                    if (isCVPort(cmd.HOSTSOURCE.Trim()))
                     {
                         if (OHT_MismatchData.ContainsKey(ohtBoxData.BOXID))
                         {
@@ -2514,7 +2530,7 @@ namespace com.mirle.ibg3k0.sc.Service
                             OHT_MismatchData.Add(addMismatchData.BOXID, addMismatchData);
                         }
                     }
-                    
+
                     IDreadStatus idReadStatus = (IDreadStatus)int.Parse(ohtBoxData.ReadStatus);
                     string resultCode = ResultCode.Successful;
 
@@ -2529,7 +2545,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     );
                     #endregion
 
-                    
+
                     if (idReadStatus == IDreadStatus.duplicate)
                     {
                         resultCode = ResultCode.DuplicateID;
@@ -3513,7 +3529,7 @@ namespace com.mirle.ibg3k0.sc.Service
                             }
 
                             reportBLL.ReportPortInService(portName);
-                            
+
                         }
                         else if (service == E_PORT_STATUS.OutOfService)
                         {
@@ -4594,7 +4610,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     {
                         foreach (var v in GetAGVPort(portID))
                         {
-                            PortValueDefMapAction portValueDefMapAction = scApp.getEQObjCacheManager().getPortByPortID(portID).getMapActionByIdentityKey(typeof(PortValueDefMapAction).Name) as PortValueDefMapAction;
+                            PortValueDefMapAction portValueDefMapAction = scApp.getEQObjCacheManager().getPortByPortID(v.PortName).getMapActionByIdentityKey(typeof(PortValueDefMapAction).Name) as PortValueDefMapAction;
 
                             portValueDefMapAction.Port_OHCV_Commanding(Commanding);
                         }
