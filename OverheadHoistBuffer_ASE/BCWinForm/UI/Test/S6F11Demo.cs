@@ -251,7 +251,7 @@ namespace com.mirle.ibg3k0.bc.winform
                 CMD_ID = datainfo.CMD_ID,
                 CARRIER_ID = datainfo.CARRIER_ID,
                 BOX_ID = datainfo.BOX_ID,
-                VH_ID = "OHB200CR1",
+                VH_ID = comboBox12.Text,
                 CMD_ID_MCS = datainfo.CMD_ID,
                 CMD_TPYE = 0,
                 PRIORITY = 50,

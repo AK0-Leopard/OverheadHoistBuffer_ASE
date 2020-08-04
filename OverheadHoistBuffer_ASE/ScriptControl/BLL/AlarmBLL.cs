@@ -115,10 +115,10 @@ namespace com.mirle.ibg3k0.sc.BLL
             lock (lock_obj_alarm)
             {
                 string alarmEq = eq_id;
-                if (scApp.TransferService.isUnitType(eq_id, Service.UnitType.AGVZONE))
-                {
-                    alarmEq = eq_id.Remove(0, 12);
-                }
+                //if (scApp.TransferService.isUnitType(eq_id, Service.UnitType.AGVZONE))
+                //{
+                //    alarmEq = eq_id.Remove(0, 12);
+                //}
 
                 if (IsAlarmExist(alarmEq, error_code)) return null;
                 string alarmUnitType = "LINE";
@@ -154,7 +154,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 {
                     //B7_OHBLINE1_ST01
                     alarmUnitType = "LINE";
-                    eq_id = eq_id.Remove(0, 12);
+                    //eq_id = eq_id.Remove(0, 12);
                 }
 
                 AlarmMap alarmMap = alarmMapDao.getAlarmMap(alarmUnitType, error_code);

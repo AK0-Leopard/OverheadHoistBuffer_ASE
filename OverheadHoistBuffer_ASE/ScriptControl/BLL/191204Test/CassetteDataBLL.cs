@@ -9,6 +9,7 @@ using com.mirle.ibg3k0.bcf.App;
 using com.mirle.ibg3k0.sc.Data;
 using com.mirle.ibg3k0.sc.App;
 using com.mirle.ibg3k0.sc.Common;
+using com.mirle.ibg3k0.sc.Service;
 
 namespace com.mirle.ibg3k0.sc.BLL
 {
@@ -579,27 +580,33 @@ namespace com.mirle.ibg3k0.sc.BLL
             bool isSuccsess = true;
             try
             {
+                CassetteData csidData;
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
-                    CassetteData csidData = con.CassetteData.Where(data => data.CSTID.Trim() == cstid.Trim() && data.BOXID.Trim() == boxid.Trim()).First();
+                    csidData = con.CassetteData.Where(data => data.CSTID.Trim() == cstid.Trim() && data.BOXID.Trim() == boxid.Trim()).First();
                     
                     cassettedataDao.DeleteCassetteData(con, csidData);
+                }
 
-                    TransferServiceLogger.Info
-                    (
-                        DateTime.Now.ToString("HH:mm:ss.fff ") +
-                        "PLC >> OHB|刪除 " + scApp.TransferService.GetCstLog(csidData)
-                    );
+                TransferServiceLogger.Info
+                (
+                    DateTime.Now.ToString("HH:mm:ss.fff ") +
+                    "PLC >> OHB|刪除 " + scApp.TransferService.GetCstLog(csidData)
+                );
 
-                    if (scApp.TransferService.isUnitType(csidData.Carrier_LOC, Service.UnitType.SHELF))
-                    {
-                        scApp.ShelfDefBLL.updateStatus(csidData.Carrier_LOC, ShelfDef.E_ShelfState.EmptyShelf);
-                    }
+                if (scApp.TransferService.isUnitType(csidData.Carrier_LOC, UnitType.SHELF))
+                {
+                    scApp.ShelfDefBLL.updateStatus(csidData.Carrier_LOC, ShelfDef.E_ShelfState.EmptyShelf);
+                }
 
-                    if (scApp.TransferService.isUnitType(csidData.Carrier_LOC, Service.UnitType.AGV))
-                    {
-                        scApp.TransferService.Redis_DeleteCstBox(csidData);
-                    }
+                if (scApp.TransferService.isUnitType(csidData.Carrier_LOC, UnitType.AGV))
+                {
+                    scApp.TransferService.Redis_DeleteCstBox(csidData);
+                }
+
+                if (scApp.TransferService.isCVPort(csidData.Carrier_LOC))
+                {
+                    scApp.TransferService.OHBC_AlarmCleared(csidData.Carrier_LOC, ((int)AlarmLst.PORT_WaitOutTimeOut).ToString());
                 }
             }
             catch (Exception ex)

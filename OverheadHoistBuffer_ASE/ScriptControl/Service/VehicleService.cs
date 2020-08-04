@@ -60,6 +60,8 @@ namespace com.mirle.ibg3k0.sc.Service
         PORT_CIM_OFF = 100019,
         PORT_DOWN = 100020,
         BOX_NumberIsNotEnough = 100021,
+        OHT_IDMismatchUNKU = 100022,
+        PORT_WaitOutTimeOut = 100023,
     }
     public class VehicleService : IDynamicMetaObjectProvider
     {

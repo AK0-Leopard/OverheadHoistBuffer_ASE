@@ -141,7 +141,7 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
             try
             {
                 var port = from a in conn.CassetteData
-                           where a.CSTState !=  E_CSTState.Completed && a.CSTState != E_CSTState.WaitOut
+                           where a.CSTState !=  E_CSTState.Completed
                            select a;
                 return port.ToList();
             }
