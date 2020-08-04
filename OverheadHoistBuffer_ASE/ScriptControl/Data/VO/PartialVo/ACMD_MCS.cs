@@ -119,9 +119,30 @@ namespace com.mirle.ibg3k0.sc
         {
             public int Compare(ACMD_MCS MCSCmd1, ACMD_MCS MCSCmd2)
             {
+                //A20.08.04
+                // -1. 判斷目的 port 為AGV者優先
+                bool isCmd1_SourceTypeAGV = IsCmdSourceTypeAGV(MCSCmd1.HOSTDESTINATION);
+                bool isCmd2_SourceTypeAGV = IsCmdSourceTypeAGV(MCSCmd2.HOSTDESTINATION);
+
+                if ((isCmd1_SourceTypeAGV == true) && (isCmd2_SourceTypeAGV == true) ||
+                    (isCmd1_SourceTypeAGV == false) && (isCmd2_SourceTypeAGV == false))
+                {
+                    //代表兩者相等，不動，且接著判斷距離
+                }
+                if ((isCmd1_SourceTypeAGV == false) && (isCmd2_SourceTypeAGV == true))
+                {
+                    return 1;
+                    //代表後者較優先，換位
+                }
+                if ((isCmd1_SourceTypeAGV == true) && (isCmd2_SourceTypeAGV == false))
+                {
+                    return -1;
+                    //代表前者較優先，不動
+                }
+
                 //A20.06.09.0
                 // 0.判斷命令來源是否為shelf，非shelf者優先進行。
-                bool isCmd1_SourceTypeShelf= IsCmdSourceTypeShelf(MCSCmd1.HOSTSOURCE);
+                bool isCmd1_SourceTypeShelf = IsCmdSourceTypeShelf(MCSCmd1.HOSTSOURCE);
                 bool isCmd2_SourceTypeShelf = IsCmdSourceTypeShelf(MCSCmd2.HOSTSOURCE);
 
                 if ((isCmd1_SourceTypeShelf == true) && (isCmd2_SourceTypeShelf == true) ||
@@ -139,6 +160,7 @@ namespace com.mirle.ibg3k0.sc
                     return -1;
                     //代表前者較優先，不動
                 }
+                
                 //A20.06.04
                 // 1.先取priority 判斷
                 if ((MCSCmd1.PRIORITY_SUM >= 99 && MCSCmd2.PRIORITY_SUM >= 99) ||
@@ -184,6 +206,16 @@ namespace com.mirle.ibg3k0.sc
                     isCmdSourceTypeShelf = true;
                 }
                 return isCmdSourceTypeShelf;
+            }
+
+            private bool IsCmdSourceTypeAGV(string cmdSource)
+            {
+                bool isCmdSourceTypeAGV = false;
+                if (cmdSource.Contains("A0")|| cmdSource.Contains("ST0"))
+                {
+                    isCmdSourceTypeAGV = true;
+                }
+                return isCmdSourceTypeAGV;
             }
         }
 
