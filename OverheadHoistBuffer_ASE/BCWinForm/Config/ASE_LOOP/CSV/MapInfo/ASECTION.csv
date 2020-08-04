@@ -33,6 +33,8 @@ Id,FromAddress,ToAddress,Speed, Type,PermitDirection
 00125,10024,10025,1000,Horizontal,Forward
 00126,10025,10026,1000,Horizontal,Forward
 00127,10026,10027,1000,Horizontal,Forward
-00128,10027,10028,1000,Horizontal,Forward
+00128,10038,10028,1000,Horizontal,Forward
 00129,10028,10029,1000,Horizontal,Forward
 00130,10029,10000,1000,Horizontal,Forward
+00138,10027,10037,1000,Horizontal,Forward
+00139,10037,10038,1000,Horizontal,Forward

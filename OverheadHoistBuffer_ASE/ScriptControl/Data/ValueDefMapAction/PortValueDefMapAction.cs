@@ -7,6 +7,7 @@ using com.mirle.ibg3k0.sc.App;
 using com.mirle.ibg3k0.sc.BLL;
 using com.mirle.ibg3k0.sc.Common;
 using com.mirle.ibg3k0.sc.Data.PLC_Functions;
+using com.mirle.ibg3k0.sc.Service;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -135,6 +136,11 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 if (bcfApp.tryGetReadValueEventstring(port.EqptObjectCate, port.PORT_ID, "PORTALLINFO", out vr))
                 {
                     vr.afterValueChange += (_sender, _e) => PortInfoChange(_sender, _e);
+                }
+
+                if (bcfApp.tryGetReadValueEventstring(port.EqptObjectCate, port.PORT_ID, "CIM_ON", out vr))
+                {
+                    vr.afterValueChange += (_sender, _e) => Port_onCIM_ON(_sender, _e);
                 }
             }
             catch (Exception ex)
@@ -286,13 +292,14 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 if (function.OpError == true)
                 {
                     //pass function.ErrorCode
-                    scApp.TransferService.OHBC_AlarmSet(port.PORT_ID, function.ErrorCode.ToString());
+                    scApp.TransferService.OHBC_AlarmSet(function.EQ_ID, function.ErrorCode.ToString());
                     //PLC_AlarmSet(port.PORT_ID, function.ErrorCode);
                 }
                 else
                 {
-                    scApp.TransferService.OHBC_AlarmAllCleared(port.PORT_ID);
+                    scApp.TransferService.OHBC_AlarmAllCleared(function.EQ_ID);
                     //PLC_AlarmAllCleared(port.PORT_ID);
+                    scApp.TransferService.PortCIM_ON(function, "Port_Error_OFF");
                 }
             }
             catch (Exception ex)
@@ -378,8 +385,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 scApp.putFunBaseObj<PortPLCInfo>(function);
             }
         }
-
-        private void Port_onOutOfService(object sender, ValueChangedEventArgs e)
+        private void Port_onCIM_ON(object sender, ValueChangedEventArgs e)
         {
             var function = scApp.getFunBaseObj<PortPLCInfo>(port.PORT_ID) as PortPLCInfo;
             try
@@ -399,11 +405,43 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                     return;
                 }
 
-                if (function.OpManualMode == true || function.OpAutoMode == false)
-                {
-                    IsInService = false;
-                    scApp.TransferService.PLC_ReportPortInOutService(function);
-                }
+                scApp.TransferService.PortCIM_ON(function, "Port_CIM_ON 訊號 ON_OFF");
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+            }
+            finally
+            {
+                scApp.putFunBaseObj<PortPLCInfo>(function);
+            }
+        }
+
+        private void Port_onOutOfService(object sender, ValueChangedEventArgs e)
+        {
+            var function = scApp.getFunBaseObj<PortPLCInfo>(port.PORT_ID) as PortPLCInfo;
+            try
+            {
+                //1.建立各個Function物件
+                function.Read(bcfApp, port.EqptObjectCate, port.PORT_ID);
+                //2.read log
+                //function.Timestamp = DateTime.Now;
+                //LogManager.GetLogger("com.mirle.ibg3k0.sc.Common.LogHelper").Info(function.ToString());
+                NLog.LogManager.GetCurrentClassLogger().Info(function.ToString());
+                //LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(EQStatusReport), Device: DEVICE_NAME_MTL,
+                //    XID: eqpt.EQPT_ID, Data: function.ToString());
+                //3.logical (include db save)
+
+                //if (scApp.TransferService.GetIgnoreModeChange(function))
+                //{
+                //    return;
+                //}
+
+                //if (function.OpManualMode == true || function.OpAutoMode == false)
+                //{
+                //    IsInService = false;
+                //    scApp.TransferService.PLC_ReportPortInOutService(function);
+                //}
             }
             catch (Exception ex)
             {
@@ -437,9 +475,14 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
 
                 scApp.TransferService.PLC_ReportPortInOutService(function);
 
-                if (function.OpAutoMode == true)
+                if (function.OpAutoMode)
                 {
-                    IsInService = true;                    
+                    IsInService = true;
+                    scApp.TransferService.OHBC_AlarmCleared(function.EQ_ID, ((int)AlarmLst.PORT_DOWN).ToString());
+                }
+                else
+                {
+                    scApp.TransferService.OHBC_AlarmSet(function.EQ_ID, ((int)AlarmLst.PORT_DOWN).ToString());
                 }
             }
             catch (Exception ex)
@@ -621,6 +664,10 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             {
                 PortInfoChange(vr, null);
             }
+            if (bcfApp.tryGetReadValueEventstring(port.EqptObjectCate, port.PORT_ID, "CIM_ON", out vr))
+            {
+                Port_onCIM_ON(vr, null);
+            }
         }
 
         public virtual string getIdentityKey()
@@ -670,7 +717,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 {
                     Console.WriteLine("wait in");
                     //TODO: wait in
-                    
+
                     if (function.OpAutoMode)
                     {
                         scApp.TransferService.PLC_ReportPortWaitIn(function, "PLC");
@@ -880,7 +927,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 {
                     //get box ID here
                     //box ID is stored in function.BoxID
-                    if(scApp.TransferService.isUnitType(function.EQ_ID, Service.UnitType.AGV))
+                    if (scApp.TransferService.isUnitType(function.EQ_ID, Service.UnitType.AGV))
                     {
                         scApp.TransferService.TransferServiceLogger.Info
                         (
@@ -894,7 +941,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                             + " IsCSTPresence:" + function.IsCSTPresence
                             + " PortWaitOut:" + function.PortWaitOut
                         );
-                    }                    
+                    }
                 }
             }
             catch (Exception ex)
@@ -1028,7 +1075,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                     }
                 }
 
-                if(function.IsInputMode && function.LoadPosition1 == false)
+                if (function.IsInputMode && function.LoadPosition1 == false)
                 {
                     scApp.TransferService.PortToOHT(function.EQ_ID.Trim(), "LoadPosition1 OFF");
                 }

@@ -26,13 +26,13 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Test
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            dataGridView1.DataSource = BCApp.SCApplication.TransferService.waitInLog.Values.ToList();
-            dataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+            //dataGridView1.DataSource = BCApp.SCApplication.TransferService.waitInLog.Values.ToList();
+            //dataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            //dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
 
-            dataGridView2.DataSource = BCApp.SCApplication.TransferService.waitOutLog.Values.ToList();
-            dataGridView2.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dataGridView2.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+            //dataGridView2.DataSource = BCApp.SCApplication.TransferService.waitOutLog.Values.ToList();
+            //dataGridView2.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            //dataGridView2.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
         }
 
         private void WaitInOutLog_Load(object sender, EventArgs e)

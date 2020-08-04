@@ -45,27 +45,31 @@ namespace com.mirle.ibg3k0.sc.BLL
             bool isSuccess = true;
             try
             {
+                datainfo.CSTID = datainfo.CSTID.Trim();
+                datainfo.BOXID = datainfo.BOXID.Trim();
+                datainfo.Carrier_LOC = datainfo.Carrier_LOC.Trim();
+                datainfo.CSTInDT = DateTime.Now.ToString("yy/MM/dd HH:mm:ss");
+                datainfo.TrnDT = DateTime.Now.ToString("yy/MM/dd HH:mm:ss");
+
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
-                    datainfo.CSTInDT = DateTime.Now.ToString("yy/MM/dd HH:mm:ss");
-                    datainfo.TrnDT = DateTime.Now.ToString("yy/MM/dd HH:mm:ss");
                     cassettedataDao.insertCassetteData(con, datainfo);
+                }
 
-                    if (scApp.TransferService.isShelfPort(datainfo.Carrier_LOC)) //若目的為儲位，設定為有卡匣
-                    {
-                        scApp.ShelfDefBLL.updateStatus(datainfo.Carrier_LOC, ShelfDef.E_ShelfState.Stored);
-                    }
+                if (scApp.TransferService.isShelfPort(datainfo.Carrier_LOC)) //若目的為儲位，設定為有卡匣
+                {
+                    scApp.ShelfDefBLL.updateStatus(datainfo.Carrier_LOC, ShelfDef.E_ShelfState.Stored);
+                }
 
-                    TransferServiceLogger.Info
-                    (
-                        DateTime.Now.ToString("HH:mm:ss.fff ")
-                        + "OHB >> DB|卡匣新增成功：" + scApp.TransferService.GetCstLog(datainfo)
-                    );
+                TransferServiceLogger.Info
+                (
+                    DateTime.Now.ToString("HH:mm:ss.fff ")
+                    + "OHB >> DB|卡匣新增成功：" + scApp.TransferService.GetCstLog(datainfo)
+                );
 
-                    if (scApp.TransferService.isUnitType(datainfo.Carrier_LOC, Service.UnitType.AGV))
-                    {
-                        scApp.TransferService.Redis_AddCstBox(datainfo);
-                    }
+                if (scApp.TransferService.isUnitType(datainfo.Carrier_LOC, Service.UnitType.AGV))
+                {
+                    scApp.TransferService.Redis_AddCstBox(datainfo);
                 }
             }
             catch (Exception ex)
@@ -240,13 +244,12 @@ namespace com.mirle.ibg3k0.sc.BLL
         }
         public bool UpdateCST_DateTime(string boxid, UpdateCassetteTimeType timeType)
         {
+            boxid = boxid.Trim();
             bool isSuccess = true;
             string time = DateTime.Now.ToString("yy/MM/dd HH:mm:ss");
 
             try
             {
-                //TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> DB|UpdateCST_StoreDT:BoxID:" + boxid + "   StoreDT:" + time);
-
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
                     switch (timeType)
@@ -266,9 +269,12 @@ namespace com.mirle.ibg3k0.sc.BLL
                     }
                     cassettedataDao.UpdateCassetteData(con);
                 }
+
+                TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> DB|UpdateCST_DateTime BoxID:" + boxid + "   " + timeType + ":" + time);
             }
             catch (Exception ex)
             {
+                TransferServiceLogger.Error(ex, "UpdateCST_DateTime " + boxid + " " + timeType + " " + time);
                 logger.Error(ex, "Exception");
                 isSuccess = false;
             }

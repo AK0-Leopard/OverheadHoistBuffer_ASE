@@ -751,7 +751,7 @@
             this.dataGridView5.Name = "dataGridView5";
             this.dataGridView5.ReadOnly = true;
             this.dataGridView5.RowTemplate.Height = 24;
-            this.dataGridView5.Size = new System.Drawing.Size(1223, 129);
+            this.dataGridView5.Size = new System.Drawing.Size(1211, 129);
             this.dataGridView5.TabIndex = 35;
             // 
             // button25

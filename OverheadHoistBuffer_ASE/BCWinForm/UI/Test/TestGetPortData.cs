@@ -77,6 +77,8 @@ namespace com.mirle.ibg3k0.bc.winform
             dataGridView2.Rows.Add("等待說明", "", "");
             dataGridView2.Rows.Add("等待 OHT 搬走", "PortWaitIn", "");
             dataGridView2.Rows.Add("等待從 Port 搬走", "PortWaitOut", "");
+            dataGridView2.Rows.Add("狀態說明", "", "");
+            dataGridView2.Rows.Add("PLC 離線狀態", "CIM_ON", "");
 
             dataGridView2.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dataGridView2.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
@@ -152,6 +154,8 @@ namespace com.mirle.ibg3k0.bc.winform
             //dataGridView2.Rows[11].Cells[2].Value = 等待說明;
             dataGridView2.Rows[12].Cells[2].Value = portData.PortWaitIn.ToString();
             dataGridView2.Rows[13].Cells[2].Value = portData.PortWaitOut.ToString();
+            //dataGridView2.Rows[14].Cells[2].Value = 等待說明;
+            dataGridView2.Rows[15].Cells[2].Value = portData.cim_on.ToString();
             #endregion
             #region dataGridView3
             dataGridView3.Rows[0].Cells[2].Value = portData.CstRemoveCheck.ToString();

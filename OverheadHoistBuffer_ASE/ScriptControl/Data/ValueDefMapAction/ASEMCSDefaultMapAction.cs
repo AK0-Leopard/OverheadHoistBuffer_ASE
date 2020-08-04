@@ -1629,10 +1629,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             S6F11.RPTINFO.RPTITEM.VIDITEM_04_SV viditem_04 = new S6F11.RPTINFO.RPTITEM.VIDITEM_04_SV();
 
             //AlarmsSet，只報會造成設備不能跑貨的狀況(S5F1)，因為會造成此狀況的只有車子的 Alarm ，這邊就濾掉 Port 的異常
-            List<ALARM> alarms = scApp.AlarmBLL.loadSetAlarmList().Where(data => 
-                                       scApp.TransferService.isUnitType(data.EQPT_ID, Service.UnitType.CRANE) 
-                                    && data.ALAM_LVL == E_ALARM_LVL.Error
-                                    ).ToList();  
+            List<ALARM> alarms = scApp.AlarmBLL.loadSetAlarmListByError();  
 
             viditem_04.ALIDs = new S6F11.RPTINFO.RPTITEM.ALID_DVVAL[alarms.Count];
             //viditem_04.SystemByte = 100;
@@ -1708,31 +1705,27 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
         {
             //List<ALARM> occurred_alarms = scApp.AlarmBLL.getCurrentAlarmsFromRedis();
             //List<ALARM> occurred_error_alarms = occurred_alarms.Where(alarm => alarm.ALAM_LVL == E_ALARM_LVL.Error).ToList();
-            List<ALARM> occurred_error_alarms = scApp.AlarmBLL.loadSetAlarmList();
-
-            List<ALARM> alarms = scApp.AlarmBLL.loadSetAlarmList().Where(data =>
-                                       (scApp.TransferService.isUnitType(data.EQPT_ID, Service.UnitType.CRANE) && data.ALAM_LVL == E_ALARM_LVL.Warn)
-                                       || scApp.TransferService.isUnitType(data.EQPT_ID, Service.UnitType.CRANE) == false
-                                                                    ).ToList();
+            
+            List<ALARM> alarms = scApp.AlarmBLL.loadSetAlarmListByWarn();
 
             S6F11.RPTINFO.RPTITEM.VIDITEM_360_SV viditem_360 = new S6F11.RPTINFO.RPTITEM.VIDITEM_360_SV();
-            viditem_360.UNIT_ALARM_INFO_OBJ = new S6F11.RPTINFO.RPTITEM.VIDITEM_361_SV[occurred_error_alarms.Count];
+            viditem_360.UNIT_ALARM_INFO_OBJ = new S6F11.RPTINFO.RPTITEM.VIDITEM_361_SV[alarms.Count];
 
-            for (int i = 0; i < occurred_error_alarms.Count; i++)
+            for (int i = 0; i < alarms.Count; i++)
             {
                 //AVEHICLE vh = scApp.getEQObjCacheManager().getVehicletByVHID(occurred_error_alarms[i].EQPT_ID);
                 //int current_adr = 0;
                 //int.TryParse(vh.CUR_ADR_ID, out current_adr);
                 //string uint_id = vh.Real_ID;
-                string uint_id = occurred_error_alarms[i].UnitID.ToString().Trim();
-                string alarm_id = occurred_error_alarms[i].ALAM_CODE;
+                string uint_id = alarms[i].UnitID.ToString().Trim();
+                string alarm_id = alarms[i].ALAM_CODE;
                 int ialarm_code = 0;
                 int.TryParse(alarm_id, out ialarm_code);
                 string alarm_code = (ialarm_code < 0 ? ialarm_code * -1 : ialarm_code).ToString();
-                string alarm_text = occurred_error_alarms[i].ALAM_DESC;
+                string alarm_text = alarms[i].ALAM_DESC;
                 string mainte_state = SECSConst.MAINTE_STATE_NotMainteance;
 
-                if (occurred_error_alarms[i].ALAM_LVL == E_ALARM_LVL.Error)
+                if (alarms[i].ALAM_LVL == E_ALARM_LVL.Error)
                 {
                     mainte_state = SECSConst.MAINTE_STATE_Mainteance;
                 }

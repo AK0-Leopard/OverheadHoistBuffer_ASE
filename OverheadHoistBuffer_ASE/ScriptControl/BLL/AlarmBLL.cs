@@ -24,6 +24,7 @@ using NLog;
 using com.mirle.ibg3k0.bcf.App;
 using com.mirle.ibg3k0.sc.Data;
 using Newtonsoft.Json;
+using com.mirle.ibg3k0.sc.Service;
 
 namespace com.mirle.ibg3k0.sc.BLL
 {
@@ -170,6 +171,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 }
 
                 string strNow = BCFUtility.formatDateTime(DateTime.Now, SCAppConstants.TimestampFormat_19);
+                
                 ALARM alarm = new ALARM()
                 {
                     EQPT_ID = eq_id,
@@ -180,14 +182,36 @@ namespace com.mirle.ibg3k0.sc.BLL
                     ALAM_DESC = alarmMap == null ? $"unknow alarm code:{error_code}" : $"{eq_id} {alarmMap.ALARM_DESC}(error code:{error_code})",
                     ERROR_ID = error_code,  //alarmMap?.ALARM_ID ?? "0",
                     UnitID = eq_id,
-                    UnitState = "1",
+                    UnitState = "3",
+                    RecoveryOption = "",
                 };
-                
+
+                if (scApp.TransferService.isUnitType(eq_id, UnitType.CRANE))
+                {
+                    if (error_code == SCAppConstants.SystemAlarmCode.OHT_Issue.DoubleStorage)
+                    {
+                        alarm.UnitState = "1";
+                        alarm.RecoveryOption = "ABORT";
+                    }
+
+                    if (error_code == SCAppConstants.SystemAlarmCode.OHT_Issue.EmptyRetrieval)
+                    {
+                        alarm.UnitState = "2";
+                        alarm.RecoveryOption = "ABORT";
+                    }
+                }
+
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
                     alarmDao.insertAlarm(con, alarm);
 
                     CheckSetAlarm();
+                }
+
+                if (scApp.TransferService.isUnitType(eq_id, UnitType.CRANE) == false)
+                {
+                    alarm.EQPT_ID = "";
+                    alarm.UnitID = "";
                 }
 
                 return alarm;
@@ -415,6 +439,20 @@ namespace com.mirle.ibg3k0.sc.BLL
             using (DBConnection_EF con = DBConnection_EF.GetUContext())
             {
                 return alarmDao.loadSetAlarm(con);
+            }
+        }
+        public List<ALARM> loadSetAlarmListByError()
+        {
+            using (DBConnection_EF con = DBConnection_EF.GetUContext())
+            {
+                return alarmDao.loadSetAlarmByError(con);
+            }
+        }
+        public List<ALARM> loadSetAlarmListByWarn()
+        {
+            using (DBConnection_EF con = DBConnection_EF.GetUContext())
+            {
+                return alarmDao.loadSetAlarmByWarn(con);
             }
         }
         public List<ALARM> loadSetAlarmListByEqName(string eqName)

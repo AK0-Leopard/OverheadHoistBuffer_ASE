@@ -156,6 +156,38 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                 throw;
             }
         }
+        public List<ALARM> loadSetAlarmByError(DBConnection_EF conn)
+        {
+            try
+            {
+                var alarm = from a in conn.ALARM
+                            where a.ALAM_STAT == ProtocolFormat.OHTMessage.ErrorStatus.ErrSet
+                            && a.ALAM_LVL == E_ALARM_LVL.Error
+                            select a;
+                return alarm.ToList();
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex);
+                throw;
+            }
+        }
+        public List<ALARM> loadSetAlarmByWarn(DBConnection_EF conn)
+        {
+            try
+            {
+                var alarm = from a in conn.ALARM
+                            where a.ALAM_STAT == ProtocolFormat.OHTMessage.ErrorStatus.ErrSet
+                            && a.ALAM_LVL == E_ALARM_LVL.Warn
+                            select a;
+                return alarm.ToList();
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex);
+                throw;
+            }
+        }
         public List<ALARM> loadSetAlarmByEqName(DBConnection_EF conn, string eqName)
         {
             try

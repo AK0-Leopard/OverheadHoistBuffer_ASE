@@ -165,7 +165,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Test
                     }
 
                     string cmdID = dataGridView1.Rows[v.RowIndex].Cells["CMD_ID"].Value.ToString();
-                    BCApp.SCApplication.TransferService.Manual_DeleteCmd(cmdID, "命令結束(車子)");
+                    BCApp.SCApplication.TransferService.Manual_DeleteCmd(cmdID, "工程UI CMD_CST_DATA");
                 }
                 UpDate_CmdData();
             }

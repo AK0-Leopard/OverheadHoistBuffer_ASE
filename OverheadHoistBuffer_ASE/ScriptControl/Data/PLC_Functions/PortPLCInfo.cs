@@ -101,5 +101,8 @@ namespace com.mirle.ibg3k0.sc.Data.PLC_Functions
 
         [PLCElement(ValueName = "FIRE_ALARM")]
         public bool FireAlarm;
+
+        [PLCElement(ValueName = "CIM_ON")]
+        public bool cim_on;
     }
 }

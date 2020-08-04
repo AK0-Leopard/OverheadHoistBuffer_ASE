@@ -57,6 +57,9 @@ namespace com.mirle.ibg3k0.sc.Service
         OHT_QueueCmdTimeOut = 100016,
         AGV_HasCmdsAccessTimeOut = 100017,
         AGVStation_DontHaveEnoughEmptyBox = 100018,
+        PORT_CIM_OFF = 100019,
+        PORT_DOWN = 100020,
+        BOX_NumberIsNotEnough = 100021,
     }
     public class VehicleService : IDynamicMetaObjectProvider
     {

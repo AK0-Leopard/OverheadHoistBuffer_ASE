@@ -56,7 +56,7 @@ namespace com.mirle.ibg3k0.sc.Data.DAO.EntityFramework
         public ACMD_MCS getByBoxID(DBConnection_EF con, String box_id)
         {
             var query = from cmd in con.ACMD_MCS
-                        where cmd.BOX_ID == box_id.Trim() && cmd.TRANSFERSTATE != E_TRAN_STATUS.TransferCompleted
+                        where cmd.BOX_ID.Trim() == box_id.Trim() && cmd.TRANSFERSTATE != E_TRAN_STATUS.TransferCompleted
                         select cmd;
             return query.SingleOrDefault();
         }
