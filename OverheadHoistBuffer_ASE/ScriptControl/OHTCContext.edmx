@@ -154,6 +154,7 @@
           <Property Name="SOURCE" Type="char" MaxLength="64" />
           <Property Name="DESTINATION" Type="char" MaxLength="64" />
           <Property Name="PRIORITY" Type="int" Nullable="false" />
+          <Property Name="CMD_INSER_TIME" Type="datetime2" Precision="7" />
           <Property Name="CMD_START_TIME" Type="datetime2" Precision="7" />
           <Property Name="CMD_END_TIME" Type="datetime2" Precision="7" />
           <Property Name="CMD_STAUS" Type="int" Nullable="false" />
@@ -1784,6 +1785,7 @@
           <Property Name="DESTINATION_ADR" Type="String" MaxLength="64" FixedLength="true" Unicode="false" />
           <Property Name="BOX_ID" Type="String" MaxLength="64" FixedLength="true" Unicode="false" />
           <Property Name="LOT_ID" Type="String" MaxLength="64" FixedLength="true" Unicode="false" />
+          <Property Name="CMD_INSER_TIME" Type="DateTime" Precision="7" />
         </EntityType>
         <EntityType Name="ACEID">
           <Key>
@@ -3077,7 +3079,8 @@
     <EntitySetMapping Name="ACMD_OHTC">
       <EntityTypeMapping TypeName="IsTypeOf(OHTC_DevModel.ACMD_OHTC)">
         <MappingFragment StoreEntitySet="ACMD_OHTC">
-          <ScalarProperty Name="CMD_ID" ColumnName="CMD_ID" />
+          <ScalarProperty Name="CMD_INSER_TIME" ColumnName="CMD_INSER_TIME" />
+                <ScalarProperty Name="CMD_ID" ColumnName="CMD_ID" />
           <ScalarProperty Name="VH_ID" ColumnName="VH_ID" />
           <ScalarProperty Name="CARRIER_ID" ColumnName="CARRIER_ID" />
           <ScalarProperty Name="CMD_ID_MCS" ColumnName="CMD_ID_MCS" />

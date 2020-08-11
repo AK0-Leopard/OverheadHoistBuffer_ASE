@@ -5154,6 +5154,7 @@ LINE,100017,2,"AGV_has Cmds access but haven't wait in or change type , TimeOut 
 LINE,100018,2,AGV Station is unable to accept AGV store CST. Due to dont have enough empty box.
 LINE,100020,2,PORT_DOWN
 LINE,100021,2,BOX_NumberIsNotEnough
+LINE,100024,2,NotEmptyShelf
 CRANE,100013,1,PORT_BOXID_READ_FAIL
 CRANE,100014,1,PORT_CSTID_READ_FAIL
 CRANE,100022,1,OHT_IDMismatchUNKU
@@ -5177,3 +5178,7 @@ OHCV_7,100014,1,PORT_CSTID_READ_FAIL
 OHCV_7,100019,2,PORT_CIM_OFF 
 OHCV_7,100020,2,PORT_DOWN
 OHCV_7,100023,2,PORT_WaitOutTimeOut
+OHCV_5,770,2,[CV1]BCR 15min auto 2 times
+OHCV_5,1470,2,[TUCV5]BCR 15min auto 2 times
+OHCV_7,770,2,[CV7]BCR 15min auto 2 times
+OHCV_7,1470,2,[TUCV1]BCR 15min auto 2 times

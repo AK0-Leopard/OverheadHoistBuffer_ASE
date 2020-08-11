@@ -855,7 +855,16 @@ namespace com.mirle.ibg3k0.sc.BLL
                         cmdMCS.DistanceFromVehicleToHostSource = (int)distance;
                     }
                 }
-                sortedMCSData.Sort(new MCSCmdCompareByAddressDistance());
+                bool isAGVCmdNumMoreThan1 = false;
+                isAGVCmdNumMoreThan1 = IsAGVCmdNumMoreThanOne(originMCSCmdData);
+                if (isAGVCmdNumMoreThan1 == true)
+                {
+                    sortedMCSData.Sort(MCSCmdCompare_MoreThan1);
+                }
+                else
+                {
+                    sortedMCSData.Sort(MCSCmdCompare_LessThan2);
+                }
                 #endregion
 
                 cmdMCSSort = scApp.CMDBLL.CombineMCSLogData(sortedMCSData);
@@ -876,6 +885,163 @@ namespace com.mirle.ibg3k0.sc.BLL
                 logger.Error(ex, "Exception");
                 return originMCSCmdData;
             }
+        }
+        public int MCSCmdCompare_MoreThan1(ACMD_MCS MCSCmd1, ACMD_MCS MCSCmd2)
+        {
+            //A20.06.09.0
+            // 0.判斷命令來源是否為shelf，非shelf者優先進行。
+            bool isCmd1_SourceTypeShelf = MCSCmd1.IsCmdSourceTypeShelf(MCSCmd1.HOSTSOURCE);
+            bool isCmd2_SourceTypeShelf = MCSCmd1.IsCmdSourceTypeShelf(MCSCmd2.HOSTSOURCE);
+
+            if ((isCmd1_SourceTypeShelf == true) && (isCmd2_SourceTypeShelf == true) ||
+                (isCmd1_SourceTypeShelf == false) && (isCmd2_SourceTypeShelf == false))
+            {
+                //代表兩者相等，不動，且接著判斷距離
+            }
+            if ((isCmd1_SourceTypeShelf == true) && (isCmd2_SourceTypeShelf == false))
+            {
+                return 1;
+                //代表後者較優先，換位
+            }
+            if ((isCmd1_SourceTypeShelf == false) && (isCmd2_SourceTypeShelf == true))
+            {
+                return -1;
+                //代表前者較優先，不動
+            }
+
+            //A20.06.04
+            // 1.先取priority 判斷
+            if ((MCSCmd1.PRIORITY_SUM >= 99 && MCSCmd2.PRIORITY_SUM >= 99) ||
+                (MCSCmd1.PRIORITY_SUM < 99 && MCSCmd2.PRIORITY_SUM < 99))
+            {
+                //代表兩者相等，不動，且接著判斷距離
+            }
+            if (MCSCmd1.PRIORITY_SUM < 99 && MCSCmd2.PRIORITY_SUM >= 99)
+            {
+                return 1;
+                //代表後者較優先，換位
+            }
+            if (MCSCmd1.PRIORITY_SUM >= 99 && MCSCmd2.PRIORITY_SUM < 99)
+            {
+                return -1;
+                //代表前者較優先，不動
+            }
+
+            // 2. 若priority 相同，則獲得各自 shelf 的 address 與起始 address的距離
+            if (MCSCmd1.DistanceFromVehicleToHostSource == MCSCmd2.DistanceFromVehicleToHostSource)
+            {
+                return 0;
+                //代表兩者相等，不動
+            }
+            if (MCSCmd1.DistanceFromVehicleToHostSource > MCSCmd2.DistanceFromVehicleToHostSource)
+            {
+                return 1;
+                //代表後者較優先，換位
+            }
+            if (MCSCmd1.DistanceFromVehicleToHostSource < MCSCmd2.DistanceFromVehicleToHostSource)
+            {
+                return -1;
+                //代表前者較優先，不動
+            }
+            return 0;
+        }
+        public int MCSCmdCompare_LessThan2(ACMD_MCS MCSCmd1, ACMD_MCS MCSCmd2)
+        {
+            //A20.08.04
+            // -1. 判斷目的 port 為AGV者優先
+            bool isCmd1_SourceTypeAGV = MCSCmd1.IsCmdSourceTypeAGV(MCSCmd1.HOSTDESTINATION);
+            bool isCmd2_SourceTypeAGV = MCSCmd1.IsCmdSourceTypeAGV(MCSCmd2.HOSTDESTINATION);
+
+            if ((isCmd1_SourceTypeAGV == true) && (isCmd2_SourceTypeAGV == true) ||
+                (isCmd1_SourceTypeAGV == false) && (isCmd2_SourceTypeAGV == false))
+            {
+                //代表兩者相等，不動，且接著判斷距離
+            }
+            if ((isCmd1_SourceTypeAGV == false) && (isCmd2_SourceTypeAGV == true))
+            {
+                return 1;
+                //代表後者較優先，換位
+            }
+            if ((isCmd1_SourceTypeAGV == true) && (isCmd2_SourceTypeAGV == false))
+            {
+                return -1;
+                //代表前者較優先，不動
+            }
+
+            //A20.06.09.0
+            // 0.判斷命令來源是否為shelf，非shelf者優先進行。
+            bool isCmd1_SourceTypeShelf = MCSCmd1.IsCmdSourceTypeShelf(MCSCmd1.HOSTSOURCE);
+            bool isCmd2_SourceTypeShelf = MCSCmd1.IsCmdSourceTypeShelf(MCSCmd2.HOSTSOURCE);
+
+            if ((isCmd1_SourceTypeShelf == true) && (isCmd2_SourceTypeShelf == true) ||
+                (isCmd1_SourceTypeShelf == false) && (isCmd2_SourceTypeShelf == false))
+            {
+                //代表兩者相等，不動，且接著判斷距離
+            }
+            if ((isCmd1_SourceTypeShelf == true) && (isCmd2_SourceTypeShelf == false))
+            {
+                return 1;
+                //代表後者較優先，換位
+            }
+            if ((isCmd1_SourceTypeShelf == false) && (isCmd2_SourceTypeShelf == true))
+            {
+                return -1;
+                //代表前者較優先，不動
+            }
+
+            //A20.06.04
+            // 1.先取priority 判斷
+            if ((MCSCmd1.PRIORITY_SUM >= 99 && MCSCmd2.PRIORITY_SUM >= 99) ||
+                (MCSCmd1.PRIORITY_SUM < 99 && MCSCmd2.PRIORITY_SUM < 99))
+            {
+                //代表兩者相等，不動，且接著判斷距離
+            }
+            if (MCSCmd1.PRIORITY_SUM < 99 && MCSCmd2.PRIORITY_SUM >= 99)
+            {
+                return 1;
+                //代表後者較優先，換位
+            }
+            if (MCSCmd1.PRIORITY_SUM >= 99 && MCSCmd2.PRIORITY_SUM < 99)
+            {
+                return -1;
+                //代表前者較優先，不動
+            }
+
+            // 2. 若priority 相同，則獲得各自 shelf 的 address 與起始 address的距離
+            if (MCSCmd1.DistanceFromVehicleToHostSource == MCSCmd2.DistanceFromVehicleToHostSource)
+            {
+                return 0;
+                //代表兩者相等，不動
+            }
+            if (MCSCmd1.DistanceFromVehicleToHostSource > MCSCmd2.DistanceFromVehicleToHostSource)
+            {
+                return 1;
+                //代表後者較優先，換位
+            }
+            if (MCSCmd1.DistanceFromVehicleToHostSource < MCSCmd2.DistanceFromVehicleToHostSource)
+            {
+                return -1;
+                //代表前者較優先，不動
+            }
+            return 0;
+        }
+        private static bool IsAGVCmdNumMoreThanOne(List<ACMD_MCS> originMCSCmdData)
+        {
+            bool _checkAGVCmdNumMoreThan1 = false;
+            if (originMCSCmdData.Where(data => data.HOSTDESTINATION.Contains("ST01")).Count() > 1)
+            {
+                _checkAGVCmdNumMoreThan1 = true;
+            }
+            else if (originMCSCmdData.Where(data => data.HOSTDESTINATION.Contains("ST02")).Count() > 1)
+            {
+                _checkAGVCmdNumMoreThan1 = true;
+            }
+            else if (originMCSCmdData.Where(data => data.HOSTDESTINATION.Contains("ST03")).Count() > 1)
+            {
+                _checkAGVCmdNumMoreThan1 = true;
+            }
+
+            return _checkAGVCmdNumMoreThan1;
         }
 
         //*************************************************
@@ -933,6 +1099,15 @@ namespace com.mirle.ibg3k0.sc.BLL
                 cmd_mcsDao.DeleteCmdData(con, cmd);
             }
         }
+        public void DeleteLog(int deleteMonths)
+        {
+            using (DBConnection_EF con = DBConnection_EF.GetUContext())
+            {
+                cmd_mcsDao.DeleteLOG_ByACMD_MCS(con, deleteMonths);
+                cmd_mcsDao.DeleteLOG_ByACMD_OHTC(con, deleteMonths);
+                //cmd_mcsDao.DeleteLOG_ByACMD_AMCSREPORTQUEUE(con, deleteMonths);
+            }
+        }
         public bool updateCMD_MCS_CmdStatus(string cmd_id, int status)
         {
             bool isSuccess = true;
@@ -941,7 +1116,7 @@ namespace com.mirle.ibg3k0.sc.BLL
             {
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
-                    int i = (int)status;
+                    int i = status;
                     ACMD_MCS cmd = cmd_mcsDao.getByID(con, cmd_id);
                     cmd.COMMANDSTATE = i;
                     cmd_mcsDao.update(con, cmd);
@@ -969,7 +1144,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                     cmd.TRANSFERSTATE = status;
                     cmd.CMD_FINISH_TIME = DateTime.Now;
 
-                    if(status == E_TRAN_STATUS.Queue)
+                    if (status == E_TRAN_STATUS.Queue)
                     {
                         cmd.COMMANDSTATE = 0;
                     }
@@ -1015,7 +1190,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
                     scApp.TransferService.OHBC_OHT_QueueCmdTimeOutCmdIDCleared(cmd.CMD_ID);
                 }
-                else 
+
                 TransferServiceLogger.Info
                 (
                     DateTime.Now.ToString("HH:mm:ss.fff ")
@@ -3231,7 +3406,36 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
 
         }
-
+        public ACMD_OHTC getCMD_OHTCByMCScmdID_And_NotFinishByDest(string mcs_cmd_id, string dest)
+        {
+            try
+            {
+                using (DBConnection_EF con = new DBConnection_EF())
+                {
+                    return cmd_ohtcDAO.getCMD_OHTCByMCScmdID_And_NotFinishByDest(con, mcs_cmd_id, dest);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return null;
+            }
+        }
+        public ACMD_OHTC getCMD_OHTCByMCScmdID_And_NotFinishBySource(string mcs_cmd_id, string source)
+        {
+            try
+            {
+                using (DBConnection_EF con = new DBConnection_EF())
+                {
+                    return cmd_ohtcDAO.getCMD_OHTCByMCScmdID_And_NotFinishBySource(con, mcs_cmd_id, source);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return null;
+            }
+        }
         public bool isCMD_OHTCQueueByVh(string vh_id)
         {
             int count = 0;

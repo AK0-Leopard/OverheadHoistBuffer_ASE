@@ -9,6 +9,7 @@ using com.mirle.ibg3k0.bcf.App;
 using com.mirle.ibg3k0.sc.Data;
 using com.mirle.ibg3k0.sc.App;
 using System.Transactions;
+using com.mirle.ibg3k0.sc.Service;
 
 namespace com.mirle.ibg3k0.sc.BLL
 {
@@ -181,6 +182,12 @@ namespace com.mirle.ibg3k0.sc.BLL
                     + "更新儲位狀態:  shelf_id: " + shelf_id
                     + " status: " + status
                 );
+
+                if(status == ShelfDef.E_ShelfState.EmptyShelf)
+                {
+                    scApp.TransferService.OHBC_AlarmCleared(scApp.getEQObjCacheManager().getLine().LINE_ID, ((int)AlarmLst.LINE_NotEmptyShelf).ToString());
+                }
+                
             }
             catch (Exception ex)
             {

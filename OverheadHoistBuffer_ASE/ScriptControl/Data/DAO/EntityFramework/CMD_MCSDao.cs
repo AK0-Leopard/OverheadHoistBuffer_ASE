@@ -33,7 +33,51 @@ namespace com.mirle.ibg3k0.sc.Data.DAO.EntityFramework
                 throw;
             }
         }
-
+        public void DeleteLOG_ByACMD_MCS(DBConnection_EF conn, int deleteMonths)
+        {
+            try
+            {
+                DateTime dateTime = DateTime.Now.AddMonths(-deleteMonths);
+                var deleteData = conn.ACMD_MCS.Where(x => x.CMD_INSER_TIME < dateTime);
+                conn.ACMD_MCS.RemoveRange(deleteData);
+                conn.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                //logger.Warn(ex);
+                throw;
+            }
+        }
+        public void DeleteLOG_ByACMD_OHTC(DBConnection_EF conn, int deleteMonths)
+        {
+            try
+            {
+                DateTime dateTime = DateTime.Now.AddMonths(-deleteMonths);
+                var deleteData = conn.ACMD_OHTC.Where(x => x.CMD_INSER_TIME < dateTime);
+                conn.ACMD_OHTC.RemoveRange(deleteData);
+                conn.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                //logger.Warn(ex);
+                throw;
+            }
+        }
+        public void DeleteLOG_ByACMD_AMCSREPORTQUEUE(DBConnection_EF conn, int deleteMonths)
+        {
+            try
+            {
+                DateTime dateTime = DateTime.Now.AddMonths(-deleteMonths);
+                var deleteData = conn.AMCSREPORTQUEUE.Where(x => x.INTER_TIME < dateTime);
+                conn.AMCSREPORTQUEUE.RemoveRange(deleteData);
+                conn.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                //logger.Warn(ex);
+                throw;
+            }
+        }
         public void update(DBConnection_EF con, ACMD_MCS cmd)
         {
             con.SaveChanges();

@@ -60,6 +60,8 @@ namespace com.mirle.ibg3k0.sc.Data.PLC_Functions
         [PLCElement(ValueName = "ASSIGN_CST_ID")]
         public string AssignCassetteID;
 
+        [PLCElement(ValueName = "BCR_ENABLE_CMD")]
+        public bool PortBCR_Enable;
     }
 
     class PortPLCControl_CSTID_BOXID : PLC_FunBase
@@ -114,6 +116,13 @@ namespace com.mirle.ibg3k0.sc.Data.PLC_Functions
 
         [PLCElement(ValueName = "ID_READ_CMD")]
         public bool PortIDRead;
+    }
+    class PortPLCControl_AGV_BCR_Enable : PLC_FunBase
+    {
+        public DateTime Timestamp;
+
+        [PLCElement(ValueName = "BCR_ENABLE_CMD")]
+        public bool PortBCR_Enable;
     }
     class PortPLCControl_AGV_AGVmode : PLC_FunBase
     {

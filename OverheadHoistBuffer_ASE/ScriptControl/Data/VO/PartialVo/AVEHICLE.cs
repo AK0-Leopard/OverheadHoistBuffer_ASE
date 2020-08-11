@@ -243,6 +243,9 @@ namespace com.mirle.ibg3k0.sc
         [JsonIgnore]
         [BaseElement(NonChangeFromOtherVO = true)]
         public object DoCreatTransferCommand_Sync = new object();
+        [JsonIgnore]
+        [BaseElement(NonChangeFromOtherVO = true)]
+        public object Connection_Sync = new object();
 
         [JsonIgnore]
         [BaseElement(NonChangeFromOtherVO = true)]

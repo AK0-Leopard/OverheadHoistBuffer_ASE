@@ -555,5 +555,15 @@ namespace com.mirle.ibg3k0.bc.winform
 
             }
         }
+
+        private void button37_Click(object sender, EventArgs e)
+        {
+            transferService.PortBCR_Enable(comboBox1.Text, true);
+        }
+
+        private void button38_Click(object sender, EventArgs e)
+        {
+            transferService.PortBCR_Enable(comboBox1.Text, false);
+        }
     }
 }

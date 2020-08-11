@@ -412,22 +412,7 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
 
         }
-        public CassetteData loadCassetteDataByCSTID(string cstid)
-        {
-            try
-            {
-                using (DBConnection_EF con = DBConnection_EF.GetUContext())
-                {
-                    return cassettedataDao.LoadCassetteDataByCSTID(con, cstid);
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex, "Exception");
-                return null;
-            }
-        }
-
+        
         public CassetteData loadCassetteDataByLoc(string portName)
         {
             try
@@ -459,7 +444,21 @@ namespace com.mirle.ibg3k0.sc.BLL
                 return null;
             }
         }
-
+        public CassetteData loadCassetteDataByCSTID(string cstid)
+        {
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    return cassettedataDao.LoadCassetteDataByCSTID(con, cstid);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return null;
+            }
+        }
         public CassetteData loadCassetteDataByBoxID(string boxid)
         {
             try
@@ -468,6 +467,38 @@ namespace com.mirle.ibg3k0.sc.BLL
                 {
                     //return con.CassetteData.Where(data => data.BOXID == boxid).FirstOrDefault();
                     return cassettedataDao.LoadCassetteDataByBoxID(con, boxid);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return null;
+            }
+        }
+        public CassetteData loadCassetteDataByDU_CstID(CassetteData cstData)
+        {
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    //return con.CassetteData.Where(data => data.BOXID == boxid).FirstOrDefault();
+                    return cassettedataDao.LoadCassetteDataByDU_CSTID(con, cstData);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return null;
+            }
+        }
+        public CassetteData loadCassetteDataByDU_BoxID(CassetteData cstData)
+        {
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    //return con.CassetteData.Where(data => data.BOXID == boxid).FirstOrDefault();
+                    return cassettedataDao.LoadCassetteDataByDU_BOXID(con, cstData);
                 }
             }
             catch (Exception ex)

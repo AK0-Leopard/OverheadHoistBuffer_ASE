@@ -10,6 +10,7 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
     {
         public void add(DBConnection_EF con, ACMD_OHTC blockObj)
         {
+            blockObj.CMD_INSER_TIME = DateTime.Now;
             con.ACMD_OHTC.Add(blockObj);
             con.SaveChanges();
         }
@@ -197,11 +198,30 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
         public ACMD_OHTC getCMD_OHTCByMCScmdID(DBConnection_EF con, string mcs_cmd_id)
         {
             var query = from cmd in con.ACMD_OHTC
-                        where cmd.CMD_ID_MCS == mcs_cmd_id.Trim()
+                        where cmd.CMD_ID_MCS.Trim() == mcs_cmd_id.Trim()
                         select cmd;
             return query.FirstOrDefault();
         }
+        public ACMD_OHTC getCMD_OHTCByMCScmdID_And_NotFinishByDest(DBConnection_EF con, string mcs_cmd_id, string dest)
+        {
+            var query = from cmd in con.ACMD_OHTC
+                        where cmd.CMD_ID_MCS.Trim() == mcs_cmd_id.Trim() 
+                            && cmd.CMD_END_TIME == null
+                            && cmd.DESTINATION.Trim() == dest.Trim()
+                        select cmd;
 
+            return query.FirstOrDefault();
+        }
+        public ACMD_OHTC getCMD_OHTCByMCScmdID_And_NotFinishBySource(DBConnection_EF con, string mcs_cmd_id, string source)
+        {
+            var query = from cmd in con.ACMD_OHTC
+                        where cmd.CMD_ID_MCS.Trim() == mcs_cmd_id.Trim()
+                            && cmd.CMD_END_TIME == null
+                            && cmd.SOURCE.Trim() == source.Trim()
+                        select cmd;
+
+            return query.FirstOrDefault();
+        }
         public void update(DBConnection_EF con, ACMD_OHTC ohtCmd)
         {
             con.SaveChanges();

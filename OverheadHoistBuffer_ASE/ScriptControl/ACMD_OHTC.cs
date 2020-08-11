@@ -34,5 +34,6 @@ namespace com.mirle.ibg3k0.sc
         public string DESTINATION_ADR { get; set; }
         public string BOX_ID { get; set; }
         public string LOT_ID { get; set; }
+        public Nullable<System.DateTime> CMD_INSER_TIME { get; set; }
     }
 }

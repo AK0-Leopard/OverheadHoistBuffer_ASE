@@ -115,14 +115,14 @@ namespace com.mirle.ibg3k0.sc
         }
         //*******************************************************************
         //A20.05.22 用於List sort 指令 呼叫使用
-        public class MCSCmdCompareByAddressDistance : IComparer<ACMD_MCS>
+        public class MCSCmdCompare_LessThan2 : IComparer<ACMD_MCS>
         {
             public int Compare(ACMD_MCS MCSCmd1, ACMD_MCS MCSCmd2)
             {
                 //A20.08.04
                 // -1. 判斷目的 port 為AGV者優先
-                bool isCmd1_SourceTypeAGV = IsCmdSourceTypeAGV(MCSCmd1.HOSTDESTINATION);
-                bool isCmd2_SourceTypeAGV = IsCmdSourceTypeAGV(MCSCmd2.HOSTDESTINATION);
+                bool isCmd1_SourceTypeAGV = MCSCmd1.IsCmdSourceTypeAGV(MCSCmd1.HOSTDESTINATION);
+                bool isCmd2_SourceTypeAGV = MCSCmd1.IsCmdSourceTypeAGV(MCSCmd2.HOSTDESTINATION);
 
                 if ((isCmd1_SourceTypeAGV == true) && (isCmd2_SourceTypeAGV == true) ||
                     (isCmd1_SourceTypeAGV == false) && (isCmd2_SourceTypeAGV == false))
@@ -142,8 +142,8 @@ namespace com.mirle.ibg3k0.sc
 
                 //A20.06.09.0
                 // 0.判斷命令來源是否為shelf，非shelf者優先進行。
-                bool isCmd1_SourceTypeShelf = IsCmdSourceTypeShelf(MCSCmd1.HOSTSOURCE);
-                bool isCmd2_SourceTypeShelf = IsCmdSourceTypeShelf(MCSCmd2.HOSTSOURCE);
+                bool isCmd1_SourceTypeShelf = MCSCmd1.IsCmdSourceTypeShelf(MCSCmd1.HOSTSOURCE);
+                bool isCmd2_SourceTypeShelf = MCSCmd1.IsCmdSourceTypeShelf(MCSCmd2.HOSTSOURCE);
 
                 if ((isCmd1_SourceTypeShelf == true) && (isCmd2_SourceTypeShelf == true) ||
                     (isCmd1_SourceTypeShelf == false) && (isCmd2_SourceTypeShelf == false))
@@ -160,7 +160,7 @@ namespace com.mirle.ibg3k0.sc
                     return -1;
                     //代表前者較優先，不動
                 }
-                
+
                 //A20.06.04
                 // 1.先取priority 判斷
                 if ((MCSCmd1.PRIORITY_SUM >= 99 && MCSCmd2.PRIORITY_SUM >= 99) ||
@@ -198,26 +198,90 @@ namespace com.mirle.ibg3k0.sc
                 return 0;
             }
 
-            private bool IsCmdSourceTypeShelf(string cmdSource)
-            {
-                bool isCmdSourceTypeShelf = false;
-                if (cmdSource.StartsWith("10") || cmdSource.StartsWith("11") || cmdSource.StartsWith("20") || cmdSource.StartsWith("21"))
-                {
-                    isCmdSourceTypeShelf = true;
-                }
-                return isCmdSourceTypeShelf;
-            }
-
-            private bool IsCmdSourceTypeAGV(string cmdSource)
-            {
-                bool isCmdSourceTypeAGV = false;
-                if (cmdSource.Contains("A0")|| cmdSource.Contains("ST0"))
-                {
-                    isCmdSourceTypeAGV = true;
-                }
-                return isCmdSourceTypeAGV;
-            }
         }
 
+        public class MCSCmdCompare_MoreThan1 : IComparer<ACMD_MCS>
+        {
+            public int Compare(ACMD_MCS MCSCmd1, ACMD_MCS MCSCmd2)
+            {
+                //A20.06.09.0
+                // 0.判斷命令來源是否為shelf，非shelf者優先進行。
+                bool isCmd1_SourceTypeShelf = MCSCmd1.IsCmdSourceTypeShelf(MCSCmd1.HOSTSOURCE);
+                bool isCmd2_SourceTypeShelf = MCSCmd1.IsCmdSourceTypeShelf(MCSCmd2.HOSTSOURCE);
+
+                if ((isCmd1_SourceTypeShelf == true) && (isCmd2_SourceTypeShelf == true) ||
+                    (isCmd1_SourceTypeShelf == false) && (isCmd2_SourceTypeShelf == false))
+                {
+                    //代表兩者相等，不動，且接著判斷距離
+                }
+                if ((isCmd1_SourceTypeShelf == true) && (isCmd2_SourceTypeShelf == false))
+                {
+                    return 1;
+                    //代表後者較優先，換位
+                }
+                if ((isCmd1_SourceTypeShelf == false) && (isCmd2_SourceTypeShelf == true))
+                {
+                    return -1;
+                    //代表前者較優先，不動
+                }
+
+                //A20.06.04
+                // 1.先取priority 判斷
+                if ((MCSCmd1.PRIORITY_SUM >= 99 && MCSCmd2.PRIORITY_SUM >= 99) ||
+                    (MCSCmd1.PRIORITY_SUM < 99 && MCSCmd2.PRIORITY_SUM < 99))
+                {
+                    //代表兩者相等，不動，且接著判斷距離
+                }
+                if (MCSCmd1.PRIORITY_SUM < 99 && MCSCmd2.PRIORITY_SUM >= 99)
+                {
+                    return 1;
+                    //代表後者較優先，換位
+                }
+                if (MCSCmd1.PRIORITY_SUM >= 99 && MCSCmd2.PRIORITY_SUM < 99)
+                {
+                    return -1;
+                    //代表前者較優先，不動
+                }
+
+                // 2. 若priority 相同，則獲得各自 shelf 的 address 與起始 address的距離
+                if (MCSCmd1.DistanceFromVehicleToHostSource == MCSCmd2.DistanceFromVehicleToHostSource)
+                {
+                    return 0;
+                    //代表兩者相等，不動
+                }
+                if (MCSCmd1.DistanceFromVehicleToHostSource > MCSCmd2.DistanceFromVehicleToHostSource)
+                {
+                    return 1;
+                    //代表後者較優先，換位
+                }
+                if (MCSCmd1.DistanceFromVehicleToHostSource < MCSCmd2.DistanceFromVehicleToHostSource)
+                {
+                    return -1;
+                    //代表前者較優先，不動
+                }
+                return 0;
+            }
+
+        }
+
+        public bool IsCmdSourceTypeShelf(string cmdSource)
+        {
+            bool isCmdSourceTypeShelf = false;
+            if (cmdSource.StartsWith("10") || cmdSource.StartsWith("11") || cmdSource.StartsWith("20") || cmdSource.StartsWith("21"))
+            {
+                isCmdSourceTypeShelf = true;
+            }
+            return isCmdSourceTypeShelf;
+        }
+
+        public bool IsCmdSourceTypeAGV(string cmdSource)
+        {
+            bool isCmdSourceTypeAGV = false;
+            if (cmdSource.Contains("A0") || cmdSource.Contains("ST0"))
+            {
+                isCmdSourceTypeAGV = true;
+            }
+            return isCmdSourceTypeAGV;
+        }
     }
 }

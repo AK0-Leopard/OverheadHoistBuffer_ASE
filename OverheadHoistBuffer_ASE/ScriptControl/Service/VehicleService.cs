@@ -62,6 +62,7 @@ namespace com.mirle.ibg3k0.sc.Service
         BOX_NumberIsNotEnough = 100021,
         OHT_IDMismatchUNKU = 100022,
         PORT_WaitOutTimeOut = 100023,
+        LINE_NotEmptyShelf = 100024,
     }
     public class VehicleService : IDynamicMetaObjectProvider
     {
@@ -1170,7 +1171,7 @@ namespace com.mirle.ibg3k0.sc.Service
 
                         if (crane.isTcpIpConnect)
                         {
-                            if(crane.MCS_CMD.Trim() == mcs_cmd.CMD_ID.Trim())
+                            if (crane.MCS_CMD.Trim() == mcs_cmd.CMD_ID.Trim())
                             {
                                 is_success = cancleOrAbortCommandByMCSCmdID(cancel_abort_mcs_cmd_id, ProtocolFormat.OHTMessage.CMDCancelType.CmdAbort);
                                 if (is_success)
@@ -1186,21 +1187,21 @@ namespace com.mirle.ibg3k0.sc.Service
                             else
                             {
                                 log = log + " 命令ID不一樣";
-                                localDelete = true;                                
+                                localDelete = true;
                             }
                         }
                         else
                         {
-                            log = log + " " +  crane.VEHICLE_ID + " 連線狀態(isTcpIpConnect) : " + crane.isTcpIpConnect;
+                            log = log + " " + crane.VEHICLE_ID + " 連線狀態(isTcpIpConnect) : " + crane.isTcpIpConnect;
                             localDelete = true;
                         }
                     }
 
-                    if(localDelete)
+                    if (localDelete)
                     {
                         transferService.TransferServiceLogger.Info
-                        (DateTime.Now.ToString("HH:mm:ss.fff ") 
-                            + log + "\n" 
+                        (DateTime.Now.ToString("HH:mm:ss.fff ")
+                            + log + "\n"
                             + transferService.GetCmdLog(mcs_cmd)
                         );
 
@@ -5033,46 +5034,53 @@ namespace com.mirle.ibg3k0.sc.Service
         public void Connection(BCFApplication bcfApp, AVEHICLE vh)
         {
             //scApp.getEQObjCacheManager().refreshVh(eqpt.VEHICLE_ID);
-            vh.VhRecentTranEvent = EventType.AdrPass;
+            lock (vh.Connection_Sync)
+            {
+                vh.VhRecentTranEvent = EventType.AdrPass;
 
-            vh.isTcpIpConnect = true;
+                vh.isTcpIpConnect = true;
 
-            LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
-               Data: "Connection ! Begin synchronize with vehicle...",
-               VehicleID: vh.VEHICLE_ID,
-               CarrierID: vh.CST_ID);
-            VehicleInfoSynchronize(vh.VEHICLE_ID);
-            LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
-               Data: "Connection ! End synchronize with vehicle.",
-               VehicleID: vh.VEHICLE_ID,
-               CarrierID: vh.CST_ID);
-            SCUtility.RecodeConnectionInfo
-                (vh.VEHICLE_ID,
-                SCAppConstants.RecodeConnectionInfo_Type.Connection.ToString(),
-                vh.getDisconnectionIntervalTime(bcfApp));
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                   Data: "Connection ! Begin synchronize with vehicle...",
+                   VehicleID: vh.VEHICLE_ID,
+                   CarrierID: vh.CST_ID);
+                VehicleInfoSynchronize(vh.VEHICLE_ID);
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                   Data: "Connection ! End synchronize with vehicle.",
+                   VehicleID: vh.VEHICLE_ID,
+                   CarrierID: vh.CST_ID);
+                SCUtility.RecodeConnectionInfo
+                    (vh.VEHICLE_ID,
+                    SCAppConstants.RecodeConnectionInfo_Type.Connection.ToString(),
+                    vh.getDisconnectionIntervalTime(bcfApp));
 
-            //clear the connection alarm code 99999
-            //scApp.TransferService.OHBC_AlarmCleared(vh.VEHICLE_ID,
-            //    SCAppConstants.SystemAlarmCode.OHT_Issue.OHTAccidentOfflineWarning);
+                //clear the connection alarm code 99999
+                //scApp.TransferService.OHBC_AlarmCleared(vh.VEHICLE_ID,
+                //    SCAppConstants.SystemAlarmCode.OHT_Issue.OHTAccidentOfflineWarning);
 
-            scApp.TransferService.iniOHTData(vh.VEHICLE_ID, "OHT_Connection");
+                scApp.TransferService.iniOHTData(vh.VEHICLE_ID, "OHT_Connection");
+            }
         }
         [ClassAOPAspect]
         public void Disconnection(BCFApplication bcfApp, AVEHICLE vh)
         {
-            vh.isTcpIpConnect = false;
+            lock (vh.Connection_Sync)
+            {
 
-            LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
-               Data: "Disconnection !",
-               VehicleID: vh.VEHICLE_ID,
-               CarrierID: vh.CST_ID);
-            SCUtility.RecodeConnectionInfo
-                (vh.VEHICLE_ID,
-                SCAppConstants.RecodeConnectionInfo_Type.Disconnection.ToString(),
-                vh.getConnectionIntervalTime(bcfApp));
+                vh.isTcpIpConnect = false;
 
-            //set the connection alarm code 99999
-            scApp.TransferService.OHBC_AlarmSet(vh.VEHICLE_ID, SCAppConstants.SystemAlarmCode.OHT_Issue.OHTAccidentOfflineWarning);
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                   Data: "Disconnection !",
+                   VehicleID: vh.VEHICLE_ID,
+                   CarrierID: vh.CST_ID);
+                SCUtility.RecodeConnectionInfo
+                    (vh.VEHICLE_ID,
+                    SCAppConstants.RecodeConnectionInfo_Type.Disconnection.ToString(),
+                    vh.getConnectionIntervalTime(bcfApp));
+
+                //set the connection alarm code 99999
+                scApp.TransferService.OHBC_AlarmSet(vh.VEHICLE_ID, SCAppConstants.SystemAlarmCode.OHT_Issue.OHTAccidentOfflineWarning);
+            }
         }
         #endregion Vh Connection / disconnention
 

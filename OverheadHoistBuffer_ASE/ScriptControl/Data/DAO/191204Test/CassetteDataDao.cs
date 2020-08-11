@@ -217,6 +217,67 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
             }
         }
 
+        public CassetteData LoadCassetteDataByBoxID(DBConnection_EF conn, string boxid)
+        {
+            try
+            {
+                var result = conn.CassetteData.Where(x => x.BOXID.Trim() == boxid.Trim()).FirstOrDefault();
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex);
+                throw;
+            }
+        }
+
+        public CassetteData LoadCassetteDataByDU_CSTID(DBConnection_EF conn, CassetteData cstData)
+        {
+            try
+            {
+                if (cstData == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    var result = conn.CassetteData.Where
+                        (x => x.CSTID.Trim() == cstData.CSTID.Trim() 
+                        && x.Carrier_LOC.Trim() != cstData.Carrier_LOC.Trim()
+                        ).FirstOrDefault();
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex);
+                throw;
+            }
+        }
+        public CassetteData LoadCassetteDataByDU_BOXID(DBConnection_EF conn, CassetteData cstData)
+        {
+            try
+            {
+                if (cstData == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    var result = conn.CassetteData.Where
+                        (x => x.BOXID.Trim() == cstData.BOXID.Trim()
+                        && x.Carrier_LOC.Trim() != cstData.Carrier_LOC.Trim()
+                        ).FirstOrDefault();
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex);
+                throw;
+            }
+        }
         public CassetteData LoadCassetteDataByLoc(DBConnection_EF conn, string portName)
         {
             try
@@ -237,21 +298,6 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
             try
             {
                 var result = conn.CassetteData.Where(x => x.Carrier_LOC.Contains(portName.Trim())).ToList();
-
-                return result;
-            }
-            catch (Exception ex)
-            {
-                logger.Warn(ex);
-                throw;
-            }
-        }
-
-        public CassetteData LoadCassetteDataByBoxID(DBConnection_EF conn, string boxid)
-        {
-            try
-            {
-                var result = conn.CassetteData.Where(x => x.BOXID.Trim() == boxid.Trim()).FirstOrDefault();
 
                 return result;
             }

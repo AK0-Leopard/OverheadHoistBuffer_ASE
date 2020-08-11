@@ -978,26 +978,26 @@ namespace com.mirle.ibg3k0.sc.BLL
 
         public void insertMCSReport(List<AMCSREPORTQUEUE> mcsQueues)
         {
-            using (DBConnection_EF con = DBConnection_EF.GetUContext())
-            {
-                mcsReportQueueDao.AddByBatch(con, mcsQueues);
-            }
+            //using (DBConnection_EF con = DBConnection_EF.GetUContext())
+            //{
+            //    mcsReportQueueDao.AddByBatch(con, mcsQueues);
+            //}
         }
 
         public void insertMCSReport(AMCSREPORTQUEUE mcs_queue)
         {
             //lock (mcs_report_lock_obj)
             //{
-            SCUtility.LockWithTimeout(mcs_report_lock_obj, SCAppConstants.LOCK_TIMEOUT_MS,
-                () =>
-                {
-                    //DBConnection_EF con = DBConnection_EF.GetContext();
-                    //using (DBConnection_EF con = new DBConnection_EF())
-                    using (DBConnection_EF con = DBConnection_EF.GetUContext())
-                    {
-                        mcsReportQueueDao.add(con, mcs_queue);
-                    }
-                });
+            //SCUtility.LockWithTimeout(mcs_report_lock_obj, SCAppConstants.LOCK_TIMEOUT_MS,
+            //    () =>
+            //    {
+            //        //DBConnection_EF con = DBConnection_EF.GetContext();
+            //        //using (DBConnection_EF con = new DBConnection_EF())
+            //        using (DBConnection_EF con = DBConnection_EF.GetUContext())
+            //        {
+            //            mcsReportQueueDao.add(con, mcs_queue);
+            //        }
+            //    });
             //}
         }
         object mcs_report_lock_obj = new object();

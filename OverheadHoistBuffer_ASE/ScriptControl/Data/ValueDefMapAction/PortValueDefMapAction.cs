@@ -473,7 +473,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                     return;
                 }
 
-                scApp.TransferService.PLC_ReportPortInOutService(function);
+                scApp.TransferService.PLC_ReportRunDwon(function, "PLC_RUN");
 
                 if (function.OpAutoMode)
                 {
@@ -1617,6 +1617,32 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             finally
             {
                 scApp.putFunBaseObj<PortPLCControl_AGV_BCR_Read>(function);
+            }
+        }
+        public void Port_BCR_Enable(bool enable)
+        {
+            var function = scApp.getFunBaseObj<PortPLCControl_AGV_BCR_Enable>(port.PORT_ID) as PortPLCControl_AGV_BCR_Enable;
+            try
+            {
+                //1.建立各個Function物件
+                function.PortBCR_Enable = enable;
+
+                function.Write(bcfApp, port.EqptObjectCate, port.PORT_ID);
+                function.Timestamp = DateTime.Now;
+
+                //2.write log
+                //LogManager.GetLogger("com.mirle.ibg3k0.sc.Common.LogHelper").Info(function.ToString());
+                NLog.LogManager.GetCurrentClassLogger().Info(function.ToString());
+                //3.logical (include db save)
+                //Port_RstBCR_Read();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+            }
+            finally
+            {
+                scApp.putFunBaseObj<PortPLCControl_AGV_BCR_Enable>(function);
             }
         }
         public void Port_ChangeToAGVMode()
