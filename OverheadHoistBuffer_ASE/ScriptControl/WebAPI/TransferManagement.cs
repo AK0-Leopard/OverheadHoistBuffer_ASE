@@ -1,5 +1,6 @@
 ﻿using com.mirle.ibg3k0.sc.App;
 using com.mirle.ibg3k0.sc.Common;
+using com.mirle.ibg3k0.sc.Data.VO;
 using com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage;
 using Nancy;
 using Newtonsoft.Json;
@@ -66,6 +67,14 @@ namespace com.mirle.ibg3k0.sc.WebAPI
                     ACMD_MCS mcs_cmd = scApp.CMDBLL.getCMD_MCSByID(mcs_cmd_id);
 
                     scApp.TransferService.Manual_DeleteCmd(mcs_cmd_id, "正式 UI");
+
+                    UserOperationLog userOperationLog = new UserOperationLog()
+                    {
+                        Action = "TransferCancelAbort",
+                        ActionTime = DateTime.Now,
+                        CommandID = mcs_cmd_id,
+                    };
+                    SCUtility.UserOperationLog(userOperationLog);
                     //if (mcs_cmd == null)
                     //{
                     //    result = $"Can not find transfer command:[{mcs_cmd_id}].";
@@ -140,6 +149,14 @@ namespace com.mirle.ibg3k0.sc.WebAPI
                     result = "ForceFinish failed.";
                 }
 
+                UserOperationLog userOperationLog = new UserOperationLog()
+                {
+                    Action = "TransferForceFinish",
+                    ActionTime = DateTime.Now,
+                    CommandID = mcs_cmd_id,
+                };
+                SCUtility.UserOperationLog(userOperationLog);
+
                 var response = (Response)result;
                 response.ContentType = restfulContentType;
                 return response;
@@ -162,6 +179,14 @@ namespace com.mirle.ibg3k0.sc.WebAPI
                     result = "Assign command to  vehicle failed with exception happened.";
                 }
 
+                UserOperationLog userOperationLog = new UserOperationLog()
+                {
+                    Action = "TransferAssignVehicle",
+                    ActionTime = DateTime.Now,
+                    CommandID = mcs_cmd_id,
+                };
+                SCUtility.UserOperationLog(userOperationLog);
+
                 var response = (Response)result;
                 response.ContentType = restfulContentType;
                 return response;
@@ -183,6 +208,14 @@ namespace com.mirle.ibg3k0.sc.WebAPI
                 {
                     result = "Shift command failed with exception happened.";
                 }
+
+                UserOperationLog userOperationLog = new UserOperationLog()
+                {
+                    Action = "TransferShiftCommand",
+                    ActionTime = DateTime.Now,
+                    CommandID = mcs_cmd_id,
+                };
+                SCUtility.UserOperationLog(userOperationLog);
 
                 var response = (Response)result;
                 response.ContentType = restfulContentType;
@@ -222,6 +255,14 @@ namespace com.mirle.ibg3k0.sc.WebAPI
                 {
                     result = "Update status failed with exception happened.";
                 }
+
+                UserOperationLog userOperationLog = new UserOperationLog()
+                {
+                    Action = "TransferChangeStatus",
+                    ActionTime = DateTime.Now,
+                    CommandID = mcs_cmd_id,
+                };
+                SCUtility.UserOperationLog(userOperationLog);
 
                 //Todo by Mark
 
@@ -263,6 +304,14 @@ namespace com.mirle.ibg3k0.sc.WebAPI
                     result = "Update priority failed with exception happened.";
                 }
 
+                UserOperationLog userOperationLog = new UserOperationLog()
+                {
+                    Action = "TransferPriority",
+                    ActionTime = DateTime.Now,
+                    CommandID = mcs_cmd_id,
+                };
+                SCUtility.UserOperationLog(userOperationLog);
+
                 var response = (Response)result;
                 response.ContentType = restfulContentType;
                 return response;
@@ -287,6 +336,17 @@ namespace com.mirle.ibg3k0.sc.WebAPI
                 string dest = Request.Query.dest.Value ?? Request.Form.dest.Value ?? string.Empty;
                 string lot_id = Request.Query.lot_id.Value ?? Request.Form.lot_id.Value ?? string.Empty;
                 result = scApp.TransferService.Manual_InsertCmd(source, dest, 5);
+
+                UserOperationLog userOperationLog = new UserOperationLog()
+                {
+                    Action = "TransferCreate",
+                    ActionTime = DateTime.Now,
+                    CommandID = mcs_cmd_id,
+                    Source = source,
+                    Dest = dest,
+                    BOXID = box_id,
+                };
+                SCUtility.UserOperationLog(userOperationLog);
 
                 var response = (Response)result;
                 response.ContentType = restfulContentType;
