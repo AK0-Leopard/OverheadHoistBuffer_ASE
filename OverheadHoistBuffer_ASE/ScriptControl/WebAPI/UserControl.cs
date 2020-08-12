@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
+using com.mirle.ibg3k0.sc.Data.VO;
 
 namespace com.mirle.ibg3k0.sc.WebAPI
 {
@@ -68,6 +69,15 @@ namespace com.mirle.ibg3k0.sc.WebAPI
                     result = "Execption happend!";
                     logger.Error(ex, "Execption:");
                 }
+
+                UserOperationLog userOperationLog = new UserOperationLog()
+                {
+                    Action = "LogIn",
+                    ActionTime = DateTime.Now,
+                    UserID = userID,
+                };
+                SCUtility.UserOperationLog(userOperationLog);
+
                 var response = (Response)result;
                 response.ContentType = restfulContentType;
                 return response;
@@ -110,6 +120,15 @@ namespace com.mirle.ibg3k0.sc.WebAPI
                     result = "Execption happend!";
                     logger.Error(ex, "Execption:");
                 }
+
+                UserOperationLog userOperationLog = new UserOperationLog()
+                {
+                    Action = "LogOut",
+                    ActionTime = DateTime.Now,
+                    UserID = userID,
+                };
+                SCUtility.UserOperationLog(userOperationLog);
+
                 var response = (Response)result;
                 response.ContentType = restfulContentType;
                 return response;
