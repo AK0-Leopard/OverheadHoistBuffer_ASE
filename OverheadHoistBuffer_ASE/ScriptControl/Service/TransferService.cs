@@ -7699,7 +7699,16 @@ namespace com.mirle.ibg3k0.sc.Service
             {
                 if (AGVCFromEQToStationCmdNum > 0)
                 {
-                    if (GetTotalEmptyBoxNumber().emptyBox.Count() < 2)
+                    int emptyBoxCount = GetTotalEmptyBoxNumber().emptyBox.Count();
+                    TransferServiceLogger.Info
+                    (
+                        DateTime.Now.ToString("HH:mm:ss.fff ") 
+                        + "AGV >> OHB|CheckForChangeAGVPortMode_AGVC"
+                        + "    GetTotalEmptyBoxNumber().emptyBox.Count():" + emptyBoxCount
+                        + "    emptyBoxNum_OnPort:" + emptyBoxNum_OnPort
+                    );
+
+                    if (emptyBoxCount < 2)
                     {
                         if (emptyBoxNum_OnPort < 2)
                         {
