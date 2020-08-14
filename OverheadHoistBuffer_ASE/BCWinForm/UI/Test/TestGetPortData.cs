@@ -565,5 +565,21 @@ namespace com.mirle.ibg3k0.bc.winform
         {
             transferService.PortBCR_Enable(comboBox1.Text, false);
         }
+
+        private void UseFirst2Port_buttom_Click(object sender, EventArgs e)
+        {
+            if (comboBox3.Text.Contains("LOOP"))
+            {
+                transferService.Manual_UseFirst2Port(comboBox3.Text);
+            }
+        }
+
+        private void UseLast2Port_buttom_Click(object sender, EventArgs e)
+        {
+            if (comboBox3.Text.Contains("LOOP"))
+            {
+                transferService.Manual_UseLast2Port(comboBox3.Text);
+            }
+        }
     }
 }

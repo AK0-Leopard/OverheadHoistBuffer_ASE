@@ -637,7 +637,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
                 if (scApp.TransferService.isCVPort(csidData.Carrier_LOC))
                 {
-                    scApp.TransferService.OHBC_AlarmCleared(csidData.Carrier_LOC, ((int)AlarmLst.PORT_WaitOutTimeOut).ToString());
+                    scApp.TransferService.SetPortWaitOutTimeOutAlarm(csidData.Carrier_LOC, 0);
                 }
             }
             catch (Exception ex)

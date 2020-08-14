@@ -58,6 +58,8 @@
             this.button17 = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.button40 = new System.Windows.Forms.Button();
+            this.button39 = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.button36 = new System.Windows.Forms.Button();
@@ -398,6 +400,8 @@
             // panel1
             // 
             this.panel1.AutoScroll = true;
+            this.panel1.Controls.Add(this.button40);
+            this.panel1.Controls.Add(this.button39);
             this.panel1.Controls.Add(this.label10);
             this.panel1.Controls.Add(this.label9);
             this.panel1.Controls.Add(this.button36);
@@ -426,6 +430,28 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1362, 462);
             this.panel1.TabIndex = 30;
+            // 
+            // button40
+            // 
+            this.button40.Font = new System.Drawing.Font("PMingLiU", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.button40.Location = new System.Drawing.Point(1250, 353);
+            this.button40.Name = "button40";
+            this.button40.Size = new System.Drawing.Size(69, 29);
+            this.button40.TabIndex = 14;
+            this.button40.Text = "後2Port";
+            this.button40.UseVisualStyleBackColor = true;
+            this.button40.Click += new System.EventHandler(this.UseLast2Port_buttom_Click);
+            // 
+            // button39
+            // 
+            this.button39.Font = new System.Drawing.Font("PMingLiU", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.button39.Location = new System.Drawing.Point(1177, 353);
+            this.button39.Name = "button39";
+            this.button39.Size = new System.Drawing.Size(67, 29);
+            this.button39.TabIndex = 13;
+            this.button39.Text = "前2Port";
+            this.button39.UseVisualStyleBackColor = true;
+            this.button39.Click += new System.EventHandler(this.UseFirst2Port_buttom_Click);
             // 
             // label10
             // 
@@ -587,9 +613,9 @@
             // button29
             // 
             this.button29.Font = new System.Drawing.Font("PMingLiU", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.button29.Location = new System.Drawing.Point(1179, 353);
+            this.button29.Location = new System.Drawing.Point(1142, 354);
             this.button29.Name = "button29";
-            this.button29.Size = new System.Drawing.Size(67, 29);
+            this.button29.Size = new System.Drawing.Size(29, 29);
             this.button29.TabIndex = 7;
             this.button29.Text = "關閉";
             this.button29.UseVisualStyleBackColor = true;
@@ -600,7 +626,7 @@
             this.button28.Font = new System.Drawing.Font("PMingLiU", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.button28.Location = new System.Drawing.Point(1106, 353);
             this.button28.Name = "button28";
-            this.button28.Size = new System.Drawing.Size(67, 29);
+            this.button28.Size = new System.Drawing.Size(30, 29);
             this.button28.TabIndex = 7;
             this.button28.Text = "開啟";
             this.button28.UseVisualStyleBackColor = true;
@@ -753,7 +779,7 @@
             this.dataGridView5.Name = "dataGridView5";
             this.dataGridView5.ReadOnly = true;
             this.dataGridView5.RowTemplate.Height = 24;
-            this.dataGridView5.Size = new System.Drawing.Size(1151, 129);
+            this.dataGridView5.Size = new System.Drawing.Size(1105, 129);
             this.dataGridView5.TabIndex = 35;
             // 
             // button25
@@ -903,5 +929,7 @@
         private System.Windows.Forms.Button button25;
         private System.Windows.Forms.Button button37;
         private System.Windows.Forms.Button button38;
+        private System.Windows.Forms.Button button39;
+        private System.Windows.Forms.Button button40;
     }
 }

@@ -208,11 +208,11 @@ namespace com.mirle.ibg3k0.sc.BLL
                     CheckSetAlarm();
                 }
 
-                if (scApp.TransferService.isUnitType(eq_id, UnitType.CRANE) == false)
-                {
-                    alarm.EQPT_ID = "";
-                    alarm.UnitID = "";
-                }
+                //if (scApp.TransferService.isUnitType(eq_id, UnitType.CRANE) == false)
+                //{
+                //    alarm.EQPT_ID = "";
+                //    alarm.UnitID = "";
+                //}
 
                 return alarm;
             }

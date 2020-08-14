@@ -113,6 +113,23 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
 
         }
+
+        public void UpdataAGVSimPortLocationType(string portID, int service_num)  //service：1 = first 2 port, 2 = Last 2 port
+        {
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    con.PortDef.Where(data => data.PLCPortID == portID).First().PortLocationType = service_num;
+                    con.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+            }
+
+        }
         public bool updatePriority(string port_id, int priority)
         {
             try
