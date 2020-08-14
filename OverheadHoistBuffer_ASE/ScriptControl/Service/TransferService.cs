@@ -7480,7 +7480,8 @@ namespace com.mirle.ibg3k0.sc.Service
                 useFirst2Port = IsUsingFirst2Port(portDefByAGVStationID);
                 //取得PLC目前資訊
                 AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Trigger start. Get the AGVSTation Data, " +
-                    "AGVStationID = " + AGVStationID + ", AGVCFromEQToStationCmdNum = " + AGVCFromEQToStationCmdNum + ", isEmergency = " + isEmergency.ToString());
+                    "AGVStationID = " + AGVStationID + ", AGVCFromEQToStationCmdNum = " + AGVCFromEQToStationCmdNum + ", isEmergency = " + isEmergency.ToString()
+                     + " , 線上空盒數量 = " + GetTotalEmptyBoxNumber().emptyBox.Count().ToString());
                 List<PortDef> AGVPortDatas = scApp.PortDefBLL.GetAGVPortGroupDataByStationID(line.LINE_ID, AGVStationID);
                 AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Exit GetAGVPortGroupDataByStationID().");
 
@@ -7710,6 +7711,25 @@ namespace com.mirle.ibg3k0.sc.Service
                             _portTypeNum_Result = PortTypeNum.OutPut_Mode;
 
                         }
+                        else
+                        {
+                            _isOK_Result = true;
+                            
+                            portINIData[AGVStationID].agvHasCmdsAccess = true;
+                            portINIData[AGVStationID].reservePortTime = DateTime.Now;
+
+                            bool isSuccess = InputModeChange(AGVStationData);
+                            _portTypeNum_Result = PortTypeNum.Input_Mode;
+                            if (isSuccess == false)
+                            {
+                                _isOK_Result = false;
+                                portINIData[AGVStationID].agvHasCmdsAccess = false;
+                            }
+                            else
+                            {
+                                agvHasCmdsAccess = true;
+                            }
+                        }
                     }
                     else
                     {
@@ -7907,6 +7927,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 PortPLCInfo portData = GetPLC_PortData(AGVPortData.PLCPortID);
                 if (portData.IsModeChangable == false)
                 {
+                    AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " AGV " + AGVPortData.PLCPortID + " IsModeChangable 是 false 回復 AGVC NG ");
                     isSuccess = false;
                     return isSuccess;
                 }
