@@ -473,7 +473,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                     return;
                 }
 
-                scApp.TransferService.PLC_ReportRunDwon(function, "PLC_RUN");
+                scApp.TransferService.PLC_ReportRunDwon(function, "PLC_RUN:" + function.OpAutoMode);
 
                 if (function.OpAutoMode)
                 {

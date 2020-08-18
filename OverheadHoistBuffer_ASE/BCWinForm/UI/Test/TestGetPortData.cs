@@ -581,5 +581,10 @@ namespace com.mirle.ibg3k0.bc.winform
                 transferService.Manual_UseLast2Port(comboBox3.Text);
             }
         }
+
+        private void button41_Click(object sender, EventArgs e)
+        {
+            transferService.doUpdateTimeOutForAutoUD(comboBox1.Text, (int)numericUpDown1.Value);
+        }
     }
 }

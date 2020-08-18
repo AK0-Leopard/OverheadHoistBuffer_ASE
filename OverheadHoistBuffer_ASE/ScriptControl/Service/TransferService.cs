@@ -1268,6 +1268,17 @@ namespace com.mirle.ibg3k0.sc.Service
                             {
                                 success = true;
                             }
+
+                            if (cst.CSTState == E_CSTState.Installed && plcInfo.IsInputMode && plcInfo.PortWaitIn)
+                            {
+                                TimeSpan timeSpan = DateTime.Now - DateTime.Parse(cst.TrnDT);
+
+                                if(timeSpan.TotalSeconds >= 20)
+                                {
+                                    cassette_dataBLL.UpdateCST_DateTime(cst.BOXID, UpdateCassetteTimeType.TrnDT);
+                                    PLC_ReportPortWaitIn(plcInfo, "CSTState = Installed");
+                                }
+                            }
                         }
 
                         if (isUnitType(zoneName, UnitType.CRANE))
@@ -3789,13 +3800,40 @@ namespace com.mirle.ibg3k0.sc.Service
                         }
                         else
                         {
-                            #region Log
-                            TransferServiceLogger.Info
-                            (
-                                DateTime.Now.ToString("HH:mm:ss.fff ") +
-                                "PLC >> OHB|PLC_AGV_Station_InMode " + plcInfo.EQ_ID + " Mismatch 沒報，等待 WaitIn"
-                            );
-                            #endregion
+                            if(plcInfo.PortWaitIn)
+                            {
+                                CassetteData dbCSTData = cassette_dataBLL.loadCassetteDataByLoc(plcInfo.EQ_ID.Trim());
+
+                                if (dbCSTData == null)
+                                {
+                                    #region Log
+                                    TransferServiceLogger.Info
+                                    (
+                                        DateTime.Now.ToString("HH:mm:ss.fff ") +
+                                        "PLC >> OHB|PLC_AGV_Station_InMode " + plcInfo.EQ_ID + " 發現:PortWaitIn = " + plcInfo.PortWaitIn + "，沒帳"
+                                    );
+                                    #endregion
+
+                                    //PLC_ReportPortWaitIn(plcInfo, "PLC_AGV_Station_InMode");   20_0818 SCC+ 
+                                    /*
+                                     * PLC_ReportPortWaitIn(plcInfo, "PLC_AGV_Station_InMode"); 
+                                       此功能為 0817_1241 之後發生，PortWaitIn 亮的時候，RUN 沒亮，造成沒有上報 WaitIn 給 MCS
+                                       ，擔心 PLC_AGV_Station_InMode 與實際觸發 WaitIn 訊號造成衝突，造時註解掉
+                                       ，柏裕提出：理論上，PortWaitIn 訊號亮的時候，RUN 訊號一定會亮，此問題待觀察
+                                       ，若下次在發生時，PLC 那邊還是無法解決時，此功能再把註解拿掉，另外做預防重複上報的機制
+                                    */
+                                }
+                            }
+                            else
+                            {
+                                #region Log
+                                TransferServiceLogger.Info
+                                (
+                                    DateTime.Now.ToString("HH:mm:ss.fff ") +
+                                    "PLC >> OHB|PLC_AGV_Station_InMode " + plcInfo.EQ_ID + " Mismatch 沒報，等待 WaitIn"
+                                );
+                                #endregion
+                            }
 
                             status = E_PORT_STATUS.InService;
                         }
