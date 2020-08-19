@@ -6204,7 +6204,7 @@ namespace com.mirle.ibg3k0.sc.Service
             (
                 DateTime.Now.ToString("HH:mm:ss.fff ") +
                 "OHT >> OHB|AlarmCleared:"
-                + "    OHT_Name:" + craneName
+                + "    EQ_Name:" + craneName
                 + "    OHT_AlarmID:" + errCode
             );
             #endregion

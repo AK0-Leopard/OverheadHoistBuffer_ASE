@@ -2380,6 +2380,10 @@ namespace com.mirle.ibg3k0.sc.BLL
                         if (isSuccess)
                         {
                             //isSuccess &= scApp.CMDBLL.updateCMD_MCS_TranStatus2Paused(mcs_cmd.CMD_ID);  //20200220改成Paused WARNING
+                            if (mcs_cmd.CRANE != best_suitable_vehicle_id)
+                            {
+                                updateCMD_MCS_CRANE(mcs_cmd.CMD_ID, best_suitable_vehicle_id);
+                            }
                         }
                         //如果產生完命令後，發現該Vh正在執行OHTC的移動命令時，則需要將該命令Cancel
                         //20200515 不要取消了，讓他做完
@@ -2389,12 +2393,13 @@ namespace com.mirle.ibg3k0.sc.BLL
                         //    isSuccess = bestSuitableVh.sned_Str37(bestSuitableVh.OHTC_CMD, CMDCancelType.CmdCancel);
                         //}
 
-                        if (mcs_cmd.CRANE != best_suitable_vehicle_id)
-                        {
-                            updateCMD_MCS_CRANE(mcs_cmd.CMD_ID, best_suitable_vehicle_id);
-                        }
+                        //if (mcs_cmd.CRANE != best_suitable_vehicle_id)
+                        //{
+                        //    updateCMD_MCS_CRANE(mcs_cmd.CMD_ID, best_suitable_vehicle_id);
+                        //}
 
-                        return true;
+                        //return true;
+                        return isSuccess;
                     }
                 }
                 catch (Exception ex)

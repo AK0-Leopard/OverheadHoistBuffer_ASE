@@ -46,17 +46,19 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
         /// </summary>
         /// <param name="conn">The connection.</param>
         /// <param name="alarm">The alarm.</param>
-        public void insertAlarm(DBConnection_EF conn, ALARM alarm)
+        public bool insertAlarm(DBConnection_EF conn, ALARM alarm)
         {
             try
             {
                 conn.ALARM.Add(alarm);
                 conn.SaveChanges();
+                return true;
             }
             catch (Exception ex)
             {
                 logger.Warn(ex);
-                throw;
+                return false;
+                throw;                
             }
         }
 

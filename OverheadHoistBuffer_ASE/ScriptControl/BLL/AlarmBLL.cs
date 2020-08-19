@@ -203,7 +203,10 @@ namespace com.mirle.ibg3k0.sc.BLL
 
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
-                    alarmDao.insertAlarm(con, alarm);
+                    if(alarmDao.insertAlarm(con, alarm) == false)
+                    {
+                        alarm = null;
+                    }
 
                     CheckSetAlarm();
                 }
