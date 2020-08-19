@@ -33,7 +33,7 @@ namespace com.mirle.ibg3k0.sc.Service
         //2020.6.22 每檢查N次高水位，檢查1次低水位
         private const int lowLevelCheckTime = 4;
         //2020.06.16 緊急水位設定(以比例計算，占用儲格超過這個比例就是達緊急水位)
-        private const double emergencyWaterLevel = 0.95;
+        private double emergencyWaterLevel = 0.95;
 
         private SCApplication scApp = null;
         private CassetteDataBLL cassette_dataBLL = null;
@@ -57,6 +57,11 @@ namespace com.mirle.ibg3k0.sc.Service
             cassette_dataBLL = _app.CassetteDataBLL;
             shelfDefBLL = _app.ShelfDefBLL;
             zoneBLL = _app.ZoneDefBLL;
+            var zoneInfo = zoneBLL.loadZoneData();
+            if (zoneInfo.FirstOrDefault().ZoneName.Contains("LOOP"))
+            {
+                emergencyWaterLevel = 0.6;
+            }
         }
 
         #region Use for check the empty box number and transport for empty box
@@ -67,7 +72,7 @@ namespace com.mirle.ibg3k0.sc.Service
             zoneDatas = zoneBLL.loadZoneData();
             boxDatas = cassette_dataBLL.loadCassetteData();
             shelfDatas = shelfDefBLL.LoadShelf();
-
+            var emptyBox = GetTotalEmptyBoxNumber();
             if (!initializedFlag)
             {
                 zoneCacheDatas = new List<ZoneDef>(zoneDatas);
@@ -112,8 +117,9 @@ namespace com.mirle.ibg3k0.sc.Service
                     string dest = scApp.TransferService.GetSTKorOHCV_OutModePortName();
                     if (string.IsNullOrWhiteSpace(dest) == false)
                     {
-                        string recycleBoxLoc = cassette_dataBLL.GetCassetteLocByBoxID(zoneData.EmptyBoxList.FirstOrDefault());
-                        scApp.TransferService.Manual_InsertCmd(recycleBoxLoc, dest, 5,"CheckTheEmptyBoxStockLevel", ACMD_MCS.CmdType.OHBC);
+                        string recycleBoxID = FindBestRecycleBoxID(zoneData, emptyBox.emptyBox);
+                        string recycleBoxLoc = cassette_dataBLL.GetCassetteLocByBoxID(recycleBoxID);
+                        scApp.TransferService.Manual_InsertCmd(recycleBoxLoc, dest, 5, "CheckTheEmptyBoxStockLevel", ACMD_MCS.CmdType.OHBC);
                     }
                     else
                     {
@@ -141,7 +147,6 @@ namespace com.mirle.ibg3k0.sc.Service
             {
                 lowLevelCheckCount = 0;
                 //B1: 先確認目前的line 上shelf的空box 是否夠用(目前標準為AGV station 數量)
-                var emptyBox = GetTotalEmptyBoxNumber();
                 if (emptyBox.isSuccess == true)
                 {
                     int requriedBoxAGV;
@@ -169,6 +174,24 @@ namespace com.mirle.ibg3k0.sc.Service
             }
         }
 
+        private string FindBestRecycleBoxID(ZoneDef zoneData, List<CassetteData> _emptyBoxList)
+        {
+            string recycleBlockID = "";
+            int requriedBoxAGV = 0;
+            int emptyBoxNum = zoneData.EmptyBoxList.Count();
+            var isEnoughEmptyBox = CheckIsEnoughEmptyBox(_emptyBoxList.Count - 1, out requriedBoxAGV);
+            if (emptyBoxNum != 0 && isEnoughEmptyBox.isEnough == true )
+            {
+                recycleBlockID = zoneData.EmptyBoxList.FirstOrDefault();
+            }
+            else
+            {
+                zoneData.SolidBoxList.Sort();
+                recycleBlockID = zoneData.SolidBoxList.FirstOrDefault();
+            }
+            return recycleBlockID;
+        }
+
         private void RecycleBoxByMCS(ZoneDef zoneData, int boxCount)
         {
             List<string> emptyBoxList = new List<string>(zoneData.EmptyBoxList);
@@ -176,7 +199,7 @@ namespace com.mirle.ibg3k0.sc.Service
             for (int i = boxCount; i > zoneData.HighWaterMark; i--)
             {
                 string recycledBox = emptyBoxList.FirstOrDefault();
-                if (recycledBox != null)
+                if (string.IsNullOrEmpty(recycledBox) == false)
                 {
                     DoSendPopEmptyBoxToMCS(recycledBox);
                     zoneData.WaitForRecycleBoxList.Add(recycledBox);    //加入待回收box清單
@@ -375,6 +398,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                  where b.Carrier_LOC == s.ShelfID &&
                                     !string.IsNullOrEmpty(b.CSTID) &&
                                     s.ZoneID == z.ZoneID
+                                 orderby b.StoreDT 
                                  select b.BOXID;
                 z.EmptyBoxList = emptyBoxes.ToList();
                 z.SolidBoxList = solidBoxes.ToList();
