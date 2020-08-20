@@ -1124,12 +1124,13 @@ namespace com.mirle.ibg3k0.sc.Service
                             cmdBLL.updateCMD_MCS_Dest(mcsCmd.CMD_ID, mcsCmd.HOSTDESTINATION);
                         }
                     }
-                    else if (sourcePortType && isCVPort(mcsCmd.HOSTSOURCE) && destPortType == false && isCVPort(mcsCmd.HOSTDESTINATION))
+                    else if (sourcePortType && isShelfPort(mcsCmd.HOSTSOURCE) == false
+                          && destPortType == false && isCVPort(mcsCmd.HOSTDESTINATION))
                     {
                         //來源目的都是 CV Port 且 目的不能搬，觸發將卡匣送至中繼站
                         TimeSpan timeSpan = DateTime.Now - mcsCmd.CMD_INSER_TIME;
 
-                        if (timeSpan.TotalSeconds < 30)  //200806 SCC+ 目的Port不能搬，超過30秒才產生搬往中繼站，防止 AGV Port正準備做退補 BOX 跟 車子剛好放在 CV 上，造成 CV 短暫不能放貨之情況
+                        if (timeSpan.TotalSeconds < 15)  //200806 SCC+ 目的Port不能搬，超過30秒才產生搬往中繼站，防止 AGV Port正準備做退補 BOX 跟 車子剛好放在 CV 上，造成 CV 短暫不能放貨之情況
                         {
                             break;
                         }
@@ -1401,7 +1402,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 TimeSpan timeSpan = DateTime.Now - cmdTime;
                 if (timeSpan.Minutes >= 1 + ohtCmdTimeOut)
                 {
-                    TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHT|OHT回應不能搬送");
+                    TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHT|OHT回應不能搬送 " + GetCmdLog(cmd));
                     ohtCmdTimeOut++;
                 }
             }
@@ -2047,9 +2048,9 @@ namespace com.mirle.ibg3k0.sc.Service
                         reportBLL.ReportTransferAbortCompleted(cmd.CMD_ID);
                         //reportBLL.ReportTransferCompleted(cmd, null, ResultCode.InterlockError);
 
-                        string cstID = CarrierDouble(cmd.HOSTDESTINATION.Trim());
-                        string boxID = CarrierDouble(cmd.HOSTDESTINATION.Trim());
-                        string loc = cmd.HOSTDESTINATION;
+                        string cstID = CarrierDouble(ohtCmd.DESTINATION.Trim());
+                        string boxID = CarrierDouble(ohtCmd.DESTINATION.Trim());
+                        string loc = ohtCmd.DESTINATION;
 
                         OHBC_InsertCassette(cstID, boxID, loc, "二重格異常");
 
@@ -2063,7 +2064,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         reportBLL.ReportTransferAbortCompleted(cmd.CMD_ID);
                         //reportBLL.ReportTransferCompleted(cmd, null, ResultCode.InterlockError);
 
-                        CassetteData emptyData = cassette_dataBLL.loadCassetteDataByLoc(cmd.HOSTSOURCE.Trim());
+                        CassetteData emptyData = cassette_dataBLL.loadCassetteDataByLoc(ohtCmd.SOURCE.Trim());
 
                         reportBLL.ReportCarrierRemovedCompleted(emptyData.CSTID, emptyData.BOXID);
 
@@ -4553,7 +4554,10 @@ namespace com.mirle.ibg3k0.sc.Service
                         {
                             cmdDest = shelfID;
                         }
-
+                        else
+                        {
+                            return;
+                        }
                         #endregion
                     }
                     else
@@ -5732,43 +5736,71 @@ namespace com.mirle.ibg3k0.sc.Service
                 return emptyBox;
             }
         }
+
+        //bool GetShelfRecentLocationIng = false;
+        private long GetShelfRecentLocationIng = 0;
         public string GetShelfRecentLocation(List<ShelfDef> shelfData, string portLoc)  //取得最近儲位
         {
-            string shelfName = "";
-            //A20.06.09.0
-            shelfData = cmdBLL.doSortShelfDataByDistanceFromHostSource(shelfData, portLoc.Trim())
-                                                            .Where(data => data.ShelfState == ShelfDef.E_ShelfState.EmptyShelf).ToList();
-
-            foreach (var v in shelfData)
+            if (Interlocked.Exchange(ref GetShelfRecentLocationIng, 1) == 0)
             {
-                ACMD_MCS cmdData = cmdBLL.GetCmdDataByDest(v.ShelfID).FirstOrDefault();
-                if (cmdData == null) //cmdList.Count == 0
+                try
                 {
-                    shelfName = v.ShelfID;
-                    break;
+                    string shelfName = "";
+                    //A20.06.09.0
+                    shelfData = cmdBLL.doSortShelfDataByDistanceFromHostSource(shelfData, portLoc.Trim())
+                                                                    .Where(data => data.ShelfState == ShelfDef.E_ShelfState.EmptyShelf).ToList();
+
+                    foreach (var v in shelfData)
+                    {
+                        ACMD_MCS cmdData = cmdBLL.GetCmdDataByDest(v.ShelfID).FirstOrDefault();
+                        if (cmdData == null) //cmdList.Count == 0
+                        {
+                            shelfName = v.ShelfID;
+                            break;
+                        }
+                        else
+                        {
+                            TransferServiceLogger.Info
+                            (
+                                DateTime.Now.ToString("HH:mm:ss.fff ")
+                                + "OHB >> OHB|GetShelfRecentLocation 已有命令搬到此 " + v.ShelfID + " 儲位 " + GetCmdLog(cmdData)
+                            );
+                        }
+                    }
+
+                    if (string.IsNullOrWhiteSpace(shelfName))
+                    {
+                        TransferServiceLogger.Info
+                        (
+                            DateTime.Now.ToString("HH:mm:ss.fff ")
+                            + "OHB >> OHB|GetShelfRecentLocation 沒有儲位可以用"
+                        );
+
+                        OHBC_AlarmSet(line.LINE_ID, ((int)AlarmLst.LINE_NotEmptyShelf).ToString());
+                    }
+
+                    return shelfName;
                 }
-                else
+                catch (Exception ex)
                 {
-                    TransferServiceLogger.Info
-                    (
-                        DateTime.Now.ToString("HH:mm:ss.fff ")
-                        + "OHB >> OHB|GetShelfRecentLocation 已有命令搬到此 " + v.ShelfID + " 儲位 " + GetCmdLog(cmdData)
-                    );
+                    TransferServiceLogger.Error(ex, "GetShelfRecentLocation 找離 " + portLoc + "最近儲位");
+                    return "";
+                }
+                finally
+                {
+                    Interlocked.Exchange(ref GetShelfRecentLocationIng, 0);
                 }
             }
-
-            if (string.IsNullOrWhiteSpace(shelfName))
+            else
             {
                 TransferServiceLogger.Info
                 (
                     DateTime.Now.ToString("HH:mm:ss.fff ")
-                    + "OHB >> OHB|GetShelfRecentLocation 沒有儲位可以用"
+                    + "OHB >> OHB|GetShelfRecentLocation interlock 中 回傳空值"
                 );
 
-                OHBC_AlarmSet(line.LINE_ID, ((int)AlarmLst.LINE_NotEmptyShelf).ToString());
+                return "";
             }
-
-            return shelfName;
         }
         #endregion
         #region PLC 控制命令
