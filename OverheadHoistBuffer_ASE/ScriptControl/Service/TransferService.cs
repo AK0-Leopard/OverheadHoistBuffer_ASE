@@ -1130,7 +1130,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         //來源目的都是 CV Port 且 目的不能搬，觸發將卡匣送至中繼站
                         TimeSpan timeSpan = DateTime.Now - mcsCmd.CMD_INSER_TIME;
 
-                        if (timeSpan.TotalSeconds < 15)  //200806 SCC+ 目的Port不能搬，超過30秒才產生搬往中繼站，防止 AGV Port正準備做退補 BOX 跟 車子剛好放在 CV 上，造成 CV 短暫不能放貨之情況
+                        if (timeSpan.TotalSeconds < 30)  //200806 SCC+ 目的Port不能搬，超過30秒才產生搬往中繼站，防止 AGV Port正準備做退補 BOX 跟 車子剛好放在 CV 上，造成 CV 短暫不能放貨之情況
                         {
                             break;
                         }
@@ -1141,14 +1141,17 @@ namespace com.mirle.ibg3k0.sc.Service
 
                             foreach (var v in GetAGVPort(mcsCmd.HOSTDESTINATION))
                             {
+                                agvName = v.PortName.Trim();
+
                                 if (GetPLC_PortData(v.PortName).IsOutputMode)
                                 {
-                                    agvName = v.PortName.Trim();
+                                    break;
                                 }
                             }
 
                             if (string.IsNullOrWhiteSpace(agvName))
                             {
+                                TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|觸發搬往中繼站 AGV Zone: " + mcsCmd.HOSTDESTINATION + " 找不到 Port" + agvName + "跳出");
                                 return false;
                             }
 
@@ -1158,7 +1161,9 @@ namespace com.mirle.ibg3k0.sc.Service
                         PortPLCInfo plcInfoSource = GetPLC_PortData(mcsCmd.HOSTSOURCE);
                         PortPLCInfo plcInfoDest = GetPLC_PortData(mcsCmd.HOSTDESTINATION);
 
-                        if (plcInfoDest.IsReadyToLoad == false && plcInfoDest.IsOutputMode && plcInfoSource.IsInputMode)
+                        if (plcInfoSource.OpAutoMode && plcInfoSource.IsReadyToUnload
+                         && plcInfoDest.OpAutoMode && plcInfoDest.IsReadyToLoad == false
+                           )
                         {
                             ACMD_MCS cmdRelay = mcsCmd.Clone();
 
@@ -1182,15 +1187,25 @@ namespace com.mirle.ibg3k0.sc.Service
                                     TransferIng = true;
                                 }
                             }
+                            else
+                            {
+                                TransferServiceLogger.Info
+                                (
+                                    DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB|搬到中繼站，沒有儲位"
+                                );
+                            }
                         }
                         else
                         {
                             TransferServiceLogger.Info
                             (
                                 DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB| 觸發將卡匣送至中繼站失敗: "
-                                + " plcInfo_Dest.IsReadyToLoad 要 false 實際是" + plcInfoDest.IsReadyToLoad
-                                + " plcInfo_Dest.IsOutputMode 要 True 實際是" + plcInfoDest.IsOutputMode
-                                + " plcInfo_Source.IsInputMode 要 True 實際是" + plcInfoSource.IsInputMode
+                                + " plcInfo_Source.EQ_ID: " + plcInfoSource.EQ_ID
+                                + " plcInfo_Source.OpAutoMode 要 True 實際是 " + plcInfoSource.OpAutoMode
+                                + " plcInfo_Source.IsReadyToUnload 要 True 實際是 " + plcInfoSource.IsReadyToUnload
+                                + " plcInfo_Dest.EQ_ID: " + plcInfoDest.EQ_ID
+                                + " plcInfo_Dest.OpAutoMode 要 True 實際是 " + plcInfoDest.OpAutoMode
+                                + " plcInfo_Dest.IsReadyToLoad 要 false 實際是 " + plcInfoDest.IsReadyToLoad
                             );
                         }
                     }
@@ -1274,7 +1289,7 @@ namespace com.mirle.ibg3k0.sc.Service
                             {
                                 TimeSpan timeSpan = DateTime.Now - DateTime.Parse(cst.TrnDT);
 
-                                if(timeSpan.TotalSeconds >= 20)
+                                if (timeSpan.TotalSeconds >= 20)
                                 {
                                     cassette_dataBLL.UpdateCST_DateTime(cst.BOXID, UpdateCassetteTimeType.TrnDT);
                                     PLC_ReportPortWaitIn(plcInfo, "CSTState = Installed");
@@ -1398,13 +1413,15 @@ namespace com.mirle.ibg3k0.sc.Service
             }
             else
             {
-                DateTime cmdTime = cmd.CMD_INSER_TIME;
-                TimeSpan timeSpan = DateTime.Now - cmdTime;
-                if (timeSpan.Minutes >= 1 + ohtCmdTimeOut)
-                {
-                    TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHT|OHT回應不能搬送 " + GetCmdLog(cmd));
-                    ohtCmdTimeOut++;
-                }
+                TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHT|OHT回應不能搬送 " + GetCmdLog(cmd));
+
+                //DateTime cmdTime = cmd.CMD_INSER_TIME;
+                //TimeSpan timeSpan = DateTime.Now - cmdTime;
+                //if (timeSpan.Minutes >= 1 + ohtCmdTimeOut)
+                //{
+                //    TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHT|OHT回應不能搬送 " + GetCmdLog(cmd));
+                //    ohtCmdTimeOut++;
+                //}
             }
 
             return ohtReport;
@@ -1728,124 +1745,133 @@ namespace com.mirle.ibg3k0.sc.Service
                 ohtName = ohtName.Trim();
                 bool isCreatScuess = true;
                 ACMD_OHTC ohtCmdData = cmdBLL.getCMD_OHTCByID(oht_cmdid);
-                ACMD_MCS cmd = new ACMD_MCS();
 
                 if (ohtCmdData == null)
                 {
                     #region Log
                     TransferServiceLogger.Info
                     (
-                        DateTime.Now.ToString("HH:mm:ss.fff ") +
-                        "OHT >> OHB|找 ACMD_OHTC 的 oht_cmdid: " + oht_cmdid + "  資料為 Null"
+                        DateTime.Now.ToString("HH:mm:ss.fff ") 
+                        + "OHT >> OHB|找 ACMD_OHTC 的 oht_cmdid: " + oht_cmdid + "  資料為 Null"
                         + " OHTName: " + ohtName
                         + " OHT_Status:" + statusToName(status)
                     );
                     #endregion
 
-                    //cmd = cmdBLL.getCMD_ByOHTName(ohtName);
-
                     return true;
-                }
-                else
-                {
-                    #region Log
-                    TransferServiceLogger.Info
-                    (
-                        DateTime.Now.ToString("HH:mm:ss.fff ") +
-                        "OHT >> OHB|OHT_NAME: " + ohtName
-                        + " OHT_CMD_ID: " + oht_cmdid.Trim()
-                        + " MCS_CMD_ID:" + ohtCmdData.CMD_ID_MCS.Trim()
-                        + " OHT_SOURCE:" + ohtCmdData.SOURCE.Trim()
-                        + " OHT_DEST:" + ohtCmdData.DESTINATION.Trim()
-                        + " OHT_Status:" + statusToName(status)
-                    );
-                    #endregion
-
-                    cmd = cmdBLL.getCMD_MCSByID(ohtCmdData.CMD_ID_MCS.Trim());
-                }
-
-                #region OHT 手動測試，不會有 MCS_ID，回報指更新 Loc
-                if (cmd == null)
-                {
-                    TransferServiceLogger.Info
-                    (
-                        "找不到 MCS_CMDID  " + GetOHTcmdLog(ohtCmdData)
-                    );
-
-                    OHT_TestProcess(ohtCmdData, status);
-
-                    return true;
-                }
-                #endregion
-
-                if (status == COMMAND_STATUS_BIT_INDEX_COMMNAD_FINISH
-                    && cmd.CRANE.Trim() != ohtName
-                    && string.IsNullOrWhiteSpace(cmd.RelayStation) == false
-                   )
-                {
-                    TransferServiceLogger.Info
-                    (
-                        "此筆變更為中繼站命令不做 COMMNAD_FINISH 狀態改變：" + GetCmdLog(cmd)
-                    );
-
-                    reportBLL.ReportCraneIdle(ohtName, cmd.CMD_ID);
-
-                    return true;
-                }
-
-                isCreatScuess &= cmdBLL.updateCMD_MCS_CmdStatus(cmd.CMD_ID, status);
-
-                if (cmd.TRANSFERSTATE == E_TRAN_STATUS.TransferCompleted)
-                {
-                    TransferServiceLogger.Info
-                    (
-                        "此筆命令已完成  " + GetCmdLog(cmd)
-                    );
-
-                    if (status == COMMAND_STATUS_BIT_INDEX_COMMNAD_FINISH)
-                    {
-                        reportBLL.ReportCraneIdle(ohtName, cmd.CMD_ID);
-                    }
-
-                    return true;
-                }
-
-                if (cmd.CRANE != ohtName)
-                {
-                    cmdBLL.updateCMD_MCS_CRANE(cmd.CMD_ID, ohtName);
-                }
-
-                if (string.IsNullOrWhiteSpace(cmd.CARRIER_ID_ON_CRANE))
-                {
-                    cmd.CARRIER_ID_ON_CRANE = "";
                 }
 
                 #region Log
                 TransferServiceLogger.Info
                 (
-                    DateTime.Now.ToString("HH:mm:ss.fff ") + "OHT >> OHB|"
-                    + "找到命令" + GetCmdLog(cmd)
+                    DateTime.Now.ToString("HH:mm:ss.fff ") +
+                    "OHT >> OHB|OHT_NAME: " + ohtName
+                    + " OHT_CMD_ID: " + oht_cmdid.Trim()
+                    + " MCS_CMD_ID:" + ohtCmdData.CMD_ID_MCS.Trim()
+                    + " OHT_SOURCE:" + ohtCmdData.SOURCE.Trim()
+                    + " OHT_DEST:" + ohtCmdData.DESTINATION.Trim()
+                    + " OHT_Status:" + statusToName(status)
                 );
                 #endregion
 
-                if (cmd.COMMANDSTATE == status)
+                ACMD_MCS cmd = cmdBLL.getCMD_MCSByID(ohtCmdData.CMD_ID_MCS.Trim());
+
+                if (cmd == null)
                 {
-                    #region Log
+                    #region OHT 手動測試，不會有 MCS_ID
+
                     TransferServiceLogger.Info
                     (
-                        DateTime.Now.ToString("HH:mm:ss.fff ") + "OHT >> OHB| cmd.COMMANDSTATE 相同跳出"
+                        "找不到 ACMD_MCS 命令: " + GetOHTcmdLog(ohtCmdData)
                     );
-                    #endregion
-                    return true;
-                }
 
-                if (cmd.CMD_ID.Contains("SCAN-"))
-                {
-                    OHT_ScanProcess(cmd, ohtName, status);
+                    OHT_TestProcess(ohtCmdData, status);
+
+                    #endregion
                 }
                 else
                 {
-                    OHT_TransferProcess(cmd, ohtCmdData, ohtName, status);
+                    #region 中繼站命令
+                    if (status == COMMAND_STATUS_BIT_INDEX_COMMNAD_FINISH
+                    && cmd.CRANE.Trim() != ohtName
+                    && string.IsNullOrWhiteSpace(cmd.RelayStation) == false
+                       )
+                    {
+                        TransferServiceLogger.Info
+                        (
+                            "此筆變更為中繼站命令不做 COMMNAD_FINISH 狀態改變：" + GetCmdLog(cmd)
+                        );
+
+                        reportBLL.ReportCraneIdle(ohtName, cmd.CMD_ID);
+                    }
+                    #endregion
+                    #region 命令已完成
+                    else if (cmd.TRANSFERSTATE == E_TRAN_STATUS.TransferCompleted)
+                    {
+                        TransferServiceLogger.Info
+                        (
+                            "此筆命令已完成  " + GetCmdLog(cmd)
+                        );
+
+                        if (status == COMMAND_STATUS_BIT_INDEX_COMMNAD_FINISH)
+                        {
+                            reportBLL.ReportCraneIdle(ohtName, cmd.CMD_ID);
+                        }
+                    }
+                    #endregion
+                    #region 未完成命令
+                    else
+                    {
+                        #region Log
+                        TransferServiceLogger.Info
+                        (
+                            DateTime.Now.ToString("HH:mm:ss.fff ") + "OHT >> OHB|"
+                            + "找到命令" + GetCmdLog(cmd)
+                        );
+                        #endregion
+
+                        if (cmd.COMMANDSTATE == status)
+                        {
+                            #region Log
+                            TransferServiceLogger.Info
+                            (
+                                DateTime.Now.ToString("HH:mm:ss.fff ") + "OHT >> OHB| cmd.COMMANDSTATE 相同跳出"
+                            );
+                            #endregion
+                        }
+                        else
+                        {
+                            isCreatScuess &= cmdBLL.updateCMD_MCS_CmdStatus(cmd.CMD_ID, status);
+
+                            if (cmd.CRANE != ohtName)
+                            {
+                                cmdBLL.updateCMD_MCS_CRANE(cmd.CMD_ID, ohtName);
+                            }
+
+                            if (string.IsNullOrWhiteSpace(cmd.CARRIER_ID_ON_CRANE))
+                            {
+                                cmd.CARRIER_ID_ON_CRANE = "";
+                            }
+
+                            if (cmd.CMD_ID.Contains("SCAN-"))
+                            {
+                                OHT_ScanProcess(cmd, ohtName, status);
+                            }
+                            else
+                            {
+                                OHT_TransferProcess(cmd, ohtCmdData, ohtName, status);
+                            }
+                        }
+                    }
+                    #endregion
+                }
+
+                if(status == COMMAND_STATUS_BIT_INDEX_COMMNAD_FINISH)   //20_0824 冠皚提出車子回 128 結束，直接掃命令，不要等到下次執行緒觸發
+                {
+                    Task.Run(() =>
+                    {
+                        TransferRun();
+                    });
                 }
 
                 return isCreatScuess;
@@ -2096,7 +2122,6 @@ namespace com.mirle.ibg3k0.sc.Service
                 return false;
             }
         }
-        //CassetteData ScanCstData = null;
         public void OHT_ScanProcess(ACMD_MCS cmd, string ohtName, int status)
         {
             try
@@ -3801,7 +3826,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         }
                         else
                         {
-                            if(plcInfo.PortWaitIn)
+                            if (plcInfo.PortWaitIn)
                             {
                                 CassetteData dbCSTData = cassette_dataBLL.loadCassetteDataByLoc(plcInfo.EQ_ID.Trim());
 
@@ -7772,7 +7797,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     int emptyBoxCount = GetTotalEmptyBoxNumber().emptyBox.Count();
                     TransferServiceLogger.Info
                     (
-                        DateTime.Now.ToString("HH:mm:ss.fff ") 
+                        DateTime.Now.ToString("HH:mm:ss.fff ")
                         + "AGV >> OHB|CheckForChangeAGVPortMode_AGVC"
                         + "    GetTotalEmptyBoxNumber().emptyBox.Count():" + emptyBoxCount
                         + "    emptyBoxNum_OnPort:" + emptyBoxNum_OnPort
@@ -7793,7 +7818,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         else
                         {
                             _isOK_Result = true;
-                            
+
                             portINIData[AGVStationID].agvHasCmdsAccess = true;
                             portINIData[AGVStationID].reservePortTime = DateTime.Now;
 

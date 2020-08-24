@@ -182,7 +182,8 @@ namespace com.mirle.ibg3k0.sc.BLL
             {
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
-                    return cmd_mcsDao.LoadCmdData_WithoutComplete(con).Where(cmdData => cmdData.HOSTSOURCE.Trim() == portName.Trim()
+                    return cmd_mcsDao.LoadCmdData_WithoutComplete(con).Where(cmdData =>
+                                                                  (cmdData.HOSTSOURCE.Trim() == portName.Trim() || (cmdData.RelayStation?.Trim() ?? "") == portName.Trim())
                                                                 && cmdData.TRANSFERSTATE != E_TRAN_STATUS.TransferCompleted).FirstOrDefault();
                 }
             }
@@ -201,7 +202,8 @@ namespace com.mirle.ibg3k0.sc.BLL
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
                     //A20.06.15.0
-                    return cmd_mcsDao.LoadCmdData_WithoutComplete(con).Where(cmdData => cmdData.HOSTDESTINATION.Trim() == portName.Trim()
+                    return cmd_mcsDao.LoadCmdData_WithoutComplete(con).Where(cmdData =>
+                                                                  (cmdData.HOSTDESTINATION.Trim() == portName.Trim() || (cmdData.RelayStation?.Trim() ?? "") == portName.Trim())
                                                                 && cmdData.TRANSFERSTATE != E_TRAN_STATUS.TransferCompleted).ToList();
                 }
             }
@@ -687,6 +689,11 @@ namespace com.mirle.ibg3k0.sc.BLL
                 {
                     scApp.TransferService.ShelfReserved(cmd_mcs.HOSTSOURCE, cmd_mcs.HOSTDESTINATION);
                 }
+
+                Task.Run(() =>  //20_0824 冠皚提出車子回 128 結束，直接掃命令，不要等到下次執行緒觸發
+                {
+                    scApp.TransferService.TransferRun();
+                });
             }
             catch (Exception ex)
             {
@@ -1162,11 +1169,31 @@ namespace com.mirle.ibg3k0.sc.BLL
                         }
                         else
                         {
-                            ACMD_MCS destCmd = GetCmdDataByDest(cmd.HOSTSOURCE).FirstOrDefault();
+                            ACMD_MCS destCmd = GetCmdDataByDest(cmd.HOSTSOURCE).Where(cmdData => cmdData.CMD_ID.Trim() != cmd.CMD_ID.Trim()).FirstOrDefault();
 
                             if (destCmd == null)
                             {
                                 scApp.ShelfDefBLL.updateStatus(cmd.HOSTSOURCE, ShelfDef.E_ShelfState.EmptyShelf);
+                            }
+                        }
+                    }
+
+                    if (string.IsNullOrWhiteSpace(cmd.RelayStation) == false)
+                    {
+                        if (scApp.TransferService.isUnitType(cmd.RelayStation, Service.UnitType.SHELF))
+                        {
+                            if (scApp.CassetteDataBLL.loadCassetteDataByLoc(cmd.RelayStation) != null)
+                            {
+                                scApp.ShelfDefBLL.updateStatus(cmd.RelayStation, ShelfDef.E_ShelfState.Stored);
+                            }
+                            else
+                            {
+                                ACMD_MCS destCmd = GetCmdDataByDest(cmd.RelayStation).Where(cmdData => cmdData.CMD_ID.Trim() != cmd.CMD_ID.Trim()).FirstOrDefault();
+
+                                if (destCmd == null)
+                                {
+                                    scApp.ShelfDefBLL.updateStatus(cmd.RelayStation, ShelfDef.E_ShelfState.EmptyShelf);
+                                }
                             }
                         }
                     }
