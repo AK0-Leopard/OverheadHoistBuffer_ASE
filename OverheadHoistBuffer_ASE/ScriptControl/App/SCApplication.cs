@@ -770,11 +770,7 @@ namespace com.mirle.ibg3k0.sc.App
             sb.Clear();
             sb = null;
 
-
-
             bcfApplication = BCFApplication.getInstance(buildValueFunc);
-
-
 
             eapSecsAgentName = getString("EAPSecsAgentName", "");
             BC_ID = getString("BC_ID", "BC_ID");
@@ -788,9 +784,6 @@ namespace com.mirle.ibg3k0.sc.App
             initServer();
             initConfig();   //Initial Config
             initialTransferCommandPeriodicDataSet();
-
-
-
 
             eqptCss = bcfApplication.getEQPTConfigSections();
             //            mapActionCss = bcfApplication.getMapActionConfigSections();
@@ -807,7 +800,7 @@ namespace com.mirle.ibg3k0.sc.App
             dataCollectionCss = (DataCollectionConfigSections)ConfigurationManager.GetSection(SCAppConstants.CONFIG_DATA_COLLECTION_SETTING);
 
             initialReserveSectionAPI();//A0.01
-
+            iniOHBC_Data();
             startBLL();
             initWIF();      //Initial WIF   //A0.01
             initialCatchDataFromDB();
@@ -849,7 +842,6 @@ namespace com.mirle.ibg3k0.sc.App
 
         }
 
-
         //A0.01
         private void initialReserveSectionAPI()
         {
@@ -859,6 +851,11 @@ namespace com.mirle.ibg3k0.sc.App
             setHltVehicleInfo();
 
             LoadMapFiles();
+        }
+
+        private void iniOHBC_Data()
+        {
+            SystemParameter.cmdPriorityAdd = getInt("cmdPriorityAdd", 1);
         }
 
         //A0.01
@@ -2109,6 +2106,7 @@ namespace com.mirle.ibg3k0.sc.App
 
         public static bool IsEnableIDReadFailScenario { private set; get; } = false;
 
+        public static int cmdPriorityAdd = 1;
 
         /// <summary>
         /// Sets the secs conversaction timeout.

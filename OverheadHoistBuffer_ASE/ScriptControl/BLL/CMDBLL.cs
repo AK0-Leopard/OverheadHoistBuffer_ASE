@@ -1332,6 +1332,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 {
                     ACMD_MCS cmd = cmd_mcsDao.getByID(con, cmd_id);
                     cmd.TIME_PRIORITY = minutes;
+                    cmd.PRIORITY_SUM = cmd.PRIORITY + cmd.TIME_PRIORITY + cmd.PORT_PRIORITY;
                     cmd_mcsDao.update(con, cmd);
                 }
             }
