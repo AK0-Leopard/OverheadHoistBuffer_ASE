@@ -804,6 +804,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 //************
                 //A20.05.27
                 string cmdMCSSort = "";
+                bool checkMoreThan99 = false;
                 cmdMCSSort = scApp.CMDBLL.CombineMCSLogData(originMCSCmdData);
 
                 if (cmdMCSSort != oldBeforeSortingLog)
@@ -861,16 +862,27 @@ namespace com.mirle.ibg3k0.sc.BLL
                         (_, double distance) = scApp.VehicleBLL.findBestSuitableVhStepByNearest(sourceAddr);
                         cmdMCS.DistanceFromVehicleToHostSource = (int)distance;
                     }
+                    if(cmdMCS.PRIORITY_SUM >= 99)
+                    {
+                        checkMoreThan99 = true;
+                    }
                 }
                 bool isAGVCmdNumMoreThan1 = false;
-                isAGVCmdNumMoreThan1 = IsAGVCmdNumMoreThanOne(originMCSCmdData);
-                if (isAGVCmdNumMoreThan1 == true)
+                if (checkMoreThan99 != true)
                 {
-                    sortedMCSData.Sort(MCSCmdCompare_MoreThan1);
+                    isAGVCmdNumMoreThan1 = IsAGVCmdNumMoreThanOne(originMCSCmdData);
+                    if (isAGVCmdNumMoreThan1 == true)
+                    {
+                        sortedMCSData.Sort(MCSCmdCompare_MoreThan1);
+                    }
+                    else
+                    {
+                        sortedMCSData.Sort(MCSCmdCompare_LessThan2);
+                    }
                 }
                 else
                 {
-                    sortedMCSData.Sort(MCSCmdCompare_LessThan2);
+                    TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> DB|MCS 最大 priority 大於99 不重新排序");
                 }
                 #endregion
 
