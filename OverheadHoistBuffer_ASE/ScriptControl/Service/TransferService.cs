@@ -825,8 +825,8 @@ namespace com.mirle.ibg3k0.sc.Service
                                     TimeSpan span = nowTime - cmdTime;
                                     if (span.Minutes >= 1)
                                     {
-                                        cmdBLL.updateCMD_MCS_TimePriority(v.CMD_ID, v.TIME_PRIORITY + 1);
-                                        cmdBLL.updateCMD_MCS_sumPriority(v.CMD_ID);
+                                        cmdBLL.updateCMD_MCS_TimePriority(v.CMD_ID, v.TIME_PRIORITY + SystemParameter.cmdPriorityAdd);
+                                        //cmdBLL.updateCMD_MCS_sumPriority(v.CMD_ID);
                                     }
                                 }
                                 #endregion                                
