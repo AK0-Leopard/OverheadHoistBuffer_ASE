@@ -802,7 +802,7 @@ namespace com.mirle.ibg3k0.sc.App
 
             redisCacheManager = new RedisCacheManager(this, BC_ID);
             natsManager = new NatsManager(this, BC_ID, "nats-cluster", SCApplication.ServerName);
-
+            webClientManager = WebClientManager.getInstance();
 
             dataCollectionCss = (DataCollectionConfigSections)ConfigurationManager.GetSection(SCAppConstants.CONFIG_DATA_COLLECTION_SETTING);
 
@@ -841,7 +841,7 @@ namespace com.mirle.ibg3k0.sc.App
 
             initialRestfulServer();
 
-            webClientManager = WebClientManager.getInstance();
+            
             //
             //loadECDataToSystem();
             //bdTableWatcher = new DBTableWatcher(this);

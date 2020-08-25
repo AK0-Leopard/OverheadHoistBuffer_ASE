@@ -5087,6 +5087,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 //set the connection alarm code 99999
                 scApp.TransferService.OHBC_AlarmSet(vh.VEHICLE_ID, SCAppConstants.SystemAlarmCode.OHT_Issue.OHTAccidentOfflineWarning);
             }
+            Task.Run(() => scApp.VehicleBLL.web.vehicleDisconnection(scApp));
         }
         #endregion Vh Connection / disconnention
 

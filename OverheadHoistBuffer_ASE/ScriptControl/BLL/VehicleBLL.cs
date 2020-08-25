@@ -40,6 +40,7 @@ namespace com.mirle.ibg3k0.sc.BLL
         private SCApplication scApp = null;
         private static Logger logger = LogManager.GetCurrentClassLogger();
         public Cache cache { get; private set; }
+        public Web web { get; private set; }
 
 
         public VehicleBLL()
@@ -51,6 +52,7 @@ namespace com.mirle.ibg3k0.sc.BLL
             scApp = app;
             vehicleDAO = scApp.VehicleDao;
             cache = new Cache(scApp.getEQObjCacheManager());
+            web = new Web(scApp.webClientManager);
 
         }
         public void startMapAction()
@@ -2139,6 +2141,86 @@ namespace com.mirle.ibg3k0.sc.BLL
                            ToList();
             }
 
+
+        }
+        public class Web
+        {
+            WebClientManager webClientManager = null;
+            List<string> notify_urls = new List<string>()
+            {
+                //"http://stk01.asek21.mirle.com.tw:15000",
+                 "http://agvc.asek21.mirle.com.tw:15000"
+            };
+            const string ERROR_HAPPEND_CONST = "99";
+
+            public Web(WebClientManager _webClient)
+            {
+                webClientManager = _webClient;
+            }
+
+            public void vehicleDisconnection(SCApplication app)
+            {
+                try
+                {
+                    string lineName = SCUtility.Trim(app.BC_ID, true);
+                    if (SCUtility.isMatche(lineName, "ASE"))
+                    {
+                        lineName = "line1";
+                    }
+                    else
+                    {
+                        if (lineName.Contains("_"))
+                        {
+                            lineName = lineName.Split('_')[1];
+                        }
+                        else
+                        {
+                            return;
+                        }
+                    }
+                    lineName = lineName.ToLower();
+                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleBLL), Device: "OHxC",
+                       Data: $"Has vh dis connection,notify start.Line name:{lineName}");
+                    vehicleDisconnection(lineName);
+                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleBLL), Device: "OHxC",
+                       Data: $"Has vh dis connection,notify end.Line name:{lineName}");
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex, "Exception:");
+                }
+            }
+            /// <summary>
+            /// Notify sample
+            ///http://127.0.0.1:15000/weatherforecast/line1_dis
+            ///http://127.0.0.1:15000/weatherforecast/loop_dis
+            ///http://127.0.0.1:15000/weatherforecast/agv_dis 
+            /// </summary>
+            /// <param name="lineName"></param>
+            public void vehicleDisconnection(string lineName)
+            {
+                try
+                {
+                    lineName = lineName.ToLower();
+                    string notify_name = $"{lineName}_dis";
+                    string[] action_targets = new string[]
+                    {
+                    "weatherforecast"
+                    };
+                    string[] param = new string[]
+                    {
+                        notify_name,
+                    };
+                    foreach (string notify_url in notify_urls)
+                    {
+                        string result = webClientManager.GetInfoFromServer(notify_url, action_targets, param);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex, "Exception");
+                }
+            }
 
         }
 

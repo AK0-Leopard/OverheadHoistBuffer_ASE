@@ -41,13 +41,23 @@ namespace com.mirle.ibg3k0.sc.Common
         }
 
 
-
-
-        public string GetInfoFromServer(string[] action_targets, string param)
+        
+        public string GetInfoFromServer(string uri, string[] action_targets, string[] param)
         {
-            string result = string.Empty;
+            string p = string.Join("", param);
+            return GetInfoFromServer(uri, action_targets, p);
+        }
+        public string GetInfoFromServer(string uri, string[] action_targets, string param)
+        {
+            string result = "default";
             string action_target = string.Join("/", action_targets);
-            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create($"http://ohxcv.ha.ohxc.mirle.com.tw:3280/{action_target}/{param}");
+            string address = $"{uri}/{action_target}/{param}";
+            LogHelper.Log(logger: NLog.LogManager.GetCurrentClassLogger(), LogLevel: LogLevel.Info, Class: nameof(WebClientManager), Device: "OHxC",
+               Data:$"send GetInfoFromServer: {address} ");
+
+            // HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create($"{uri}/{action_target}/{param}");
+            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(address);
+            httpWebRequest.Timeout = 5000;
             httpWebRequest.Method = HTTP_METHOD.GET.ToString();
             //指定 request 的 content type
             httpWebRequest.ContentType = "application/x-www-form-urlencoded";

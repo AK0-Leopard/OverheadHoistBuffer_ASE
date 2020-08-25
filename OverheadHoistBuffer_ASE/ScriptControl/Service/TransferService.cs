@@ -1808,6 +1808,8 @@ namespace com.mirle.ibg3k0.sc.Service
                     #region 命令已完成
                     else if (cmd.TRANSFERSTATE == E_TRAN_STATUS.TransferCompleted)
                     {
+                        isCreatScuess &= cmdBLL.updateCMD_MCS_CmdStatus(cmd.CMD_ID, status);
+
                         TransferServiceLogger.Info
                         (
                             "此筆命令已完成  " + GetCmdLog(cmd)
@@ -4004,7 +4006,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                         status = E_PORT_STATUS.InService;
                                         //cassette_dataBLL.UpdateCSTState(dbCstData.BOXID, (int)E_CSTState.WaitOut);
 
-                                        if (agvWaitOutOpenBox)
+                                        if (agvWaitOutOpenBox && line.LINE_ID.Contains("LINE"))
                                         {
                                             SetAGV_PortOpenBOX(plcInfo.EQ_ID.Trim());
                                         }
