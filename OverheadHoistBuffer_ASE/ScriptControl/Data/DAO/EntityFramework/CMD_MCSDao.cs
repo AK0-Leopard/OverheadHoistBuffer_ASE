@@ -173,7 +173,13 @@ namespace com.mirle.ibg3k0.sc.Data.DAO.EntityFramework
                         select cmd_mcs;
             return query;
         }
-
+        public List<ACMD_MCS> getCMD_ByOHTName(DBConnection_EF con, string craneName)
+        {
+            var query = from cmd in con.ACMD_MCS
+                        where cmd.CRANE.Trim() == craneName.Trim() && cmd.TRANSFERSTATE != E_TRAN_STATUS.TransferCompleted
+                        select cmd;
+            return query.ToList();
+        }
         public int getCMD_MCSIsQueueCount(DBConnection_EF con)
         {
             var query = from cmd in con.ACMD_MCS

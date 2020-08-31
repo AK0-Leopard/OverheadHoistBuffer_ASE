@@ -388,7 +388,7 @@ namespace com.mirle.ibg3k0.sc.WebAPI
                 string agv_station_port_id = p.AGVStationPortID;
 
                 bool is_ok = true;
-                is_ok = scApp.TransferService.SetAGV_PortOpenBOX(agv_station_port_id);
+                is_ok = scApp.TransferService.SetAGV_PortOpenBOX(agv_station_port_id, "TransferManagement");
 
                 var response = (Response)(is_ok ? "OK" : "NG");
                 response.ContentType = restfulContentType;

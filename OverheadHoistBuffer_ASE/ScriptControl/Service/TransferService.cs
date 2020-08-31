@@ -3213,7 +3213,15 @@ namespace com.mirle.ibg3k0.sc.Service
 
                     if (cmd != null)
                     {
-                        log = log + "，找到命令" + GetCmdLog(cmd);
+                        if (cmd.HOSTDESTINATION.Trim() != portName.Trim())
+                        {
+                            cmd = null;
+                            log = log + "，找到命令，但命令目的錯誤" + GetCmdLog(cmd);
+                        }
+                        else
+                        {
+                            log = log + "，找到命令" + GetCmdLog(cmd);
+                        }                        
                     }
                     else
                     {
@@ -3376,10 +3384,22 @@ namespace com.mirle.ibg3k0.sc.Service
 
                     if (dbData != null)
                     {
-                        dbData.Carrier_LOC = GetPositionName(dbData.Carrier_LOC, 1);
-                        cassette_dataBLL.UpdateCSTLoc(dbData.BOXID, dbData.Carrier_LOC, 1);
+                        TransferServiceLogger.Info
+                        (
+                            DateTime.Now.ToString("HH:mm:ss.fff ") + "過帳處理: 自動過到"
+                        );
 
-                        reportBLL.ReportCarrierWaitOut(dbData, "1");
+                        DeleteCst(dbData.CSTID, dbData.BOXID, "OHTtoPort");
+                        
+                        //dbData.Carrier_LOC = GetPositionName(portName, 1);
+                        //cassette_dataBLL.UpdateCSTLoc(dbData.BOXID, dbData.Carrier_LOC, 1);
+
+                        //PortPLCInfo portInfo = GetPLC_PortData(portName);
+
+                        //if(portInfo.PortWaitOut)
+                        //{
+                        //    reportBLL.ReportCarrierWaitOut(dbData, "1");
+                        //}
                     }
                     #endregion
                 }
@@ -4008,7 +4028,7 @@ namespace com.mirle.ibg3k0.sc.Service
 
                                         if (agvWaitOutOpenBox && line.LINE_ID.Contains("LINE"))
                                         {
-                                            SetAGV_PortOpenBOX(plcInfo.EQ_ID.Trim());
+                                            SetAGV_PortOpenBOX(plcInfo.EQ_ID.Trim(), "AGV PortWaitOut");
                                         }
 
                                         waitOut = true;
@@ -4953,7 +4973,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 return false;
             }
         }
-        public bool SetAGV_PortOpenBOX(string portID)
+        public bool SetAGV_PortOpenBOX(string portID, string sourceCmd)
         {
             try
             {
@@ -4961,7 +4981,8 @@ namespace com.mirle.ibg3k0.sc.Service
                 (
                     DateTime.Now.ToString("HH:mm:ss.fff ") +
                     "OHB >> PLC|SetAGV_PortOpenBOX"
-                    + "    portID:" + portID
+                    + " portID:" + portID
+                    + " 誰呼叫:" + sourceCmd
                 );
 
                 PortValueDefMapAction portValueDefMapAction = scApp.getEQObjCacheManager().getPortByPortID(portID).getMapActionByIdentityKey(typeof(PortValueDefMapAction).Name) as PortValueDefMapAction;
@@ -6213,7 +6234,7 @@ namespace com.mirle.ibg3k0.sc.Service
             {
                 ACMD_MCS mcsCmdData = cmdBLL.getCMD_ByOHTName(eqName).FirstOrDefault();
 
-                ALARM alarm = scApp.AlarmBLL.setAlarmReport(null, eqName, errCode);
+                ALARM alarm = scApp.AlarmBLL.setAlarmReport(null, eqName, errCode, mcsCmdData);
 
                 if (alarm != null)
                 {
@@ -6823,6 +6844,29 @@ namespace com.mirle.ibg3k0.sc.Service
             }
 
             return "OK";
+        }
+
+        public string Manual_UpDateCmdPriority(string cmdID, int priority, string cmdSource)
+        {
+            string s = "";
+            if(cmdBLL.updateCMD_MCS_PortPriority(cmdID, priority))
+            {
+                s = "OK";
+            }
+            else
+            {
+                s = "失敗";
+            }
+
+            #region Log
+            TransferServiceLogger.Info
+            (
+                DateTime.Now.ToString("HH:mm:ss.fff ") +
+                "Manual >> OHB|Manual_UpDateCmdPriority: " + cmdID + " priority:" + priority + " 誰呼叫：" + cmdSource
+            );
+            #endregion
+
+            return s;
         }
         #endregion
         #region 卡匣操作

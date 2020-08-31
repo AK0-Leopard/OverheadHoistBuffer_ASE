@@ -856,6 +856,11 @@ namespace com.mirle.ibg3k0.sc.App
         private void iniOHBC_Data()
         {
             SystemParameter.cmdPriorityAdd = getInt("cmdPriorityAdd", 1);
+
+            if (SystemParameter.cmdPriorityAdd <= 0)
+            {
+                SystemParameter.cmdPriorityAdd = 1; 
+            }
         }
 
         //A0.01

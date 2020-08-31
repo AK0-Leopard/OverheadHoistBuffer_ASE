@@ -322,7 +322,7 @@ namespace com.mirle.ibg3k0.sc.WebAPI
 							break;
 
 						case "AGVOpenBox":
-							isSuccess = scApp.TransferService.SetAGV_PortOpenBOX(port_id);
+							isSuccess = scApp.TransferService.SetAGV_PortOpenBOX(port_id, "CSTBoxControl");
 							result = isSuccess ? "OK" : "Open AGV Box failed.";
 							break;
 

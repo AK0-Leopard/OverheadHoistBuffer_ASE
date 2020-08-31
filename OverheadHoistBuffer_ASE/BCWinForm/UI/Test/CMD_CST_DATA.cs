@@ -408,5 +408,32 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Test
             BCApp.SCApplication.TransferService.redisEnable = false;
         }
 
+        private void button4_Click_1(object sender, EventArgs e)
+        {
+            DialogResult result;
+
+            result = MessageBox.Show("確定設定所選的命令的優先度?", "取消確認", MessageBoxButtons.YesNo);
+
+            if (result == System.Windows.Forms.DialogResult.Yes)
+            {
+                List<int> listInt = new List<int>();
+
+                foreach (DataGridViewCell v in dataGridView1.SelectedCells)
+                {
+                    if (listInt.Contains(v.RowIndex))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        listInt.Add(v.RowIndex);
+                    }
+
+                    string cmdID = dataGridView1.Rows[v.RowIndex].Cells["CMD_ID"].Value.ToString();
+                    BCApp.SCApplication.TransferService.Manual_UpDateCmdPriority(cmdID, (int)numericUpDown2.Value, "工程UI CMD_CST_DATA");
+                }
+                UpDate_CmdData();
+            }
+        }
     }
 }

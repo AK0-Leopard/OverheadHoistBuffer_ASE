@@ -342,6 +342,14 @@ namespace com.mirle.ibg3k0.sc.BLL
             {
                 objCacheManager = _objCacheManager;
             }
+            public List<PortDef> loadCanAvoidCVPortDefs()
+            {
+                var port_defs = objCacheManager.getPortDefs();
+                return port_defs.Where(port => SCUtility.isMatche(port.UnitType, "OHCV") &&
+                                               port.PortTypeIndex.HasValue && port.PortTypeIndex.Value == 1).
+                                 ToList();
+            }
+
             public List<PortDef> loadCVPortDefs()
             {
                 var port_defs = objCacheManager.getPortDefs();

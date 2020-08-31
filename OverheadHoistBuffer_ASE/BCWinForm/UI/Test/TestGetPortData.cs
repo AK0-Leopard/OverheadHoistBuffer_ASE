@@ -336,7 +336,7 @@ namespace com.mirle.ibg3k0.bc.winform
 
         private void button12_Click(object sender, EventArgs e)
         {
-            transferService.SetAGV_PortOpenBOX(comboBox1.Text);
+            transferService.SetAGV_PortOpenBOX(comboBox1.Text, "工程UI_TestGetPortData");
         }
 
         private void button13_Click(object sender, EventArgs e)

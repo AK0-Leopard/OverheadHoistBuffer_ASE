@@ -17,6 +17,10 @@
 // 2020/05/24    Jason Wu       N/A            B0.07   新增funtion "GetVehicleIDByPortID(string portID)" 讓上層能呼叫出目前port ID address 上的車輛ID
 // 2020/05/27    Jason Wu       N/A            B0.08   新增funtion "GetVehicleDataByVehicleID(string vehicleID)" 讓上層能呼叫出目前vehicle ID 的vehicle cache 實時資料
 // 2020/05/27    Jason Wu       N/A            B0.08.0 新增Task Run 在 132 命令完成之後，會處發TransferRun，使MCS命令可以在多車情形下早於趕車CMD下達。
+// 2020/08/27    Kevin Wei      N/A            B0.09   修改選擇避車點邏輯。原本是找目前in mode的CV，改成固定找被標記的CV Port。(目前是固定設定在LOOP-T01、T0A)
+// 2020/08/27    Kevin Wei      N/A            B0.10   修改針對OHT進行 data initial的時機。
+//                                                     原:一有連線事件觸發，就直接進行
+//                                                     改:在連線事件後且詢問143狀態成功更新後。
 //**********************************************************************************
 using com.mirle.ibg3k0.bcf.App;
 using com.mirle.ibg3k0.bcf.Common;
@@ -648,7 +652,11 @@ namespace com.mirle.ibg3k0.sc.Service
         public void VehicleInfoSynchronize(string vh_id)
         {
             /*與Vehicle進行狀態同步*/
-            VehicleStatusRequest(vh_id, true);
+            bool ask_status_success = VehicleStatusRequest(vh_id, true);
+            if (ask_status_success)                                        //B0.10
+            {                                                              //B0.10
+                scApp.TransferService.iniOHTData(vh_id, "OHT_Connection"); //B0.10
+            }                                                              //B0.10
             /*要求Vehicle進行Alarm的Reset，如果成功後會將OHxC上針對該Vh的Alarm清除*/
             if (AlarmResetRequest(vh_id))
             {
@@ -1829,7 +1837,8 @@ namespace com.mirle.ibg3k0.sc.Service
                     var check_can_creat_avoid_command = canCreatDriveOutCommand(in_the_way_vh);
                     if (check_can_creat_avoid_command.is_can)
                     {
-                        var find_result = findAvoidAddressNew(in_the_way_vh);
+                        //B0.09 var find_result = findAvoidAddressNew(in_the_way_vh);
+                        var find_result = findAvoidAddressForFixCVPort(in_the_way_vh);//B0.09
                         if (find_result.isFind)
                         {
                             bool is_success = scApp.CMDBLL.doCreatTransferCommand(inTheWayVhID,
@@ -1866,7 +1875,26 @@ namespace com.mirle.ibg3k0.sc.Service
                 }
             }
         }
-
+        private (bool isFind, string avoidAdr) findAvoidAddressForFixCVPort(AVEHICLE willDrivenAwayVh)
+        {
+            //1.找看看是否有設定的在CV固定避車點。
+            List<PortDef> can_avoid_cv_port = scApp.PortDefBLL.cache.loadCanAvoidCVPortDefs();
+            if (can_avoid_cv_port == null || can_avoid_cv_port.Count == 0)
+            {
+                //1.2.如果沒有則就把全部的CV納入選擇。
+                can_avoid_cv_port = scApp.PortDefBLL.cache.loadCVPortDefs();
+            }
+            //2.找出離自己最近的一個CV點
+            var find_result = findTheNearestCVPort(willDrivenAwayVh, can_avoid_cv_port);
+            if (find_result.isFind)
+            {
+                return (true, find_result.PortDef.ADR_ID);
+            }
+            else
+            {
+                return (false, "");
+            }
+        }
         private (bool isFind, string avoidAdr) findAvoidAddressNew(AVEHICLE willDrivenAwayVh)
         {
             var all_cv_port = scApp.PortDefBLL.cache.loadCVPortDefs();
@@ -5012,7 +5040,7 @@ namespace com.mirle.ibg3k0.sc.Service
         }
         private void VehicleBlockedByTheErrorVehicle()
         {
-            ALARM alarm = scApp.AlarmBLL.setAlarmReport(SCAppConstants.System_ID, SCAppConstants.System_ID, MainAlarmCode.OHxC_BOLCKED_BY_THE_ERROR_VEHICLE_0_1);
+            ALARM alarm = scApp.AlarmBLL.setAlarmReport(SCAppConstants.System_ID, SCAppConstants.System_ID, MainAlarmCode.OHxC_BOLCKED_BY_THE_ERROR_VEHICLE_0_1, null);
             if (alarm != null)
             {
                 //scApp.AlarmBLL.onMainAlarm(SCAppConstants.MainAlarmCode.OHxC_BOLCKED_BY_THE_ERROR_VEHICLE_0_1,
@@ -5064,7 +5092,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 //scApp.TransferService.OHBC_AlarmCleared(vh.VEHICLE_ID,
                 //    SCAppConstants.SystemAlarmCode.OHT_Issue.OHTAccidentOfflineWarning);
 
-                scApp.TransferService.iniOHTData(vh.VEHICLE_ID, "OHT_Connection");
+                //B0.10 scApp.TransferService.iniOHTData(vh.VEHICLE_ID, "OHT_Connection");
             }
         }
         [ClassAOPAspect]

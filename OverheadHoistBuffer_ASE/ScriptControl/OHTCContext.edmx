@@ -328,6 +328,7 @@
           <Property Name="UnitID" Type="varchar" MaxLength="20" />
           <Property Name="UnitState" Type="varchar" MaxLength="2" />
           <Property Name="RecoveryOption" Type="varchar" MaxLength="20" />
+          <Property Name="CMD_ID" Type="varchar" MaxLength="64" />
         </EntityType>
         <!--產生期間發現錯誤:
 警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE1.dbo.ALARMMAP' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
@@ -2584,6 +2585,7 @@
           <Property Name="UnitID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="UnitState" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
           <Property Name="RecoveryOption" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="CMD_ID" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
         </EntityType>
         <EnumType Name="E_ALARM_LVL">
           <Member Name="Warn" Value="1" />
@@ -3882,7 +3884,8 @@
     <EntitySetMapping Name="ALARM">
       <EntityTypeMapping TypeName="IsTypeOf(OHTC_DevModel.ALARM)">
         <MappingFragment StoreEntitySet="ALARM">
-          <ScalarProperty Name="RecoveryOption" ColumnName="RecoveryOption" />
+          <ScalarProperty Name="CMD_ID" ColumnName="CMD_ID" />
+                <ScalarProperty Name="RecoveryOption" ColumnName="RecoveryOption" />
                 <ScalarProperty Name="EQPT_ID" ColumnName="EQPT_ID" />
           <ScalarProperty Name="UNIT_NUM" ColumnName="UNIT_NUM" />
           <ScalarProperty Name="RPT_DATE_TIME" ColumnName="RPT_DATE_TIME" />

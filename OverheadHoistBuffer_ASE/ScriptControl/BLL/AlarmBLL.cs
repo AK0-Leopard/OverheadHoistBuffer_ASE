@@ -25,6 +25,7 @@ using com.mirle.ibg3k0.bcf.App;
 using com.mirle.ibg3k0.sc.Data;
 using Newtonsoft.Json;
 using com.mirle.ibg3k0.sc.Service;
+using com.mirle.ibg3k0.sc.Data.DAO.EntityFramework;
 
 namespace com.mirle.ibg3k0.sc.BLL
 {
@@ -47,6 +48,8 @@ namespace com.mirle.ibg3k0.sc.BLL
         /// The alarm DAO
         /// </summary>
         private AlarmDao alarmDao = null;
+
+        private CMD_MCSDao cmd_mcsDao = null;
         /// <summary>
         /// The line DAO
         /// </summary>
@@ -80,6 +83,7 @@ namespace com.mirle.ibg3k0.sc.BLL
             alarmRptCondDao = scApp.AlarmRptCondDao;
             alarmMapDao = scApp.AlarmMapDao;
             mainAlarmDao = scApp.MainAlarmDao;
+            cmd_mcsDao = scApp.CMD_MCSDao;
         }
 
         #region Alarm Map
@@ -110,7 +114,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
 
         object lock_obj_alarm = new object();
-        public ALARM setAlarmReport(string node_id, string eq_id, string error_code)
+        public ALARM setAlarmReport(string node_id, string eq_id, string error_code, ACMD_MCS mcsCmdData)
         {
             lock (lock_obj_alarm)
             {
@@ -184,7 +188,13 @@ namespace com.mirle.ibg3k0.sc.BLL
                     UnitID = eq_id,
                     UnitState = "3",
                     RecoveryOption = "",
+                    CMD_ID = "",
                 };
+
+                if (mcsCmdData != null)
+                {
+                    alarm.CMD_ID = mcsCmdData.CMD_ID.Trim();
+                }
 
                 if (scApp.TransferService.isUnitType(eq_id, UnitType.CRANE))
                 {
@@ -203,7 +213,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
-                    if(alarmDao.insertAlarm(con, alarm) == false)
+                    if (alarmDao.insertAlarm(con, alarm) == false)
                     {
                         alarm = null;
                     }

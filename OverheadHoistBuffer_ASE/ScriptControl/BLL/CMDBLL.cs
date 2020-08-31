@@ -805,7 +805,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 //A20.05.27
                 string cmdMCSSort = "";
                 cmdMCSSort = scApp.CMDBLL.CombineMCSLogData(originMCSCmdData);
-
+                bool isCmdPriorityMoreThan99 = false;
                 if (cmdMCSSort != oldBeforeSortingLog)
                 {
                     TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> DB|MCS排序前 前 5 筆: " + cmdMCSSort);
@@ -861,16 +861,27 @@ namespace com.mirle.ibg3k0.sc.BLL
                         (_, double distance) = scApp.VehicleBLL.findBestSuitableVhStepByNearest(sourceAddr);
                         cmdMCS.DistanceFromVehicleToHostSource = (int)distance;
                     }
+                    if(cmdMCS.PRIORITY_SUM >= 99)
+                    {
+                        isCmdPriorityMoreThan99 = true;
+                    }
                 }
                 bool isAGVCmdNumMoreThan1 = false;
-                isAGVCmdNumMoreThan1 = IsAGVCmdNumMoreThanOne(originMCSCmdData);
-                if (isAGVCmdNumMoreThan1 == true)
+                if (isCmdPriorityMoreThan99 != true)
                 {
-                    sortedMCSData.Sort(MCSCmdCompare_MoreThan1);
+                    isAGVCmdNumMoreThan1 = IsAGVCmdNumMoreThanOne(originMCSCmdData);
+                    if (isAGVCmdNumMoreThan1 == true)
+                    {
+                        sortedMCSData.Sort(MCSCmdCompare_MoreThan1);
+                    }
+                    else
+                    {
+                        sortedMCSData.Sort(MCSCmdCompare_LessThan2);
+                    }
                 }
                 else
                 {
-                    sortedMCSData.Sort(MCSCmdCompare_LessThan2);
+                    TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> DB|MCS排序因有命令之Priority >= 99 ");
                 }
                 #endregion
 
@@ -1322,7 +1333,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
             return isSuccess;
         }
-        public bool updateCMD_MCS_TimePriority(string cmd_id, int minutes)
+        public bool updateCMD_MCS_TimePriority(string cmd_id, int priority)
         {
             bool isSuccess = true;
 
@@ -1331,7 +1342,29 @@ namespace com.mirle.ibg3k0.sc.BLL
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
                     ACMD_MCS cmd = cmd_mcsDao.getByID(con, cmd_id);
-                    cmd.TIME_PRIORITY = minutes;
+                    cmd.TIME_PRIORITY = priority;
+                    cmd.PRIORITY_SUM = cmd.PRIORITY + cmd.TIME_PRIORITY + cmd.PORT_PRIORITY;
+                    cmd_mcsDao.update(con, cmd);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                isSuccess = false;
+            }
+
+            return isSuccess;
+        }
+        public bool updateCMD_MCS_PortPriority(string cmd_id, int priority)
+        {
+            bool isSuccess = true;
+
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    ACMD_MCS cmd = cmd_mcsDao.getByID(con, cmd_id);
+                    cmd.PORT_PRIORITY = priority;
                     cmd.PRIORITY_SUM = cmd.PRIORITY + cmd.TIME_PRIORITY + cmd.PORT_PRIORITY;
                     cmd_mcsDao.update(con, cmd);
                 }
@@ -1772,7 +1805,8 @@ namespace com.mirle.ibg3k0.sc.BLL
             {
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
-                    return con.ACMD_MCS.Where(data => data.CRANE.Trim() == ohtName.Trim() && data.TRANSFERSTATE != E_TRAN_STATUS.TransferCompleted).ToList();
+                    //return con.ACMD_MCS.Where(data => data.CRANE.Trim() == ohtName.Trim() && data.TRANSFERSTATE != E_TRAN_STATUS.TransferCompleted).ToList();
+                    return cmd_mcsDao.getCMD_ByOHTName(con, ohtName);
                 }
             }
             catch (Exception ex)

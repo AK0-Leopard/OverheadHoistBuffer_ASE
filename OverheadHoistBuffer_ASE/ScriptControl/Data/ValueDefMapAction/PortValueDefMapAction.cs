@@ -1075,7 +1075,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                     }
                 }
 
-                if (function.IsInputMode && function.LoadPosition1 == false)
+                if (function.OpAutoMode && function.IsInputMode && function.LoadPosition1 == false)
                 {
                     scApp.TransferService.PortToOHT(function.EQ_ID.Trim(), "LoadPosition1 OFF");
                 }
