@@ -7676,6 +7676,27 @@ namespace com.mirle.ibg3k0.sc.Service
                     RewriteTheResultOfAGVCTrigger(AGVStationID, portTypeNum, isOK);
                     return isOK;
                 }
+                // 新增在outmode狀態下的port 是否有對該port 的命令可執行，若有，則拒絕。
+                else
+                {
+                    foreach (PortDef AGVPortData in accessAGVPortDatas)
+                    {
+                        PortPLCInfo portData = GetPLC_PortData(AGVPortData.PLCPortID);
+                        if (portData.IsOutputMode && portData.LoadPosition1 != true && portData.IsReadyToLoad) // 若該out mode port 為 無空盒 且 load OK 
+                        {
+                            List<ACMD_MCS> useCheckCmd = cmdBLL.GetCmdDataByDest(portData.EQ_ID);
+                            List<ACMD_MCS> useCheckCmd_1 = cmdBLL.GetCmdDataByDest(AGVStationID);
+                            if (useCheckCmd.Count + useCheckCmd_1.Count() > 0)
+                            {
+                                isOK = ChangeReturnDueToAGVCCmdNum(AGVCFromEQToStationCmdNum);
+                                portTypeNum = PortTypeNum.No_Change;
+                                AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Due to there is going to be a cmd to AGV port " + "一律回復" + isOK);
+                                RewriteTheResultOfAGVCTrigger(AGVStationID, portTypeNum, isOK);
+                                return isOK;
+                            }
+                        }
+                    }
+                }
                 //判斷是否強制讓貨出去
                 if (portINIData[AGVStationID].forceRejectAGVCTrigger == true)
                 {
