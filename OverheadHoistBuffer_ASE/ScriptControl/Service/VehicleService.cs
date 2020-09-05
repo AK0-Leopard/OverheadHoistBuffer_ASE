@@ -21,6 +21,7 @@
 // 2020/08/27    Kevin Wei      N/A            B0.10   修改針對OHT進行 data initial的時機。
 //                                                     原:一有連線事件觸發，就直接進行
 //                                                     改:在連線事件後且詢問143狀態成功更新後。
+// 2020/09/05    Kevin Wei      N/A            B0.11   加入在命令結束時，如果沒有MCS命令要準備派送，將會讓他到停等點待命
 //**********************************************************************************
 using com.mirle.ibg3k0.bcf.App;
 using com.mirle.ibg3k0.bcf.Common;
@@ -64,7 +65,7 @@ namespace com.mirle.ibg3k0.sc.Service
         PORT_CIM_OFF = 100019,
         PORT_DOWN = 100020,
         BOX_NumberIsNotEnough = 100021,
-        OHT_IDMismatchUNKU = 100022,        
+        OHT_IDMismatchUNKU = 100022,
         LINE_NotEmptyShelf = 100023,
         PORT_OP_WaitOutTimeOut = 100024,
         PORT_BP1_WaitOutTimeOut = 100025,
@@ -1822,46 +1823,31 @@ namespace com.mirle.ibg3k0.sc.Service
             }
         }
 
+        private void tryAskVhToIdlePosition(string findIdlePositionVh)
+        {
+            try
+            {
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                                       Data: $"start try find the vh of idle position:{findIdlePositionVh}...",
+                                       VehicleID: findIdlePositionVh);
+                bool is_success = findTheVhOfAvoidAddress("", findIdlePositionVh);
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                                       Data: $"start try find the vh of idle position:{findIdlePositionVh},result:{is_success}",
+                                       VehicleID: findIdlePositionVh);
+            }
+            catch(Exception ex)
+            {
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                   Data: ex);
+            }
+        }
         private void tryDriveOutTheVh(string willPassVhID, string inTheWayVhID)
         {
             if (System.Threading.Interlocked.Exchange(ref syncPoint_NotifyVhAvoid, 1) == 0)
             {
                 try
                 {
-                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
-                       Data: $"start try drive out vh:{inTheWayVhID}...",
-                       VehicleID: willPassVhID);
-
-                    //確認能否把該Vh趕走
-                    AVEHICLE in_the_way_vh = scApp.VehicleBLL.cache.getVhByID(inTheWayVhID);
-                    var check_can_creat_avoid_command = canCreatDriveOutCommand(in_the_way_vh);
-                    if (check_can_creat_avoid_command.is_can)
-                    {
-                        //B0.09 var find_result = findAvoidAddressNew(in_the_way_vh);
-                        var find_result = findAvoidAddressForFixCVPort(in_the_way_vh);//B0.09
-                        if (find_result.isFind)
-                        {
-                            bool is_success = scApp.CMDBLL.doCreatTransferCommand(inTheWayVhID,
-                                                                                  cmd_type: E_CMD_TYPE.Move,
-                                                                                  destination_address: find_result.avoidAdr);
-                            LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
-                               Data: $"Try to notify vh avoid,requestVh:{willPassVhID} reservedVh:{inTheWayVhID} avoid address:{find_result.avoidAdr}," +
-                                     $" is success :{is_success}.",
-                               VehicleID: willPassVhID);
-                        }
-                        else
-                        {
-                            LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
-                               Data: $"Can't find the avoid address.",
-                               VehicleID: willPassVhID);
-                        }
-                    }
-                    else
-                    {
-                        LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
-                           Data: $"start try drive out vh:{inTheWayVhID},but vh status not ready.",
-                           VehicleID: willPassVhID);
-                    }
+                    findTheVhOfAvoidAddress(willPassVhID, inTheWayVhID);
                 }
                 catch (Exception ex)
                 {
@@ -1875,17 +1861,59 @@ namespace com.mirle.ibg3k0.sc.Service
                 }
             }
         }
-        private (bool isFind, string avoidAdr) findAvoidAddressForFixCVPort(AVEHICLE willDrivenAwayVh)
+
+        private bool findTheVhOfAvoidAddress(string willPassVhID, string inTheWayVhID)
         {
-            //1.找看看是否有設定的在CV固定避車點。
-            List<PortDef> can_avoid_cv_port = scApp.PortDefBLL.cache.loadCanAvoidCVPortDefs();
-            if (can_avoid_cv_port == null || can_avoid_cv_port.Count == 0)
+            bool is_success = false;
+            LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                                   Data: $"start try drive out vh:{inTheWayVhID}...",
+                                   VehicleID: willPassVhID);
+
+            //確認能否把該Vh趕走
+            AVEHICLE in_the_way_vh = scApp.VehicleBLL.cache.getVhByID(inTheWayVhID);
+            var check_can_creat_avoid_command = canCreatDriveOutCommand(in_the_way_vh);
+            if (check_can_creat_avoid_command.is_can)
+            {
+                //B0.09 var find_result = findAvoidAddressNew(in_the_way_vh);
+                var find_result = findAvoidAddressForFixPort(in_the_way_vh);//B0.09
+                if (find_result.isFind)
+                {
+                    is_success = scApp.CMDBLL.doCreatTransferCommand(inTheWayVhID,
+                                                                         cmd_type: E_CMD_TYPE.Move,
+                                                                         destination_address: find_result.avoidAdr);
+                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                       Data: $"Try to notify vh avoid,requestVh:{willPassVhID} reservedVh:{inTheWayVhID} avoid address:{find_result.avoidAdr}," +
+                             $" is success :{is_success}.",
+                       VehicleID: willPassVhID);
+                }
+                else
+                {
+                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                       Data: $"Can't find the avoid address.",
+                       VehicleID: willPassVhID);
+                }
+            }
+            else
+            {
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                   Data: $"start try drive out vh:{inTheWayVhID},but vh status not ready.",
+                   VehicleID: willPassVhID);
+            }
+            return is_success;
+        }
+
+        private (bool isFind, string avoidAdr) findAvoidAddressForFixPort(AVEHICLE willDrivenAwayVh)
+        {
+            //1.找看看是否有設定的固定避車點。
+            //List<PortDef> can_avoid_cv_port = scApp.PortDefBLL.cache.loadCanAvoidCVPortDefs();
+            List<PortDef> can_avoid_port = scApp.PortDefBLL.cache.loadCanAvoidPortDefs();
+            if (can_avoid_port == null || can_avoid_port.Count == 0)
             {
                 //1.2.如果沒有則就把全部的CV納入選擇。
-                can_avoid_cv_port = scApp.PortDefBLL.cache.loadCVPortDefs();
+                can_avoid_port = scApp.PortDefBLL.cache.loadCVPortDefs();
             }
             //2.找出離自己最近的一個CV點
-            var find_result = findTheNearestCVPort(willDrivenAwayVh, can_avoid_cv_port);
+            var find_result = findTheNearestCVPort(willDrivenAwayVh, can_avoid_port);
             if (find_result.isFind)
             {
                 return (true, find_result.PortDef.ADR_ID);
@@ -4381,6 +4409,7 @@ namespace com.mirle.ibg3k0.sc.Service
             if (scApp.getEQObjCacheManager().getLine().ServerPreStop)
                 return;
             SCUtility.RecodeReportInfo(eqpt.VEHICLE_ID, seq_num, recive_str);
+            string vh_id = eqpt.VEHICLE_ID;
             string finish_ohxc_cmd = eqpt.OHTC_CMD;
             string finish_mcs_cmd = eqpt.MCS_CMD;
             string cmd_id = recive_str.CmdID;
@@ -4524,7 +4553,11 @@ namespace com.mirle.ibg3k0.sc.Service
                     scApp.LineService.TSCStateToPause("");
                 }
             }
-            Task.Run(() => scApp.TransferService.TransferRun());        //B0.08.0 處發TransferRun，使MCS命令可以在多車情形下早於趕車CMD下達。
+            Task.Run(() =>
+            {
+                scApp.TransferService.TransferRun();//B0.08.0 處發TransferRun，使MCS命令可以在多車情形下早於趕車CMD下達。
+                tryAskVhToIdlePosition(vh_id);//B0.11
+            });        
             eqpt.onCommandComplete(completeStatus);
         }
 

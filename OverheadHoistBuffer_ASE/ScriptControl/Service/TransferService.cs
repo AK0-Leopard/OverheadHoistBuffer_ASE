@@ -1751,7 +1751,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     #region Log
                     TransferServiceLogger.Info
                     (
-                        DateTime.Now.ToString("HH:mm:ss.fff ") 
+                        DateTime.Now.ToString("HH:mm:ss.fff ")
                         + "OHT >> OHB|找 ACMD_OHTC 的 oht_cmdid: " + oht_cmdid + "  資料為 Null"
                         + " OHTName: " + ohtName
                         + " OHT_Status:" + statusToName(status)
@@ -1868,7 +1868,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     #endregion
                 }
 
-                if(status == COMMAND_STATUS_BIT_INDEX_COMMNAD_FINISH)   //20_0824 冠皚提出車子回 128 結束，直接掃命令，不要等到下次執行緒觸發
+                if (status == COMMAND_STATUS_BIT_INDEX_COMMNAD_FINISH)   //20_0824 冠皚提出車子回 128 結束，直接掃命令，不要等到下次執行緒觸發
                 {
                     Task.Run(() =>
                     {
@@ -3221,7 +3221,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         else
                         {
                             log = log + "，找到命令" + GetCmdLog(cmd);
-                        }                        
+                        }
                     }
                     else
                     {
@@ -3390,7 +3390,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         );
 
                         DeleteCst(dbData.CSTID, dbData.BOXID, "OHTtoPort");
-                        
+
                         //dbData.Carrier_LOC = GetPositionName(portName, 1);
                         //cassette_dataBLL.UpdateCSTLoc(dbData.BOXID, dbData.Carrier_LOC, 1);
 
@@ -6267,6 +6267,7 @@ namespace com.mirle.ibg3k0.sc.Service
         }
         public void OHBC_AlarmCleared(string _craneName, string errCode)
         {
+            //SpinWait.SpinUntil(() => !is_report_alarm_set_sending, 5000); //todo 志昌
             string craneName = _craneName.Trim();
             errCode = errCode.Trim();
 
@@ -6849,7 +6850,7 @@ namespace com.mirle.ibg3k0.sc.Service
         public string Manual_UpDateCmdPriority(string cmdID, int priority, string cmdSource)
         {
             string s = "";
-            if(cmdBLL.updateCMD_MCS_PortPriority(cmdID, priority))
+            if (cmdBLL.updateCMD_MCS_PortPriority(cmdID, priority))
             {
                 s = "OK";
             }
