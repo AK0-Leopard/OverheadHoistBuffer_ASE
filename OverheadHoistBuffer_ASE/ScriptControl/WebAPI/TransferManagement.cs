@@ -373,8 +373,15 @@ namespace com.mirle.ibg3k0.sc.WebAPI
                 // 因為目前回復NG時會產生AGV走行命令回到AGV Station，但目前預設值設定為false 因避免exception情形(AGVC Cmd == 0 時回復True 不會停止觸發OHBC)
                 bool is_ok = false;
                 //todo 執行確認能否讓AGVC開始進行該AGV Station進貨的流程
-                is_ok = scApp.TransferService.CanExcuteUnloadTransferAGVStationFromAGVC(agv_station_id.Trim(), Int32.Parse(excute_count), emergency);
-
+                bool check_method = false;
+                if (check_method)
+                {
+                    is_ok = scApp.TransferService.CanExcuteUnloadTransferAGVStationFromAGVC(agv_station_id.Trim(), Int32.Parse(excute_count), emergency);
+                }
+                else
+                {
+                    is_ok = scApp.TransferService.CanExcuteUnloadTransferAGVStationFromAGVC(agv_station_id.Trim(), Int32.Parse(excute_count), emergency);
+                }
                 var response = (Response)(is_ok ? "OK" : "NG");
                 response.ContentType = restfulContentType;
 
