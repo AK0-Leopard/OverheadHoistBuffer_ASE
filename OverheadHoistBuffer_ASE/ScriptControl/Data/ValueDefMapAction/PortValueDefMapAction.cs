@@ -142,6 +142,11 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 {
                     vr.afterValueChange += (_sender, _e) => Port_onCIM_ON(_sender, _e);
                 }
+
+                if (bcfApp.tryGetReadValueEventstring(port.EqptObjectCate, port.PORT_ID, "PreLoadOK", out vr))
+                {
+                    vr.afterValueChange += (_sender, _e) => Port_onPreLoadOK(_sender, _e);
+                }
             }
             catch (Exception ex)
             {
@@ -199,6 +204,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 if (function.CSTPresenceMismatch)
                 {
                     //TODO
+                    scApp.TransferService.OpenAGV_Station(function.EQ_ID.Trim(), true, "CSTPresenceMismatch");
                     scApp.TransferService.PLC_AGV_Station(function, "CSTPresenceMismatch");
                 }
                 else
@@ -416,7 +422,35 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 scApp.putFunBaseObj<PortPLCInfo>(function);
             }
         }
+        private void Port_onPreLoadOK(object sender, ValueChangedEventArgs e)
+        {
+            var function = scApp.getFunBaseObj<PortPLCInfo>(port.PORT_ID) as PortPLCInfo;
+            try
+            {
+                //1.建立各個Function物件
+                function.Read(bcfApp, port.EqptObjectCate, port.PORT_ID);
+                //2.read log
+                //function.Timestamp = DateTime.Now;
+                //LogManager.GetLogger("com.mirle.ibg3k0.sc.Common.LogHelper").Info(function.ToString());
+                NLog.LogManager.GetCurrentClassLogger().Info(function.ToString());
+                //LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(EQStatusReport), Device: DEVICE_NAME_MTL,
+                //    XID: eqpt.EQPT_ID, Data: function.ToString());
+                //3.logical (include db save)
 
+                if (scApp.TransferService.GetIgnoreModeChange(function))
+                {
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+            }
+            finally
+            {
+                scApp.putFunBaseObj<PortPLCInfo>(function);
+            }
+        }
         private void Port_onOutOfService(object sender, ValueChangedEventArgs e)
         {
             var function = scApp.getFunBaseObj<PortPLCInfo>(port.PORT_ID) as PortPLCInfo;
@@ -667,6 +701,10 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             if (bcfApp.tryGetReadValueEventstring(port.EqptObjectCate, port.PORT_ID, "CIM_ON", out vr))
             {
                 Port_onCIM_ON(vr, null);
+            }
+            if (bcfApp.tryGetReadValueEventstring(port.EqptObjectCate, port.PORT_ID, "PreLoadOK", out vr))
+            {
+                Port_onPreLoadOK(vr, null);
             }
         }
 

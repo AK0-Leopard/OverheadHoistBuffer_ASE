@@ -5143,6 +5143,30 @@ CRANE,412010,2,InterLockNG Before BUSY turn ON
 CRANE,412011,2,Port error with Passive equipment HO_AVBL signal
 CRANE,412002,2,L_REQ/U_REQ turn ON before VALID turn ON
 CRANE,412014,2,Fail to change the PIO signals
+CRANE,111026,2,Fail to get the OHT position
+CRANE,122001,1,ByPass BOX_BCR Sensor
+CRANE,131006,2,OHT Emergency Stop
+CRANE,211001,2,High CPU useage for OHT IPC
+CRANE,211002,2,High memory useage for OHT IPC
+CRANE,211003,2,Low HDD capacity for OHT IPC
+CRANE,211004,2,Timeout for moving in position
+CRANE,212001,1,Timeout for Receiving OHBC Message
+CRANE,332001,1,OHT Have Box but anti-dropping device
+AGV,0284,1,[Port1]continuous 3 box ERROR
+AGV,0384,1,[Port2]continuous 3 box ERROR
+AGV,0484,1,[Port3]continuous 3 box ERROR
+AGV,0584,1,[Port4]continuous 3 box ERROR
+NTB,0382,1,[CV1-1]SEND TO NO CST ID
+NTB,0383,1,[CV1-1]SEND TO NO Box ID
+NTB,0782,1,[CV4-3]SEND TO NO CST ID
+NTB,0783,1,[CV4-3]SEND TO NO Box ID
+NTB,0784,1,[CV4-3]3 BOX ERROR
+NTB,0982,1,[CV2]SEND TO NO CST ID
+NTB,1083,1,[CV3]SEND TO NO Box ID
+NTB,1084,1,[CV3]continuous 3 box ERROR
+NTB,1282,1,[CV5]SEND TO NO CST ID
+NTB,1283,1,[CV5]SEND TO NO Box ID
+NTB,1284,1,[CV5]continuous 3 box ERROR
 OHCV_5,770,2,[CV1]BCR 15min auto 2 times
 OHCV_5,1470,2,[TUCV5]BCR 15min auto 2 times
 OHCV_7,770,2,[CV7]BCR 15min auto 2 times

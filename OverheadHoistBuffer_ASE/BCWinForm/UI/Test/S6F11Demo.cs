@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage;
+using System.Threading.Tasks;
 
 namespace com.mirle.ibg3k0.bc.winform
 {
@@ -118,9 +119,7 @@ namespace com.mirle.ibg3k0.bc.winform
             comboBox8.SelectedIndex = 0;
             numericUpDown1.Value = BCApp.SCApplication.TransferService.cstIdle;
 
-            dataGridView1.DataSource = BCApp.SCApplication.TransferService.portINIData.Values.ToList();
-            dataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+            ShowDataList("portINIData");
 
             label7.Text = "目前狀態:" + BCApp.SCApplication.TransferService.agvWaitOutOpenBox.ToString();
             label17.Text = "目前狀態:" + BCApp.SCApplication.TransferService.portTypeChangeOK_CVPort_CstRemove.ToString();
@@ -454,6 +453,52 @@ namespace com.mirle.ibg3k0.bc.winform
         {
             BCApp.SCApplication.TransferService.autoRemarkBOXCSTData = false ;
             label18.Text = "自動救帳狀態:" + BCApp.SCApplication.TransferService.autoRemarkBOXCSTData.ToString();
+        }
+
+        private void button37_Click(object sender, EventArgs e)
+        {
+            ShowDataList("portINIData");
+        }
+
+        private void button38_Click(object sender, EventArgs e)
+        {
+            ShowDataList("PortADR"); 
+        }
+        private void button39_Click(object sender, EventArgs e)
+        {
+            ShowDataList("All_ADR");
+            
+        }
+        public void ShowDataList(string type)
+        {
+            switch(type)
+            {
+                case "portINIData":
+                    dataGridView1.DataSource = BCApp.SCApplication.TransferService.portINIData.Values.ToList();
+                    break;
+                case "PortADR":
+                    dataGridView1.DataSource = BCApp.SCApplication.TransferService.GetPortADR();
+                    break;
+                case "All_ADR":
+                    dataGridView1.DataSource = BCApp.SCApplication.TransferService.GetAll_ADR();
+                    break;
+            }
+
+            dataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+
+            int count = dataGridView1.Rows.Count - 1;
+
+            label14.Text = type + ": 共 " + count.ToString() + " 筆";
+        }
+
+        private void button40_Click(object sender, EventArgs e)
+        {
+            string s1 = comboBox11.Text;
+            string s2 = textBox5.Text;
+            Task.Run(() => BCApp.SCApplication.TransferService.OHBC_AlarmSet(s1, s2));
+            Thread.Sleep(100);
+            Task.Run(() => BCApp.SCApplication.TransferService.OHBC_AlarmCleared(s1, s2));
         }
     }
 }
