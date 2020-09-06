@@ -8307,6 +8307,176 @@ namespace com.mirle.ibg3k0.sc.Service
         }
         #endregion
 
+        #region  Call by AGVC Restful API. Use for process the AGV Station. New Method for checking Port and Response.
+        public bool CanExcuteUnloadTransferAGVStationFromAGVC_OneInOneOut(string AGVStationID, int AGVCFromEQToStationCmdNum, bool isEmergency)
+        {
+            PortTypeNum portTypeNum = PortTypeNum.No_Change;
+            bool isOK = false; //A20.07.10.0
+            try
+            {
+                bool useFirst2Port = false;     //判斷是否使用前 2 port，若否使用後 2 port
+                //若AGVC 要求0 的時候要清掉異常OHBC_AGV_HasCmdsAccessCleared
+                if (AGVCFromEQToStationCmdNum == 0)
+                {
+                    OHBC_AGV_HasCmdsAccessCleared(AGVStationID);
+                }
+                //若AGVC觸發後，線內空盒數量大於3，則清掉無空盒異常，及線內空盒異常。
+                if (GetTotalEmptyBoxNumber().emptyBox.Count() > 3)
+                {
+                    OHBC_AlarmCleared(AGVStationID, ((int)AlarmLst.AGVStation_DontHaveEnoughEmptyBox).ToString());
+                    OHBC_AlarmCleared(AGVStationID, ((int)AlarmLst.BOX_NumberIsNotEnough).ToString());
+                }
+                else //若AGVC觸發後，線內空盒數量小於3，則觸發線內空盒異常。
+                {
+                    OHBC_AlarmSet(AGVStationID, ((int)AlarmLst.BOX_NumberIsNotEnough).ToString());
+                }
+                //此AGVStation虛擬port是 Out of service 擇要拒絕AGVC
+                PortDef portDefByAGVStationID = scApp.PortDefBLL.GetPortData(AGVStationID);
+                if (portDefByAGVStationID.State == E_PORT_STATUS.OutOfService)
+                {
+                    //若為4個Port 的虛擬Port
+                    int numOfAGVStation = GetAGVPort(AGVStationID).Count();
+                    if (numOfAGVStation == 4 && portDefByAGVStationID.AGVState == E_PORT_STATUS.OutOfService) //A20.07.10.0
+                    {
+                        isOK = true;
+                        return isOK;
+                    }
+                    isOK = ChangeReturnDueToAGVCCmdNum(AGVCFromEQToStationCmdNum); //A20.07.10.0
+                    portTypeNum = PortTypeNum.No_Change;
+                    AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " 是 Out of service 一律回復" + isOK);
+                    RewriteTheResultOfAGVCTrigger(AGVStationID, portTypeNum, isOK);
+                    return isOK;
+                }
+                //確認要取得的AGVStation Port 為前2還是後2 前為1 後為2
+                useFirst2Port = IsUsingFirst2Port(portDefByAGVStationID);
+                //取得PLC目前資訊
+                AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Trigger start. Get the AGVSTation Data, " +
+                    "AGVStationID = " + AGVStationID + ", AGVCFromEQToStationCmdNum = " + AGVCFromEQToStationCmdNum + ", isEmergency = " + isEmergency.ToString()
+                     + " , 線上空盒數量 = " + GetTotalEmptyBoxNumber().emptyBox.Count().ToString());
+                List<PortDef> AGVPortDatas = scApp.PortDefBLL.GetAGVPortGroupDataByStationID(line.LINE_ID, AGVStationID);
+                AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Exit GetAGVPortGroupDataByStationID().");
+
+                //確認目前的AGV port 是否有source 為它的取貨命令(若有，則一律回復否，避免先觸發退box後，卻因下一次觸發同意AGV來放貨)
+                AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Enter CheckIsSourceFromAGVStation().");
+                bool haveCmdFromAGVPort = CheckIsSourceFromAGVStation(AGVPortDatas);
+                if (haveCmdFromAGVPort == true)
+                {
+                    isOK = ChangeReturnDueToAGVCCmdNum(AGVCFromEQToStationCmdNum); //A20.07.10.0
+                    portTypeNum = PortTypeNum.No_Change;
+                    AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Due to there is cmd from target AGV Station Port " + "一律回復" + isOK);
+                    RewriteTheResultOfAGVCTrigger(AGVStationID, portTypeNum, isOK);
+                    return isOK;
+                }
+
+                //確認取得的AGVStationData中的Port都只有可以用的後2個。
+                AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Enter the filter for AGV port.");
+                List<PortDef> accessAGVPortDatas = FilterOfAGVPort(AGVPortDatas, useFirst2Port);
+                if (accessAGVPortDatas.Count() == 0) //若沒有任何一個可以用 //A20.07.10.0
+                {
+                    isOK = ChangeReturnDueToAGVCCmdNum(AGVCFromEQToStationCmdNum); //A20.07.10.0
+                    portTypeNum = PortTypeNum.No_Change;
+                    AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Due to there is No Port is workable " + "一律回復" + isOK);
+                    RewriteTheResultOfAGVCTrigger(AGVStationID, portTypeNum, isOK);
+                    return isOK;
+                }
+                AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Exit the filter for AGV port.");
+
+                //目前先默認取前2個，確認port上Box數量(空與實皆要)
+                int emptyBoxNumber, fullBoxNumber;
+                bool success;
+                AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Enter the Count Box number for AGV port.");
+                (emptyBoxNumber, fullBoxNumber, success) = CountAGVStationBoxInfo(accessAGVPortDatas);
+                if (success == false)
+                {
+                    isOK = ChangeReturnDueToAGVCCmdNum(AGVCFromEQToStationCmdNum); //A20.07.10.0
+                    portTypeNum = PortTypeNum.No_Change;
+                    AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Due to the AGV port is not ready to unload" + "一律回復" + isOK);
+                    RewriteTheResultOfAGVCTrigger(AGVStationID, portTypeNum, isOK);
+                    return isOK;
+                }
+                AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " emptyBoxNumber = " + emptyBoxNumber + ", fullBoxNumber = " + fullBoxNumber);
+
+                //若有實box 則先默認為NG，會稍微影響效率(在一AGV對多個Station時)
+                if (fullBoxNumber > 0)
+                {
+                    //可針對特定細節做特化處理，可進一步優化
+                    isOK = ChangeReturnDueToAGVCCmdNum(AGVCFromEQToStationCmdNum); //A20.07.10.0
+                    portTypeNum = PortTypeNum.No_Change;
+                    AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Due to there is full box on AGV port " + "一律回復" + isOK);
+                    RewriteTheResultOfAGVCTrigger(AGVStationID, portTypeNum, isOK);
+                    return isOK;
+                }
+                // 新增在outmode狀態下的port 是否有對該port 的命令可執行，若有，則拒絕。
+                else
+                {
+                    foreach (PortDef AGVPortData in accessAGVPortDatas)
+                    {
+                        PortPLCInfo portData = GetPLC_PortData(AGVPortData.PLCPortID);
+                        if (portData.IsOutputMode && portData.LoadPosition1 != true && portData.IsReadyToLoad) // 若該out mode port 為 無空盒 且 load OK 
+                        {
+                            List<ACMD_MCS> useCheckCmd = cmdBLL.GetCmdDataByDest(portData.EQ_ID);
+                            List<ACMD_MCS> useCheckCmd_1 = cmdBLL.GetCmdDataByDest(AGVStationID);
+                            if (useCheckCmd.Count + useCheckCmd_1.Count() > 0)
+                            {
+                                isOK = ChangeReturnDueToAGVCCmdNum(AGVCFromEQToStationCmdNum);
+                                portTypeNum = PortTypeNum.No_Change;
+                                AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Due to there is going to be a cmd to AGV port " + "一律回復" + isOK);
+                                RewriteTheResultOfAGVCTrigger(AGVStationID, portTypeNum, isOK);
+                                return isOK;
+                            }
+                        }
+                    }
+                }
+                //判斷是否強制讓貨出去
+                if (portINIData[AGVStationID].forceRejectAGVCTrigger == true)
+                {
+                    AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Enter the forceRejectAGVCTrigger狀態");
+                    AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " 虛擬 port: " + AGVStationID + " 是 forceRejectAGVCTrigger狀態一律回復NG，並轉為OutPut");
+                    //若forceRejectAGVCTrigger狀態，則執行轉至Output Mode 狀態。
+                    OutputModeChange(accessAGVPortDatas, AGVStationID);
+                    isOK = false;
+                    portTypeNum = PortTypeNum.OutPut_Mode;
+                    RewriteTheResultOfAGVCTrigger(AGVStationID, portTypeNum, isOK);
+                    return isOK;
+                }
+                else
+                {
+                    //若無實Box，且判斷是否強制讓貨出去後再行判斷空Box 數量。
+                    switch (emptyBoxNumber)
+                    {
+                        case (int)EmptyBoxNumber.NO_EMPTY_BOX:
+                            //若沒有空box，則執行OHBC優先判定。
+                            AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Enter the NO_EMPTY_BOX method");
+                            (portTypeNum, isOK) = CheckForChangeAGVPortMode_OHBC(AGVCFromEQToStationCmdNum, accessAGVPortDatas, AGVStationID);
+                            break;
+                        case (int)EmptyBoxNumber.ONE_EMPTY_BOX:
+                            //目前先以執行AGVC優先判定為主，因為若有Cst卡在AGV上並無其餘可去之處。
+                            AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Enter the ONE_EMPTY_BOX method");
+                            (portTypeNum, isOK) = CheckForChangeAGVPortMode_AGVC(AGVCFromEQToStationCmdNum, accessAGVPortDatas, AGVStationID, 1);
+                            break;
+                        case (int)EmptyBoxNumber.TWO_EMPTY_BOX:
+                            //若有2空box，則執行AGVC優先判定。
+                            AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Enter the TWO_EMPTY_BOX method");
+                            (portTypeNum, isOK) = CheckForChangeAGVPortMode_AGVC(AGVCFromEQToStationCmdNum, accessAGVPortDatas, AGVStationID, 2);
+                            break;
+                    }
+                    RewriteTheResultOfAGVCTrigger(AGVStationID, portTypeNum, isOK);
+                }
+            }
+            catch (Exception ex)
+            {
+                TransferServiceLogger.Error
+                (ex, "CanExcuteUnloadTransferAGVStationFromAGVC "
+                    + " AGVStationID:" + AGVStationID
+                    + " AGVCFromEQToStationCmdNum:" + AGVCFromEQToStationCmdNum
+                    + " isEmergency:" + isEmergency
+                    + "\n"
+                );
+            }
+            return isOK;
+        }
+        #endregion
+
         #region Check the unknown CST in the shelf. Try to get the CST ID back. // A20.07.12.0
         public bool CheckAndTryRemarkUnknownCSTInShelf()
         {
