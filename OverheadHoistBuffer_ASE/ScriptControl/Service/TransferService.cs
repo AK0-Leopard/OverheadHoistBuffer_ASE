@@ -1968,7 +1968,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     #region Log
                     TransferServiceLogger.Info
                     (
-                        DateTime.Now.ToString("HH:mm:ss.fff ") 
+                        DateTime.Now.ToString("HH:mm:ss.fff ")
                         + "OHT >> OHB|找 ACMD_OHTC 的 oht_cmdid: " + oht_cmdid + "  資料為 Null"
                         + " OHTName: " + ohtName
                         + " OHT_Status:" + statusToName(status)
@@ -2085,7 +2085,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     #endregion
                 }
 
-                if(status == COMMAND_STATUS_BIT_INDEX_COMMNAD_FINISH)   //20_0824 冠皚提出車子回 128 結束，直接掃命令，不要等到下次執行緒觸發
+                if (status == COMMAND_STATUS_BIT_INDEX_COMMNAD_FINISH)   //20_0824 冠皚提出車子回 128 結束，直接掃命令，不要等到下次執行緒觸發
                 {
                     Task.Run(() =>
                     {
@@ -3438,7 +3438,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         else
                         {
                             log = log + "，找到命令" + GetCmdLog(cmd);
-                        }                        
+                        }
                     }
                     else
                     {
@@ -3607,7 +3607,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         );
 
                         DeleteCst(dbData.CSTID, dbData.BOXID, "OHTtoPort");
-                        
+
                         //dbData.Carrier_LOC = GetPositionName(portName, 1);
                         //cassette_dataBLL.UpdateCSTLoc(dbData.BOXID, dbData.Carrier_LOC, 1);
 
@@ -7083,7 +7083,7 @@ namespace com.mirle.ibg3k0.sc.Service
         public string Manual_UpDateCmdPriority(string cmdID, int priority, string cmdSource)
         {
             string s = "";
-            if(cmdBLL.updateCMD_MCS_PortPriority(cmdID, priority))
+            if (cmdBLL.updateCMD_MCS_PortPriority(cmdID, priority))
             {
                 s = "OK";
             }
@@ -7909,6 +7909,27 @@ namespace com.mirle.ibg3k0.sc.Service
                     AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Due to there is full box on AGV port " + "一律回復" + isOK);
                     RewriteTheResultOfAGVCTrigger(AGVStationID, portTypeNum, isOK);
                     return isOK;
+                }
+                // 新增在outmode狀態下的port 是否有對該port 的命令可執行，若有，則拒絕。
+                else
+                {
+                    foreach (PortDef AGVPortData in accessAGVPortDatas)
+                    {
+                        PortPLCInfo portData = GetPLC_PortData(AGVPortData.PLCPortID);
+                        if (portData.IsOutputMode && portData.LoadPosition1 != true && portData.IsReadyToLoad) // 若該out mode port 為 無空盒 且 load OK 
+                        {
+                            List<ACMD_MCS> useCheckCmd = cmdBLL.GetCmdDataByDest(portData.EQ_ID);
+                            List<ACMD_MCS> useCheckCmd_1 = cmdBLL.GetCmdDataByDest(AGVStationID);
+                            if (useCheckCmd.Count + useCheckCmd_1.Count() > 0)
+                            {
+                                isOK = ChangeReturnDueToAGVCCmdNum(AGVCFromEQToStationCmdNum);
+                                portTypeNum = PortTypeNum.No_Change;
+                                AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Due to there is going to be a cmd to AGV port " + "一律回復" + isOK);
+                                RewriteTheResultOfAGVCTrigger(AGVStationID, portTypeNum, isOK);
+                                return isOK;
+                            }
+                        }
+                    }
                 }
                 //判斷是否強制讓貨出去
                 if (portINIData[AGVStationID].forceRejectAGVCTrigger == true)
