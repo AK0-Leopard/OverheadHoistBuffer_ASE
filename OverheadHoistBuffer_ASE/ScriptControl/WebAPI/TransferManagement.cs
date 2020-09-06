@@ -376,7 +376,7 @@ namespace com.mirle.ibg3k0.sc.WebAPI
                 bool check_method = false;
                 if (check_method)
                 {
-                    is_ok = scApp.TransferService.CanExcuteUnloadTransferAGVStationFromAGVC(agv_station_id.Trim(), Int32.Parse(excute_count), emergency);
+                    is_ok = scApp.TransferService.CanExcuteUnloadTransferAGVStationFromAGVC_OneInOneOut(agv_station_id.Trim(), Int32.Parse(excute_count), emergency);
                 }
                 else
                 {
