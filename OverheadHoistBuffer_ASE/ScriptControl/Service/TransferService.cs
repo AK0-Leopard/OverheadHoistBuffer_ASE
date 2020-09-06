@@ -36,6 +36,7 @@ using Mirle.Hlts.Utils;
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -69,7 +70,9 @@ namespace com.mirle.ibg3k0.sc.Service
         public string ZoneName { get; set; }
         public string Group { get; set; }   //上報 MCS ZoneName 不能報 AGVZone (ST01、ST02)，所以另外開一個來記錄
         public DateTime portStateErrorLogTime { get; set; }  //執行的命令 port 狀態異常 10 秒記 Log 一次
-        #endregion        
+        public int ADR_ID { get; set; }
+        public bool alarmSetIng { get; set; }
+        #endregion
         #region CRANE 才有用到的屬性
         public bool craneLoading { get; set; }
         public bool craneUnLoading { get; set; }
@@ -102,6 +105,11 @@ namespace com.mirle.ibg3k0.sc.Service
         public bool agvHasCmdsAccess { get; set; }
         public DateTime reservePortTime { get; set; }
         #endregion
+    }
+    public class PortAdr
+    {
+        public string PortName { get; set; }
+        public int ADR_ID { get; set; }
     }
     public class WaitInOutLog
     {
@@ -198,6 +206,8 @@ namespace com.mirle.ibg3k0.sc.Service
         #region 資料暫存
         public Dictionary<string, PortINIData> portINIData = null;
         public Dictionary<string, WaitInOutLog> waitInLog = new Dictionary<string, WaitInOutLog>();
+        public List<PortAdr> allPortAdr = new List<PortAdr>();
+
         //public Dictionary<string, WaitInOutLog> waitOutLog = new Dictionary<string, WaitInOutLog>();
 
         public Dictionary<string, OHT_BOXID_MismatchData> OHT_MismatchData = new Dictionary<string, OHT_BOXID_MismatchData>();
@@ -216,7 +226,6 @@ namespace com.mirle.ibg3k0.sc.Service
         {
 
         }
-
         public void start(SCApplication _app)
         {
             TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "TransferService >> 初始化開始------------------------------------");
@@ -247,6 +256,7 @@ namespace com.mirle.ibg3k0.sc.Service
             {
                 TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "SetPortINIData 開始------------------------------------");
                 portINIData = new Dictionary<string, PortINIData>();
+                
                 portINIData.Clear();
                 PortINIData lineData = new PortINIData();
 
@@ -273,6 +283,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         //data.timeOutForAutoInZone = v.TimeOutForAutoInZone;
                         data.openAGVZone = (E_PORT_STATUS)v.AGVState;
                         data.Group = v.ZoneName?.Trim() ?? "";
+                        data.ADR_ID = int.Parse(v.ADR_ID);
 
                         if (i == data.Stage)
                         {
@@ -291,6 +302,11 @@ namespace com.mirle.ibg3k0.sc.Service
                             data.forceRejectAGVCTrigger = false;
                         }
                     }
+
+                    if (isAGVZone(v.PLCPortID.Trim()) == false)
+                    {
+                        AddPortAdr(v.PLCPortID.Trim(), int.Parse(v.ADR_ID));
+                    }                        
                 }
 
                 foreach (var v in vehicleBLL.loadAllVehicle())
@@ -313,8 +329,11 @@ namespace com.mirle.ibg3k0.sc.Service
                     data.UnitType = UnitType.SHELF.ToString();
                     data.ZoneName = v.ZoneID.Trim();
                     data.Stage = 1;
+                    data.ADR_ID = int.Parse(v.ADR_ID);
 
                     AddPortINIData(data);
+
+                    AddPortAdr(v.ShelfID.Trim(), int.Parse(v.ADR_ID));
                 }
 
                 foreach (var v in scApp.ZoneDefBLL.loadZoneData())
@@ -328,6 +347,8 @@ namespace com.mirle.ibg3k0.sc.Service
                     AddPortINIData(data);
                 }
 
+                allPortAdr = allPortAdr.OrderBy(data => data.ADR_ID).ToList();
+
                 iniSetPortINIData = true;
 
                 TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "SetPortINIData 結束------------------------------------");
@@ -335,6 +356,17 @@ namespace com.mirle.ibg3k0.sc.Service
             catch (Exception ex)
             {
                 TransferServiceLogger.Error(ex, "SetPortData");
+            }
+        }
+        public void AddPortAdr(string portName, int adr)
+        {
+            PortAdr portAdr = new PortAdr();
+            portAdr.PortName = portName;
+            portAdr.ADR_ID = adr;
+
+            if (allPortAdr.Where(data => data.ADR_ID == adr).Count() == 0)
+            {
+                allPortAdr.Add(portAdr);
             }
         }
         public void AddPortINIData(PortINIData data)
@@ -532,7 +564,6 @@ namespace com.mirle.ibg3k0.sc.Service
                 }
             }
         }
-
         public void updateAGVHasCmdsAccessStatus()
         {
             foreach (var v in GetAGVZone())
@@ -560,7 +591,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 + craneName + " iniOHTData 初始化開始，誰呼叫: " + apiSource);
 
             AVEHICLE vehicle = scApp.VehicleService.GetVehicleDataByVehicleID(craneName);
-
+            //vehicle.CUR_ADR_ID    //存放車子現在位置
             if (vehicle.isTcpIpConnect == false)
             {
                 TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + craneName + " 連線狀態(isTcpIpConnect) : " + vehicle.isTcpIpConnect + " iniOHTData 初始化失敗 ");
@@ -1003,6 +1034,183 @@ namespace com.mirle.ibg3k0.sc.Service
             }
         }
 
+        private void CraneCountBy2(List<ACMD_MCS> cmdList)    //當有兩台車在同一條LINE (非LOOP)
+        {
+            foreach(var cmd1 in cmdList)
+            {
+
+            }
+            List<AVEHICLE> avehicles = scApp.VehicleBLL.cache.loadVhs();
+
+            foreach (var vh in avehicles)
+            {
+                if (string.IsNullOrWhiteSpace(vh.OHTC_CMD) == false)
+                {
+                    ACMD_OHTC ohtCmdData = cmdBLL.getCMD_OHTCByID(vh.OHTC_CMD);
+                    if (ohtCmdData != null)
+                    {
+
+                    }
+                }
+            }
+            //List<PortINIData> portADR = GetPortADR();
+            //portADR.Where(data => data.ADR_ID == 0).FirstOrDefault();
+            //int i = portADR.IndexOf(portADR.Where(data => data.ADR_ID == 0).FirstOrDefault());
+        }
+        /// <summary>
+        /// 比較兩筆命令路徑是否重疊
+        /// </summary>
+        public bool GetSourceDest(string cmd1_source, string cmd1_dest, string cmd2_source, string cmd2_dest) 
+        {
+            #region cmd1 資料確認
+            if (isAGVZone(cmd1_source))
+            {
+                cmd1_source = GetAGVZoneADRPortName(cmd1_source, cmd1_dest);
+            }
+
+            if (isAGVZone(cmd1_dest))
+            {
+                cmd1_dest = GetAGVZoneADRPortName(cmd1_dest, cmd1_source);
+            }
+
+            int cmd1_sourceAdr = portINIData[cmd1_source].ADR_ID;
+            int cmd1_destAdr = portINIData[cmd1_dest].ADR_ID;
+            #endregion
+
+            #region cmd2 資料確認
+            if (isAGVZone(cmd2_source))
+            {
+                cmd2_source = GetAGVZoneADRPortName(cmd2_source, cmd2_dest);
+            }
+
+            if (isAGVZone(cmd2_dest))
+            {
+                cmd2_dest = GetAGVZoneADRPortName(cmd2_dest, cmd2_source);
+            }
+
+            int cmd2_SourceAdr = portINIData[cmd2_source].ADR_ID;
+            int cmd2_DestAdr = portINIData[cmd2_dest].ADR_ID;
+            #endregion
+
+            #region 開始比較
+            int minimum = 0;
+            int maximum = 0;
+
+            if (cmd2_DestAdr > cmd2_SourceAdr)
+            {
+                minimum = GetPortMinMaxADR(cmd2_SourceAdr, "min");
+                maximum = GetPortMinMaxADR(cmd2_DestAdr, "max");
+            }
+            else
+            {
+                minimum = GetPortMinMaxADR(cmd2_DestAdr, "min");
+                maximum = GetPortMinMaxADR(cmd2_SourceAdr, "max");
+            }
+
+            if (((cmd1_sourceAdr < minimum && cmd1_destAdr < minimum)
+              || (cmd1_sourceAdr > maximum && cmd1_destAdr > maximum)
+                )
+              && minimum != 0 && maximum != 0
+              )
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+            #endregion
+        }
+
+        public int GetPortMinMaxADR(int adr_id, string type)
+        {
+            int spac = 1;
+            int adr = 0;
+            List <PortAdr> portAdrs = GetAll_ADR();
+            PortAdr portAdr = portAdrs.Where(data => data.ADR_ID == adr_id).FirstOrDefault();
+
+            if(portAdr != null)
+            {
+                int index = portAdrs.IndexOf(portAdr);
+
+                if(index >= 0)  //portAdrs.IndexOf(portAdr) 找不到值會回傳 -1
+                {
+                    if(type == "min")
+                    {
+                        index = index - spac;  //-1 後來要變可調
+                    }
+                    else if (type == "max")
+                    {
+                        index = index + spac;  //-1 後來要變可調
+                    }
+
+                    if (index <= 0)
+                    {
+                        adr = portAdrs[0].ADR_ID;
+                    }
+                    else if(index >= portAdrs.Count)
+                    {
+                        adr = portAdrs[portAdrs.Count].ADR_ID;
+                    }
+                    else
+                    {
+                        adr = portAdrs[index].ADR_ID;
+                    }
+                }
+            }
+            
+            return adr;
+        }
+
+        public string GetAGVZoneADRPortName(string source, string dest)
+        {
+            PortINIData sourceAGVData = GetAGVPort(source).FirstOrDefault();
+            int defaultVelue = sourceAGVData.ADR_ID;
+            string agvPortName = sourceAGVData.PortName;
+
+            foreach (var v in GetAGVPort(source))
+            {
+                string destPort = dest;
+                if (isAGVZone(dest))
+                {
+                    PortINIData destAGVData = GetAGVPort(dest).FirstOrDefault();
+                    destPort = destAGVData.PortName;
+                }
+
+                if (portINIData[v.PortName].ADR_ID >= portINIData[destPort].ADR_ID)
+                {
+                    if (portINIData[v.PortName].ADR_ID > defaultVelue)
+                    {
+                        defaultVelue = portINIData[v.PortName].ADR_ID;
+                        agvPortName = portINIData[v.PortName].PortName;
+                    }
+                }
+                else
+                {
+                    if (portINIData[v.PortName].ADR_ID < defaultVelue)
+                    {
+                        defaultVelue = portINIData[v.PortName].ADR_ID;
+                        agvPortName = portINIData[v.PortName].PortName;
+                    }
+                }
+
+                source = agvPortName;
+            }
+            return agvPortName;
+        }
+        public List<PortINIData> GetPortADR()
+        {
+            List<PortINIData> portADR = portINIData.Values.Where(data =>
+                                                                    (isCVPort(data.PortName) || isShelfPort(data.PortName))
+                                                                    && isAGVZone(data.PortName) == false
+                                                                ).OrderBy(data => data.ADR_ID).ToList();
+
+            return portADR;
+        }
+        public List<PortAdr> GetAll_ADR() 
+        {
+            return allPortAdr;
+        }
         private bool TransferCommandHandler(ACMD_MCS mcsCmd)
         {
             bool TransferIng = false;
@@ -1130,7 +1338,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         //來源目的都是 CV Port 且 目的不能搬，觸發將卡匣送至中繼站
                         TimeSpan timeSpan = DateTime.Now - mcsCmd.CMD_INSER_TIME;
 
-                        if (timeSpan.TotalSeconds < 30)  //200806 SCC+ 目的Port不能搬，超過30秒才產生搬往中繼站，防止 AGV Port正準備做退補 BOX 跟 車子剛好放在 CV 上，造成 CV 短暫不能放貨之情況
+                        if (timeSpan.TotalSeconds < SystemParameter.cmdTimeOutToAlternate)  //200806 SCC+ 目的Port不能搬，超過30秒才產生搬往中繼站，防止 AGV Port正準備做退補 BOX 跟 車子剛好放在 CV 上，造成 CV 短暫不能放貨之情況
                         {
                             break;
                         }
@@ -1291,8 +1499,17 @@ namespace com.mirle.ibg3k0.sc.Service
 
                                 if (timeSpan.TotalSeconds >= 20)
                                 {
+                                    TransferServiceLogger.Info
+                                    (
+                                        DateTime.Now.ToString("HH:mm:ss.fff ")
+                                        + "OHB >> OHB| BoxDataHandler 卡匣狀態: " + cst.CSTState
+                                        + " 重新上報 IDRead、WaitIn " + GetCstLog(cst)
+                                    );
+
                                     cassette_dataBLL.UpdateCST_DateTime(cst.BOXID, UpdateCassetteTimeType.TrnDT);
-                                    PLC_ReportPortWaitIn(plcInfo, "CSTState = Installed");
+                                    reportBLL.ReportCarrierIDRead(cst, cst.ReadStatus);
+                                    reportBLL.ReportCarrierWaitIn(cst);
+                                    //PLC_ReportPortWaitIn(plcInfo, "CSTState = Installed");
                                 }
                             }
                         }
@@ -2757,7 +2974,7 @@ namespace com.mirle.ibg3k0.sc.Service
                             TransferServiceLogger.Info
                             (
                                 DateTime.Now.ToString("HH:mm:ss.fff ")
-                                + "PLC >> OHB|此筆卡匣已有命令在搬："
+                                + "PLC >> OHB|PLC_ReportPortWaitIn 此筆卡匣已有命令在搬："
                                 + GetCmdLog(dbMcsdata)
                             );
 
@@ -3386,7 +3603,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     {
                         TransferServiceLogger.Info
                         (
-                            DateTime.Now.ToString("HH:mm:ss.fff ") + "過帳處理: 自動過到"
+                            DateTime.Now.ToString("HH:mm:ss.fff ") + "OHTtoPort 有帳，沒命令，自動刪帳"
                         );
 
                         DeleteCst(dbData.CSTID, dbData.BOXID, "OHTtoPort");
@@ -6186,52 +6403,65 @@ namespace com.mirle.ibg3k0.sc.Service
         #endregion
         #region 異常處理
         string alarmBug = "";   //防止Alarm 短時間重複上報
-        public void OHBC_AlarmSet(string _eqName, string errCode)
+        public void OHBC_AlarmSetIng(string _eqName, bool ing)
         {
-            string eqName = _eqName.Trim();
-            errCode = errCode.Trim();
-
-            string s = DateTime.Now.ToString() + " " + eqName + " " + errCode;
-
-            if (alarmBug.Contains(s))
-            {
-                TransferServiceLogger.Info
-                (
-                    DateTime.Now.ToString("HH:mm:ss.fff ") +
-                    "OHB >> OHB|OHBC_AlarmSet 短時間內觸發"
-                    + "    ohtName:" + eqName
-                    + "    errCode:" + errCode
-                    + "    DateTime.Now:" + s
-                );
-                return;
-            }
-            else
-            {
-                alarmBug = s;
-            }
-
-            #region Log
+            portINIData[_eqName].alarmSetIng = ing;
             TransferServiceLogger.Info
             (
                 DateTime.Now.ToString("HH:mm:ss.fff ") +
-                "OHT >> OHB|AlarmSet:"
-                + "    EQ_Name:" + eqName.Trim()
-                + "    OHT_AlarmID:" + errCode
+                "OHB >> OHB|OHBC_AlarmSetIng "
+                + "    eqName: " + _eqName
+                + "    ing: " + ing
             );
-
-            if (errCode == "0")
+        }
+        public void OHBC_AlarmSet(string _eqName, string errCode)
+        {
+            try
             {
+                OHBC_AlarmSetIng(_eqName, true);
+
+                string eqName = _eqName.Trim();
+                errCode = errCode.Trim();
+
+                string s = DateTime.Now.ToString() + " " + eqName + " " + errCode;
+
+                if (alarmBug.Contains(s))
+                {
+                    TransferServiceLogger.Info
+                    (
+                        DateTime.Now.ToString("HH:mm:ss.fff ") +
+                        "OHB >> OHB|OHBC_AlarmSet 短時間內觸發"
+                        + "    ohtName:" + eqName
+                        + "    errCode:" + errCode
+                        + "    DateTime.Now:" + s
+                    );
+                    return;
+                }
+                else
+                {
+                    alarmBug = s;
+                }
+
+                #region Log
                 TransferServiceLogger.Info
                 (
                     DateTime.Now.ToString("HH:mm:ss.fff ") +
-                    "OHT >> OHB|errCode = 0 判斷無異常跳回"
+                    "OHT >> OHB|AlarmSet:"
+                    + "    EQ_Name:" + eqName.Trim()
+                    + "    OHT_AlarmID:" + errCode
                 );
-                return;
-            }
-            #endregion
 
-            try
-            {
+                if (errCode == "0")
+                {
+                    TransferServiceLogger.Info
+                    (
+                        DateTime.Now.ToString("HH:mm:ss.fff ") +
+                        "OHT >> OHB|errCode = 0 判斷無異常跳回"
+                    );
+                    return;
+                }
+                #endregion
+
                 ACMD_MCS mcsCmdData = cmdBLL.getCMD_ByOHTName(eqName).FirstOrDefault();
 
                 ALARM alarm = scApp.AlarmBLL.setAlarmReport(null, eqName, errCode, mcsCmdData);
@@ -6258,39 +6488,43 @@ namespace com.mirle.ibg3k0.sc.Service
                     //{
                     //    reportBLL.ReportUnitAlarmSet(alarm.EQPT_ID, alarm.ALAM_CODE, alarm.ALAM_DESC);
                     //}
+                    OHBC_AlarmSetIng(_eqName, false);
                 }
             }
             catch (Exception ex)
             {
-                TransferServiceLogger.Error(ex, "OHT_AlarmSet   ohtName:" + eqName + " ErrorCode:" + errCode);
+                TransferServiceLogger.Error(ex, "OHT_AlarmSet   ohtName:" + _eqName + " ErrorCode:" + errCode);
+                OHBC_AlarmSetIng(_eqName, false);
             }
         }
         public void OHBC_AlarmCleared(string _craneName, string errCode)
         {
-            string craneName = _craneName.Trim();
-            errCode = errCode.Trim();
-
-            if (scApp.AlarmBLL == null)
-            {
-                TransferServiceLogger.Info
-                (
-                    DateTime.Now.ToString("HH:mm:ss.fff ") + "OHT >> OHB|AlarmBLL = null"
-                );
-                return;
-            }
-
-            #region Log
-            TransferServiceLogger.Info
-            (
-                DateTime.Now.ToString("HH:mm:ss.fff ") +
-                "OHT >> OHB|AlarmCleared:"
-                + "    EQ_Name:" + craneName
-                + "    OHT_AlarmID:" + errCode
-            );
-            #endregion
-
             try
             {
+                SpinWait.SpinUntil(() => portINIData[_craneName].alarmSetIng == false, 5000);
+
+                string craneName = _craneName.Trim();
+                errCode = errCode.Trim();
+
+                if (scApp.AlarmBLL == null)
+                {
+                    TransferServiceLogger.Info
+                    (
+                        DateTime.Now.ToString("HH:mm:ss.fff ") + "OHT >> OHB|AlarmBLL = null"
+                    );
+                    return;
+                }
+
+                #region Log
+                TransferServiceLogger.Info
+                (
+                    DateTime.Now.ToString("HH:mm:ss.fff ") +
+                    "OHT >> OHB|AlarmCleared:"
+                    + "    EQ_Name:" + craneName
+                    + "    OHT_AlarmID:" + errCode
+                );
+                #endregion
+
                 ACMD_MCS mcsCmdData = cmdBLL.getCMD_ByOHTName(craneName).FirstOrDefault();
 
                 if (mcsCmdData == null)
@@ -6351,7 +6585,7 @@ namespace com.mirle.ibg3k0.sc.Service
             }
             catch (Exception ex)
             {
-                TransferServiceLogger.Error(ex, "OHT_AlarmCleared   ohtName:" + craneName + " ErrorCode:" + errCode);
+                TransferServiceLogger.Error(ex, "OHT_AlarmCleared   ohtName:" + _craneName + " ErrorCode:" + errCode);
             }
         }
         public bool OHBC_AlarmAllCleared(string craneName)
