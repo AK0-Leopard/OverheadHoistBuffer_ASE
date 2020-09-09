@@ -202,6 +202,7 @@ namespace com.mirle.ibg3k0.sc.Service
         public bool agvWaitOutOpenBox = true;                      //AGVPort WaitOut 時，是否做開蓋動作
         public bool autoRemarkBOXCSTData = false;                   //是否開啟自動救帳流程。
         public bool agvHasCmdsAccess = false;           //Agv 有命令要搬入與否。
+        public bool oneInoneOutMethodUse = false;          //是否使用單取單放流程判定AGV 虛擬Port
         #endregion
 
         #region 資料暫存
@@ -257,7 +258,7 @@ namespace com.mirle.ibg3k0.sc.Service
             {
                 TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "SetPortINIData 開始------------------------------------");
                 portINIData = new Dictionary<string, PortINIData>();
-                
+
                 portINIData.Clear();
                 PortINIData lineData = new PortINIData();
 
@@ -307,7 +308,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     if (isAGVZone(v.PLCPortID.Trim()) == false)
                     {
                         AddPortAdr(v.PLCPortID.Trim(), int.Parse(v.ADR_ID));
-                    }                        
+                    }
                 }
 
                 foreach (var v in vehicleBLL.loadAllVehicle())
@@ -853,11 +854,16 @@ namespace com.mirle.ibg3k0.sc.Service
                                 else
                                 {
                                     DateTime nowTime = DateTime.Now;
-                                    DateTime cmdTime = v.CMD_INSER_TIME.AddMinutes(v.TIME_PRIORITY);
+
+                                    int addtime = v.TIME_PRIORITY / SystemParameter.cmdPriorityAdd;
+
+                                    DateTime cmdTime = v.CMD_INSER_TIME.AddMinutes(addtime);
+
                                     TimeSpan span = nowTime - cmdTime;
                                     if (span.Minutes >= 1)
                                     {
-                                        cmdBLL.updateCMD_MCS_TimePriority(v.CMD_ID, v.TIME_PRIORITY + SystemParameter.cmdPriorityAdd);
+                                        TimeSpan span1 = nowTime - v.CMD_INSER_TIME;
+                                        cmdBLL.updateCMD_MCS_TimePriority(v.CMD_ID, span1.Minutes * SystemParameter.cmdPriorityAdd);
                                         //cmdBLL.updateCMD_MCS_sumPriority(v.CMD_ID);
                                     }
                                 }
@@ -1037,7 +1043,7 @@ namespace com.mirle.ibg3k0.sc.Service
 
         private void CraneCountBy2(List<ACMD_MCS> cmdList)    //當有兩台車在同一條LINE (非LOOP)
         {
-            foreach(var cmd1 in cmdList)
+            foreach (var cmd1 in cmdList)
             {
 
             }
@@ -1061,7 +1067,7 @@ namespace com.mirle.ibg3k0.sc.Service
         /// <summary>
         /// 比較兩筆命令路徑是否重疊
         /// </summary>
-        public bool GetSourceDest(string cmd1_source, string cmd1_dest, string cmd2_source, string cmd2_dest) 
+        public bool GetSourceDest(string cmd1_source, string cmd1_dest, string cmd2_source, string cmd2_dest)
         {
             #region cmd1 資料確認
             if (isAGVZone(cmd1_source))
@@ -1127,16 +1133,16 @@ namespace com.mirle.ibg3k0.sc.Service
         {
             int spac = 1;
             int adr = 0;
-            List <PortAdr> portAdrs = GetAll_ADR();
+            List<PortAdr> portAdrs = GetAll_ADR();
             PortAdr portAdr = portAdrs.Where(data => data.ADR_ID == adr_id).FirstOrDefault();
 
-            if(portAdr != null)
+            if (portAdr != null)
             {
                 int index = portAdrs.IndexOf(portAdr);
 
-                if(index >= 0)  //portAdrs.IndexOf(portAdr) 找不到值會回傳 -1
+                if (index >= 0)  //portAdrs.IndexOf(portAdr) 找不到值會回傳 -1
                 {
-                    if(type == "min")
+                    if (type == "min")
                     {
                         index = index - spac;  //-1 後來要變可調
                     }
@@ -1149,7 +1155,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     {
                         adr = portAdrs[0].ADR_ID;
                     }
-                    else if(index >= portAdrs.Count)
+                    else if (index >= portAdrs.Count)
                     {
                         adr = portAdrs[portAdrs.Count].ADR_ID;
                     }
@@ -1159,7 +1165,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     }
                 }
             }
-            
+
             return adr;
         }
 
@@ -1208,7 +1214,7 @@ namespace com.mirle.ibg3k0.sc.Service
 
             return portADR;
         }
-        public List<PortAdr> GetAll_ADR() 
+        public List<PortAdr> GetAll_ADR()
         {
             return allPortAdr;
         }
@@ -6459,6 +6465,9 @@ namespace com.mirle.ibg3k0.sc.Service
                         DateTime.Now.ToString("HH:mm:ss.fff ") +
                         "OHT >> OHB|errCode = 0 判斷無異常跳回"
                     );
+
+                    OHBC_AlarmSetIng(_eqName, false);
+
                     return;
                 }
                 #endregion
@@ -6489,12 +6498,14 @@ namespace com.mirle.ibg3k0.sc.Service
                     //{
                     //    reportBLL.ReportUnitAlarmSet(alarm.EQPT_ID, alarm.ALAM_CODE, alarm.ALAM_DESC);
                     //}
-                    OHBC_AlarmSetIng(_eqName, false);
                 }
             }
             catch (Exception ex)
             {
                 TransferServiceLogger.Error(ex, "OHT_AlarmSet   ohtName:" + _eqName + " ErrorCode:" + errCode);
+            }
+            finally
+            {
                 OHBC_AlarmSetIng(_eqName, false);
             }
         }
@@ -6892,6 +6903,11 @@ namespace com.mirle.ibg3k0.sc.Service
             return "OK";
         }
 
+        public void Manual_SetOneInoneOutMethodUse(bool yn)
+        {
+            TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "Manual_SetOneInoneOutMethodUse: " + yn);
+            oneInoneOutMethodUse = yn;
+        }
         #endregion
         #region 命令操作
         public string Manual_InsertCmd(string source, string dest, int priority = 5, string sourceCmd = "UI", CmdType cmdType = CmdType.Manual)   //手動搬送，sourceCmd : 誰呼叫
@@ -8412,15 +8428,15 @@ namespace com.mirle.ibg3k0.sc.Service
             }
             if (_AGVPortPLCDatas.Count() > 1)
             {
-                if(_AGVPortPLCDatas[0].IsModeChangable == true && _AGVPortPLCDatas[1].IsModeChangable == true)
+                if (_AGVPortPLCDatas[0].IsModeChangable == true && _AGVPortPLCDatas[1].IsModeChangable == true)
                 {
-                    if(_AGVPortPLCDatas[0].LoadPosition1 == true && _AGVPortPLCDatas[1].LoadPosition1 == true)
+                    if (_AGVPortPLCDatas[0].LoadPosition1 == true && _AGVPortPLCDatas[1].LoadPosition1 == true)
                     {
-                        AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " AGV "+ AGVStationID + "enter 2 Box InOutMode.");
-                        if (AGVPortDatas[0].PortType == E_PortType.In)
+                        AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " AGV " + AGVStationID + "enter 2 Box InOutMode.");
+                        if (AGVPortDatas[1].PortType == E_PortType.In)
                         {
-                            isSuccess = PortTypeChange(AGVPortDatas[0].PLCPortID, E_PortType.In, "InOutModeChange");
-                            isSuccess = PortTypeChange(AGVPortDatas[1].PLCPortID, E_PortType.Out, "InOutModeChange");
+                            isSuccess = PortTypeChange(AGVPortDatas[1].PLCPortID, E_PortType.In, "InOutModeChange");
+                            isSuccess = PortTypeChange(AGVPortDatas[0].PLCPortID, E_PortType.Out, "InOutModeChange");
                         }
                         else
                         {
@@ -8431,7 +8447,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     else if (_AGVPortPLCDatas[0].LoadPosition1 == true && _AGVPortPLCDatas[1].LoadPosition1 == false)
                     {
                         AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " AGV " + AGVStationID + "enter 1 Box right InOutMode.");
-                        if (AGVPortDatas[0].PortType == E_PortType.In)
+                        if (AGVPortDatas[1].PortType == E_PortType.In)
                         {
                             isSuccess = PortTypeChange(AGVPortDatas[0].PLCPortID, E_PortType.In, "InOutModeChange");
                             isSuccess = PortTypeChange(AGVPortDatas[1].PLCPortID, E_PortType.Out, "InOutModeChange");
@@ -8445,24 +8461,24 @@ namespace com.mirle.ibg3k0.sc.Service
                     else if (_AGVPortPLCDatas[0].LoadPosition1 == false && _AGVPortPLCDatas[1].LoadPosition1 == true)
                     {
                         AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " AGV " + AGVStationID + "enter 1 Box left InOutMode.");
-                        if (AGVPortDatas[0].PortType == E_PortType.In)
+                        if (AGVPortDatas[1].PortType == E_PortType.In)
                         {
-                            isSuccess = PortTypeChange(AGVPortDatas[0].PLCPortID, E_PortType.Out, "InOutModeChange");
                             isSuccess = PortTypeChange(AGVPortDatas[1].PLCPortID, E_PortType.In, "InOutModeChange");
+                            isSuccess = PortTypeChange(AGVPortDatas[0].PLCPortID, E_PortType.Out, "InOutModeChange");
                         }
                         else
                         {
-                            isSuccess = PortTypeChange(AGVPortDatas[0].PLCPortID, E_PortType.Out, "InOutModeChange");
                             isSuccess = PortTypeChange(AGVPortDatas[1].PLCPortID, E_PortType.In, "InOutModeChange");
+                            isSuccess = PortTypeChange(AGVPortDatas[0].PLCPortID, E_PortType.Out, "InOutModeChange");
                         }
                     }
                     else if (_AGVPortPLCDatas[0].LoadPosition1 == false && _AGVPortPLCDatas[1].LoadPosition1 == false)
                     {
                         AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " AGV " + AGVStationID + "enter 0 Box InOutMode.");
-                        if (AGVPortDatas[0].PortType == E_PortType.In)
+                        if (AGVPortDatas[1].PortType == E_PortType.In)
                         {
-                            isSuccess = PortTypeChange(AGVPortDatas[0].PLCPortID, E_PortType.Out, "InOutModeChange");
                             isSuccess = PortTypeChange(AGVPortDatas[1].PLCPortID, E_PortType.In, "InOutModeChange");
+                            isSuccess = PortTypeChange(AGVPortDatas[0].PLCPortID, E_PortType.Out, "InOutModeChange");
                         }
                         else
                         {
@@ -8556,7 +8572,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     //以目前資料判斷是否已經轉向完成
                     foreach (PortPLCInfo portPLCStatus in portPLCDatas)
                     {
-                        if ((portPLCStatus.IsReadyToLoad == true ) || //若該port為input mode且 is ready to load 為 true; (可以被補空盒)
+                        if ((portPLCStatus.IsReadyToLoad == true) || //若該port為input mode且 is ready to load 為 true; (可以被補空盒)
                             (portPLCStatus.IsReadyToUnload == true)) //或者為input mode 且 is ready to unload 為true;   (上已有盒)
                         {
                             AGVPortReady = true;
@@ -8640,6 +8656,7 @@ namespace com.mirle.ibg3k0.sc.Service
             bool isOK = false; //A20.07.10.0
             try
             {
+                AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + "觸發開始");
                 bool useFirst2Port = false;     //判斷是否使用前 2 port，若否使用後 2 port
                 //若AGVC 要求0 的時候要清掉異常OHBC_AGV_HasCmdsAccessCleared
                 if (AGVCFromEQToStationCmdNum == 0)
@@ -8736,6 +8753,15 @@ namespace com.mirle.ibg3k0.sc.Service
                 // 新增在outmode狀態下的port 是否有對該port 的命令可執行，若有，則拒絕。
                 else
                 {
+                    bool isThereInputModePort = false;
+                    foreach (PortDef AGVPortData in accessAGVPortDatas)
+                    {
+                        PortPLCInfo portData = GetPLC_PortData(AGVPortData.PLCPortID);
+                        if (portData.IsInputMode && portData.LoadPosition1 != true && portData.IsReadyToLoad)
+                        {
+                            isThereInputModePort = true;
+                        }
+                    }
                     foreach (PortDef AGVPortData in accessAGVPortDatas)
                     {
                         PortPLCInfo portData = GetPLC_PortData(AGVPortData.PLCPortID);
@@ -8743,13 +8769,16 @@ namespace com.mirle.ibg3k0.sc.Service
                         {
                             List<ACMD_MCS> useCheckCmd = cmdBLL.GetCmdDataByDest(portData.EQ_ID);
                             List<ACMD_MCS> useCheckCmd_1 = cmdBLL.GetCmdDataByDest(AGVStationID);
-                            if (useCheckCmd.Count + useCheckCmd_1.Count() > 0)
+                            if (isThereInputModePort != true)
                             {
-                                isOK = ChangeReturnDueToAGVCCmdNum(AGVCFromEQToStationCmdNum);
-                                portTypeNum = PortTypeNum.No_Change;
-                                AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Due to there is going to be a cmd to AGV port " + "一律回復" + isOK);
-                                RewriteTheResultOfAGVCTrigger(AGVStationID, portTypeNum, isOK);
-                                return isOK;
+                                if ((useCheckCmd.Count + useCheckCmd_1.Count() > 0))
+                                {
+                                    isOK = ChangeReturnDueToAGVCCmdNum(AGVCFromEQToStationCmdNum);
+                                    portTypeNum = PortTypeNum.No_Change;
+                                    AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Due to there is going to be a cmd to AGV port " + "一律回復" + isOK);
+                                    RewriteTheResultOfAGVCTrigger(AGVStationID, portTypeNum, isOK);
+                                    return isOK;
+                                }
                             }
                         }
                     }
@@ -8800,6 +8829,7 @@ namespace com.mirle.ibg3k0.sc.Service
                             AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Enter the Two IN MODE TYPE method");
                             InputModeChange(accessAGVPortDatas);
                             portTypeNum = PortTypeNum.Input_Mode;
+                            isOK = true;
                         }
                         //其餘狀況中都為 1 In 1 Out 為控制方向去對AGV Station 變換
                         else
@@ -8833,6 +8863,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     + "\n"
                 );
             }
+            AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + "觸發正常結束");
             return isOK;
         }
         #endregion

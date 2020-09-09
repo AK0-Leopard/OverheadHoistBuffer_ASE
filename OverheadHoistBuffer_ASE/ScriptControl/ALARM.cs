@@ -26,5 +26,6 @@ namespace com.mirle.ibg3k0.sc
         public string UnitState { get; set; }
         public string RecoveryOption { get; set; }
         public string CMD_ID { get; set; }
+        public string END_TIME { get; set; }
     }
 }

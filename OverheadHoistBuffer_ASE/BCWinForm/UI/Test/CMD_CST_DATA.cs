@@ -186,7 +186,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Test
         #region 卡匣操作
         public void UpDate_CstData()
         {
-            dataGridView2.DataSource = BCApp.SCApplication.CassetteDataBLL.loadCassetteData();
+            dataGridView2.DataSource = BCApp.SCApplication.CassetteDataBLL.loadCassetteData().OrderBy(data => data.Carrier_LOC).ToList();
             dataGridView2.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dataGridView2.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
         }

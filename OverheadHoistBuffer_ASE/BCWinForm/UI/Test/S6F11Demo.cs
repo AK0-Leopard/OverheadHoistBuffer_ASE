@@ -9,6 +9,7 @@ using System.Threading;
 using System.Windows.Forms;
 using com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage;
 using System.Threading.Tasks;
+using com.mirle.ibg3k0.sc.App;
 
 namespace com.mirle.ibg3k0.bc.winform
 {
@@ -124,6 +125,8 @@ namespace com.mirle.ibg3k0.bc.winform
             label7.Text = "目前狀態:" + BCApp.SCApplication.TransferService.agvWaitOutOpenBox.ToString();
             label17.Text = "目前狀態:" + BCApp.SCApplication.TransferService.portTypeChangeOK_CVPort_CstRemove.ToString();
             label18.Text = "自動救帳狀態:" + BCApp.SCApplication.TransferService.autoRemarkBOXCSTData.ToString();
+
+            Update();
         }
 
         public void UPStage()
@@ -500,5 +503,23 @@ namespace com.mirle.ibg3k0.bc.winform
             Thread.Sleep(100);
             Task.Run(() => BCApp.SCApplication.TransferService.OHBC_AlarmCleared(s1, s2));
         }
+
+        private void button41_Click(object sender, EventArgs e)
+        {
+            sc.App.SystemParameter.cmdTimeOutToAlternate = (int)numericUpDown2.Value;
+            Update();
+        }
+
+        private void button42_Click(object sender, EventArgs e)
+        {
+            sc.App.SystemParameter.cmdPriorityAdd = (int)numericUpDown3.Value;
+            Update();
+        }
+        public void Update()
+        {
+            numericUpDown2.Value = sc.App.SystemParameter.cmdTimeOutToAlternate;
+            numericUpDown3.Value = sc.App.SystemParameter.cmdPriorityAdd;
+        }
+
     }
 }

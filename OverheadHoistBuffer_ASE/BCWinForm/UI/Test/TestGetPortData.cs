@@ -250,6 +250,7 @@ namespace com.mirle.ibg3k0.bc.winform
             #endregion
 
             label6.Text = "關聯實際狀態： " + transferService.agvZone_ConnectedRealAGVPortRunDown.ToString();
+            label11.Text = "單取單放狀態： " + transferService.oneInoneOutMethodUse.ToString();
 
             if (transferService.isAGVZone(comboBox3.Text))
             {
@@ -587,6 +588,16 @@ namespace com.mirle.ibg3k0.bc.winform
         private void button41_Click(object sender, EventArgs e)
         {
             transferService.doUpdateTimeOutForAutoUD(comboBox1.Text, (int)numericUpDown1.Value);
+        }
+
+        private void button42_Click(object sender, EventArgs e)
+        {
+            transferService.Manual_SetOneInoneOutMethodUse(true);
+        }
+
+        private void button43_Click(object sender, EventArgs e)
+        {
+            transferService.Manual_SetOneInoneOutMethodUse(false);
         }
     }
 }

@@ -4556,7 +4556,7 @@ namespace com.mirle.ibg3k0.sc.Service
             Task.Run(() =>
             {
                 scApp.TransferService.TransferRun();//B0.08.0 處發TransferRun，使MCS命令可以在多車情形下早於趕車CMD下達。
-                tryAskVhToIdlePosition(vh_id);//B0.11
+                //tryAskVhToIdlePosition(vh_id);//B0.11
             });        
             eqpt.onCommandComplete(completeStatus);
         }
