@@ -1077,6 +1077,13 @@ namespace com.mirle.ibg3k0.sc.BLL
             isSuccsess = isSuccsess && iBSEMDriver.S6F11SendQueryLotID(cstID, reportQueues);
             return isSuccsess;
         }
+
+        public bool ReportClearBoxMoveReq(string boxID, string portID, List<AMCSREPORTQUEUE> reportQueues = null)
+        {
+            bool isSuccsess = true;
+            isSuccsess = isSuccsess && iBSEMDriver.S6F11SendClearBoxMoveReq(boxID, portID, reportQueues);
+            return isSuccsess;
+        }
         #endregion MCS SXFY Report
 
 
