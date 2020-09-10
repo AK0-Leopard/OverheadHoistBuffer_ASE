@@ -1763,7 +1763,7 @@ namespace com.mirle.ibg3k0.sc.Service
 
                     TimeSpan timeSpan = DateTime.Now - portINIData[sourceName].portStateErrorLogTime;
 
-                    if (timeSpan.Seconds >= 10)
+                    if (timeSpan.TotalSeconds >= 10)
                     {
                         portINIData[sourceName].portStateErrorLogTime = DateTime.Now;
 
@@ -1891,7 +1891,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 {
                     TimeSpan timeSpan = DateTime.Now - portINIData[destName].portStateErrorLogTime;
 
-                    if (timeSpan.Seconds >= 10)
+                    if (timeSpan.TotalSeconds >= 10)
                     {
                         portINIData[destName].portStateErrorLogTime = DateTime.Now;
 
@@ -7511,7 +7511,7 @@ namespace com.mirle.ibg3k0.sc.Service
         {
             return portINIData.Values.Where(data => data.Group == agvZoneName.Trim()
                                                  && data.UnitType == UnitType.AGV.ToString()
-                                           ).ToList();
+                                           ).OrderBy(loc => loc.PortName).ToList();
         }
 
         public List<PortINIData> GetAGVZone()
@@ -7532,9 +7532,11 @@ namespace com.mirle.ibg3k0.sc.Service
                         && agvInfo.IsReadyToUnload
                         && agvInfo.OpAutoMode
                         && agvInfo.LoadPosition1
+                        && agvInfo.IsCSTPresence == false
                       )
                     {
                         agvPortName = agvPortData.PortName;
+                        break;
                     }
                 }
             }
@@ -7556,6 +7558,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     if (agvInfo.IsOutputMode && AreDestEnable(agvPortData.PortName))
                     {
                         agvPortName = agvPortData.PortName;
+                        break;
                     }
 
                     //PortPLCInfo agvInfo = GetPLC_PortData(agvPortData.PortName);

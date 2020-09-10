@@ -119,6 +119,8 @@
             this.button37 = new System.Windows.Forms.Button();
             this.button38 = new System.Windows.Forms.Button();
             this.button39 = new System.Windows.Forms.Button();
+            this.button43 = new System.Windows.Forms.Button();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -1164,6 +1166,25 @@
             this.button39.UseVisualStyleBackColor = true;
             this.button39.Click += new System.EventHandler(this.button39_Click);
             // 
+            // button43
+            // 
+            this.button43.Location = new System.Drawing.Point(770, 506);
+            this.button43.Name = "button43";
+            this.button43.Size = new System.Drawing.Size(96, 25);
+            this.button43.TabIndex = 31;
+            this.button43.Text = "顯示AGVPort";
+            this.button43.UseVisualStyleBackColor = true;
+            this.button43.Click += new System.EventHandler(this.button43_Click);
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.Font = new System.Drawing.Font("PMingLiU", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(612, 510);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(152, 21);
+            this.comboBox1.TabIndex = 21;
+            // 
             // S6F11Demo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1171,7 +1192,9 @@
             this.ClientSize = new System.Drawing.Size(1193, 861);
             this.Controls.Add(this.button39);
             this.Controls.Add(this.button38);
+            this.Controls.Add(this.button43);
             this.Controls.Add(this.button37);
+            this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.groupBox8);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.groupBox7);
@@ -1299,5 +1322,7 @@
         private System.Windows.Forms.NumericUpDown numericUpDown2;
         private System.Windows.Forms.Button button42;
         private System.Windows.Forms.Button button41;
+        private System.Windows.Forms.Button button43;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }

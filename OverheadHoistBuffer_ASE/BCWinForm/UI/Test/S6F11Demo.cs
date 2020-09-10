@@ -51,6 +51,10 @@ namespace com.mirle.ibg3k0.bc.winform
                 {
                     comboBox9.Items.Add(s.PLCPortID);
                 }
+                else if(s.UnitType == "AGVZONE")
+                {
+                    comboBox1.Items.Add(s.PLCPortID);
+                }
 
                 if(BCApp.SCApplication.TransferService.isCVPort(s.PLCPortID))
                 {
@@ -469,9 +473,13 @@ namespace com.mirle.ibg3k0.bc.winform
         }
         private void button39_Click(object sender, EventArgs e)
         {
-            ShowDataList("All_ADR");
-            
+            ShowDataList("All_ADR");            
         }
+        private void button43_Click(object sender, EventArgs e)
+        {
+            ShowDataList("GetAGVPort");
+        }
+
         public void ShowDataList(string type)
         {
             switch(type)
@@ -485,12 +493,15 @@ namespace com.mirle.ibg3k0.bc.winform
                 case "All_ADR":
                     dataGridView1.DataSource = BCApp.SCApplication.TransferService.GetAll_ADR();
                     break;
+                case "GetAGVPort":
+                    dataGridView1.DataSource = BCApp.SCApplication.TransferService.GetAGVPort(comboBox1.Text);
+                    break;
             }
 
             dataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
 
-            int count = dataGridView1.Rows.Count - 1;
+            int count = dataGridView1.Rows.Count;
 
             label14.Text = type + ": 共 " + count.ToString() + " 筆";
         }
@@ -521,5 +532,6 @@ namespace com.mirle.ibg3k0.bc.winform
             numericUpDown3.Value = sc.App.SystemParameter.cmdPriorityAdd;
         }
 
+        
     }
 }
