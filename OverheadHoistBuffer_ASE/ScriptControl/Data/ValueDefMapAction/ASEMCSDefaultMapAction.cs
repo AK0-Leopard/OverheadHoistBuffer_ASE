@@ -3980,6 +3980,33 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             }
             return true;
         }
+        public override bool S6F11SendClearBoxMoveReq(string boxID, string portID, List<AMCSREPORTQUEUE> reportQueues = null)
+        {
+            try
+            {
+                VIDCollection Vids = new VIDCollection();
+                Vids.VIDITEM_115_DVVAL_PortID.PORT_ID = portID;
+                Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = boxID;
+
+                AMCSREPORTQUEUE mcs_queue = S6F11BulibMessage(SECSConst.CEID_QueryLotID, Vids);
+                if (reportQueues == null)
+                {
+                    S6F11SendMessage(mcs_queue);
+                }
+                else
+                {
+                    reportQueues.Add(mcs_queue);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
+                   Data: ex);
+
+                return false;
+            }
+            return true;
+        }
         public override AMCSREPORTQUEUE S6F11BulibMessage(string ceid, object vidCollection)
         {
             try
