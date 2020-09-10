@@ -7542,6 +7542,30 @@ namespace com.mirle.ibg3k0.sc.Service
             return agvPortName;
         }
 
+        public int GetAGV_InModeInServicePortName_Number(string agvZone) //取得AGV ZONE 狀態為 InMode 且上面有空 BOX 的 AGV Port 數量
+        {
+            List<PortINIData> agvZoneData = GetAGVPort(agvZone);
+            int count = 0;
+            if (agvZoneData.Count() != 0)
+            {
+                foreach (PortINIData agvPortData in agvZoneData)
+                {
+                    PortPLCInfo agvInfo = GetPLC_PortData(agvPortData.PortName);
+                    if (agvInfo.IsInputMode
+                        && agvInfo.IsReadyToUnload
+                        && agvInfo.OpAutoMode
+                        && agvInfo.LoadPosition1
+                        && agvInfo.IsCSTPresence == false
+                      )
+                    {
+                        count = count + 1;
+                    }
+                }
+            }
+
+            return count;
+        }
+
         public string GetAGV_OutModeInServicePortName(string agvZone) //取得AGV ZONE 狀態為 OutMode 且上面沒有空 BOX 的 AGV Port 名稱
         {
             string agvPortName = "";
@@ -8984,10 +9008,20 @@ namespace com.mirle.ibg3k0.sc.Service
                         //若目前的AGVC 命令在2筆以上，且OHBC為0筆，此時以2 in 為控制方向去對AGV Station變換。
                         if (AGVCFromEQToStationCmdNum >= 2 && OHBCCmdNumber == 0)
                         {
-                            AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Enter the Two IN MODE TYPE method");
-                            InputModeChange(accessAGVPortDatas);
-                            portTypeNum = PortTypeNum.Input_Mode;
-                            isOK = true;
+                            // 若為有超過2個input mode 且為 InServeice (有空Box 且readyToUnload)，則不用2 in 維持 單 in 單 out 就可以。
+                            int InMode_InServiceNum = GetAGV_InModeInServicePortName_Number(AGVStationID);
+                            if (InMode_InServiceNum >= 2)
+                            {
+                                AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " InMode_InServiceNum = " + InMode_InServiceNum + " and Already has two Input Mode Inservice Port.");
+                                isOK = true;
+                            }
+                            else 
+                            {
+                                AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " InMode_InServiceNum = " + InMode_InServiceNum + " and Enter the Two IN MODE TYPE method");
+                                InputModeChange(accessAGVPortDatas);
+                                portTypeNum = PortTypeNum.Input_Mode;
+                                isOK = true;
+                            }
                         }
                         //其餘狀況中都為 1 In 1 Out 為控制方向去對AGV Station 變換
                         else
