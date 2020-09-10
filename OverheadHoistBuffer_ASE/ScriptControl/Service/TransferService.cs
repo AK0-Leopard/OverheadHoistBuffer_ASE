@@ -1820,7 +1820,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     {
                         if (destPort.OpAutoMode)
                         {
-                            if (destPort.IsReadyToLoad)
+                            if (destPort.IsReadyToLoad || (isUnitType(destName, UnitType.STK) && destPort.preLoadOK))
                             {
                                 if (isUnitType(destName, UnitType.AGV))
                                 {
@@ -7532,7 +7532,6 @@ namespace com.mirle.ibg3k0.sc.Service
                         && agvInfo.IsReadyToUnload
                         && agvInfo.OpAutoMode
                         && agvInfo.LoadPosition1
-                        && agvInfo.IsCSTPresence == false
                       )
                     {
                         agvPortName = agvPortData.PortName;
@@ -7544,7 +7543,7 @@ namespace com.mirle.ibg3k0.sc.Service
             return agvPortName;
         }
 
-        public int GetAGV_InModeInServicePortName_Number(string agvZone) //取得AGV ZONE 狀態為 InMode 且上面有空 BOX 的 AGV Port 數量
+        public int GetAGV_InModeInServicePortName_NumberByHasEmptyBox(string agvZone) //取得AGV ZONE 狀態為 InMode 且上面有空 BOX 的 AGV Port 數量
         {
             List<PortINIData> agvZoneData = GetAGVPort(agvZone);
             int count = 0;
@@ -9012,7 +9011,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         if (AGVCFromEQToStationCmdNum >= 2 && OHBCCmdNumber == 0)
                         {
                             // 若為有超過2個input mode 且為 InServeice (有空Box 且readyToUnload)，則不用2 in 維持 單 in 單 out 就可以。
-                            int InMode_InServiceNum = GetAGV_InModeInServicePortName_Number(AGVStationID);
+                            int InMode_InServiceNum = GetAGV_InModeInServicePortName_NumberByHasEmptyBox(AGVStationID);
                             if (InMode_InServiceNum >= 2)
                             {
                                 AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " InMode_InServiceNum = " + InMode_InServiceNum + " and Already has two Input Mode Inservice Port.");
