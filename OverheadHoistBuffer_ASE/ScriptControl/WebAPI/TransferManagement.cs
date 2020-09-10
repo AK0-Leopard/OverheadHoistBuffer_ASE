@@ -284,7 +284,8 @@ namespace com.mirle.ibg3k0.sc.WebAPI
                     int iPriority = Convert.ToInt32(priority);
                     if (mcs_cmd != null)
                     {
-                        isSuccess = scApp.CMDBLL.updateCMD_MCS_PrioritySUM(mcs_cmd, iPriority);
+                        //isSuccess = scApp.CMDBLL.updateCMD_MCS_PrioritySUM(mcs_cmd, iPriority);
+                        isSuccess = scApp.CMDBLL.updateCMD_MCS_PortPriority(mcs_cmd.CMD_ID, iPriority);
                         if (isSuccess)
                         {
                             result = "OK";
