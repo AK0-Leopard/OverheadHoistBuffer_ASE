@@ -8150,6 +8150,13 @@ namespace com.mirle.ibg3k0.sc.Service
                 ACMD_MCS cmdData_FromPortID = cmdBLL.GetCmdDataBySource(AGVPortData.PLCPortID); //A01 A02
                 if (cmdData_FromPortID != null)
                 {
+                    AGVCTriggerLogger.Info
+                    (
+                        DateTime.Now.ToString("HH:mm:ss.fff ") 
+                        + " CheckIsSourceFromAGVStation " + AGVPortData.PLCPortID 
+                        + " 找到命令 " + GetCmdLog(cmdData_FromPortID)
+                    );
+
                     return true;
                 }
             }
