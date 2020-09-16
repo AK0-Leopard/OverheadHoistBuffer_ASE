@@ -280,8 +280,9 @@ namespace com.mirle.ibg3k0.sc.BLL
                     ALARM alarm = alarmDao.getSetAlarm(con, eq_id, error_code);
                     if (alarm != null)
                     {
+                        string strNow = BCFUtility.formatDateTime(DateTime.Now, SCAppConstants.TimestampFormat_19);
                         alarm.ALAM_STAT = ProtocolFormat.OHTMessage.ErrorStatus.ErrReset;
-
+                        alarm.END_TIME = strNow;
                         alarmDao.updateAlarm(con, alarm);
 
                         CheckSetAlarm();

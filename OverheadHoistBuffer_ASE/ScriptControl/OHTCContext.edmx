@@ -320,6 +320,7 @@
           <Property Name="EQPT_ID" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="UNIT_NUM" Type="int" Nullable="false" />
           <Property Name="RPT_DATE_TIME" Type="char" MaxLength="19" Nullable="false" />
+          <Property Name="END_TIME" Type="char" MaxLength="19" />
           <Property Name="ALAM_CODE" Type="char" MaxLength="10" Nullable="false" />
           <Property Name="ALAM_LVL" Type="int" Nullable="false" />
           <Property Name="ALAM_STAT" Type="int" Nullable="false" />
@@ -2586,6 +2587,7 @@
           <Property Name="UnitState" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
           <Property Name="RecoveryOption" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="CMD_ID" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="END_TIME" Type="String" MaxLength="19" FixedLength="true" Unicode="false" />
         </EntityType>
         <EnumType Name="E_ALARM_LVL">
           <Member Name="Warn" Value="1" />
@@ -3884,7 +3886,8 @@
     <EntitySetMapping Name="ALARM">
       <EntityTypeMapping TypeName="IsTypeOf(OHTC_DevModel.ALARM)">
         <MappingFragment StoreEntitySet="ALARM">
-          <ScalarProperty Name="CMD_ID" ColumnName="CMD_ID" />
+          <ScalarProperty Name="END_TIME" ColumnName="END_TIME" />
+                <ScalarProperty Name="CMD_ID" ColumnName="CMD_ID" />
                 <ScalarProperty Name="RecoveryOption" ColumnName="RecoveryOption" />
                 <ScalarProperty Name="EQPT_ID" ColumnName="EQPT_ID" />
           <ScalarProperty Name="UNIT_NUM" ColumnName="UNIT_NUM" />

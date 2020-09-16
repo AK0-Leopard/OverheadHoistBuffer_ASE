@@ -861,6 +861,13 @@ namespace com.mirle.ibg3k0.sc.App
             {
                 SystemParameter.cmdPriorityAdd = 1;
             }
+
+            SystemParameter.cmdTimeOutToAlternate = getInt("cmdTimeOutToAlternate", 30);
+
+            if (SystemParameter.cmdTimeOutToAlternate <= 0)
+            {
+                SystemParameter.cmdTimeOutToAlternate = 30;
+            }
         }
 
         //A0.01
@@ -2171,7 +2178,7 @@ namespace com.mirle.ibg3k0.sc.App
         public static bool IsEnableIDReadFailScenario { private set; get; } = false;
 
         public static int cmdPriorityAdd = 1;
-
+        public static int cmdTimeOutToAlternate = 30;
         /// <summary>
         /// Sets the secs conversaction timeout.
         /// </summary>

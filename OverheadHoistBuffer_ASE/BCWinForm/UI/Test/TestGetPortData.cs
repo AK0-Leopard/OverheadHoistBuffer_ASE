@@ -79,6 +79,7 @@ namespace com.mirle.ibg3k0.bc.winform
             dataGridView2.Rows.Add("等待從 Port 搬走", "PortWaitOut", "");
             dataGridView2.Rows.Add("狀態說明", "", "");
             dataGridView2.Rows.Add("PLC 離線狀態", "CIM_ON", "");
+            dataGridView2.Rows.Add("PLC 預先入料完成", "PreLoadOK", "");
 
             dataGridView2.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dataGridView2.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
@@ -156,6 +157,7 @@ namespace com.mirle.ibg3k0.bc.winform
             dataGridView2.Rows[13].Cells[2].Value = portData.PortWaitOut.ToString();
             //dataGridView2.Rows[14].Cells[2].Value = 等待說明;
             dataGridView2.Rows[15].Cells[2].Value = portData.cim_on.ToString();
+            dataGridView2.Rows[16].Cells[2].Value = portData.preLoadOK.ToString();
             #endregion
             #region dataGridView3
             dataGridView3.Rows[0].Cells[2].Value = portData.CstRemoveCheck.ToString();
@@ -248,6 +250,7 @@ namespace com.mirle.ibg3k0.bc.winform
             #endregion
 
             label6.Text = "關聯實際狀態： " + transferService.agvZone_ConnectedRealAGVPortRunDown.ToString();
+            label11.Text = "單取單放狀態： " + transferService.oneInoneOutMethodUse.ToString();
 
             if (transferService.isAGVZone(comboBox3.Text))
             {
@@ -585,6 +588,16 @@ namespace com.mirle.ibg3k0.bc.winform
         private void button41_Click(object sender, EventArgs e)
         {
             transferService.doUpdateTimeOutForAutoUD(comboBox1.Text, (int)numericUpDown1.Value);
+        }
+
+        private void button42_Click(object sender, EventArgs e)
+        {
+            transferService.Manual_SetOneInoneOutMethodUse(true);
+        }
+
+        private void button43_Click(object sender, EventArgs e)
+        {
+            transferService.Manual_SetOneInoneOutMethodUse(false);
         }
     }
 }

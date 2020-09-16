@@ -72,6 +72,7 @@
             this.button32 = new System.Windows.Forms.Button();
             this.button23 = new System.Windows.Forms.Button();
             this.button26 = new System.Windows.Forms.Button();
+            this.button40 = new System.Windows.Forms.Button();
             this.button24 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.textBox3 = new System.Windows.Forms.TextBox();
@@ -105,10 +106,21 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.label14 = new System.Windows.Forms.Label();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.comboBox14 = new System.Windows.Forms.ComboBox();
+            this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
             this.comboBox13 = new System.Windows.Forms.ComboBox();
+            this.button42 = new System.Windows.Forms.Button();
+            this.button41 = new System.Windows.Forms.Button();
+            this.button37 = new System.Windows.Forms.Button();
+            this.button38 = new System.Windows.Forms.Button();
+            this.button39 = new System.Windows.Forms.Button();
+            this.button43 = new System.Windows.Forms.Button();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -119,6 +131,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             this.SuspendLayout();
             // 
             // textBox1
@@ -274,7 +288,7 @@
             // button2
             // 
             this.button2.Font = new System.Drawing.Font("PMingLiU", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.button2.Location = new System.Drawing.Point(75, 156);
+            this.button2.Location = new System.Drawing.Point(75, 182);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(135, 25);
             this.button2.TabIndex = 10;
@@ -308,7 +322,7 @@
             // 
             this.comboBox7.Font = new System.Drawing.Font("PMingLiU", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.comboBox7.FormattingEnabled = true;
-            this.comboBox7.Location = new System.Drawing.Point(59, 129);
+            this.comboBox7.Location = new System.Drawing.Point(59, 155);
             this.comboBox7.Name = "comboBox7";
             this.comboBox7.Size = new System.Drawing.Size(151, 21);
             this.comboBox7.TabIndex = 17;
@@ -382,7 +396,7 @@
             // 
             this.label17.AutoSize = true;
             this.label17.Font = new System.Drawing.Font("Microsoft JhengHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label17.Location = new System.Drawing.Point(6, 422);
+            this.label17.Location = new System.Drawing.Point(6, 423);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(78, 21);
             this.label17.TabIndex = 1;
@@ -487,7 +501,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("PMingLiU", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label3.Location = new System.Drawing.Point(7, 134);
+            this.label3.Location = new System.Drawing.Point(7, 160);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(46, 13);
             this.label3.TabIndex = 1;
@@ -550,6 +564,7 @@
             this.groupBox2.Controls.Add(this.button32);
             this.groupBox2.Controls.Add(this.button23);
             this.groupBox2.Controls.Add(this.button26);
+            this.groupBox2.Controls.Add(this.button40);
             this.groupBox2.Controls.Add(this.button24);
             this.groupBox2.Controls.Add(this.button1);
             this.groupBox2.Controls.Add(this.textBox3);
@@ -610,6 +625,17 @@
             this.button26.Text = "AlarmCleared";
             this.button26.UseVisualStyleBackColor = true;
             this.button26.Click += new System.EventHandler(this.button26_Click);
+            // 
+            // button40
+            // 
+            this.button40.Font = new System.Drawing.Font("PMingLiU", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.button40.Location = new System.Drawing.Point(135, 208);
+            this.button40.Name = "button40";
+            this.button40.Size = new System.Drawing.Size(109, 25);
+            this.button40.TabIndex = 13;
+            this.button40.Text = "瞬斷測試";
+            this.button40.UseVisualStyleBackColor = true;
+            this.button40.Click += new System.EventHandler(this.button40_Click);
             // 
             // button24
             // 
@@ -936,9 +962,9 @@
             // 
             // button13
             // 
-            this.button13.Location = new System.Drawing.Point(175, 106);
+            this.button13.Location = new System.Drawing.Point(199, 106);
             this.button13.Name = "button13";
-            this.button13.Size = new System.Drawing.Size(75, 25);
+            this.button13.Size = new System.Drawing.Size(51, 25);
             this.button13.TabIndex = 28;
             this.button13.Text = "設置";
             this.button13.UseVisualStyleBackColor = true;
@@ -969,7 +995,7 @@
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Microsoft JhengHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label14.Location = new System.Drawing.Point(17, 513);
+            this.label14.Location = new System.Drawing.Point(17, 514);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(117, 21);
             this.label14.TabIndex = 1;
@@ -977,12 +1003,18 @@
             // 
             // groupBox8
             // 
+            this.groupBox8.Controls.Add(this.label20);
+            this.groupBox8.Controls.Add(this.label19);
             this.groupBox8.Controls.Add(this.label16);
             this.groupBox8.Controls.Add(this.label15);
             this.groupBox8.Controls.Add(this.label13);
             this.groupBox8.Controls.Add(this.comboBox14);
+            this.groupBox8.Controls.Add(this.numericUpDown3);
+            this.groupBox8.Controls.Add(this.numericUpDown2);
             this.groupBox8.Controls.Add(this.numericUpDown1);
             this.groupBox8.Controls.Add(this.comboBox13);
+            this.groupBox8.Controls.Add(this.button42);
+            this.groupBox8.Controls.Add(this.button41);
             this.groupBox8.Controls.Add(this.button13);
             this.groupBox8.Location = new System.Drawing.Point(898, 276);
             this.groupBox8.Name = "groupBox8";
@@ -990,6 +1022,26 @@
             this.groupBox8.TabIndex = 30;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "自動搬送設定";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Font = new System.Drawing.Font("Microsoft JhengHei", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label20.Location = new System.Drawing.Point(6, 182);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(141, 20);
+            this.label20.TabIndex = 0;
+            this.label20.Text = "優先權每分鐘增加:";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Font = new System.Drawing.Font("Microsoft JhengHei", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label19.Location = new System.Drawing.Point(6, 152);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(109, 20);
+            this.label19.TabIndex = 0;
+            this.label19.Text = "命令等待超時:";
             // 
             // label16
             // 
@@ -1021,6 +1073,40 @@
             this.comboBox14.TabIndex = 4;
             this.comboBox14.SelectedIndexChanged += new System.EventHandler(this.comboBox5_SelectedIndexChanged);
             // 
+            // numericUpDown3
+            // 
+            this.numericUpDown3.Location = new System.Drawing.Point(145, 185);
+            this.numericUpDown3.Maximum = new decimal(new int[] {
+            9999,
+            0,
+            0,
+            0});
+            this.numericUpDown3.Name = "numericUpDown3";
+            this.numericUpDown3.Size = new System.Drawing.Size(49, 20);
+            this.numericUpDown3.TabIndex = 25;
+            this.numericUpDown3.Value = new decimal(new int[] {
+            30,
+            0,
+            0,
+            0});
+            // 
+            // numericUpDown2
+            // 
+            this.numericUpDown2.Location = new System.Drawing.Point(145, 152);
+            this.numericUpDown2.Maximum = new decimal(new int[] {
+            9999,
+            0,
+            0,
+            0});
+            this.numericUpDown2.Name = "numericUpDown2";
+            this.numericUpDown2.Size = new System.Drawing.Size(49, 20);
+            this.numericUpDown2.TabIndex = 25;
+            this.numericUpDown2.Value = new decimal(new int[] {
+            30,
+            0,
+            0,
+            0});
+            // 
             // comboBox13
             // 
             this.comboBox13.Font = new System.Drawing.Font("PMingLiU", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
@@ -1030,11 +1116,85 @@
             this.comboBox13.Size = new System.Drawing.Size(151, 21);
             this.comboBox13.TabIndex = 4;
             // 
+            // button42
+            // 
+            this.button42.Location = new System.Drawing.Point(199, 181);
+            this.button42.Name = "button42";
+            this.button42.Size = new System.Drawing.Size(51, 25);
+            this.button42.TabIndex = 28;
+            this.button42.Text = "設置";
+            this.button42.UseVisualStyleBackColor = true;
+            this.button42.Click += new System.EventHandler(this.button42_Click);
+            // 
+            // button41
+            // 
+            this.button41.Location = new System.Drawing.Point(199, 151);
+            this.button41.Name = "button41";
+            this.button41.Size = new System.Drawing.Size(51, 25);
+            this.button41.TabIndex = 28;
+            this.button41.Text = "設置";
+            this.button41.UseVisualStyleBackColor = true;
+            this.button41.Click += new System.EventHandler(this.button41_Click);
+            // 
+            // button37
+            // 
+            this.button37.Location = new System.Drawing.Point(883, 506);
+            this.button37.Name = "button37";
+            this.button37.Size = new System.Drawing.Size(96, 25);
+            this.button37.TabIndex = 31;
+            this.button37.Text = "顯示PortINIData";
+            this.button37.UseVisualStyleBackColor = true;
+            this.button37.Click += new System.EventHandler(this.button37_Click);
+            // 
+            // button38
+            // 
+            this.button38.Location = new System.Drawing.Point(984, 506);
+            this.button38.Name = "button38";
+            this.button38.Size = new System.Drawing.Size(96, 25);
+            this.button38.TabIndex = 31;
+            this.button38.Text = "顯示PortADR";
+            this.button38.UseVisualStyleBackColor = true;
+            this.button38.Click += new System.EventHandler(this.button38_Click);
+            // 
+            // button39
+            // 
+            this.button39.Location = new System.Drawing.Point(1086, 506);
+            this.button39.Name = "button39";
+            this.button39.Size = new System.Drawing.Size(95, 25);
+            this.button39.TabIndex = 31;
+            this.button39.Text = "顯示所有位置";
+            this.button39.UseVisualStyleBackColor = true;
+            this.button39.Click += new System.EventHandler(this.button39_Click);
+            // 
+            // button43
+            // 
+            this.button43.Location = new System.Drawing.Point(770, 506);
+            this.button43.Name = "button43";
+            this.button43.Size = new System.Drawing.Size(96, 25);
+            this.button43.TabIndex = 31;
+            this.button43.Text = "顯示AGVPort";
+            this.button43.UseVisualStyleBackColor = true;
+            this.button43.Click += new System.EventHandler(this.button43_Click);
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.Font = new System.Drawing.Font("PMingLiU", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(612, 510);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(152, 21);
+            this.comboBox1.TabIndex = 21;
+            // 
             // S6F11Demo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1193, 861);
+            this.Controls.Add(this.button39);
+            this.Controls.Add(this.button38);
+            this.Controls.Add(this.button43);
+            this.Controls.Add(this.button37);
+            this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.groupBox8);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.groupBox7);
@@ -1063,6 +1223,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.groupBox8.ResumeLayout(false);
             this.groupBox8.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1150,5 +1312,17 @@
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Button button36;
         private System.Windows.Forms.Button button35;
+        private System.Windows.Forms.Button button37;
+        private System.Windows.Forms.Button button38;
+        private System.Windows.Forms.Button button39;
+        private System.Windows.Forms.Button button40;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.NumericUpDown numericUpDown3;
+        private System.Windows.Forms.NumericUpDown numericUpDown2;
+        private System.Windows.Forms.Button button42;
+        private System.Windows.Forms.Button button41;
+        private System.Windows.Forms.Button button43;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }

@@ -2258,7 +2258,8 @@ namespace com.mirle.ibg3k0.sc.BLL
                                     {
                                         int change_priority = current_time_priority - waitting_excute_mcs_cmd.TIME_PRIORITY;
                                         updateCMD_MCS_TimePriority(waitting_excute_mcs_cmd, current_time_priority);
-                                        updateCMD_MCS_PrioritySUM(waitting_excute_mcs_cmd, waitting_excute_mcs_cmd.PRIORITY_SUM + change_priority);
+                                        //updateCMD_MCS_PrioritySUM(waitting_excute_mcs_cmd, waitting_excute_mcs_cmd.PRIORITY_SUM + change_priority);
+                                        updateCMD_MCS_PortPriority(waitting_excute_mcs_cmd.CMD_ID, change_priority);
                                     }
                                     continue;
                                 }

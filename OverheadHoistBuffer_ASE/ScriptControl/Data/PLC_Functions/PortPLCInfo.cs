@@ -104,5 +104,8 @@ namespace com.mirle.ibg3k0.sc.Data.PLC_Functions
 
         [PLCElement(ValueName = "CIM_ON")]
         public bool cim_on;
+
+        [PLCElement(ValueName = "PreLoadOK")]
+        public bool preLoadOK;
     }
 }

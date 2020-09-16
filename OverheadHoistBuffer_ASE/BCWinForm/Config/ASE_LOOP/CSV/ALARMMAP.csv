@@ -568,7 +568,6 @@ OHCV_5,1466,2,[TUCV2]  0? Sensor not ON
 OHCV_5,1467,2,[TUCV2] 90? Sensor not ON
 OHCV_5,1468,2,[TUCV2]180? Sensor not ON
 OHCV_5,1469,2,[TUCV2]270? Sensor not ON
-OHCV_5,1470,2,[TUCV2]
 OHCV_5,1471,2,[TUCV2]
 OHCV_5,1472,2,[TUCV2]
 OHCV_5,1473,2,[TUCV2]
@@ -1785,7 +1784,6 @@ OHCV_7,766,2,[CV7]  0? Sensor not ON
 OHCV_7,767,2,[CV7] 90? Sensor not ON
 OHCV_7,768,2,[CV7]180? Sensor not ON
 OHCV_7,769,2,[CV7]270? Sensor not ON
-OHCV_7,770,2,[CV7]
 OHCV_7,771,2,[CV7]
 OHCV_7,772,2,[CV7]
 OHCV_7,773,2,[CV7]
@@ -1885,7 +1883,6 @@ OHCV_7,1466,2,[TUCV1]  0? Sensor not ON
 OHCV_7,1467,2,[TUCV1] 90? Sensor not ON
 OHCV_7,1468,2,[TUCV1]180? Sensor not ON
 OHCV_7,1469,2,[TUCV1]270? Sensor not ON
-OHCV_7,1470,2,[TUCV1]
 OHCV_7,1471,2,[TUCV1]
 OHCV_7,1472,2,[TUCV1]
 OHCV_7,1473,2,[TUCV1]
@@ -2814,8 +2811,6 @@ NTB,378,2,[CV1-1]Electric Cylinder PSN.1 Sensor not ON
 NTB,379,2,[CV1-1]Electric Cylinder PSN.2 Sensor not ON
 NTB,380,2,[CV1-1]Electric Cylinder PSN.3 Sensor not ON
 NTB,381,2,[CV1-1]Electric Cylinder PSN.4 Sensor not ON
-NTB,382,2,[CV1-1]
-NTB,383,2,[CV1-1]
 NTB,384,2,[CV1-1]
 NTB,385,2,[CV1-1]
 NTB,386,2,[CV1-1]
@@ -3214,9 +3209,6 @@ NTB,778,2,[CV4-3]Electric Cylinder PSN.1 Sensor not ON
 NTB,779,2,[CV4-3]Electric Cylinder PSN.2 Sensor not ON
 NTB,780,2,[CV4-3]Electric Cylinder PSN.3 Sensor not ON
 NTB,781,2,[CV4-3]Electric Cylinder PSN.4 Sensor not ON
-NTB,782,2,[CV4-3]
-NTB,783,2,[CV4-3]
-NTB,784,2,[CV4-3]
 NTB,785,2,[CV4-3]
 NTB,786,2,[CV4-3]
 NTB,787,2,[CV4-3]
@@ -3414,7 +3406,6 @@ NTB,978,2,[CV2]Electric Cylinder PSN.1 Sensor not ON
 NTB,979,2,[CV2]Electric Cylinder PSN.2 Sensor not ON
 NTB,980,2,[CV2]Electric Cylinder PSN.3 Sensor not ON
 NTB,981,2,[CV2]Electric Cylinder PSN.4 Sensor not ON
-NTB,982,2,[CV2]
 NTB,983,2,[CV2]
 NTB,984,2,[CV2]
 NTB,985,2,[CV2]
@@ -3515,8 +3506,6 @@ NTB,1079,2,[CV3]Electric Cylinder PSN.2 Sensor not ON
 NTB,1080,2,[CV3]Electric Cylinder PSN.3 Sensor not ON
 NTB,1081,2,[CV3]Electric Cylinder PSN.4 Sensor not ON
 NTB,1082,2,[CV3]
-NTB,1083,2,[CV3]
-NTB,1084,2,[CV3]
 NTB,1085,2,[CV3]
 NTB,1086,2,[CV3]
 NTB,1087,2,[CV3]
@@ -3714,9 +3703,6 @@ NTB,1278,2,[CV5]Electric Cylinder PSN.1 Sensor not ON
 NTB,1279,2,[CV5]Electric Cylinder PSN.2 Sensor not ON
 NTB,1280,2,[CV5]Electric Cylinder PSN.3 Sensor not ON
 NTB,1281,2,[CV5]Electric Cylinder PSN.4 Sensor not ON
-NTB,1282,2,[CV5]
-NTB,1283,2,[CV5]
-NTB,1284,2,[CV5]
 NTB,1285,2,[CV5]
 NTB,1286,2,[CV5]
 NTB,1287,2,[CV5]
@@ -4517,7 +4503,6 @@ AGV,280,2,[Port1]Electric Cylinder PSN.3 Sensor not ON
 AGV,281,2,[Port1]Electric Cylinder PSN.4 Sensor not ON
 AGV,282,2,[Port1]
 AGV,283,2,[Port1]
-AGV,284,2,[Port1]
 AGV,285,2,[Port1]
 AGV,286,2,[Port1]
 AGV,287,2,[Port1]
@@ -4617,7 +4602,6 @@ AGV,380,2,[Port2]Electric Cylinder PSN.3 Sensor not ON
 AGV,381,2,[Port2]Electric Cylinder PSN.4 Sensor not ON
 AGV,382,2,[Port2]
 AGV,383,2,[Port2]
-AGV,384,2,[Port2]
 AGV,385,2,[Port2]
 AGV,386,2,[Port2]
 AGV,387,2,[Port2]
@@ -4717,7 +4701,6 @@ AGV,480,2,[Port3]Electric Cylinder PSN.3 Sensor not ON
 AGV,481,2,[Port3]Electric Cylinder PSN.4 Sensor not ON
 AGV,482,2,[Port3]
 AGV,483,2,[Port3]
-AGV,484,2,[Port3]
 AGV,485,2,[Port3]
 AGV,486,2,[Port3]
 AGV,487,2,[Port3]
@@ -4817,7 +4800,6 @@ AGV,580,2,[Port4]Electric Cylinder PSN.3 Sensor not ON
 AGV,581,2,[Port4]Electric Cylinder PSN.4 Sensor not ON
 AGV,582,2,[Port4]
 AGV,583,2,[Port4]
-AGV,584,2,[Port4]
 AGV,585,2,[Port4]
 AGV,586,2,[Port4]
 AGV,587,2,[Port4]
@@ -5040,109 +5022,129 @@ AGV,9956,1,[RFID4]
 AGV,9957,1,[RFID4]
 AGV,9958,1,[RFID4]
 AGV,9959,1,[RFID4]
-CRANE,111001,1,Fail to initial motor command position
-CRANE,111002,1,Fail to determine the direction of the vehicle
-CRANE,111003,1,Fail to determine the original Section of the vehicle
-CRANE,111004,1,Fail to calculate the positon correction
-CRANE,111005,1,Fail to reserve the moving section
-CRANE,111006,1,Fail to calculate the distance of moving
-CRANE,111007,1,Fail to calculate the parameter of moving
-CRANE,111008,1,Fail to control the moving (vehicle)
-CRANE,111009,1,Fail to check the area sensor state
-CRANE,111010,1,Fail to pause the moving (motor)
-CRANE,111011,1,Fail to resume the moving (motor)
-CRANE,111012,1,Fail to correct the positon
-CRANE,111013,1,timeout for communication about the moving section data of the reservation
-CRANE,111014,1,error in moving section data of the reservation
-CRANE,111015,1,Fail to set the parameter of section type
-CRANE,111016,1,Vehicle data for moving dose not exist
-CRANE,111017,1,Error in moving section data
-CRANE,111018,1,Fail to control the moving motion (motor)
-CRANE,111019,1,There is no address for moving
-CRANE,111020,1,The start section do not match the section now
-CRANE,111021,1,Fail to calculate the positon correction
-CRANE,111022,1,The positon correction is too long
-CRANE,111023,1,Jaws does not ready to be used
-CRANE,111024,1,OHBC reply nothing for event report
-CRANE,111025,1,Fail to get the Sick barcode
-CRANE,111026,1,Fail to get the OHT position
-CRANE,111099,1,Exception in the moving process
-CRANE,121001,1,Area sensor parameter does not exist
-CRANE,121002,1,Fail to set the area sensor parameter
-CRANE,121003,1,Fail in the back area sensor process
-CRANE,121004,1,Fail to check the front area sensor state
-CRANE,121005,1,Fail in the front area sensor process
-CRANE,121006,1,Fail to check the back area sensor state
-CRANE,121007,1,Area sensor actived
-CRANE,121008,1,Area sensor actived
-CRANE,121009,1,Area sensor actived
-CRANE,121010,1,Area sensor actived
-CRANE,121011,1,Area sensor actived
-CRANE,121012,1,Area sensor actived
-CRANE,121013,1,Area sensor actived
-CRANE,121014,1,Fail to set the area sensor IO parameter
-CRANE,121015,1,High Temputre alarm for moving motor
-CRANE,121016,1,High Temputre alarm for moving driver
-CRANE,121017,1,High Temputre alarm for hoisting motor
-CRANE,122001,2,ByPass BOX_BCR Sensor
-CRANE,122015,2,High Temputre memo for moving motor
-CRANE,122016,2,High Temputre memo for moving driver
-CRANE,122017,2,High Temputre memo for hoisting motor
-CRANE,121099,1,Exception in the area sensor process
-CRANE,131001,1,System emergency stop
-CRANE,131002,1,The motor used for moving was abnormal
-CRANE,131003,1,The motor used for jaws lateral moving were abnormal
-CRANE,131004,1,The motor used for jaws hoist moving were abnormal
-CRANE,131005,1,The motor used for jaws grabbing were abnormal
-CRANE,131006,1,OHT Emergency Stop
-CRANE,131099,1,Exception in the command handling process
-CRANE,311001,1,Error in the vehicle mounted station
-CRANE,311002,1,A foreign object in the anti-dropping detecting process
-CRANE,311003,1,Jaws isn't in the home position
-CRANE,311004,1,Error in the carrier position before hoist moving
-CRANE,311005,1,Timeout for lateraling excursion
-CRANE,311006,1,Timeout for hoisting
-CRANE,311007,1,Error in check box sensors before the jaws going
-CRANE,311008,1,Timeout for jaws closing
-CRANE,311009,1,Timeout for jaws opening
-CRANE,311010,1,Fail to getting hoist in position
-CRANE,311011,1,Error Position while Loading
-CRANE,311012,1,Error Position while Unloading
-CRANE,311013,1,Error in the carrier position before lateral moving
-CRANE,321001,1,There is a belt rewind
-CRANE,321002,1,vehicle mounted station's runout sensors turn ON
-CRANE,321003,1,Error in belt tension
-CRANE,321007,1,Error in checking box sensor turns ON 
-CRANE,331001,1,Fail to threw out the back anti-dropping device
-CRANE,331002,1,Fail to threw out the front anti-dropping device
-CRANE,331003,1,Fail to take back the back anti-dropping device
-CRANE,331004,1,Fail to take back the front anti-dropping device
-CRANE,331005,1,Fail to getting lateraling excursion in position
-CRANE,331007,1,Fail to control the Z-axis
-CRANE,331008,1,Fail to going jaws
-CRANE,331012,1,Fail to run the lateral excursion
-CRANE,332001,2,OHT Have Box but anti-dropping device
-CRANE,332007,2,Warning in checking box sensor turns ON
-CRANE,332010,2,EmptyRetrieval while Loading
-CRANE,332011,2,DoubleStorage while Unloading
-CRANE,411001,1,HPIO setting error for ID/CH
-CRANE,411003,1,Emergency Stop with Passive equipment ES signal
-CRANE,411004,1,CS0/CS1 signal did not turn ON
-CRANE,411012,1,Carrier was not detected/removed within specified time.[TP3 Timeout]
-CRANE,411013,1,BUSY signal did not turn OFF within specified time.[TP4 Timeout]
-CRANE,412001,2,VALID signal did not turn ON within specified time.[TD0 Timeout]
-CRANE,412002,2,L_REQ/U_REQ signal did not turn ON within specified time.[TA1 timeout]
-CRANE,412003,2,TR_REQ signal did not turn ON within specified time.[TP1 Timeout]
-CRANE,412004,2,READY signal did not turn ON within specified time.[TA2 Timeout]
-CRANE,412005,2,BUSY signal did not turn ON within specified time.[TP2 Timeout]
-CRANE,412006,2,READY signal did not turn OFF within specified time.[TA3 Timeout]
-CRANE,412007,2,VALID signal did not turn OFF within specified time.[TP5 Timeout]
-CRANE,412008,2,VALID signal did not turn ON within specified time.[TD1 Timeout]
-CRANE,412009,2,GO signal did not turn ON within specified time.
-CRANE,412010,2,InterLockNG Before BUSY turn ON
-CRANE,412011,2,Port error with Passive equipment HO_AVBL signal
-CRANE,412002,2,L_REQ/U_REQ turn ON before VALID turn ON
-CRANE,412014,2,Fail to change the PIO signals
+CRANE,111001,2,Fail to initial motor command position
+CRANE,111002,2,Fail to determine the direction of the vehicle
+CRANE,111003,2,Fail to determine the original Section of the vehicle
+CRANE,111004,2,Fail to calculate the positon correction
+CRANE,111005,2,Fail to reserve the moving section
+CRANE,111006,2,Fail to calculate the distance of moving
+CRANE,111007,2,Fail to calculate the parameter of moving
+CRANE,111008,2,Fail to control the moving (vehicle)
+CRANE,111009,2,Fail to check the area sensor state
+CRANE,111010,2,Fail to pause the moving (motor)
+CRANE,111011,2,Fail to resume the moving (motor)
+CRANE,111012,2,Fail to correct the positon
+CRANE,111013,2,timeout for communication about the moving section data of the reservation
+CRANE,111014,2,error in moving section data of the reservation
+CRANE,111015,2,fail to set the parameter of section type
+CRANE,111016,2,Vehicle data for moving dose not exist
+CRANE,111017,2,error in moving section data
+CRANE,111018,2,Fail to control the moving motion (motor)
+CRANE,111019,2,There is no address for moving
+CRANE,111020,2,The start section do not match the section now
+CRANE,111021,2,Fail to calculate the positon correction
+CRANE,111022,2,The positon correction is too long
+CRANE,111023,2,Jaws does not ready to be used
+CRANE,111024,2,OHBC reply nothing for event report
+CRANE,111025,2,Fail to get the Sick barcode
+CRANE,111026,2,Fail to get the OHT position
+CRANE,111099,2,Exception in the moving process
+CRANE,121001,2,Area sensor parameter does not exist
+CRANE,121002,2,Fail to set the area sensor parameter
+CRANE,121003,2,Fail in the back area sensor process
+CRANE,121004,2,Fail to check the front area sensor state
+CRANE,121005,2,Fail in the front area sensor process
+CRANE,121006,2,Fail to check the back area sensor state
+CRANE,121007,2,Area sensor actived
+CRANE,121008,2,Area sensor actived
+CRANE,121009,2,Area sensor actived
+CRANE,121010,2,Area sensor actived
+CRANE,121011,2,Area sensor actived
+CRANE,121012,2,Area sensor actived
+CRANE,121013,2,Area sensor actived
+CRANE,121014,2,Fail to set the area sensor IO parameter
+CRANE,121015,2,High Temputre alarm for moving motor
+CRANE,121016,2,High Temputre alarm for moving driver
+CRANE,121017,2,High Temputre alarm for hoisting motor
+CRANE,122001,1,ByPass BOX_BCR Sensor
+CRANE,122015,1,High Temputre memo for moving motor
+CRANE,122016,1,High Temputre memo for moving driver
+CRANE,122017,1,High Temputre memo for hoisting motor
+CRANE,121099,2,Exception in the area sensor process
+CRANE,131001,2,System emergency stop
+CRANE,131002,2,The motor used for moving was abnormal
+CRANE,131003,2,The motor used for jaws lateral moving were abnormal
+CRANE,131004,2,The motor used for jaws hoist moving were abnormal
+CRANE,131005,2,The motor used for jaws grabbing were abnormal
+CRANE,131006,2,OHT Emergency Stop
+CRANE,131099,2,Exception in the command handling process
+CRANE,211001,2,High CPU useage for OHT IPC
+CRANE,211002,2,High memory useage for OHT IPC
+CRANE,211003,2,Low HDD capacity for OHT IPC
+CRANE,211004,2,Timeout for moving in position
+CRANE,212001,1,Timeout for Receiving OHBC Message
+CRANE,311001,2,Error in the vehicle mounted station
+CRANE,311002,2,A foreign object in the anti-dropping detecting process
+CRANE,311003,2,Jaws isn't in the home position
+CRANE,311004,2,Error in the carrier position before hoist moving
+CRANE,311005,2,Timeout for lateraling excursion
+CRANE,311006,2,Timeout for hoisting
+CRANE,311007,2,Error in check box sensors before the jaws going
+CRANE,311008,2,Timeout for jaws closing
+CRANE,311009,2,Timeout for jaws opening
+CRANE,311010,2,Fail to getting hoist in position
+CRANE,311011,2,Error Position while Loading
+CRANE,311012,2,Error Position while Unloading
+CRANE,311013,2,Error in the carrier position before lateral moving
+CRANE,321001,2,There is a belt rewind
+CRANE,321002,2,vehicle mounted station's runout sensors turn ON
+CRANE,321003,2,Error in belt tension
+CRANE,321007,2,Error in checking box sensor turns ON
+CRANE,331001,2,Fail to threw out the back anti-dropping device
+CRANE,331002,2,Fail to threw out the front anti-dropping device
+CRANE,331003,2,Fail to take back the back anti-dropping device
+CRANE,331004,2,Fail to take back the front anti-dropping device
+CRANE,331005,2,Fail to getting lateraling excursion in position
+CRANE,331007,2,Fail to control the Z-axis
+CRANE,331008,2,Fail to going jaws
+CRANE,331012,2,Fail to run the lateral excursion
+CRANE,332001,1,OHT Have Box but anti-dropping device
+CRANE,332007,1,Warning in checking box sensor turns ON
+CRANE,332010,1,Error in OHB box detecter
+CRANE,332011,1,Error in OHB box detecter
+CRANE,411001,2,HPIO setting error for ID/CH
+CRANE,411003,2,Emergency Stop with Passive equipment ES signal
+CRANE,411004,2,CS0/CS1 signal did not turn ON
+CRANE,411012,2,Carrier was not detected/removed within specified time.[TP3 Timeout]
+CRANE,411013,2,BUSY signal did not turn OFF within specified time.[TP4 Timeout]
+CRANE,412001,1,VALID signal did not turn ON within specified time.[TD0 Timeout]
+CRANE,412002,1,L_REQ/U_REQ signal did not turn ON within specified time.[TA1 timeout]
+CRANE,412003,1,TR_REQ signal did not turn ON within specified time.[TP1 Timeout]
+CRANE,412004,1,READY signal did not turn ON within specified time.[TA2 Timeout]
+CRANE,412005,1,BUSY signal did not turn ON within specified time.[TP2 Timeout]
+CRANE,412006,1,READY signal did not turn OFF within specified time.[TA3 Timeout]
+CRANE,412007,1,VALID signal did not turn OFF within specified time.[TP5 Timeout]
+CRANE,412008,1,VALID signal did not turn ON within specified time.[TD1 Timeout]
+CRANE,412009,1,GO signal did not turn ON within specified time.
+CRANE,412010,1,InterLockNG Before BUSY turn ON
+CRANE,412011,1,Port error with Passive equipment HO_AVBL signal
+CRANE,412012,1,L_REQ/U_REQ turn ON before VALID turn ON
+CRANE,412014,1,Fail to change the PIO signals
+AGV,0284,1,[Port1]continuous 3 box ERROR
+AGV,0384,1,[Port2]continuous 3 box ERROR
+AGV,0484,1,[Port3]continuous 3 box ERROR
+AGV,0584,1,[Port4]continuous 3 box ERROR
+NTB,0382,1,[CV1-1]SEND TO NO CST ID
+NTB,0383,1,[CV1-1]SEND TO NO Box ID
+NTB,0782,1,[CV4-3]SEND TO NO CST ID
+NTB,0783,1,[CV4-3]SEND TO NO Box ID
+NTB,0784,1,[CV4-3]3 BOX ERROR
+NTB,0982,1,[CV2]SEND TO NO CST ID
+NTB,1083,1,[CV3]SEND TO NO Box ID
+NTB,1084,1,[CV3]continuous 3 box ERROR
+NTB,1282,1,[CV5]SEND TO NO CST ID
+NTB,1283,1,[CV5]SEND TO NO Box ID
+NTB,1284,1,[CV5]continuous 3 box ERROR
 OHCV_5,770,2,[CV1]BCR 15min auto 2 times
 OHCV_5,1470,2,[TUCV5]BCR 15min auto 2 times
 OHCV_7,770,2,[CV7]BCR 15min auto 2 times
