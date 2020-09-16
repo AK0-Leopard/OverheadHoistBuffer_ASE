@@ -247,6 +247,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="UI\Components\WPFComponents\uctlMapWPF.xaml.cs">
+      <DependentUpon>uctlMapWPF.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Test\CMD_CST_DATA.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1299,6 +1302,10 @@
     </PublishFile>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="UI\Components\WPFComponents\uctlMapWPF.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\Components\WPFComponents\uctlReserveSectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
