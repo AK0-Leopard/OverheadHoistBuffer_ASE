@@ -8902,7 +8902,7 @@ namespace com.mirle.ibg3k0.sc.Service
                             AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " AGV " + AGVStationID + "enter " + fourAGVPort_DB.PLCPortID + " fourth Port Check Method Has box.");
                             PortTypeChange(fourAGVPort_DB.PLCPortID, E_PortType.In, "Fourth Port Check Method");
                         }
-                        else if (fourAGVPort.LoadPosition1 == false && thirdAGVPort.IsReadyToLoad == true) //若為空Port 則切為 Output Mode
+                        else if (fourAGVPort.LoadPosition1 == false && fourAGVPort.IsReadyToLoad == true) //若為空Port 則切為 Output Mode
                         {
                             AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " AGV " + AGVStationID + "enter " + fourAGVPort_DB.PLCPortID + " fourth Port Check Method No box.");
                             PortTypeChange(fourAGVPort_DB.PLCPortID, E_PortType.Out, "Fourth Port Check Method");

@@ -32,9 +32,10 @@ using System.Runtime.InteropServices;
 // 您可以指定所有的值，也可以依照以下的方式，使用 '*' 將組建和修訂編號
 // 指定為預設值:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.4.6")]
-[assembly: AssemblyFileVersion("1.4.6")]
+[assembly: AssemblyVersion("1.4.7")]
+[assembly: AssemblyFileVersion("1.4.7")]
 
 //版號 + Tab + 日期 + Tab + 修改人 + Tab + 敘述
+//1.4.7 2020/09/13  SCC+    API CheckIsSourceFromAGVStation 內，增加Log
 //1.4.6 2020/09/10  SCC*    修正OHT AlarmType
 //1.4.5 2020/09/10  SCC*    GetAGV_OutModeInServicePortName 取得可用AGVPort，跳出迴圈
