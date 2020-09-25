@@ -739,6 +739,8 @@ namespace com.mirle.ibg3k0.sc.Service
         {
             if (Interlocked.Exchange(ref syncTranCmdPoint, 1) == 0)
             {
+                DateTime startTime = DateTime.Now;
+
                 try
                 {
                     if (iniStatus == false)
@@ -1007,8 +1009,16 @@ namespace com.mirle.ibg3k0.sc.Service
                 {
                     Interlocked.Exchange(ref syncTranCmdPoint, 0);
                 }
+
+                TimeSpan runTimeOut = DateTime.Now - startTime;
+
+                if (runTimeOut.TotalSeconds >= 10)
+                {
+                    TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "TransferRun 執行：" + runTimeOut.TotalSeconds + " 秒");
+                }
             }
         }
+
         /// <summary>
         /// 判斷目前的狀態是否可以將指定Port上的Box退回
         /// </summary>
