@@ -1271,7 +1271,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
         {
             string current_sec_id = txt_current_sec_id.Text;
             uint distance = (uint)num_section_dis.Value;
-            bcApp.SCApplication.VehicleBLL.setAndPublishPositionReportInfo2Redis(vh_id, current_sec_id, "", distance);
+            bcApp.SCApplication.VehicleBLL.setAndPublishPositionReportInfo2Redis(vh_id, current_sec_id, "", distance, 0, 0);
         }
 
         private void combox_cycle_type_SelectedIndexChanged(object sender, EventArgs e)
@@ -1285,6 +1285,24 @@ namespace com.mirle.ibg3k0.bc.winform.UI
         private void Ignore136UnloadComplete_CheckedChanged(object sender, EventArgs e)
         {
             DebugParameter.ignore136UnloadComplete = Ignore136UnloadComplete.Checked;
+        }
+
+        private void num_vh_y_ValueChanged(object sender, EventArgs e)
+        {
+            string current_sec_id = txt_current_sec_id.Text;
+            uint distance = (uint)num_section_dis.Value;
+            double x_axis = (int)num_vh_x.Value;
+            double y_axis = (int)num_vh_y.Value;
+            bcApp.SCApplication.VehicleBLL.setAndPublishPositionReportInfo2Redis(vh_id, current_sec_id, "", distance, x_axis,y_axis);
+        }
+
+        private void num_vh_x_ValueChanged(object sender, EventArgs e)
+        {
+            string current_sec_id = txt_current_sec_id.Text;
+            uint distance = (uint)num_section_dis.Value;
+            double x_axis = (int)num_vh_x.Value;
+            double y_axis = (int)num_vh_y.Value;
+            bcApp.SCApplication.VehicleBLL.setAndPublishPositionReportInfo2Redis(vh_id, current_sec_id, "", distance, x_axis, y_axis);
         }
     }
 }

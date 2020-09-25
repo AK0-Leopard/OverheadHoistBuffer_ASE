@@ -19,6 +19,22 @@
             VerticalScrollBarVisibility="Auto">
                 <Viewbox Width="{Binding ElementName=ImageWidthSlider, Path=Value}">
                     <Canvas  x:Name="VehicleTrack" Background="LightGray" >
+                        <Path x:Name="vh1" Stroke="Green" Fill="LawnGreen"  Stretch="Fill" Panel.ZIndex="0" >
+                            <Path.Data>
+                                <EllipseGeometry x:Name="Vh1_Circle" RadiusX="15" RadiusY="15"  />
+                            </Path.Data>
+                            <Path.RenderTransform>
+                                <TranslateTransform X="0" Y="0" x:Name="vh1_position"/>
+                            </Path.RenderTransform>
+                        </Path>
+                        <Path x:Name="vh2" Stroke="Green" Fill="LawnGreen"  Stretch="Fill" Panel.ZIndex="0" >
+                            <Path.Data>
+                                <EllipseGeometry x:Name="Vh2_Circle" RadiusX="15" RadiusY="15"  />
+                            </Path.Data>
+                            <Path.RenderTransform>
+                                <TranslateTransform X="0" Y="0" x:Name="vh2_position"/>
+                            </Path.RenderTransform>
+                        </Path>
                     </Canvas>
                 </Viewbox>
             </ScrollViewer>

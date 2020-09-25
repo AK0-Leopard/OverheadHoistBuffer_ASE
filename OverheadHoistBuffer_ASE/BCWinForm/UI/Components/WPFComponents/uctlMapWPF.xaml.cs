@@ -1,4 +1,6 @@
 ﻿using com.mirle.ibg3k0.bc.winform.App;
+using com.mirle.ibg3k0.bcf.Common;
+using com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -22,7 +24,15 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Components.WPFComponents
     /// </summary>
     public partial class uctlMapWPF : UserControl
     {
+
+        Brush Brush_Black;
+        Brush Brush_Yellow;
+        Brush Brush_LawnGreen;
+        Brush Brush_Orange;
+        Brush Brush_Cyan;
+
         PathEnhance pathEnhance = new PathEnhance();
+
         List<Address> addresses;
         List<Section> sections;
 
@@ -30,18 +40,102 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Components.WPFComponents
         {
             InitializeComponent();
 
+            BrushConverter brushConverter = new BrushConverter();
+            Brush_Black = brushConverter.ConvertFromString("Black") as Brush;
+            Brush_Yellow = brushConverter.ConvertFromString("Yellow") as Brush;
+            Brush_LawnGreen = brushConverter.ConvertFromString("LawnGreen") as Brush;
+            Brush_Orange = brushConverter.ConvertFromString("Orange") as Brush;
+            Brush_Cyan = brushConverter.ConvertFromString("Cyan") as Brush;
         }
 
         public void Start(App.BCApplication _bcApp)
         {
             initialObj(_bcApp);
             initialPath();
+            initialVhEvent(_bcApp);
+
         }
+        string event_id = string.Empty;
+        private void initialVhEvent(BCApplication _bcApp)
+        {
+            sc.AVEHICLE vh_1 = _bcApp.SCApplication.VehicleBLL.cache.getVhByID("B7_OHBLOOP_CR1");
+            event_id = this.Name;
+            vh_1.addEventHandler(event_id
+                                , nameof(vh_1.VhPositionChangeEvent)
+                                , (s1, e1) =>
+                                {
+                                    updateVehiclePosition_vh1(vh1_position, s1 as sc.AVEHICLE);
+                                });
+            //vh_1.addEventHandler(event_id
+            //        , nameof(vh_1.VhStatusChangeEvent)
+            //        , (s1, e1) =>
+            //        {
+
+            //        });
+            //updateVehicleStatus_vh1(vh1, vh_1);
+
+            sc.AVEHICLE vh_2 = _bcApp.SCApplication.VehicleBLL.cache.getVhByID("B7_OHBLOOP_CR2");
+            event_id = this.Name;
+            vh_1.addEventHandler(event_id
+                                , nameof(vh_1.VhPositionChangeEvent)
+                                , (s1, e1) =>
+                                {
+                                    updateVehiclePosition_vh1(vh2_position, s1 as sc.AVEHICLE);
+                                });
+            //updateVehicleStatus_vh1(vh2, vh_2);
+
+
+        }
+
+        private void updateVehiclePosition_vh1(TranslateTransform transfer, sc.AVEHICLE vh)
+        {
+            Adapter.Invoke((obj) =>
+            {
+                transfer.X = ((vh.X_Axis - min_x + pathEnhance.StrokeThickness) * PathEnhance.Scale) - Vh1_Circle.RadiusX;
+                transfer.Y = ((vh.Y_Axis - min_y + pathEnhance.StrokeThickness) * PathEnhance.Scale) - Vh1_Circle.RadiusY;
+            }, null);
+
+        }
+        private void updateVehicleStatus_vh1(Path path_vh, sc.AVEHICLE vh)
+        {
+            if (!vh.isTcpIpConnect)
+            {
+                path_vh.Fill = Brush_Black;
+            }
+            else
+            {
+                switch (vh.MODE_STATUS)
+                {
+                    case VHModeStatus.InitialPowerOff:
+                    case VHModeStatus.Manual:
+                        break;
+                    case VHModeStatus.InitialPowerOn:
+                        break;
+                    case VHModeStatus.AutoLocal:
+                        break;
+                    case VHModeStatus.AutoMts:
+                        break;
+                    case VHModeStatus.AutoMtl:
+                        break;
+                    case VHModeStatus.AutoRemote:
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+
+        double min_x = 0;
+        double min_y = 0;
 
         private void initialObj(App.BCApplication _bcApp)
         {
             addresses = loadAddresss(_bcApp);
             sections = loadASection(_bcApp);
+            min_x = addresses.Min(address => address.X);
+            min_y = addresses.Min(address => address.Y);
+
         }
         private void initialPath()
         {

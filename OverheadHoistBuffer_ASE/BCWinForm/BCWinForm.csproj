@@ -250,6 +250,12 @@
     <Compile Include="UI\Components\WPFComponents\uctlMapWPF.xaml.cs">
       <DependentUpon>uctlMapWPF.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\OHT_FormNew.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\OHT_FormNew.Designer.cs">
+      <DependentUpon>OHT_FormNew.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\Test\CMD_CST_DATA.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1035,6 +1041,9 @@
     <EmbeddedResource Include="Properties\Resources.zh-TW.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.zh-TW.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\OHT_FormNew.resx">
+      <DependentUpon>OHT_FormNew.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Test\CMD_CST_DATA.resx">
       <DependentUpon>CMD_CST_DATA.cs</DependentUpon>

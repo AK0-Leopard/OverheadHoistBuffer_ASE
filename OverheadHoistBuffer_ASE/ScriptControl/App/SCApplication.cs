@@ -1301,7 +1301,7 @@ namespace com.mirle.ibg3k0.sc.App
                 }
                 else
                 {
-                    parser.SetDataSource(Environment.CurrentDirectory + this.getString("CsvConfig", "") + tableName + ".csv", System.Text.Encoding.Default);
+                    parser.SetDataSource(Environment.CurrentDirectory + this.getString("CsvConfig", "") + @"MapInfo\" + tableName + ".csv", System.Text.Encoding.Default);
                 }
                 parser.ColumnDelimiter = ',';
                 parser.FirstRowHasHeader = true;
