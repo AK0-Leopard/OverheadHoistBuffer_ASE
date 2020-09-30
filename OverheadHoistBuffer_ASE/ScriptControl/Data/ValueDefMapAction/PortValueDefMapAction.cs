@@ -1104,7 +1104,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                     return;
                 }
 
-                if (function.IsInputMode && scApp.TransferService.isUnitType(port.PORT_ID, Service.UnitType.AGV))
+                if (function.OpAutoMode && function.IsInputMode && scApp.TransferService.isUnitType(port.PORT_ID, Service.UnitType.AGV))
                 {
                     if (function.LoadPosition1)
                     {
@@ -1122,7 +1122,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                     scApp.TransferService.PortToOHT(function.EQ_ID.Trim(), "LoadPosition1 OFF");
                 }
 
-                if (function.IsOutputMode)  //2020/2/18 Hsinyu Chang: input mode時忽略position資訊的更新
+                if (function.OpAutoMode && function.IsOutputMode)  //2020/2/18 Hsinyu Chang: input mode時忽略position資訊的更新
                 {
                     CassetteData datainfo = new CassetteData();
                     datainfo.CSTID = function.CassetteID;        //填CSTID

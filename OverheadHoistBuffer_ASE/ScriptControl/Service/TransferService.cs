@@ -7982,7 +7982,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     // 當 AgvState 為 OutOfSevice 則可進行取放，因若為 InService 代表當作救帳 Port 使用
                     if (thirdAGVPort.OpAutoMode && thirdAGVPort_DB.AGVState == E_PORT_STATUS.OutOfService)
                     {
-                        if (thirdAGVPort.LoadPosition1 == true && thirdAGVPort.IsCSTPresence == false && 
+                        if (thirdAGVPort.LoadPosition1 == true && thirdAGVPort.IsCSTPresence == false &&
                             thirdAGVPort.IsReadyToUnload == true && thirdAGVPort.AGVPortReady == true) // 若為空盒，則切為Input Mode
                         {
                             AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " AGV " + AGVStationID + "enter " + thirdAGVPort_DB.PLCPortID + " third Port Check Method Has box.");
@@ -8155,8 +8155,8 @@ namespace com.mirle.ibg3k0.sc.Service
                 {
                     AGVCTriggerLogger.Info
                     (
-                        DateTime.Now.ToString("HH:mm:ss.fff ") 
-                        + " CheckIsSourceFromAGVStation " + AGVPortData.PLCPortID 
+                        DateTime.Now.ToString("HH:mm:ss.fff ")
+                        + " CheckIsSourceFromAGVStation " + AGVPortData.PLCPortID
                         + " 找到命令 " + GetCmdLog(cmdData_FromPortID)
                     );
 
@@ -8857,7 +8857,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     }
                 }
                 // 在判定是否為 4 port 狀況
-                else if(numOfAGVStation == 4)
+                else if (numOfAGVStation == 4)
                 {
                     PortPLCInfo thirdAGVPort = new PortPLCInfo();
                     PortPLCInfo fourAGVPort = new PortPLCInfo();
@@ -9029,7 +9029,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                 AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " InMode_InServiceNum = " + InMode_InServiceNum + " and Already has two Input Mode Inservice Port.");
                                 isOK = true;
                             }
-                            else if(fullBoxNumber == 0)
+                            else if (fullBoxNumber == 0)
                             {
                                 AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " InMode_InServiceNum = " + InMode_InServiceNum + " and Enter the Two IN MODE TYPE method");
                                 InputModeChange(accessAGVPortDatas);
