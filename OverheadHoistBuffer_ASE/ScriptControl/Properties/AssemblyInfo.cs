@@ -37,6 +37,7 @@ using System.Runtime.InteropServices;
 
 //版號 + Tab + 日期 + Tab + 修改人 + Tab + 敘述
 //1.5.0 2020/09/28  JasonWu+ 修改PortValueDefMapAction 中對於LoadPostion1 的觸發，要同時判斷是否為Auto mode。
+//1.4.10    2020/09/30  SCC+    增加命令狀態為 Canceling、Aborting 進行強制結束功能
 //1.4.9 2020/09/23  JasonWu+ 1.修改判定 port 是否可用之判定邏輯，拿掉 port ready 及 mismatch 訊號。 
 //                           2.修改判定是否可轉向，進一步確認是否為實盒及out mode 避免出貨命令被取走。
 //                           3.修改原判定退補空盒命令產生時間，由 10 -> 3.5 (因為AGVC 每3秒觸發一次)
