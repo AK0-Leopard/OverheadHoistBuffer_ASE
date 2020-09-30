@@ -5471,6 +5471,14 @@ namespace com.mirle.ibg3k0.sc.Service
                     reportBLL.ReportOperatorInitiatedAction(cmdData.CMD_ID, reportMCSCommandType.Cancel.ToString());
                     scApp.VehicleService.doCancelOrAbortCommandByMCSCmdID(cmdData.CMD_ID, CMDCancelType.CmdCancel);
                 }
+                else if(cmdData.TRANSFERSTATE == E_TRAN_STATUS.Canceling)
+                {
+                    ForcedEndCmd(cmdData);
+                }
+                else if (cmdData.TRANSFERSTATE == E_TRAN_STATUS.Aborting)
+                {
+                    ForcedEndCmd(cmdData);
+                }
                 else
                 {
                     if (cmdData.COMMANDSTATE < COMMAND_STATUS_BIT_INDEX_UNLOAD_COMPLETE)
@@ -5493,7 +5501,67 @@ namespace com.mirle.ibg3k0.sc.Service
                 }
             }
         }
+        public void ForcedEndCmd(ACMD_MCS cmdData)
+        {
+            AVEHICLE vehicle = scApp.VehicleService.GetVehicleDataByVehicleID(cmdData.CRANE.Trim());
 
+            bool deleteCon = false;
+
+            if (vehicle != null)
+            {
+                if (vehicle.MCS_CMD.Trim() != cmdData.CMD_ID.Trim())
+                {
+                    #region Log
+                    TransferServiceLogger.Info
+                    (
+                        DateTime.Now.ToString("HH:mm:ss.fff ") +
+                        "Manual >> OHB| " + vehicle.VEHICLE_ID.Trim()
+                        + " 執行：" + vehicle.MCS_CMD.Trim()
+                        + " 命令不一致強制結束：" + GetCmdLog(cmdData)
+                    );
+                    #endregion
+
+                    deleteCon = true;
+                }
+                else
+                {
+                    #region Log
+                    TransferServiceLogger.Info
+                    (
+                        DateTime.Now.ToString("HH:mm:ss.fff ") +
+                        "Manual >> OHB|強制結束 " + vehicle.MCS_CMD.Trim() + " 失敗，" + vehicle.VEHICLE_ID + " 正在執行" + GetCmdLog(cmdData)
+                    );
+                    #endregion
+                }
+            }
+            else
+            {
+                #region Log
+                TransferServiceLogger.Info
+                (
+                    DateTime.Now.ToString("HH:mm:ss.fff ") +
+                    "Manual >> OHB| 找不到車子" + cmdData.CRANE.Trim()
+                    + "強制結束" + GetCmdLog(cmdData)
+                );
+                #endregion
+
+                deleteCon = true;
+            }
+
+            if (deleteCon)
+            {
+                cmdBLL.updateCMD_MCS_TranStatus(cmdData.CMD_ID, E_TRAN_STATUS.TransferCompleted);
+
+                if (cmdData.TRANSFERSTATE == E_TRAN_STATUS.Canceling)
+                {
+                    reportBLL.ReportTransferCancelCompleted(cmdData.CMD_ID);
+                }
+                else if (cmdData.TRANSFERSTATE == E_TRAN_STATUS.Aborting)
+                {
+                    scApp.ReportBLL.ReportTransferAbortCompleted(cmdData.CMD_ID);
+                }
+            }
+        }
         #endregion
         #region 卡匣處理
 

@@ -36,6 +36,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion("1.4.7")]
 
 //版號 + Tab + 日期 + Tab + 修改人 + Tab + 敘述
+//1.4.8 2020/09/30  SCC+    增加命令狀態為 Canceling、Aborting 進行強制結束功能
 //1.4.7 2020/09/13  SCC+    API CheckIsSourceFromAGVStation 內，增加Log
 //1.4.6 2020/09/10  SCC*    修正OHT AlarmType
 //1.4.5 2020/09/10  SCC*    GetAGV_OutModeInServicePortName 取得可用AGVPort，跳出迴圈
