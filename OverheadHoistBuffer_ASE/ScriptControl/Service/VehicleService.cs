@@ -1835,7 +1835,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                        Data: $"start try find the vh of idle position:{findIdlePositionVh},result:{is_success}",
                                        VehicleID: findIdlePositionVh);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
                    Data: ex);

@@ -834,7 +834,7 @@ namespace com.mirle.ibg3k0.sc.App
 
             initialRestfulServer();
 
-            
+
             //
             //loadECDataToSystem();
             //bdTableWatcher = new DBTableWatcher(this);
@@ -859,7 +859,7 @@ namespace com.mirle.ibg3k0.sc.App
 
             if (SystemParameter.cmdPriorityAdd <= 0)
             {
-                SystemParameter.cmdPriorityAdd = 1; 
+                SystemParameter.cmdPriorityAdd = 1;
             }
 
             SystemParameter.cmdTimeOutToAlternate = getInt("cmdTimeOutToAlternate", 30);
@@ -1203,6 +1203,8 @@ namespace com.mirle.ibg3k0.sc.App
                 loadCSVToDataset(ohxcConfig, "RETURNCODEMAP");
                 loadCSVToDataset(ohxcConfig, "EQPTLOCATIONINFO");
                 loadCSVToDataset(ohxcConfig, "RESERVEENHANCEINFO");
+                loadMapInfoCSVToDataset(ohxcConfig, "AADDRESS");
+                loadMapInfoCSVToDataset(ohxcConfig, "ASECTION");
                 logger.Info("init bc_Config success");
             }
             else
@@ -1243,6 +1245,63 @@ namespace com.mirle.ibg3k0.sc.App
                 else
                 {
                     parser.SetDataSource(Environment.CurrentDirectory + this.getString("CsvConfig", "") + tableName + ".csv", System.Text.Encoding.Default);
+                }
+                parser.ColumnDelimiter = ',';
+                parser.FirstRowHasHeader = true;
+                //parser.SkipStartingDataRows = 1;
+                parser.MaxBufferSize = 1024;
+                //parser.MaxRows = 500;
+                //parser.TextQualifier = '\"';
+
+
+                DataTable dt = new System.Data.DataTable(tableName);
+
+                bool isfirst = true;
+                while (parser.Read())
+                {
+
+                    int cs = parser.ColumnCount;
+                    if (isfirst)
+                    {
+
+                        for (int i = 0; i < cs; i++)
+                        {
+                            dt.Columns.Add(parser.GetColumnName(i), typeof(string));
+                        }
+                        isfirst = false;
+                    }
+
+
+                    DataRow dr = dt.NewRow();
+
+                    for (int i = 0; i < cs; i++)
+                    {
+                        string val = parser[i];
+                        //ALARM 要可以接受 16進制的 2015.02.23 by Kevin Wei
+                        //if (dt.Columns[i] != null && BCFUtility.isMatche(dt.Columns[i].ColumnName, "ALARM_ID"))
+                        //{
+                        //    int valInt = Convert.ToInt32(val);
+                        //    val = val;
+                        //}
+                        dr[i] = val;
+                        //                        dr[i] = parser[i];
+                    }
+                    dt.Rows.Add(dr);
+                }
+                ds.Tables.Add(dt);
+            }
+        }
+        private void loadMapInfoCSVToDataset(DataSet ds, string tableName)
+        {
+            using (GenericParser parser = new GenericParser())
+            {
+                if (SCUtility.isMatche(tableName, "MAINALARM"))
+                {
+                    parser.SetDataSource(Environment.CurrentDirectory + @"\Config\MapInfo\" + tableName + ".csv", System.Text.Encoding.Default);
+                }
+                else
+                {
+                    parser.SetDataSource(Environment.CurrentDirectory + this.getString("CsvConfig", "") + @"MapInfo\" + tableName + ".csv", System.Text.Encoding.Default);
                 }
                 parser.ColumnDelimiter = ',';
                 parser.FirstRowHasHeader = true;

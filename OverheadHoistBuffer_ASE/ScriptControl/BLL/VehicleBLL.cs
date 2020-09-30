@@ -1731,7 +1731,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
 
         TimeSpan POSITION_TIMEOUT = new TimeSpan(0, 5, 0);
-        public void setAndPublishPositionReportInfo2Redis(string vh_id, string sec_id, string adr_id, uint distance)
+        public void setAndPublishPositionReportInfo2Redis(string vh_id, string sec_id, string adr_id, uint distance, double x_axis, double y_axis)
         {
             AVEHICLE vh = getVehicleByID(vh_id);
             ID_134_TRANS_EVENT_REP id_134_trans_event_rep = new ID_134_TRANS_EVENT_REP()
@@ -1742,7 +1742,9 @@ namespace com.mirle.ibg3k0.sc.BLL
                 EventType = EventType.AdrPass,
                 LeftGuideLockStatus = VhGuideStatus.Unlock,
                 RightGuideLockStatus = VhGuideStatus.Unlock,
-                SecDistance = distance
+                SecDistance = distance,
+                XAxis = x_axis,
+                YAxis = y_axis
             };
             setAndPublishPositionReportInfo2Redis(vh_id, id_134_trans_event_rep);
         }

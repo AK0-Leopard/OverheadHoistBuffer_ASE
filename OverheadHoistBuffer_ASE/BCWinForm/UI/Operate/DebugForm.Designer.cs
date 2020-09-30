@@ -51,6 +51,7 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.Ignore136UnloadComplete = new System.Windows.Forms.CheckBox();
             this.txt_current_sec_id = new System.Windows.Forms.TextBox();
             this.num_section_dis = new System.Windows.Forms.NumericUpDown();
             this.ck_retry = new System.Windows.Forms.CheckBox();
@@ -343,7 +344,10 @@
             this.ck_SaftyCheckComplete = new System.Windows.Forms.CheckBox();
             this.ck_SaftyCheckRequest = new System.Windows.Forms.CheckBox();
             this.ck_Alive = new System.Windows.Forms.CheckBox();
-            this.Ignore136UnloadComplete = new System.Windows.Forms.CheckBox();
+            this.num_vh_x = new System.Windows.Forms.NumericUpDown();
+            this.label75 = new System.Windows.Forms.Label();
+            this.label76 = new System.Windows.Forms.Label();
+            this.num_vh_y = new System.Windows.Forms.NumericUpDown();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -379,6 +383,8 @@
             this.tableLayoutPanel5.SuspendLayout();
             this.groupBox13.SuspendLayout();
             this.groupBox10.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.num_vh_x)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.num_vh_y)).BeginInit();
             this.SuspendLayout();
             // 
             // cb_FroceReservePass
@@ -620,6 +626,10 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.label76);
+            this.groupBox4.Controls.Add(this.num_vh_y);
+            this.groupBox4.Controls.Add(this.label75);
+            this.groupBox4.Controls.Add(this.num_vh_x);
             this.groupBox4.Controls.Add(this.Ignore136UnloadComplete);
             this.groupBox4.Controls.Add(this.txt_current_sec_id);
             this.groupBox4.Controls.Add(this.num_section_dis);
@@ -673,9 +683,20 @@
             this.groupBox4.Text = "Specify Vehicle Action";
             this.groupBox4.Enter += new System.EventHandler(this.groupBox4_Enter);
             // 
+            // Ignore136UnloadComplete
+            // 
+            this.Ignore136UnloadComplete.AutoSize = true;
+            this.Ignore136UnloadComplete.Location = new System.Drawing.Point(831, 112);
+            this.Ignore136UnloadComplete.Name = "Ignore136UnloadComplete";
+            this.Ignore136UnloadComplete.Size = new System.Drawing.Size(249, 26);
+            this.Ignore136UnloadComplete.TabIndex = 56;
+            this.Ignore136UnloadComplete.Text = "Ignore Unload Complete";
+            this.Ignore136UnloadComplete.UseVisualStyleBackColor = true;
+            this.Ignore136UnloadComplete.CheckedChanged += new System.EventHandler(this.Ignore136UnloadComplete_CheckedChanged);
+            // 
             // txt_current_sec_id
             // 
-            this.txt_current_sec_id.Location = new System.Drawing.Point(834, 601);
+            this.txt_current_sec_id.Location = new System.Drawing.Point(834, 564);
             this.txt_current_sec_id.Name = "txt_current_sec_id";
             this.txt_current_sec_id.Size = new System.Drawing.Size(172, 30);
             this.txt_current_sec_id.TabIndex = 55;
@@ -687,7 +708,7 @@
             0,
             0,
             0});
-            this.num_section_dis.Location = new System.Drawing.Point(834, 646);
+            this.num_section_dis.Location = new System.Drawing.Point(834, 609);
             this.num_section_dis.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -2536,7 +2557,7 @@
             // 
             this.cb_Cache_data_Name.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.cb_Cache_data_Name.FormattingEnabled = true;
-            this.cb_Cache_data_Name.Location = new System.Drawing.Point(178, 8);
+            this.cb_Cache_data_Name.Location = new System.Drawing.Point(178, 3);
             this.cb_Cache_data_Name.Name = "cb_Cache_data_Name";
             this.cb_Cache_data_Name.Size = new System.Drawing.Size(193, 30);
             this.cb_Cache_data_Name.TabIndex = 1;
@@ -4159,16 +4180,61 @@
             this.ck_Alive.UseVisualStyleBackColor = true;
             this.ck_Alive.CheckedChanged += new System.EventHandler(this.ck_Alive_CheckedChanged);
             // 
-            // Ignore136UnloadComplete
+            // num_vh_x
             // 
-            this.Ignore136UnloadComplete.AutoSize = true;
-            this.Ignore136UnloadComplete.Location = new System.Drawing.Point(831, 112);
-            this.Ignore136UnloadComplete.Name = "Ignore136UnloadComplete";
-            this.Ignore136UnloadComplete.Size = new System.Drawing.Size(249, 26);
-            this.Ignore136UnloadComplete.TabIndex = 56;
-            this.Ignore136UnloadComplete.Text = "Ignore Unload Complete";
-            this.Ignore136UnloadComplete.UseVisualStyleBackColor = true;
-            this.Ignore136UnloadComplete.CheckedChanged += new System.EventHandler(this.Ignore136UnloadComplete_CheckedChanged);
+            this.num_vh_x.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.num_vh_x.Location = new System.Drawing.Point(834, 664);
+            this.num_vh_x.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.num_vh_x.Name = "num_vh_x";
+            this.num_vh_x.Size = new System.Drawing.Size(172, 30);
+            this.num_vh_x.TabIndex = 57;
+            this.num_vh_x.ValueChanged += new System.EventHandler(this.num_vh_x_ValueChanged);
+            // 
+            // label75
+            // 
+            this.label75.AutoSize = true;
+            this.label75.Location = new System.Drawing.Point(810, 666);
+            this.label75.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.label75.Name = "label75";
+            this.label75.Size = new System.Drawing.Size(20, 22);
+            this.label75.TabIndex = 17;
+            this.label75.Text = "X";
+            // 
+            // label76
+            // 
+            this.label76.AutoSize = true;
+            this.label76.Location = new System.Drawing.Point(810, 705);
+            this.label76.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.label76.Name = "label76";
+            this.label76.Size = new System.Drawing.Size(20, 22);
+            this.label76.TabIndex = 58;
+            this.label76.Text = "Y";
+            // 
+            // num_vh_y
+            // 
+            this.num_vh_y.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.num_vh_y.Location = new System.Drawing.Point(834, 703);
+            this.num_vh_y.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.num_vh_y.Name = "num_vh_y";
+            this.num_vh_y.Size = new System.Drawing.Size(172, 30);
+            this.num_vh_y.TabIndex = 59;
+            this.num_vh_y.ValueChanged += new System.EventHandler(this.num_vh_y_ValueChanged);
             // 
             // DebugForm
             // 
@@ -4246,6 +4312,8 @@
             this.groupBox13.PerformLayout();
             this.groupBox10.ResumeLayout(false);
             this.groupBox10.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.num_vh_x)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.num_vh_y)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -4568,5 +4636,9 @@
         private System.Windows.Forms.NumericUpDown num_section_dis;
         private System.Windows.Forms.ComboBox combox_cycle_type;
         private System.Windows.Forms.CheckBox Ignore136UnloadComplete;
+        private System.Windows.Forms.Label label76;
+        private System.Windows.Forms.NumericUpDown num_vh_y;
+        private System.Windows.Forms.Label label75;
+        private System.Windows.Forms.NumericUpDown num_vh_x;
     }
 }

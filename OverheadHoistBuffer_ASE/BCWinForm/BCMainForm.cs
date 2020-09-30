@@ -245,7 +245,15 @@ namespace com.mirle.ibg3k0.bc.winform
                     progress.ShowDialog();
                 }
 #if DEBUG
-                openForm(typeof(OHT_Form).Name);
+                //openForm(typeof(OHT_Form).Name);
+                if (SCUtility.isMatche(BCApp.SCApplication.BC_ID, "ASE_LOOP"))
+                {
+                    openForm(typeof(OHT_FormNew).Name, true, false);
+                }
+                else
+                {
+                    openForm(typeof(OHT_Form).Name);
+                }
 #endif
             }
             catch (Exception ex)
@@ -901,11 +909,11 @@ namespace com.mirle.ibg3k0.bc.winform
 
         public void entryMonitorMode()
         {
-            (openForms["OHT_Form"] as OHT_Form).entryMonitorMode();
+            //(openForms["OHT_Form"] as OHT_Form).entryMonitorMode();
         }
         public void LeaveMonitorMode()
         {
-            (openForms["OHT_Form"] as OHT_Form).LeaveMonitorMode();
+            //(openForms["OHT_Form"] as OHT_Form).LeaveMonitorMode();
         }
 
         private void engineerToolStripMenuItem_Click(object sender, EventArgs e)
@@ -970,7 +978,7 @@ namespace com.mirle.ibg3k0.bc.winform
         {
             openForm(typeof(CarrierMaintenanceForm).Name, true, false);
         }
-        
+
         private void reserveInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openForm(typeof(ReserveSectionInfoForm).Name, true, false);
@@ -996,7 +1004,7 @@ namespace com.mirle.ibg3k0.bc.winform
             demo.SetApp(BCApp);
             ShowFrom(demo, null);
         }
-        
+
         private void waitInOutLogToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WaitInOutLog demo = new WaitInOutLog();
@@ -1037,6 +1045,6 @@ namespace com.mirle.ibg3k0.bc.winform
             return null;
         }
 
-        
+
     }
 }
