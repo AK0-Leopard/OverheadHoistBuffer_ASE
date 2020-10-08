@@ -411,15 +411,7 @@ namespace com.mirle.ibg3k0.sc.WebAPI
                 bool is_more_out = false;
 
                 //todo 執行確認能否讓AGVC開始進行該AGV Station進貨的流程
-                bool check_method = scApp.TransferService.oneInoneOutMethodUse;
-                if (check_method)
-                {
-                    is_ok = scApp.TransferService.CanExcuteUnloadTransferAGVStationFromAGVC_OneInOneOut(agv_station_id.Trim(), Int32.Parse(excute_count), emergency);
-                }
-                else
-                {
-                    is_ok = scApp.TransferService.CanExcuteUnloadTransferAGVStationFromAGVC(agv_station_id.Trim(), Int32.Parse(excute_count), emergency);
-                }
+                (is_ok, is_more_out) = scApp.TransferService.CanExcuteUnloadTransferAGVStationFromAGVC_Swap(agv_station_id.Trim(), Int32.Parse(excute_count), emergency);
 
                 string check_result = is_ok ? "OK" : "NG";
                 E_AGVStationTranMode tran_mode = is_more_out ? E_AGVStationTranMode.MoreOut : E_AGVStationTranMode.MoreIn;

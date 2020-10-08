@@ -8991,7 +8991,7 @@ namespace com.mirle.ibg3k0.sc.Service
         #endregion
 
         #region Call by AGVC Restful API. Use swap method.
-        public bool CanExcuteUnloadTransferAGVStationFromAGVC_Swap(string AGVStationID, int AGVCFromEQToStationCmdNum, bool isEmergency)
+        public (bool is_OK , bool is_More_out) CanExcuteUnloadTransferAGVStationFromAGVC_Swap(string AGVStationID, int AGVCFromEQToStationCmdNum, bool isEmergency)
         {
             PortTypeNum portTypeNum = PortTypeNum.No_Change;
             bool isOK = false; //A20.07.10.0
@@ -9010,7 +9010,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     isOK = ChangeReturnDueToAGVCCmdNum(AGVCFromEQToStationCmdNum); //A20.07.10.0
                     AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " 是 Out of service 一律回復" + isOK);
                     RewriteTheResultOfAGVCTrigger(AGVStationID, portTypeNum, isOK);
-                    return isOK;
+                    return (isOK, isMoreOutMode);
                 }
                 //確認要取得的AGVStation Port 為前2還是後2 前為1 後為2
                 useFirst2Port = IsUsingFirst2Port(portDefByAGVStationID);
@@ -9025,7 +9025,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     isOK = ChangeReturnDueToAGVCCmdNum(AGVCFromEQToStationCmdNum); //A20.07.10.0
                     AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Due to there is cmd from target AGV Station Port " + "一律回復" + isOK);
                     RewriteTheResultOfAGVCTrigger(AGVStationID, portTypeNum, isOK);
-                    return isOK;
+                    return (isOK, isMoreOutMode);
                 }
                 CheckThreeFourPortSituationAndMove(AGVStationID, useFirst2Port, numOfAGVStation, AGVPortDatas);
                 //確認取得的AGVStationData中的Port都只有可以用的後2個。
@@ -9036,7 +9036,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     isOK = ChangeReturnDueToAGVCCmdNum(AGVCFromEQToStationCmdNum); //A20.07.10.0
                     AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Due to there is No Port is workable " + "一律回復" + isOK);
                     RewriteTheResultOfAGVCTrigger(AGVStationID, portTypeNum, isOK);
-                    return isOK;
+                    return (isOK, isMoreOutMode);
                 }
                 //目前先默認取前2個，確認port上Box數量(空與實皆要)
                 int emptyBoxNumber, fullBoxNumber;
@@ -9048,7 +9048,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     isOK = ChangeReturnDueToAGVCCmdNum(AGVCFromEQToStationCmdNum); //A20.07.10.0
                     AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Due to the AGV port is not ready to unload" + "一律回復" + isOK);
                     RewriteTheResultOfAGVCTrigger(AGVStationID, portTypeNum, isOK);
-                    return isOK;
+                    return (isOK, isMoreOutMode);
                 }
                 AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " emptyBoxNumber = " + emptyBoxNumber + ", fullBoxNumber = " + fullBoxNumber);
 
@@ -9076,7 +9076,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                 isOK = ChangeReturnDueToAGVCCmdNum(AGVCFromEQToStationCmdNum);
                                 AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Due to there is going to be a cmd to AGV port " + "一律回復" + isOK);
                                 RewriteTheResultOfAGVCTrigger(AGVStationID, portTypeNum, isOK);
-                                return isOK;
+                                return (isOK, isMoreOutMode);
                             }
                         }
                     }
@@ -9092,7 +9092,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     isOK = false;
                     portTypeNum = PortTypeNum.OutPut_Mode;
                     RewriteTheResultOfAGVCTrigger(AGVStationID, portTypeNum, isOK);
-                    return isOK;
+                    return (isOK, isMoreOutMode);
                 }
                 else
                 {
@@ -9144,7 +9144,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                     AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " 沒AGVC也沒OHBC命令 一律回復" + isOK);
                                     RewriteTheResultOfAGVCTrigger(AGVStationID, portTypeNum, isOK);
                                     isMoreOutMode = true;
-                                    return isOK;
+                                    return (isOK, isMoreOutMode);
                                 }
                                 //有2筆AGVC命令直接都轉in 且不論目前狀態，都回可以大量入庫。
                                 else if (AGVCFromEQToStationCmdNum >= 1)
@@ -9230,7 +9230,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 );
             }
             AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + "觸發正常結束, isOK = " + isOK + " , isMoreOutMode = " + isMoreOutMode);
-            return isOK;
+            return (isOK, isMoreOutMode);
         }
 
         private bool OneEmptyBox1AGVC0OHBC(string AGVStationID, List<PortDef> AGVPortDatas, int emptyBoxNumber)
