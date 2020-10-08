@@ -40,6 +40,10 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             try
             {
                 ValueRead vr = null;
+                if (bcfApp.tryGetReadValueEventstring(port.EqptObjectCate, port.PORT_ID, "MODE_CHANGEABLE", out vr))
+                {
+                    vr.afterValueChange += (_sender, _e) => Port_onModeChangable(_sender, _e);
+                }
                 if (bcfApp.tryGetReadValueEventstring(port.EqptObjectCate, port.PORT_ID, "WAIT_IN", out vr))
                 {
                     vr.afterValueChange += (_sender, _e) => Port_onWaitIn(_sender, _e);
@@ -726,7 +730,66 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
         {
             //not implement
         }
+        public virtual void Port_onModeChangable(object sender, ValueChangedEventArgs args)
+        {
+            var function = scApp.getFunBaseObj<PortPLCInfo>(port.PORT_ID) as PortPLCInfo;
+            try
+            {
+                //1.建立各個Function物件
+                function.Read(bcfApp, port.EqptObjectCate, port.PORT_ID);
+                //2.read log
+                //function.Timestamp = DateTime.Now;
+                //LogManager.GetLogger("com.mirle.ibg3k0.sc.Common.LogHelper").Info(function.ToString());
+                NLog.LogManager.GetCurrentClassLogger().Info(function.ToString());
+                //LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(EQStatusReport), Device: DEVICE_NAME_MTL,
+                //    XID: eqpt.EQPT_ID, Data: function.ToString());
+                //3.logical (include db save)
 
+                scApp.TransferService.TransferServiceLogger.Info
+                (
+                    DateTime.Now.ToString("HH:mm:ss.fff ") +
+                    "PLC >> OHB|Port_onWaitInOut"
+                    + " PORT_ID:" + port.PORT_ID
+                    + " Port_onModeChangable:" + function.IsModeChangable
+                );
+
+                if (scApp.TransferService.GetIgnoreModeChange(function))
+                {
+                    return;
+                }
+
+                if (function.IsModeChangable)
+                {
+                    Console.WriteLine("IsModeChangable");
+                    //TODO: wait in
+
+                    if (function.OpAutoMode)
+                    {
+                        scApp.TransferService.PLC_ReportPortIsModeChangable(function, "PLC");
+                    }
+                    else
+                    {
+                        scApp.TransferService.TransferServiceLogger.Info
+                        (
+                            DateTime.Now.ToString("HH:mm:ss.fff ") +
+                            "PLC >> OHB|Port 狀態錯誤，不能報 IsModeChangable "
+                            + " PORT_ID:" + port.PORT_ID
+                            + " Run:" + function.OpAutoMode
+                        );
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                scApp.TransferService.TransferServiceLogger.Error(ex, "Port_onModeChangable");
+                logger.Error(ex, "Exception");
+            }
+            finally
+            {
+                scApp.putFunBaseObj<PortPLCInfo>(function);
+            }
+        }
         public virtual void Port_onWaitIn(object sender, ValueChangedEventArgs args)
         {
             var function = scApp.getFunBaseObj<PortPLCInfo>(port.PORT_ID) as PortPLCInfo;
