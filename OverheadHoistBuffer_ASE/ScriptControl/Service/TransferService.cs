@@ -201,6 +201,7 @@ namespace com.mirle.ibg3k0.sc.Service
         public bool portTypeChangeOK_CVPort_CstRemove = true;      //Port 轉向成功時，刪除此 Port 的所有卡匣
         public bool agvWaitOutOpenBox = true;                      //AGVPort WaitOut 時，是否做開蓋動作
         public bool autoRemarkBOXCSTData = false;                   //是否開啟自動救帳流程。
+        public bool setForMoreOut = true;                           //是否為多出模式。
         public bool agvHasCmdsAccess = false;           //Agv 有命令要搬入與否。
         public bool oneInoneOutMethodUse = false;          //是否使用單取單放流程判定AGV 虛擬Port
         #endregion
@@ -8996,7 +8997,7 @@ namespace com.mirle.ibg3k0.sc.Service
             PortTypeNum portTypeNum = PortTypeNum.No_Change;
             bool isOK = false; //A20.07.10.0
             bool isMoreOutMode = true;
-            bool setMoreOutMode = true; // 這邊之後可以串接UI控制。
+            bool setMoreOutMode = setForMoreOut; // 這邊可以串接UI控制。
             try
             {
                 AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + "觸發開始");

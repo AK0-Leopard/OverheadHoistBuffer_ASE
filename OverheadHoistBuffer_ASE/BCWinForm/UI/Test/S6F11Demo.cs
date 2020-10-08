@@ -129,6 +129,7 @@ namespace com.mirle.ibg3k0.bc.winform
             label7.Text = "目前狀態:" + BCApp.SCApplication.TransferService.agvWaitOutOpenBox.ToString();
             label17.Text = "目前狀態:" + BCApp.SCApplication.TransferService.portTypeChangeOK_CVPort_CstRemove.ToString();
             label18.Text = "自動救帳狀態:" + BCApp.SCApplication.TransferService.autoRemarkBOXCSTData.ToString();
+            label21.Text = "多出狀態:" + BCApp.SCApplication.TransferService.setForMoreOut.ToString();
 
             Update();
         }
@@ -532,6 +533,16 @@ namespace com.mirle.ibg3k0.bc.winform
             numericUpDown3.Value = sc.App.SystemParameter.cmdPriorityAdd;
         }
 
-        
+        private void button44_Click(object sender, EventArgs e)
+        {
+            BCApp.SCApplication.TransferService.setForMoreOut = true;
+            label21.Text = "多出狀態:" + BCApp.SCApplication.TransferService.setForMoreOut.ToString();
+        }
+
+        private void CloseSwapMoreOut_Click(object sender, EventArgs e)
+        {
+            BCApp.SCApplication.TransferService.setForMoreOut = false;
+            label21.Text = "多出狀態:" + BCApp.SCApplication.TransferService.setForMoreOut.ToString();
+        }
     }
 }
