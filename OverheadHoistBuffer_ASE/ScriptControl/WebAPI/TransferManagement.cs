@@ -389,6 +389,48 @@ namespace com.mirle.ibg3k0.sc.WebAPI
                 return response;
             };
 
+            Get["TransferManagement/TransferCheck/Swap/AGVStation/{AGVStationID}"] = (p) =>
+            {
+                SCApplication scApp = SCApplication.getInstance();
+                //string queue_count = 0;
+                string agv_station_id = p.AGVStationID;
+                string excute_count = Request.Query.unfinishCmdCount.Value ?? Request.Form.unfinishCmdCount.Value ?? string.Empty;
+                string is_emergency = Request.Query.isEmergency.Value ?? Request.Form.isEmergency.Value ?? string.Empty;
+                bool emergency = false;
+                if (is_emergency == "true")
+                {
+                    emergency = true;
+                }
+                else if (is_emergency == "false")
+                {
+                    emergency = false;
+                }
+                // Change the default return from false to true. 
+                // 因為目前回復NG時會產生AGV走行命令回到AGV Station，但目前預設值設定為false 因避免exception情形(AGVC Cmd == 0 時回復True 不會停止觸發OHBC)
+                bool is_ok = false;
+                bool is_more_out = false;
+
+                //todo 執行確認能否讓AGVC開始進行該AGV Station進貨的流程
+                bool check_method = scApp.TransferService.oneInoneOutMethodUse;
+                if (check_method)
+                {
+                    is_ok = scApp.TransferService.CanExcuteUnloadTransferAGVStationFromAGVC_OneInOneOut(agv_station_id.Trim(), Int32.Parse(excute_count), emergency);
+                }
+                else
+                {
+                    is_ok = scApp.TransferService.CanExcuteUnloadTransferAGVStationFromAGVC(agv_station_id.Trim(), Int32.Parse(excute_count), emergency);
+                }
+
+                string check_result = is_ok ? "OK" : "NG";
+                E_AGVStationTranMode tran_mode = is_more_out ? E_AGVStationTranMode.MoreOut : E_AGVStationTranMode.MoreIn;
+
+                int s_tran_mode = (int)tran_mode;
+                //var response = (Response)(is_ok ? "OK" : "NG");
+                var response = (Response)($"{check_result},{s_tran_mode}");
+                response.ContentType = restfulContentType;
+
+                return response;
+            };
 
             Get["TransferManagement/PreOpenAGVStationCover/AGVStationPorts/{AGVStationPortID}"] = (p) =>
             {
@@ -403,7 +445,12 @@ namespace com.mirle.ibg3k0.sc.WebAPI
 
                 return response;
             };
-
         }
+        public enum E_AGVStationTranMode
+        {
+            MoreIn = 1,
+            MoreOut = 2
+        }
+
     }
 }
