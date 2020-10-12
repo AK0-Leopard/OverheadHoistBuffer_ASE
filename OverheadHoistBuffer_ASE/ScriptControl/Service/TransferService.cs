@@ -2914,7 +2914,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     );
                     return;
                 }
-                if(swapTriggerWaitin == false)
+                if (swapTriggerWaitin == false)
                 {
                     return;
                 }
@@ -8550,8 +8550,9 @@ namespace com.mirle.ibg3k0.sc.Service
                     if (_AGVPortPLCDatas[0].LoadPosition1 == true && _AGVPortPLCDatas[1].LoadPosition1 == true)
                     {
                         AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " AGV " + AGVStationID + "enter 2 Box InOutMode.");
-                        if (_AGVPortPLCDatas[0].IsCSTPresence == true && _AGVPortPLCDatas[1].IsCSTPresence == true)
+                        if (_AGVPortPLCDatas[0].IsCSTPresence == true && _AGVPortPLCDatas[1].IsCSTPresence == true && swapTriggerWaitin == false)
                         {
+                            // 若2實盒且為 非swap 觸發模式需拒絕
                             AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " AGV Station " + " two box but have full box.");
                         }
                         else
@@ -8922,7 +8923,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     {
                         if (fullBoxNumber > 0)
                         {
-                            isOK = ChangeReturnDueToAGVCCmdNum(AGVCFromEQToStationCmdNum); 
+                            isOK = ChangeReturnDueToAGVCCmdNum(AGVCFromEQToStationCmdNum);
                             AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Due to there is full box on AGV port 1 in 1 out " + "一律回復" + isOK);
                             RewriteTheResultOfAGVCTrigger(AGVStationID, portTypeNum, isOK);
                             return isOK;
@@ -9014,12 +9015,14 @@ namespace com.mirle.ibg3k0.sc.Service
         #endregion
 
         #region Call by AGVC Restful API. Use swap method.
-        public (bool is_OK , bool is_More_out) CanExcuteUnloadTransferAGVStationFromAGVC_Swap(string AGVStationID, int AGVCFromEQToStationCmdNum, bool isEmergency)
+        public (bool is_OK, bool is_More_out) CanExcuteUnloadTransferAGVStationFromAGVC_Swap(string AGVStationID, int AGVCFromEQToStationCmdNum, bool isEmergency)
         {
             PortTypeNum portTypeNum = PortTypeNum.No_Change;
             bool isOK = false; //A20.07.10.0
             bool isMoreOutMode = true;
             bool setMoreOutMode = setForMoreOut; // 這邊可以串接UI控制。
+            PortPLCInfo thirdAGVPort = new PortPLCInfo();
+            PortDef thirdAGVPort_DB = new PortDef();
             try
             {
                 AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + "觸發開始");
@@ -9050,7 +9053,22 @@ namespace com.mirle.ibg3k0.sc.Service
                     RewriteTheResultOfAGVCTrigger(AGVStationID, portTypeNum, isOK);
                     return (isOK, isMoreOutMode);
                 }
+                //確認3 4 port 狀態及切換
                 CheckThreeFourPortSituationAndMove(AGVStationID, useFirst2Port, numOfAGVStation, AGVPortDatas);
+                //若有第3個port 須納入考量
+                if (numOfAGVStation == 3)
+                {
+                    if (useFirst2Port == false) //取3port的第一個
+                    {
+                        thirdAGVPort_DB = AGVPortDatas.FirstOrDefault();
+                        thirdAGVPort = GetPLC_PortData(thirdAGVPort_DB.PLCPortID);
+                    }
+                    else //取3port的第三個
+                    {
+                        thirdAGVPort_DB = AGVPortDatas.LastOrDefault();
+                        thirdAGVPort = GetPLC_PortData(thirdAGVPort_DB.PLCPortID);
+                    }
+                }
                 //確認取得的AGVStationData中的Port都只有可以用的後2個。
                 AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Enter the filter for AGV port.");
                 List<PortDef> accessAGVPortDatas = FilterOfAGVPort(AGVPortDatas, useFirst2Port);
@@ -9124,9 +9142,46 @@ namespace com.mirle.ibg3k0.sc.Service
                     int OHBCCmdNumber = GetToThisAGVStationMCSCmdNum(accessAGVPortDatas, AGVStationID);
                     if (accessAGVPortDatas.Count() == 1)
                     {
-                        //有AGVC cmd 轉in ， 只有 OHBC cmd 轉out 退空 ， 若都無則不動作。
-                        if (emptyBoxNumber > 0)
+                        if (isEmergency != true)
                         {
+                            //有AGVC cmd 轉in ， 只有 OHBC cmd 轉out 退空 ， 若都無則不動作。
+                            if (emptyBoxNumber > 0)
+                            {
+                                if (AGVCFromEQToStationCmdNum > 0)
+                                {
+                                    InputModeChange(accessAGVPortDatas);
+                                }
+                                else if (OHBCCmdNumber > 0)
+                                {
+                                    OutputModeChange(accessAGVPortDatas, AGVStationID);
+                                }
+                                isOK = true;
+                                isMoreOutMode = true;
+                            }
+                            // 不可能有實盒 所以非空盒 = 空port。 有OHBC cmd 轉out ， 有AGVC cmd 轉in 補空，  若都無則不動作。
+                            else if (fullBoxNumber == 0)
+                            {
+                                if (OHBCCmdNumber > 0)
+                                {
+                                    OutputModeChange(accessAGVPortDatas, AGVStationID);
+                                }
+                                else if (AGVCFromEQToStationCmdNum > 0)
+                                {
+                                    InputModeChange(accessAGVPortDatas);
+                                }
+                                isOK = true;
+                                isMoreOutMode = true;
+                            }
+                            else
+                            {
+                                AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " 虛擬 port: " + AGVStationID + " 上有實盒且上僅1可用port 回復NG。");
+                                isMoreOutMode = true;
+                                isOK = false;
+                            }
+                        }
+                        else
+                        {
+                            AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Enter the One port One in One Out swap Emergency = " + isEmergency.ToString());
                             if (AGVCFromEQToStationCmdNum > 0)
                             {
                                 InputModeChange(accessAGVPortDatas);
@@ -9135,107 +9190,44 @@ namespace com.mirle.ibg3k0.sc.Service
                             {
                                 OutputModeChange(accessAGVPortDatas, AGVStationID);
                             }
-                            isOK = true;
                             isMoreOutMode = true;
-                        }
-                        // 不可能有實盒 所以非空盒 = 空port。 有OHBC cmd 轉out ， 有AGVC cmd 轉in 補空，  若都無則不動作。
-                        else
-                        {
-                            if (OHBCCmdNumber > 0)
-                            {
-                                OutputModeChange(accessAGVPortDatas, AGVStationID);
-                            }
-                            else if (AGVCFromEQToStationCmdNum > 0)
-                            {
-                                InputModeChange(accessAGVPortDatas);
-                            }
                             isOK = true;
-                            isMoreOutMode = true;
                         }
                     }
-                    else
+                    // 若有 2 Port 或者 3 Port 的第3個Port不為自動狀態，走一般2port 流程。
+                    else if (numOfAGVStation == 2 || (numOfAGVStation == 3 && thirdAGVPort.OpAutoMode != true))
                     {
                         //若不緊急 走正常邏輯
                         if (isEmergency != true)
                         {
-                            if (OHBCCmdNumber == 0)
-                            {
-                                //沒AGVC也沒OHBC命令 一律無動作
-                                if (AGVCFromEQToStationCmdNum == 0)
-                                {
-                                    isOK = ChangeReturnDueToAGVCCmdNum(AGVCFromEQToStationCmdNum); //A20.07.10.0
-                                    AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " 沒AGVC也沒OHBC命令 一律回復" + isOK);
-                                    RewriteTheResultOfAGVCTrigger(AGVStationID, portTypeNum, isOK);
-                                    isMoreOutMode = true;
-                                    return (isOK, isMoreOutMode);
-                                }
-                                //有2筆AGVC命令直接都轉in 且不論目前狀態，都回可以大量入庫。
-                                else if (AGVCFromEQToStationCmdNum >= 1)
-                                {
-                                    AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Enter the Two IN MODE TYPE swap");
-                                    InputModeChange(accessAGVPortDatas);
-                                    portTypeNum = PortTypeNum.Input_Mode;
-                                    isMoreOutMode = false;
-                                    isOK = true;
-                                }
-                            }
-                            else if (OHBCCmdNumber == 1)
-                            {
-                                //沒AGVC 1 OHBC命令 需判斷一個空盒情形下的動作
-                                if (AGVCFromEQToStationCmdNum == 0)
-                                {
-                                    AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Enter the OneEmptyBox0AGVC1OHBC swap");
-                                    isMoreOutMode = true;
-                                    isOK = OneEmptyBox0AGVC1OHBC(AGVStationID, AGVPortDatas, emptyBoxNumber);
-                                }
-                                //有2筆AGVC命令 1 OHBC命令 直接走 1 in 1 out 流程 且不論目前狀態，都回可以大量入庫。
-                                else if (AGVCFromEQToStationCmdNum >= 1)
-                                {
-                                    AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Enter the One in One Out swap");
-                                    InOutModeChange(accessAGVPortDatas, AGVStationID);
-                                    isMoreOutMode = false;
-                                    isOK = true;
-                                }
-                            }
-                            else if (OHBCCmdNumber >= 2)
-                            {
-                                //沒AGVC 2 OHBC命令 都轉OUT 回多出
-                                if (AGVCFromEQToStationCmdNum == 0)
-                                {
-                                    AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Enter the OutputModeChange 0A 2B More out swap");
-                                    OutputModeChange(accessAGVPortDatas, AGVStationID);
-                                    isMoreOutMode = true;
-                                    isOK = true;
-                                }
-                                //有1 筆以上 AGVC命令 2  OHBC命令 此處需要判斷多進多出流程，及回復AGVC的內容。extra 此處可以多考量第3 port 邏輯。
-                                else if (AGVCFromEQToStationCmdNum >= 2)
-                                {
-                                    // 若為設定多出模式 則都走Out Mode
-                                    if (setMoreOutMode)
-                                    {
-                                        AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Enter the OutputModeChange 2A 2B  More out swap");
-                                        OutputModeChange(accessAGVPortDatas, AGVStationID);
-                                        isMoreOutMode = true;
-                                        isOK = true;
-                                    }
-                                    // 若為設定多入模式 則走1 in 1 out
-                                    else
-                                    {
-                                        AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Enter the OutputModeChange 2A 2B  More in swap");
-                                        InOutModeChange(accessAGVPortDatas, AGVStationID);
-                                        isMoreOutMode = true;
-                                        isOK = true;
-                                    }
-                                }
-                            }
+                            (isOK, isMoreOutMode, portTypeNum) = SwapTwoPortCheck(accessAGVPortDatas, AGVPortDatas, AGVStationID, portTypeNum, OHBCCmdNumber, AGVCFromEQToStationCmdNum, emptyBoxNumber, setMoreOutMode, isOK, isMoreOutMode);
                         }
                         //若為緊急流程 走1 in 1 out 回多入流程
                         else
                         {
                             AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Enter the One in One Out swap Emergency = " + isEmergency.ToString());
                             InOutModeChange(accessAGVPortDatas, AGVStationID);
-                            isMoreOutMode = false;
+                            isMoreOutMode = true;
                             isOK = true;
+                        }
+                    }
+                    // 若有 3 Port 且為自動模式，走 3 Port 確認流程。只有在第3個port 上為 input mode 且空箱時，下 2 out ，其餘為1 in 1 out (但須注意是否有足夠的out 命令，沒有還是得轉in 補空)
+                    // 並且默認為多入模式。(因為必定會有1個空 port)
+                    else if (numOfAGVStation == 3 && thirdAGVPort.OpAutoMode == true)
+                    {
+                        // 若第3 port 已經有空盒 input 走 多出模式 但要回復多入模式。
+                        if (thirdAGVPort.IsInputMode == true && thirdAGVPort.IsOutputMode == false && thirdAGVPort.LoadPosition1 == true && thirdAGVPort.IsCSTPresence == false)
+                        {
+                            setMoreOutMode = true;
+                            (isOK, isMoreOutMode, portTypeNum) = SwapTwoPortCheck(accessAGVPortDatas, AGVPortDatas, AGVStationID, portTypeNum, OHBCCmdNumber, AGVCFromEQToStationCmdNum, emptyBoxNumber, setMoreOutMode, isOK, isMoreOutMode);
+                            isMoreOutMode = false;
+                        }
+                        // 其餘狀態需要走多入模式
+                        else
+                        {
+                            setMoreOutMode = false;
+                            (isOK, isMoreOutMode, portTypeNum) = SwapTwoPortCheck(accessAGVPortDatas, AGVPortDatas, AGVStationID, portTypeNum, OHBCCmdNumber, AGVCFromEQToStationCmdNum, emptyBoxNumber, setMoreOutMode, isOK, isMoreOutMode);
+                            isMoreOutMode = false;
                         }
                     }
                 }
@@ -9256,6 +9248,80 @@ namespace com.mirle.ibg3k0.sc.Service
             return (isOK, isMoreOutMode);
         }
 
+        private (bool isOK_, bool isMoreOutMode_, PortTypeNum portTypeNum_) SwapTwoPortCheck(List<PortDef> _accessAGVPortDatas, List<PortDef> _AGVPortDatas, string _AGVStationID, PortTypeNum _portTypeNum, int _OHBCCmdNumber, int _AGVCFromEQToStationCmdNum, int _emptyBoxNumber, bool _setMoreOutMode, bool _isOK, bool _isMoreOutMode)
+        {
+            if (_OHBCCmdNumber == 0)
+            {
+                //沒AGVC也沒OHBC命令 一律無動作
+                if (_AGVCFromEQToStationCmdNum == 0)
+                {
+                    _isOK = ChangeReturnDueToAGVCCmdNum(_AGVCFromEQToStationCmdNum); //A20.07.10.0
+                    AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + _AGVStationID + " 沒AGVC也沒OHBC命令 一律回復" + _isOK);
+                    RewriteTheResultOfAGVCTrigger(_AGVStationID, _portTypeNum, _isOK);
+                    _isMoreOutMode = true;
+                    return (_isOK, _isMoreOutMode, _portTypeNum);
+                }
+                //有2筆AGVC命令直接都轉in 且不論目前狀態，都回可以大量入庫。
+                else if (_AGVCFromEQToStationCmdNum >= 1)
+                {
+                    AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + _AGVStationID + " Enter the Two IN MODE TYPE swap");
+                    InputModeChange(_accessAGVPortDatas);
+                    _portTypeNum = PortTypeNum.Input_Mode;
+                    _isMoreOutMode = false;
+                    _isOK = true;
+                }
+            }
+            else if (_OHBCCmdNumber == 1)
+            {
+                //沒AGVC 1 OHBC命令 需判斷一個空盒情形下的動作
+                if (_AGVCFromEQToStationCmdNum == 0)
+                {
+                    AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + _AGVStationID + " Enter the OneEmptyBox0AGVC1OHBC swap");
+                    _isMoreOutMode = true;
+                    _isOK = OneEmptyBox0AGVC1OHBC(_AGVStationID, _AGVPortDatas, _emptyBoxNumber);
+                }
+                //有2筆AGVC命令 1 OHBC命令 直接走 1 in 1 out 流程 且不論目前狀態，都回可以大量入庫。
+                else if (_AGVCFromEQToStationCmdNum >= 1)
+                {
+                    AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + _AGVStationID + " Enter the One in One Out swap");
+                    InOutModeChange(_accessAGVPortDatas, _AGVStationID);
+                    _isMoreOutMode = false;
+                    _isOK = true;
+                }
+            }
+            else if (_OHBCCmdNumber >= 2)
+            {
+                //沒AGVC 2 OHBC命令 都轉OUT 回多出
+                if (_AGVCFromEQToStationCmdNum == 0)
+                {
+                    AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + _AGVStationID + " Enter the OutputModeChange 0A 2B More out swap");
+                    OutputModeChange(_accessAGVPortDatas, _AGVStationID);
+                    _isMoreOutMode = true;
+                    _isOK = true;
+                }
+                //有1 筆以上 AGVC命令 2  OHBC命令 此處需要判斷多進多出流程，及回復AGVC的內容。extra 此處可以多考量第3 port 邏輯。
+                else if (_AGVCFromEQToStationCmdNum >= 2)
+                {
+                    // 若為設定多出模式 則都走Out Mode
+                    if (_setMoreOutMode)
+                    {
+                        AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + _AGVStationID + " Enter the OutputModeChange 2A 2B  More out swap");
+                        OutputModeChange(_accessAGVPortDatas, _AGVStationID);
+                        _isMoreOutMode = true;
+                        _isOK = true;
+                    }
+                    // 若為設定多入模式 則走1 in 1 out
+                    else
+                    {
+                        AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + _AGVStationID + " Enter the OutputModeChange 2A 2B  More in swap");
+                        InOutModeChange(_accessAGVPortDatas, _AGVStationID);
+                        _isMoreOutMode = true;
+                        _isOK = true;
+                    }
+                }
+            }
+            return (_isOK, _isMoreOutMode, _portTypeNum);
+        }
         private bool OneEmptyBox1AGVC0OHBC(string AGVStationID, List<PortDef> AGVPortDatas, int emptyBoxNumber)
         {
             bool isSuccess = false;
