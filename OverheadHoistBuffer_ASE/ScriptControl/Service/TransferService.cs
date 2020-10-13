@@ -2919,7 +2919,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     return;
                 }
                 // 若為 output mode 空盒 + cst remove check 則轉in 
-                if (plcInfo.LoadPosition1 == true && plcInfo.IsCSTPresence == false && plcInfo.CstRemoveCheck == true && plcInfo.IsOutputMode == true && plcInfo.IsModeChangable == true)
+                if (plcInfo.LoadPosition1 == true && plcInfo.IsCSTPresence == false  && plcInfo.IsOutputMode == true && plcInfo.IsModeChangable == true)
                 {
                     TransferServiceLogger.Info
                     (
