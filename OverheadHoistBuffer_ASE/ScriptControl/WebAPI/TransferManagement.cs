@@ -399,11 +399,12 @@ namespace com.mirle.ibg3k0.sc.WebAPI
                 string excute_count = Request.Query.unfinishCmdCount.Value ?? Request.Form.unfinishCmdCount.Value ?? string.Empty;
                 string is_emergency = Request.Query.isEmergency.Value ?? Request.Form.isEmergency.Value ?? string.Empty;
                 bool emergency = false;
-                if (is_emergency == "true")
+                is_emergency = is_emergency.ToUpper();
+                if (is_emergency.Contains("T"))
                 {
                     emergency = true;
                 }
-                else if (is_emergency == "false")
+                else if (is_emergency.Contains("F"))
                 {
                     emergency = false;
                 }

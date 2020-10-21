@@ -32,10 +32,13 @@ using System.Runtime.InteropServices;
 // 您可以指定所有的值，也可以依照以下的方式，使用 '*' 將組建和修訂編號
 // 指定為預設值:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.6.1")]
-[assembly: AssemblyFileVersion("1.6.1")]
+[assembly: AssemblyVersion("1.6.3")]
+[assembly: AssemblyFileVersion("1.6.3")]
 
 //版號 + Tab + 日期 + Tab + 修改人 + Tab + 敘述
+
+//1.6.3 2020/10/14  JasonWu+ 修改emergency 狀況下 對於實盒可以轉向
+//1.6.2 2020/10/14  JasonWu+ 新增判斷在實盒且inmode 時需要拒絕AGVC命令，避免回答OK後，只有一個空盒給AGVC，造成兩邊皆無命令知情型。
 //1.6.1 2020/10/12  JasonWu+ 新增3 port swap 控制模式，及自動觸發流程，並修改1 in 1 out 流程中對於2實盒之判定。
 //1.6.0 2020/10/11  JasonWu+ 合併內外版本，新增swap功能，增加新UI選項，開關多出功能，及藉由AGVC觸發調整mode changable自動waitin 功能。
 //                  JasonWu- 拿掉單取單放 強制2 in 動作，避免出現先2in 右被觸發後，In 轉out 之情形，造成該CST 路徑問題。

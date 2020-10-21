@@ -348,3 +348,6 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+/OverheadHoistBuffer_ASE/ScriptControl/WebAPI/TransferManagement.cs.bak
+/OverheadHoistBuffer_ASE/ScriptControl/Service/TransferService.cs.bak
+/OverheadHoistBuffer_ASE/ScriptControl/Properties/AssemblyInfo.cs.bak
