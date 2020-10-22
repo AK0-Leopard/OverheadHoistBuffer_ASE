@@ -195,7 +195,7 @@ namespace com.mirle.ibg3k0.sc.Service
         bool queueCmdFail = false;  //queueCmdTimeOut 的旗標
         bool cmdFailAlarmSet = true;
 
-        public bool requireEmptyBox = false;
+        public bool requireEmptyBox = true; // 空盒水位要求符號，啟動後才會進行空盒需求
         public bool redisEnable = false;
         public bool agvZone_ConnectedRealAGVPortRunDown = true;
         public bool portTypeChangeOK_CVPort_CstRemove = true;      //Port 轉向成功時，刪除此 Port 的所有卡匣
@@ -203,7 +203,7 @@ namespace com.mirle.ibg3k0.sc.Service
         public bool autoRemarkBOXCSTData = false;                   //是否開啟自動救帳流程。
         public bool setForMoreOut = true;                           //是否為多出模式。
         public bool agvHasCmdsAccess = false;           //Agv 有命令要搬入與否。
-        public bool oneInoneOutMethodUse = false;          //是否使用單取單放流程判定AGV 虛擬Port
+        public bool oneInoneOutMethodUse = true;          //是否使用單取單放流程判定AGV 虛擬Port
         public bool swapTriggerWaitin = false;
         #endregion
 
