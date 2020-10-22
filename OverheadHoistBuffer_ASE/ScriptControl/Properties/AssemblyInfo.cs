@@ -32,11 +32,13 @@ using System.Runtime.InteropServices;
 // 您可以指定所有的值，也可以依照以下的方式，使用 '*' 將組建和修訂編號
 // 指定為預設值:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.6.3")]
-[assembly: AssemblyFileVersion("1.6.3")]
+[assembly: AssemblyVersion("1.6.4")]
+[assembly: AssemblyFileVersion("1.6.4")]
 
 //版號 + Tab + 日期 + Tab + 修改人 + Tab + 敘述
 
+//1.6.4 2020/10/22  JasonWu+ 1. 修改空盒要求與 1 in 1 out 非 swap 的預設flag 由 false 改為 true
+//                           2. 修改自動轉in 被modechangable觸發後，判斷時要確認非為mismatch 才可轉向。
 //1.6.3 2020/10/14  JasonWu+ 修改emergency 狀況下 對於實盒可以轉向
 //1.6.2 2020/10/14  JasonWu+ 新增判斷在實盒且inmode 時需要拒絕AGVC命令，避免回答OK後，只有一個空盒給AGVC，造成兩邊皆無命令知情型。
 //1.6.1 2020/10/12  JasonWu+ 新增3 port swap 控制模式，及自動觸發流程，並修改1 in 1 out 流程中對於2實盒之判定。
