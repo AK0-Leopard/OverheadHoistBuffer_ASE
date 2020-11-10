@@ -1002,6 +1002,19 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
             foreach (AVEHICLE vh in vhs.ToList())
             {
+                if (vh.isSynchronizing)
+                {
+                    vhs.Remove(vh);
+                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleBLL), Device: "OHxC",
+                       Data: $"vh id:{vh.VEHICLE_ID} is synchronizing," +
+                             $"so filter it out",
+                       VehicleID: vh.VEHICLE_ID,
+                       CarrierID: vh.CST_ID);
+                }
+            }
+
+            foreach (AVEHICLE vh in vhs.ToList())
+            {
                 if (vh.MODE_STATUS != VHModeStatus.AutoRemote)
                 {
                     vhs.Remove(vh);

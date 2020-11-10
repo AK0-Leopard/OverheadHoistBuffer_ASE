@@ -32,11 +32,14 @@ using System.Runtime.InteropServices;
 // 您可以指定所有的值，也可以依照以下的方式，使用 '*' 將組建和修訂編號
 // 指定為預設值:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.6.4")]
-[assembly: AssemblyFileVersion("1.6.4")]
+[assembly: AssemblyVersion("1.6.5")]
+[assembly: AssemblyFileVersion("1.6.5")]
 
 //版號 + Tab + 日期 + Tab + 修改人 + Tab + 敘述
 
+//1.6.5 2020/11/05  KevinWei+ 1. Bug fix:在143、134、136多加入判斷，如果目前是斷線狀態，卻收到連線成功，則將其改回連線狀態，避免瞬斷問題。
+//                            2. 加入避免在OHT一連上線後，且同步動作尚未完成時，馬上下命令給OHT因而造成OHT、OHBC狀態不同步的問題。
+//                            3. 加入修改143狀態詢問time out後，會跳例外導致連線後的on line初始化流程中斷的問題
 //1.6.4 2020/10/22  JasonWu+ 1. 修改空盒要求與 1 in 1 out 非 swap 的預設flag 由 false 改為 true
 //                           2. 修改自動轉in 被modechangable觸發後，判斷時要確認非為mismatch 才可轉向。
 //1.6.3 2020/10/14  JasonWu+ 修改emergency 狀況下 對於實盒可以轉向

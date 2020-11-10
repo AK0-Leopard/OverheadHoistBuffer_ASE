@@ -334,6 +334,10 @@ namespace com.mirle.ibg3k0.sc
         }
 
 
+        [BaseElement(NonChangeFromOtherVO = true)]
+        public bool isSynchronizing;
+
+
         private bool istcpipconnect;
         [BaseElement(NonChangeFromOtherVO = true)]
         public virtual bool isTcpIpConnect

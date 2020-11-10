@@ -178,6 +178,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 return;
             try
             {
+                connectionCheck(eqpt);
                 str134_ReceiveProcess(sender, e);
             }
             catch (Exception ex)
@@ -202,7 +203,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
 
             if (scApp.getEQObjCacheManager().getLine().ServerPreStop)
                 return;
-
+            connectionCheck(eqpt);
             int threadID = System.Threading.Thread.CurrentThread.ManagedThreadId;
             Stopwatch sw = scApp.StopwatchPool.GetObject();
             string lockTraceInfo = string.Format("VH ID:{0},Pack ID:{1},Seq Num:{2},ThreadID:{3},"
@@ -261,6 +262,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 , e.iPacketID
                 , e.iSeqNum.ToString()
                 , threadID.ToString());
+            connectionCheck(eqpt);
             try
             {
                 sw.Start();
@@ -303,8 +305,18 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             service.AlarmReport(bcfApp, eqpt, recive_gpp, e.iSeqNum);
 
         }
-
-
+        private void connectionCheck(AVEHICLE vh)
+        {
+            if (!vh.isTcpIpConnect)
+            {
+                vh.isTcpIpConnect = true;
+                BCFApplication.onWarningMsg($"vh:{vh.VEHICLE_ID} Force change connection status to connection !");
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(EQTcpIpMapAction), Device: "AGVC",
+                   Data: "Force change connection status to connection !",
+                   VehicleID: vh.VEHICLE_ID,
+                   CarrierID: vh.CST_ID);
+            }
+        }
 
         private static TransactionScope BegingTransaction()
         {

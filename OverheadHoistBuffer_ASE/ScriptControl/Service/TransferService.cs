@@ -8225,7 +8225,7 @@ namespace com.mirle.ibg3k0.sc.Service
         /// <param name="AGVStationData"></param>
         /// <param name="AGVStationID"></param>
         /// <returns></returns>
-        private (PortTypeNum portTypeNum_Result, bool isOK_Result) CheckForChangeAGVPortMode_AGVC(int AGVCFromEQToStationCmdNum, List<PortDef> AGVStationData, string AGVStationID, int emptyBoxNum_OnPort,bool isEmergency)
+        private (PortTypeNum portTypeNum_Result, bool isOK_Result) CheckForChangeAGVPortMode_AGVC(int AGVCFromEQToStationCmdNum, List<PortDef> AGVStationData, string AGVStationID, int emptyBoxNum_OnPort, bool isEmergency)
         {
             bool _isOK_Result = false;
             PortTypeNum _portTypeNum_Result = PortTypeNum.No_Change;
@@ -9243,7 +9243,7 @@ namespace com.mirle.ibg3k0.sc.Service
                             isMoreOutMode = false;
                         }
                     }
-                #endregion
+                    #endregion
                 }
 
                 RewriteTheResultOfAGVCTrigger(AGVStationID, portTypeNum, isOK);
@@ -9306,7 +9306,7 @@ namespace com.mirle.ibg3k0.sc.Service
             else if (_OHBCCmdNumber >= 2)
             {
                 //沒AGVC 2 OHBC命令 都轉OUT 回多出
-                if (_AGVCFromEQToStationCmdNum == 0 )
+                if (_AGVCFromEQToStationCmdNum == 0)
                 {
                     if (_fullBoxNumber > 1)
                     {

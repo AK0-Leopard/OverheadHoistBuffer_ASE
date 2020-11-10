@@ -861,7 +861,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                         (_, double distance) = scApp.VehicleBLL.findBestSuitableVhStepByNearest(sourceAddr);
                         cmdMCS.DistanceFromVehicleToHostSource = (int)distance;
                     }
-                    if(cmdMCS.PRIORITY_SUM >= 99)
+                    if (cmdMCS.PRIORITY_SUM >= 99)
                     {
                         isCmdPriorityMoreThan99 = true;
                     }
@@ -2933,6 +2933,14 @@ namespace com.mirle.ibg3k0.sc.BLL
                     {
                         check_result.Result.AppendLine($" vh:{vh_id} no connection");
                         check_result.Result.AppendLine($" please check IPC.");
+                        check_result.Result.AppendLine("");
+                        check_result.IsSuccess &= false;
+                    }
+
+                    if (vh.isSynchronizing)
+                    {
+                        check_result.Result.AppendLine($" vh:{vh_id} is synchronizing");
+                        check_result.Result.AppendLine($" please wait.");
                         check_result.Result.AppendLine("");
                         check_result.IsSuccess &= false;
                     }

@@ -684,51 +684,58 @@ namespace com.mirle.ibg3k0.sc.Service
         public bool VehicleStatusRequest(string vh_id, bool isSync = false)
         {
             bool isSuccess = false;
-            string reason = string.Empty;
-            AVEHICLE vh = scApp.getEQObjCacheManager().getVehicletByVHID(vh_id);
-            ID_143_STATUS_RESPONSE receive_gpp;
-            ID_43_STATUS_REQUEST send_gpp = new ID_43_STATUS_REQUEST()
+            try
             {
-                SystemTime = DateTime.Now.ToString(SCAppConstants.TimestampFormat_16)
-            };
-            SCUtility.RecodeReportInfo(vh.VEHICLE_ID, 0, send_gpp);
-            isSuccess = vh.send_S43(send_gpp, out receive_gpp);
-            SCUtility.RecodeReportInfo(vh.VEHICLE_ID, 0, receive_gpp, isSuccess.ToString());
-            if (isSync && isSuccess)
+
+                string reason = string.Empty;
+                AVEHICLE vh = scApp.getEQObjCacheManager().getVehicletByVHID(vh_id);
+                ID_143_STATUS_RESPONSE receive_gpp;
+                ID_43_STATUS_REQUEST send_gpp = new ID_43_STATUS_REQUEST()
+                {
+                    SystemTime = DateTime.Now.ToString(SCAppConstants.TimestampFormat_16)
+                };
+                SCUtility.RecodeReportInfo(vh.VEHICLE_ID, 0, send_gpp);
+                isSuccess = vh.send_S43(send_gpp, out receive_gpp);
+                SCUtility.RecodeReportInfo(vh.VEHICLE_ID, 0, receive_gpp, isSuccess.ToString());
+                if (isSync && isSuccess)
+                {
+                    string current_adr_id = receive_gpp.CurrentAdrID;
+                    VHModeStatus modeStat = DecideVhModeStatus(vh.VEHICLE_ID, current_adr_id, receive_gpp.ModeStatus);
+                    VHActionStatus actionStat = receive_gpp.ActionStatus;
+                    VhPowerStatus powerStat = receive_gpp.PowerStatus;
+                    string cstID = receive_gpp.CSTID;
+                    VhStopSingle obstacleStat = receive_gpp.ObstacleStatus;
+                    VhStopSingle blockingStat = receive_gpp.BlockingStatus;
+                    VhStopSingle pauseStat = receive_gpp.PauseStatus;
+                    VhStopSingle hidStat = receive_gpp.HIDStatus;
+                    VhStopSingle errorStat = receive_gpp.ErrorStatus;
+                    VhLoadCarrierStatus loadCSTStatus = receive_gpp.HasCst;
+                    VhLoadCarrierStatus loadBOXStatus = receive_gpp.HasBox;
+                    if (loadBOXStatus == VhLoadCarrierStatus.Exist) //B0.05
+                    {
+                        vh.BOX_ID = receive_gpp.CarBoxID;
+                    }
+                    //VhGuideStatus leftGuideStat = recive_str.LeftGuideLockStatus;
+                    //VhGuideStatus rightGuideStat = recive_str.RightGuideLockStatus;
+
+
+                    int obstacleDIST = receive_gpp.ObstDistance;
+                    string obstacleVhID = receive_gpp.ObstVehicleID;
+
+                    scApp.VehicleBLL.setAndPublishPositionReportInfo2Redis(vh.VEHICLE_ID, receive_gpp);
+                    scApp.VehicleBLL.getAndProcPositionReportFromRedis(vh.VEHICLE_ID);
+                    // 0317 Jason 此部分之loadBOXStatus 原為loadCSTStatus ，現在之狀況為暫時解法
+                    if (!scApp.VehicleBLL.doUpdateVehicleStatus(vh, cstID,
+                                           modeStat, actionStat,
+                                           blockingStat, pauseStat, obstacleStat, hidStat, errorStat, loadBOXStatus))
+                    {
+                        isSuccess = false;
+                    }
+                }
+            }
+            catch (Exception ex)
             {
-                string current_adr_id = receive_gpp.CurrentAdrID;
-                VHModeStatus modeStat = DecideVhModeStatus(vh.VEHICLE_ID, current_adr_id, receive_gpp.ModeStatus);
-                VHActionStatus actionStat = receive_gpp.ActionStatus;
-                VhPowerStatus powerStat = receive_gpp.PowerStatus;
-                string cstID = receive_gpp.CSTID;
-                VhStopSingle obstacleStat = receive_gpp.ObstacleStatus;
-                VhStopSingle blockingStat = receive_gpp.BlockingStatus;
-                VhStopSingle pauseStat = receive_gpp.PauseStatus;
-                VhStopSingle hidStat = receive_gpp.HIDStatus;
-                VhStopSingle errorStat = receive_gpp.ErrorStatus;
-                VhLoadCarrierStatus loadCSTStatus = receive_gpp.HasCst;
-                VhLoadCarrierStatus loadBOXStatus = receive_gpp.HasBox;
-                if (loadBOXStatus == VhLoadCarrierStatus.Exist) //B0.05
-                {
-                    vh.BOX_ID = receive_gpp.CarBoxID;
-                }
-                //VhGuideStatus leftGuideStat = recive_str.LeftGuideLockStatus;
-                //VhGuideStatus rightGuideStat = recive_str.RightGuideLockStatus;
-
-
-                int obstacleDIST = receive_gpp.ObstDistance;
-                string obstacleVhID = receive_gpp.ObstVehicleID;
-
-
-                scApp.VehicleBLL.setAndPublishPositionReportInfo2Redis(vh.VEHICLE_ID, receive_gpp);
-                scApp.VehicleBLL.getAndProcPositionReportFromRedis(vh.VEHICLE_ID);
-                // 0317 Jason 此部分之loadBOXStatus 原為loadCSTStatus ，現在之狀況為暫時解法
-                if (!scApp.VehicleBLL.doUpdateVehicleStatus(vh, cstID,
-                                       modeStat, actionStat,
-                                       blockingStat, pauseStat, obstacleStat, hidStat, errorStat, loadBOXStatus))
-                {
-                    isSuccess = false;
-                }
+                logger.Error(ex, "Exception:");
             }
             return isSuccess;
         }
@@ -4557,7 +4564,7 @@ namespace com.mirle.ibg3k0.sc.Service
             {
                 scApp.TransferService.TransferRun();//B0.08.0 處發TransferRun，使MCS命令可以在多車情形下早於趕車CMD下達。
                 //tryAskVhToIdlePosition(vh_id);//B0.11
-            });        
+            });
             eqpt.onCommandComplete(completeStatus);
         }
 
@@ -5101,31 +5108,43 @@ namespace com.mirle.ibg3k0.sc.Service
         public void Connection(BCFApplication bcfApp, AVEHICLE vh)
         {
             //scApp.getEQObjCacheManager().refreshVh(eqpt.VEHICLE_ID);
-            lock (vh.Connection_Sync)
+            try
             {
-                vh.VhRecentTranEvent = EventType.AdrPass;
+                vh.isSynchronizing = true;
+                lock (vh.Connection_Sync)
+                {
+                    vh.VhRecentTranEvent = EventType.AdrPass;
 
-                vh.isTcpIpConnect = true;
+                    vh.isTcpIpConnect = true;
 
-                LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
-                   Data: "Connection ! Begin synchronize with vehicle...",
-                   VehicleID: vh.VEHICLE_ID,
-                   CarrierID: vh.CST_ID);
-                VehicleInfoSynchronize(vh.VEHICLE_ID);
-                LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
-                   Data: "Connection ! End synchronize with vehicle.",
-                   VehicleID: vh.VEHICLE_ID,
-                   CarrierID: vh.CST_ID);
-                SCUtility.RecodeConnectionInfo
-                    (vh.VEHICLE_ID,
-                    SCAppConstants.RecodeConnectionInfo_Type.Connection.ToString(),
-                    vh.getDisconnectionIntervalTime(bcfApp));
+                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                       Data: "Connection ! Begin synchronize with vehicle...",
+                       VehicleID: vh.VEHICLE_ID,
+                       CarrierID: vh.CST_ID);
+                    VehicleInfoSynchronize(vh.VEHICLE_ID);
+                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                       Data: "Connection ! End synchronize with vehicle.",
+                       VehicleID: vh.VEHICLE_ID,
+                       CarrierID: vh.CST_ID);
+                    SCUtility.RecodeConnectionInfo
+                        (vh.VEHICLE_ID,
+                        SCAppConstants.RecodeConnectionInfo_Type.Connection.ToString(),
+                        vh.getDisconnectionIntervalTime(bcfApp));
 
-                //clear the connection alarm code 99999
-                //scApp.TransferService.OHBC_AlarmCleared(vh.VEHICLE_ID,
-                //    SCAppConstants.SystemAlarmCode.OHT_Issue.OHTAccidentOfflineWarning);
+                    //clear the connection alarm code 99999
+                    //scApp.TransferService.OHBC_AlarmCleared(vh.VEHICLE_ID,
+                    //    SCAppConstants.SystemAlarmCode.OHT_Issue.OHTAccidentOfflineWarning);
 
-                //B0.10 scApp.TransferService.iniOHTData(vh.VEHICLE_ID, "OHT_Connection");
+                    //B0.10 scApp.TransferService.iniOHTData(vh.VEHICLE_ID, "OHT_Connection");
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+            }
+            finally
+            {
+                vh.isSynchronizing = false;
             }
         }
         [ClassAOPAspect]
