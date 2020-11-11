@@ -20,6 +20,7 @@
 // 2020/06/15    Jason Wu       N/A            A20.06.15.0  新增新增CanExcuteUnloadTransferAGVStationFromAGVC()後續處理流程。
 // 2020/06/16    Jason Wu       N/A            A20.06.16.0  新增確認該AGVport是否可用的優先流程FilterOfAGVPort()。
 // 2020/07/07    Hsinyu Chang   N/A            2020.07.07   Master PLC斷線時發alarm
+// 2020/11/11    Jason Wu       N/A            A20.11.11.0  新增在進入Load_Complete的時候，若為非shelf的port 就不要進行過帳
 //**********************************************************************************
 
 using com.mirle.ibg3k0.bcf.Common;
@@ -2142,7 +2143,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         break;
                     case COMMAND_STATUS_BIT_INDEX_LOAD_COMPLETE: //入料完成
 
-                        if (cmd.COMMANDSTATE == status)  //模擬器會重複發，第二次就跳過
+                        if (cmd.COMMANDSTATE == status )  //模擬器會重複發，第二次就跳過 
                         {
                             break;
                         }
@@ -2150,7 +2151,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         cmd.HOSTSOURCE = ohtCmd.SOURCE;
                         CassetteData LoadCSTData = cassette_dataBLL.loadCassetteDataByLoc(cmd.HOSTSOURCE);
 
-                        if (LoadCSTData != null)
+                        if (LoadCSTData != null && isShelfPort(ohtCmd.SOURCE)) //A20.11.11.0 當為shelf port 時才進入(避免出現自動過帳後，136上報延遲，造成進一步過到下一顆CST
                         {
                             OHT_LoadCompleted(ohtCmd, LoadCSTData, ohtName, "OHT_TransferProcess");
                         }
