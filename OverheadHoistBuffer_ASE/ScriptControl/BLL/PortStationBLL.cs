@@ -15,6 +15,7 @@ namespace com.mirle.ibg3k0.sc.BLL
     {
         public DB OperateDB { private set; get; }
         public Catch OperateCatch { private set; get; }
+        public Web web { private set; get; }
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public PortStationBLL()
@@ -24,6 +25,7 @@ namespace com.mirle.ibg3k0.sc.BLL
         {
             OperateDB = new DB(_app.PortStationDao);
             OperateCatch = new Catch(_app.getEQObjCacheManager());
+            web = new Web(_app.webClientManager);
         }
 
         public class DB
@@ -277,7 +279,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 return port_station != null;
             }
 
-            public bool IsPortInSpecifiedSegment( BLL.SectionBLL sectionBLL, string portID, string segmentID)
+            public bool IsPortInSpecifiedSegment(BLL.SectionBLL sectionBLL, string portID, string segmentID)
             {
                 APORTSTATION aPORTSTATION = getPortStation(portID);
                 ASECTION aSECTION = sectionBLL.cache.GetSectionsByAddress(aPORTSTATION.ADR_ID.Trim()).First();
@@ -296,5 +298,55 @@ namespace com.mirle.ibg3k0.sc.BLL
 
 
         }
+        public class Web
+        {
+            WebClientManager webClientManager = null;
+            List<string> notify_urls = new List<string>()
+            {
+                //"http://stk01.asek21.mirle.com.tw:15000",
+                 "http://agvc.asek21.mirle.com.tw:15000"
+            };
+            const string CARRIER_LONG_STAY_CONST = "98";
+
+            public Web(WebClientManager _webClient)
+            {
+                webClientManager = _webClient;
+            }
+
+            /// <summary>
+            /// Notify sample
+            ///http://127.0.0.1:15000/weatherforecast/line1_dis
+            ///http://127.0.0.1:15000/weatherforecast/loop_dis
+            ///http://127.0.0.1:15000/weatherforecast/agv_dis 
+            /// </summary>
+            /// <param name="lineName"></param>
+            public void CarrierLongStay()
+            {
+                try
+                {
+                    string[] action_targets = new string[]
+                    {
+                    "weatherforecast"
+                    };
+                    string[] param = new string[]
+                    {
+                        CARRIER_LONG_STAY_CONST,
+                    };
+                    foreach (string notify_url in notify_urls)
+                    {
+                        string result = webClientManager.GetInfoFromServer(notify_url, action_targets, param);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex, "Exception");
+                }
+            }
+
+
+        }
+
+
+
     }
 }

@@ -41,7 +41,7 @@ namespace com.mirle.ibg3k0.sc.Data.SECS
         /// <summary>
         /// Initializes a new instance of the <see cref="S1F2"/> class.
         /// </summary>
-        public S1F2() 
+        public S1F2()
         {
             StreamFunction = "S1F2";
             W_Bit = 0;
