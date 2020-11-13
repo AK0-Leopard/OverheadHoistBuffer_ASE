@@ -1404,6 +1404,11 @@ namespace com.mirle.ibg3k0.sc.Service
 
                                     TransferIng = true;
                                 }
+                                else
+                                {
+                                    //釋放於GetShelfRecentLocation中 提前預約的shelf
+                                    shelfDefBLL.updateStatus(cmdRelay.HOSTDESTINATION , ShelfDef.E_ShelfState.EmptyShelf);
+                                }
                             }
                             else
                             {
@@ -6153,6 +6158,10 @@ namespace com.mirle.ibg3k0.sc.Service
                         );
 
                         OHBC_AlarmSet(line.LINE_ID, ((int)AlarmLst.LINE_NotEmptyShelf).ToString());
+                    }
+                    else
+                    {
+                        shelfDefBLL.updateStatus(shelfName, ShelfDef.E_ShelfState.StorageInReserved);
                     }
 
                     return shelfName;
