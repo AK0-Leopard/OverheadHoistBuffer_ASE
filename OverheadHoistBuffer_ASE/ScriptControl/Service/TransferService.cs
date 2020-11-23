@@ -2156,7 +2156,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         cmd.HOSTSOURCE = ohtCmd.SOURCE;
                         CassetteData LoadCSTData = cassette_dataBLL.loadCassetteDataByLoc(cmd.HOSTSOURCE);
 
-                        if (LoadCSTData != null && isShelfPort(ohtCmd.SOURCE)) //A20.11.11.0 當為shelf port 時才進入(避免出現自動過帳後，136上報延遲，造成進一步過到下一顆CST
+                        if (LoadCSTData != null) 
                         {
                             OHT_LoadCompleted(ohtCmd, LoadCSTData, ohtName, "OHT_TransferProcess");
                         }
