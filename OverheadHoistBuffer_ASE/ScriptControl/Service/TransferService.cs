@@ -3700,10 +3700,12 @@ namespace com.mirle.ibg3k0.sc.Service
                         );
 
                         ACMD_OHTC ohtData = cmdBLL.getCMD_OHTCByMCScmdID_And_NotFinishBySource(cmd.CMD_ID, cmd.HOSTSOURCE);
-
-                        cmdBLL.updateCMD_MCS_CmdStatus(cmd.CMD_ID, COMMAND_STATUS_BIT_INDEX_LOAD_COMPLETE);
-
-                        OHT_LoadCompleted(ohtData, dbCstData, cmd.CRANE, "PortToOHT");
+                        
+                        if (cmd.COMMANDSTATE < COMMAND_STATUS_BIT_INDEX_LOAD_COMPLETE)
+                        {
+                            cmdBLL.updateCMD_MCS_CmdStatus(cmd.CMD_ID, COMMAND_STATUS_BIT_INDEX_LOAD_COMPLETE);
+                            OHT_LoadCompleted(ohtData, dbCstData, cmd.CRANE, "PortToOHT");
+                        }
                     }
                 }
             }
