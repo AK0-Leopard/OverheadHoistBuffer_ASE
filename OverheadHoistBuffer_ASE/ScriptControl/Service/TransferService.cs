@@ -3758,16 +3758,20 @@ namespace com.mirle.ibg3k0.sc.Service
                     return;
                 }
 
-                reportBLL.ReportCarrierRemovedFromPort(dbData, HandoffType);
-
-                cassette_dataBLL.DeleteCSTbyCstBoxID(dbData.CSTID, dbData.BOXID);
-
                 if (isUnitType(dbData.Carrier_LOC, UnitType.AGV))
                 {
+                    DeleteCst(dbData.CSTID, dbData.BOXID, "PortCarrierRemoved");    //201127 AGV Port 改報 152
+
                     if (isAGV)
                     {
                         PLC_AGV_Station(GetPLC_PortData(dbData.Carrier_LOC), "PortCarrierRemoved");
                     }
+                }
+                else
+                {
+                    reportBLL.ReportCarrierRemovedFromPort(dbData, HandoffType);
+
+                    cassette_dataBLL.DeleteCSTbyCstBoxID(dbData.CSTID, dbData.BOXID);
                 }
             }
             catch (Exception ex)
