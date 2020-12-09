@@ -3131,7 +3131,14 @@ namespace com.mirle.ibg3k0.sc.Service
                 datainfo.BOXID = plcInfo.BoxID.Trim();        //填BOXID
                 datainfo.Carrier_LOC = plcInfo.EQ_ID.Trim();  //填Port 名稱
 
-                PortCarrierRemoved(datainfo, plcInfo.IsAGVMode, "PortPositionOFF");
+                if(isUnitType(plcInfo.EQ_ID, UnitType.AGV))
+                {
+                    PortCarrierRemoved(datainfo, plcInfo.IsAGVMode, "PortPositionOFF", true);
+                }
+                else
+                {
+                    PortCarrierRemoved(datainfo, plcInfo.IsAGVMode, "PortPositionOFF");
+                }
             }
 
             string portLoc = GetPositionName(plcInfo.EQ_ID.Trim(), position);
@@ -3714,14 +3721,14 @@ namespace com.mirle.ibg3k0.sc.Service
                 TransferServiceLogger.Error(ex, "PortToOHT");
             }
         }
-        public void PortCarrierRemoved(CassetteData cstData, bool isAGV, string cmdSource)
+        public void PortCarrierRemoved(CassetteData cstData, bool isAGV, string cmdSource, bool isCEID152 = false)
         {
             try
             {
                 TransferServiceLogger.Info
                 (
                     DateTime.Now.ToString("HH:mm:ss.fff ") +
-                    "PLC >> OHB|PortCarrierRemoved  誰呼叫:" + cmdSource + GetCstLog(cstData)
+                    "PLC >> OHB|PortCarrierRemoved  誰呼叫:" + cmdSource + GetCstLog(cstData) + " isCEID152：" + isCEID152
                 );
 
                 int stage = portINIData[cstData.Carrier_LOC.Trim()].Stage;
@@ -3758,20 +3765,23 @@ namespace com.mirle.ibg3k0.sc.Service
                     return;
                 }
 
-                if (isUnitType(dbData.Carrier_LOC, UnitType.AGV))
+                if(isCEID152)
                 {
-                    DeleteCst(dbData.CSTID, dbData.BOXID, "PortCarrierRemoved");    //201127 AGV Port 改報 152
-
-                    if (isAGV)
-                    {
-                        PLC_AGV_Station(GetPLC_PortData(dbData.Carrier_LOC), "PortCarrierRemoved");
-                    }
+                    reportBLL.ReportCarrierRemovedCompleted(dbData.CSTID, dbData.BOXID);
                 }
                 else
                 {
                     reportBLL.ReportCarrierRemovedFromPort(dbData, HandoffType);
 
                     cassette_dataBLL.DeleteCSTbyCstBoxID(dbData.CSTID, dbData.BOXID);
+                }
+
+                if (isUnitType(dbData.Carrier_LOC, UnitType.AGV))
+                {
+                    if (isAGV)
+                    {
+                        PLC_AGV_Station(GetPLC_PortData(dbData.Carrier_LOC), "PortCarrierRemoved");
+                    }
                 }
             }
             catch (Exception ex)
