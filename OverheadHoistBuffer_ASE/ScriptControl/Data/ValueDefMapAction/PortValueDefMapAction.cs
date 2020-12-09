@@ -1,6 +1,7 @@
 ﻿using com.mirle.ibg3k0.bcf.App;
 using com.mirle.ibg3k0.bcf.Common;
 using com.mirle.ibg3k0.bcf.Controller;
+using com.mirle.ibg3k0.bcf.Data.TimerAction;
 using com.mirle.ibg3k0.bcf.Data.ValueDefMapAction;
 using com.mirle.ibg3k0.bcf.Data.VO;
 using com.mirle.ibg3k0.sc.App;
@@ -151,6 +152,10 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 {
                     vr.afterValueChange += (_sender, _e) => Port_onPreLoadOK(_sender, _e);
                 }
+                if (bcfApp.tryGetReadValueEventstring(port.EqptObjectCate, port.PORT_ID, "ERROR_CODE", out vr))
+                {
+                    vr.afterValueChange += (_sender, _e) => Port_ErrorCodeChange(_sender, _e);
+                }
             }
             catch (Exception ex)
             {
@@ -208,11 +213,11 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 if (function.CSTPresenceMismatch)
                 {
                     //TODO
-                    if(function.IsInputMode)
+                    if (function.IsInputMode)
                     {
                         scApp.TransferService.OpenAGV_Station(function.EQ_ID.Trim(), true, "CSTPresenceMismatch");
                     }
-                    
+
                     scApp.TransferService.PLC_AGV_Station(function, "CSTPresenceMismatch");
                 }
                 else
@@ -597,6 +602,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                     case BCFAppConstants.RUN_LEVEL.TWO:
                         break;
                     case BCFAppConstants.RUN_LEVEL.NINE:
+
                         break;
                 }
             }
@@ -1574,6 +1580,38 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             }
         }
 
+        const int OHCV_ALARM_CODE_BCR_READ_FAIL_OVER_TIMES_ON_CV5 = 1570;
+        const int OHCV_ALARM_CODE_BCR_READ_FAIL_OVER_TIMES_ON_CV1 = 370;
+        public void Port_ErrorCodeChange(object sender, ValueChangedEventArgs e)
+        {
+            var function = scApp.getFunBaseObj<PortPLCInfo>(port.PORT_ID) as PortPLCInfo;
+            try
+            {
+                //1.建立各個Function物件
+                function.Read(bcfApp, port.EqptObjectCate, port.PORT_ID);
+
+                if (function.ErrorCode == OHCV_ALARM_CODE_BCR_READ_FAIL_OVER_TIMES_ON_CV1 ||
+                   function.ErrorCode == OHCV_ALARM_CODE_BCR_READ_FAIL_OVER_TIMES_ON_CV5)
+                {
+                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(VehicleService), Device: VehicleService.DEVICE_NAME_OHx,
+                       Data: $"Box BCR read fail over times.");
+
+                    scApp.PortStationBLL.web.BOXBCRReadFailOverTimes();
+                }
+
+                NLog.LogManager.GetCurrentClassLogger().Info(function.ToString());
+
+                //3.logical (include db save)
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+            }
+            finally
+            {
+                scApp.putFunBaseObj<PortPLCInfo>(function);
+            }
+        }
         #region OHB >> PLC
         public void Port_ChangeToInput(bool isInput)
         {
@@ -1885,5 +1923,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             }
         }
         #endregion
+
+
     }
 }

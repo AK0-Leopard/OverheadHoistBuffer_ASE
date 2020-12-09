@@ -339,13 +339,15 @@ namespace com.mirle.ibg3k0.sc.WebAPI
 							break;
 
 						case "BlockPort":
-                            isSuccess = scApp.TransferService.UpdateIgnoreModeChange(port_id, "Y");
-                            result = isSuccess ? "OK" : "Block Port failed.";
+							//isSuccess = scApp.TransferService.UpdateIgnoreModeChange(port_id, "Y");
+							isSuccess = false;
+							result = isSuccess ? "OK" : "Block Port failed.";
 							break;
 
 						case "UnblockPort":
-                            isSuccess = scApp.TransferService.UpdateIgnoreModeChange(port_id, "N");
-                            result = isSuccess ? "OK" : "Unblock Port failed.";
+							//isSuccess = scApp.TransferService.UpdateIgnoreModeChange(port_id, "N");
+							isSuccess = false;
+							result = isSuccess ? "OK" : "Unblock Port failed.";
 							break;
 
 						case "ClearAlarmPort":

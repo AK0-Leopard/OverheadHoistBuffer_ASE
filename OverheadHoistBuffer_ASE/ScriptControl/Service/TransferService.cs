@@ -3877,7 +3877,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         portDefBLL.UpdataPortService(portName, service);
 
                         TransferServiceLogger.Info
-                        (
+                        ( 
                             DateTime.Now.ToString("HH:mm:ss.fff ") +
                             "OHB >> DB|PortInOutService"
                             + " PortName:" + portName

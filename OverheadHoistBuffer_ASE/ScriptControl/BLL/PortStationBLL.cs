@@ -307,6 +307,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                  "http://agvc.asek21.mirle.com.tw:15000"
             };
             const string CARRIER_LONG_STAY_CONST = "98";
+            const string OHCV_BOX_BCR_READ_FAIL_OVER_TIMES = "97";
 
             public Web(WebClientManager _webClient)
             {
@@ -331,6 +332,28 @@ namespace com.mirle.ibg3k0.sc.BLL
                     string[] param = new string[]
                     {
                         CARRIER_LONG_STAY_CONST,
+                    };
+                    foreach (string notify_url in notify_urls)
+                    {
+                        string result = webClientManager.GetInfoFromServer(notify_url, action_targets, param);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex, "Exception");
+                }
+            }
+            public void BOXBCRReadFailOverTimes()
+            {
+                try
+                {
+                    string[] action_targets = new string[]
+                    {
+                    "weatherforecast"
+                    };
+                    string[] param = new string[]
+                    {
+                        OHCV_BOX_BCR_READ_FAIL_OVER_TIMES,
                     };
                     foreach (string notify_url in notify_urls)
                     {

@@ -32,10 +32,14 @@ using System.Runtime.InteropServices;
 // 您可以指定所有的值，也可以依照以下的方式，使用 '*' 將組建和修訂編號
 // 指定為預設值:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.6.7")]
-[assembly: AssemblyFileVersion("1.6.7")]
+[assembly: AssemblyVersion("1.6.8")]
+[assembly: AssemblyFileVersion("1.6.8")]
 
 //版號 + Tab + 日期 + Tab + 修改人 + Tab + 敘述
+//1.6.8 2020/12/01  SCC+     1.修改 PortToOHT 自動過帳與OHT_LOAD_COMPLETE，先後觸發問題
+//                           2.修改 AGV PortPositionOFF 原本報CEID:153 改報 CEID:152
+//                  JasonWu+ 1.拿掉 限制只有shelf 才上報Load Complete 過帳的動作
+//                  KevinWei 1.修改...
 
 //1.6.7 2020/11/13  JasonWu+ 新增在GetShelfRecentLocation 中確認到shelf後就要提前預約
 //1.6.6 2020/11/11  JasonWu+ 新增在進入Load_Complete的時候，若為非shelf的port 就不要進行過帳，避免網路延遲時出現過到下一顆帳的問題。

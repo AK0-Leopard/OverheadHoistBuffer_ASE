@@ -858,6 +858,7 @@
     <None Include="Image\single_4.png" />
     <None Include="Image\single_5.png" />
     <Content Include="Image\OHxC icon.png" />
+    <Content Include="Image\盟立集團-去背檔.png" />
     <Content Include="OHxC.ico" />
     <Content Include="ResGen.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

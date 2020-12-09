@@ -109,14 +109,14 @@ namespace com.mirle.ibg3k0.bc.winform
             #region dataGridView4
             dataGridView4.Columns.Add("中文說明", "中文說明");                 //0
             dataGridView4.Columns.Add("訊號名稱", "訊號名稱");                 //1
-            dataGridView4.Columns.Add("狀態", "狀態");                         //2
+            dataGridView4.Columns.Add("狀態", "狀態");                        //2
 
-            dataGridView4.Rows.Add("開啟自動補退盒子功能", "openAGV_Station");  //0
+            dataGridView4.Rows.Add("開啟自動補退盒子功能", "openAGV_Station");       //0
             dataGridView4.Rows.Add("開啟自動切換流向功能", "openAGV_AutoPortType");  //1
-            dataGridView4.Rows.Add("AGV 模式", "IsAGVMode");                    //2
-            dataGridView4.Rows.Add("MGV 模式", "IsMGVMode");                    //3
-            dataGridView4.Rows.Add("", "", "");                                 //4
-            dataGridView4.Rows.Add("AGV 能投放", "AGVPortReady");               //5
+            dataGridView4.Rows.Add("AGV 模式", "IsAGVMode");                      //2
+            dataGridView4.Rows.Add("MGV 模式", "IsMGVMode");                      //3
+            dataGridView4.Rows.Add("", "", "");                                  //4
+            dataGridView4.Rows.Add("AGV 能投放", "AGVPortReady");                 //5
             dataGridView4.Rows.Add("AGV 不能投放", "AGVPortMismatch");          //6
             dataGridView4.Rows.Add("", "", "");                                 //7
             dataGridView4.Rows.Add("是否能開蓋", "CanOpenBox");                 //8
@@ -369,7 +369,7 @@ namespace com.mirle.ibg3k0.bc.winform
             foreach (DataGridViewCell v in dataGridView1.SelectedCells)
             {
                 string portName = dataGridView1.Rows[v.RowIndex].Cells["PLCPortID"].Value.ToString();
-                transferService.UpdateIgnoreModeChange(portName, "Y");
+                //transferService.UpdateIgnoreModeChange(portName, "Y");
             }
             GetPortData();
         }
@@ -379,7 +379,7 @@ namespace com.mirle.ibg3k0.bc.winform
             foreach (DataGridViewCell v in dataGridView1.SelectedCells)
             {
                 string portName = dataGridView1.Rows[v.RowIndex].Cells["PLCPortID"].Value.ToString();
-                transferService.UpdateIgnoreModeChange(portName, "N");
+                //transferService.UpdateIgnoreModeChange(portName, "N");
             }
             GetPortData();
         }
