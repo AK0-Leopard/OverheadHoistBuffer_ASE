@@ -630,7 +630,7 @@ message Timestamp {
   message ID_145_POWER_OPE_RESPONSE {
    	 int32 ReplyCode = 1;
   }
-   
+  
   message ID_51_AVOID_REQUEST {
 	string DestinationAdr = 1;
 	repeated string Guide_Sections = 2;
@@ -1147,6 +1147,9 @@ message Timestamp {
 
 		ID_45_POWER_OPE_REQ Power_Ope_Req = 45;
 		ID_145_POWER_OPE_RESPONSE Power_Ope_Resp = 145;
+
+		ID_51_AVOID_REQUEST Avoid_Req = 51;
+		ID_151_AVOID_RESPONSE Avoid_Resp = 151;
 
 		ID_71_RANGE_TEACHING_REQUEST Range_Teaching_Req = 71;
 		ID_171_RANGE_TEACHING_RESPONSE Range_Teaching_Resp = 171;

@@ -198,6 +198,85 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                 throw;
             }
         }
+
+        public List<ShelfDef> GetEmptyHandOffShelf(DBConnection_EF conn)
+        {
+            try
+            {
+                var result = conn.ShelfDef
+                    .Where(x => x.ShelfState == ShelfDef.E_ShelfState.EmptyShelf &&
+                                x.Enable == "Y"
+                                && (int.Parse(x.ADR_ID) > 10090 && int.Parse(x.ADR_ID) < 10102))
+                    .OrderByDescending(x => x.ShelfID).ToList();
+                //.FirstOrDefault();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex);
+                throw;
+            }
+        }
+
+        public List<ShelfDef> GetEmptyHandOffShelfNorth(DBConnection_EF conn)
+        {
+            try
+            {
+                var result = conn.ShelfDef
+                    .Where(x => x.ShelfState == ShelfDef.E_ShelfState.EmptyShelf &&
+                                x.Enable == "Y"
+                                && ( int.Parse(x.ADR_ID) == 10103))
+                    .OrderByDescending(x => x.ShelfID).ToList();
+                //.FirstOrDefault();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex);
+                throw;
+            }
+        }
+
+        public List<ShelfDef> GetEmptyHandOffShelfSouth(DBConnection_EF conn)
+        {
+            try
+            {
+                var result = conn.ShelfDef
+                    .Where(x => x.ShelfState == ShelfDef.E_ShelfState.EmptyShelf &&
+                                x.Enable == "Y"
+                                && (int.Parse(x.ADR_ID) == 10089))
+                    .OrderByDescending(x => x.ShelfID).ToList();
+                //.FirstOrDefault();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex);
+                throw;
+            }
+        }
+
+        public List<ShelfDef> GetEmptyNonHandOffShelf(DBConnection_EF conn)
+        {
+            try
+            {
+                var result = conn.ShelfDef
+                    .Where(x => x.ShelfState == ShelfDef.E_ShelfState.EmptyShelf &&
+                                x.Enable == "Y"
+                                && (int.Parse(x.ADR_ID) < 10089 && int.Parse(x.ADR_ID) > 10103)
+                                )
+                    .OrderByDescending(x => x.ShelfID).ToList();
+                //.FirstOrDefault();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex);
+                throw;
+            }
+        }
+
+        
         public List<ShelfDef> GetReserveShelf(DBConnection_EF conn)  //取得不是空儲位的所有儲位
         {
             try

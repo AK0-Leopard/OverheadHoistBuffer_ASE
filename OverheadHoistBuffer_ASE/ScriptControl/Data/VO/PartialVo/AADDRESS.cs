@@ -54,5 +54,13 @@ namespace com.mirle.ibg3k0.sc
                 return AddressTypeFlags[BIT_INDEX_SEGMENT];
             }
         }
+
+        public bool canAvoidVhecle
+        {
+            get
+            {
+                return true;
+            }
+        }
     }
 }

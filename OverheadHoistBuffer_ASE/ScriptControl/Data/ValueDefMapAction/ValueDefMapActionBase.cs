@@ -127,6 +127,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
         public virtual bool sned_Str41(ID_41_MODE_CHANGE_REQ send_gpp, out ID_141_MODE_CHANGE_RESPONSE receive_gpp) { receive_gpp = null; return true; }
         public virtual bool send_Str43(ID_43_STATUS_REQUEST send_gpp, out ID_143_STATUS_RESPONSE receive_gpp) { receive_gpp = null; return true; }
         public virtual bool sned_Str45(ID_45_POWER_OPE_REQ send_gpp, out ID_145_POWER_OPE_RESPONSE receive_gpp) { receive_gpp = null; return true; }
+        public virtual bool send_Str51(ID_51_AVOID_REQUEST send_gpp, out ID_151_AVOID_RESPONSE receive_gpp) { receive_gpp = null; return true; }
         public virtual bool sned_Str91(ID_91_ALARM_RESET_REQUEST send_gpp, out ID_191_ALARM_RESET_RESPONSE receive_gpp) { receive_gpp = null; return true; }
 
         public virtual bool send_Str31(ID_31_TRANS_REQUEST send_gpp, out ID_131_TRANS_RESPONSE receive_gpp, out string reason) { reason = string.Empty; receive_gpp = null; return true; }

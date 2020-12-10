@@ -514,7 +514,28 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             return isScuess;
 
         }
+        public override bool send_Str51(ID_51_AVOID_REQUEST send_gpp, out ID_151_AVOID_RESPONSE receive_gpp)
+        {
+            bool isScuess = false;
+            try
+            {
+                string rtnMsg = string.Empty;
+                WrapperMessage wrapper = new WrapperMessage
+                {
+                    ID = WrapperMessage.AvoidReqFieldNumber,
+                    AvoidReq = send_gpp
+                };
+                com.mirle.iibg3k0.ttc.Common.TrxTcpIp.ReturnCode result = snedRecv(wrapper, out receive_gpp, out rtnMsg);
+                isScuess = result == TrxTcpIp.ReturnCode.Normal;
+            }
+            catch (Exception ex)
+            {
+                receive_gpp = null;
+                logger.Error(ex, "Exception");
+            }
+            return isScuess;
 
+        }
         public override bool send_Str71(ID_71_RANGE_TEACHING_REQUEST send_gpp, out ID_171_RANGE_TEACHING_RESPONSE receive_gpp)
         {
             bool isScuess = false;

@@ -2155,6 +2155,7 @@ namespace com.mirle.ibg3k0.sc.App
     /// </summary>
     public class SystemParameter
     {
+        public static event EventHandler<bool> AutoOverrideChange;
         //System EC Data 
         /// <summary>
         /// The secs conversaction timeout
@@ -2179,6 +2180,8 @@ namespace com.mirle.ibg3k0.sc.App
 
         public static int cmdPriorityAdd = 1;
         public static int cmdTimeOutToAlternate = 30;
+
+        public static bool AutoOverride = true;
         /// <summary>
         /// Sets the secs conversaction timeout.
         /// </summary>
@@ -2223,7 +2226,14 @@ namespace com.mirle.ibg3k0.sc.App
         {
             IsEnableIDReadFailScenario = isEnable;
         }
-
+        public static void setAutoOverride(bool autoOverride)
+        {
+            if (AutoOverride != autoOverride)
+            {
+                AutoOverride = autoOverride;
+                AutoOverrideChange?.Invoke(null, AutoOverride);
+            }
+        }
     }
 
     public class HAProxyConnectionTest

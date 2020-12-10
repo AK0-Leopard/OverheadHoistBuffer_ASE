@@ -63,7 +63,17 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                         select cmd;
             return query.ToList();
         }
-
+        public List<ACMD_OHTC> loadAllQueue_AutoNew(DBConnection_EF con)
+        {
+            string sGen_type = ((int)(App.SCAppConstants.GenOHxCCommandType.Auto)).ToString();
+            var query = from cmd in con.ACMD_OHTC.AsNoTracking()
+                        where (cmd.CMD_STAUS == E_CMD_STATUS.Queue) &&
+                              cmd.CMD_ID.StartsWith(sGen_type)
+                              orderby cmd.PRIORITY descending,
+                              cmd.CMD_START_TIME ascending
+                        select cmd;
+            return query.ToList();
+        }
 
         public List<ACMD_OHTC> loadExecuteCmd(DBConnection_EF con, string vh_id)
         {

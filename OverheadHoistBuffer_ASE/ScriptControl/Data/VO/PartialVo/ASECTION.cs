@@ -32,8 +32,27 @@ namespace com.mirle.ibg3k0.sc
         {
             onSectinoEntry(vh_id);
         }
-
-
+        public string GetOrtherEndPoint(string endPoint)
+        {
+            if (Common.SCUtility.isMatche(this.FROM_ADR_ID, endPoint))
+            {
+                return this.TO_ADR_ID;
+            }
+            else if (Common.SCUtility.isMatche(this.TO_ADR_ID, endPoint))
+            {
+                return this.FROM_ADR_ID;
+            }
+            else
+            {
+                LogHelper.Log(logger: LogManager.GetCurrentClassLogger(), LogLevel: LogLevel.Warn, Class: nameof(ASECTION), Device: "OHBC",
+                   Data: $"in section id:{SEC_ID}, unknow endpoint:{endPoint}");
+                return "";
+            }
+        }
+        public bool IsActive(BLL.SegmentBLL segmentBLL)
+        {
+            return segmentBLL.cache.GetSegment(this.SEG_NUM).STATUS == E_SEG_STATUS.Active;
+        }
 
     }
 }

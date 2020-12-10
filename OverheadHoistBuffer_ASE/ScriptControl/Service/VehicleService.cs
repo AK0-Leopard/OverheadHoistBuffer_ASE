@@ -1010,6 +1010,36 @@ namespace com.mirle.ibg3k0.sc.Service
             return isSuccess;
         }
 
+
+        public bool trydoAvoidCommandToVh(AVEHICLE avoidVh, AVEHICLE passVh)
+        {
+            var find_avoid_result = findNotConflictSectionAndAvoidAddressNew(passVh, avoidVh, true);
+            string blocked_section = avoidVh.CanNotReserveInfo.ReservedSectionID;
+            string blocked_vh_id = avoidVh.CanNotReserveInfo.ReservedVhID;
+            if (find_avoid_result.isFind)
+            {
+                avoidVh.VhAvoidInfo = null;
+                //找到避車點之後，就可以下ID:51，開始讓vh進行避車了
+                var avoid_request_result = AvoidRequest(avoidVh.VEHICLE_ID, find_avoid_result.avoidAdr,
+                                                        needbyPassSectionID: blocked_section);
+                if (avoid_request_result.is_success)
+                {
+                    avoidVh.VhAvoidInfo = new AVEHICLE.AvoidInfo(blocked_section, blocked_vh_id, avoid_request_result.guide_address_ids);
+                }
+                return avoid_request_result.is_success;
+            }
+            else
+            {
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                   Data: $"No find the can avoid address. avoid vh:{avoidVh.VEHICLE_ID} current adr:{avoidVh.CUR_ADR_ID}," +
+                         $"will pass vh:{passVh.VEHICLE_ID} current adr:{passVh.CUR_ADR_ID}",
+                   VehicleID: avoidVh.VEHICLE_ID,
+                   CarrierID: avoidVh.CST_ID);
+                return false;
+            }
+        }
+
+
         public bool doCancelCommandByMCSCmdIDWithNoReport(string cancel_abort_mcs_cmd_id, CMDCancelType actType, out string ohtc_cmd_id)
         {
             ACMD_MCS mcs_cmd = scApp.CMDBLL.getCMD_MCSByID(cancel_abort_mcs_cmd_id);
@@ -1596,6 +1626,169 @@ namespace com.mirle.ibg3k0.sc.Service
             return isSuccess;
         }
 
+        public (bool is_success, string result, List<string> guide_address_ids) AvoidRequest(string vh_id, string avoidAddress, string needbyPassSectionID = null)
+        {
+            AVEHICLE vh = scApp.getEQObjCacheManager().getVehicletByVHID(vh_id);
+            List<string> guide_segment_ids = null;
+            List<string> guide_section_ids = null;
+            List<string> guide_address_ids = null;
+            int total_cost = 0;
+            bool is_success = true;
+            string result = "";
+            string vh_current_address = SCUtility.Trim(vh.CUR_ADR_ID, true);
+            try
+            {
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                   Data: $"Start vh:{vh_id} avoid script,avoid to address:{avoidAddress}...",
+                   VehicleID: vh_id,
+                   CarrierID: vh.CST_ID);
+
+                if (SCUtility.isEmpty(vh.OHTC_CMD))
+                {
+                    is_success = false;
+                    result = $"vh:{vh_id} not excute ohtc command.";
+                }
+                if (!vh.IsReservePause)
+                {
+                    is_success = false;
+                    result = $"vh:{vh_id} current not in reserve pause.";
+                }
+                List<string> need_by_pass_sec_ids = new List<string>();
+                if (!SCUtility.isEmpty(needbyPassSectionID))
+                {
+                    need_by_pass_sec_ids.Add(needbyPassSectionID);
+                }
+
+                if (is_success)
+                {
+                    int current_find_count = 0;
+                    int max_find_count = 10;
+                    do
+                    {
+                        //確認下一段Section，是否可以預約成功
+                        string next_walk_section = "";
+                        string next_walk_address = "";
+
+
+                        //(is_success, guide_segment_ids, guide_section_ids, guide_address_ids, total_cost) =
+                        //    scApp.GuideBLL.getGuideInfo_New2(vh_current_section, vh_current_address, avoidAddress);
+                        (is_success, guide_segment_ids, guide_section_ids, guide_address_ids, total_cost) =
+                                                    scApp.GuideBLL.getGuideInfo(vh_current_address, avoidAddress, need_by_pass_sec_ids);
+                        next_walk_section = guide_section_ids[0];
+                        next_walk_address = guide_address_ids[0];
+
+                        if (is_success)
+                        {
+
+                            var reserve_result = askReserveSuccess(vh_id, next_walk_section, next_walk_address);
+                            if (reserve_result.isSuccess)
+                            {
+                                is_success = true;
+                            }
+                            else
+                            {
+                                is_success = false;
+                                need_by_pass_sec_ids.Add(next_walk_section);
+                                LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                                   Data: $"find the avoid path ,but section:{next_walk_section} is reserved for vh:{reserve_result.reservedVhID}" +
+                                         $"add to need by pass sec ids,current by pass section:{string.Join(",", need_by_pass_sec_ids)}",
+                                   VehicleID: vh.VEHICLE_ID,
+                                   CarrierID: vh.CST_ID);
+                            }
+                        }
+                        if (current_find_count++ > max_find_count)
+                        {
+                            is_success = false;
+                            LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                               Data: $"find the avoid path ,but over times:{max_find_count}",
+                               VehicleID: vh.VEHICLE_ID,
+                               CarrierID: vh.CST_ID);
+                            break;
+                        }
+                    } while (!is_success);
+
+                    string vh_current_section = SCUtility.Trim(vh.CUR_SEC_ID, true);
+                    if (is_success)
+                    {
+                        //根據車子所在位置，補足路段
+                        bool start_section_is_same = true;
+                        if (guide_section_ids != null && guide_section_ids.Count > 0)
+                        {
+                            start_section_is_same = SCUtility.isMatche(guide_section_ids[0], vh_current_section);
+                            if (!start_section_is_same)
+                            {
+                                guide_section_ids.Insert(0, vh_current_section);
+                                ASECTION new_start_section = scApp.SectionBLL.cache.GetSection(vh_current_section);
+                                if (SCUtility.isMatche(guide_address_ids[0], new_start_section.FROM_ADR_ID))
+                                {
+                                    guide_address_ids.Insert(0, new_start_section.TO_ADR_ID);
+                                }
+                                else
+                                {
+                                    guide_address_ids.Insert(0, new_start_section.FROM_ADR_ID);
+                                }
+                                //if (!SCUtility.isMatche(guide_segment_ids[0], new_start_section.SEG_NUM))
+                                //{
+                                //    guide_segment_ids.Insert(0, new_start_section.SEG_NUM);
+                                //}
+                            }
+                        }
+                        vh.IsPrepareAvoid = true;
+                        is_success = AvoidRequest(vh_id, avoidAddress, guide_section_ids.ToArray(), guide_address_ids.ToArray());
+                        if (!is_success)
+                        {
+                            result = $"send avoid to vh fail.vh:{vh_id}, vh current adr:{vh_current_address} ,avoid address:{avoidAddress}.";
+                        }
+                        else
+                        {
+                            scApp.ReserveBLL.RemoveAllReservedSectionsByVehicleID(vh_id);
+                            LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                               Data: $"Avoid success remove vh:{vh_id} all reserved section.",
+                               VehicleID: vh.VEHICLE_ID,
+                               CarrierID: vh.CST_ID);
+                            //在移除掉該VH所預約的路徑後，要再加入自己本身所在的Section，避免之後其他車子預約走
+                            var reserve_result = scApp.ReserveBLL.TryAddReservedSection(vh_id, vh_current_section,
+                                                                    Mirle.Hlts.Utils.HltDirection.None);
+                            LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                               Data: $"Avoid success append vh:{vh_id} current section:{vh_current_section}.result:{reserve_result.ToString()}",
+                               VehicleID: vh.VEHICLE_ID,
+                               CarrierID: vh.CST_ID);
+                        }
+                    }
+                    else
+                    {
+                        result = $"find avoid path fail.vh:{vh_id}, vh current adr:{vh_current_address} ,avoid address:{avoidAddress}.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                   Data: ex,
+                   Details: $"AvoidRequest fail.vh:{vh_id}, vh current adr:{vh_current_address} ,avoid address:{avoidAddress}.",
+                   VehicleID: vh_id);
+            }
+            finally
+            {
+                vh.IsPrepareAvoid = false;
+            }
+            return (is_success, result, guide_address_ids);
+        }
+        public bool AvoidRequest(string vh_id, string avoidAddress, string[] guideSection, string[] guideAddresses)
+        {
+            bool isSuccess = false;
+            AVEHICLE vh = scApp.getEQObjCacheManager().getVehicletByVHID(vh_id);
+            ID_151_AVOID_RESPONSE receive_gpp;
+            ID_51_AVOID_REQUEST send_gpp = new ID_51_AVOID_REQUEST();
+            send_gpp.DestinationAdr = avoidAddress;
+            send_gpp.GuideSections.AddRange(guideSection);
+            send_gpp.GuideAddresses.AddRange(guideAddresses);
+
+            SCUtility.RecodeReportInfo(vh.VEHICLE_ID, 0, send_gpp);
+            isSuccess = vh.send_Str51(send_gpp, out receive_gpp);
+            SCUtility.RecodeReportInfo(vh.VEHICLE_ID, 0, receive_gpp, isSuccess.ToString());
+            return isSuccess;
+        }
 
         #endregion Tcp/Ip
         #region PLC
@@ -2302,7 +2495,260 @@ namespace com.mirle.ibg3k0.sc.Service
                 }
             }
         }
+        /// <summary>
+        /// 用來找出要讓路的vh(avoidVh)根據先讓它通過的車子(passVh)行走路線
+        /// 找出適合讓退避車的退避的點
+        /// </summary>
+        /// <param name="passVh"></param>
+        /// <param name="avoidVh"></param>
+        /// <param name="isDeadLock"></param>
+        /// <returns></returns>
+        private (bool isFind, ASECTION notConflictSection, string entryAdr, string avoidAdr) findNotConflictSectionAndAvoidAddressNew
+            (AVEHICLE passVh, AVEHICLE avoidVh, bool isDeadLock)
+        {
+            string pass_vh_cur_adr = passVh.CUR_ADR_ID;
+            string find_avoid_vh_cur_adr = avoidVh.CUR_ADR_ID;
+            ASECTION req_vh_current_section = scApp.SectionBLL.cache.GetSection(passVh.CUR_SEC_ID);
+            ASECTION avoid_vh_current_section = scApp.SectionBLL.cache.GetSection(avoidVh.CUR_SEC_ID);
+            //先找出哪個Address是距離pass vh比較遠的距離，即代表是反方向
+            //就可以先從那邊開始往上找
+            string first_search_adr = findTheOppositeOfAddress(pass_vh_cur_adr, avoid_vh_current_section);
 
+            //設定開始找路的起點
+            (string next_address, ASECTION source_section) first_search_section_infos = (first_search_adr, avoid_vh_current_section);
+            //先朝著相反的路徑找
+            var searchResult = tryFindAvoidAddress(passVh, avoidVh, first_search_section_infos, false);
+            if (!isDeadLock && !searchResult.isFind)
+            {
+                //如果相反方向找不到路，且並不是在執行解Dead lock邏輯時(如:趕車邏輯)則可以試著往同一方向找看看。
+                //(即可能會需要穿過另外一台車)
+                string second_search_adr = SCUtility.isMatche(first_search_adr, avoid_vh_current_section.FROM_ADR_ID) ?
+                    avoid_vh_current_section.TO_ADR_ID : avoid_vh_current_section.FROM_ADR_ID;
+
+                (string next_address, ASECTION source_section) second_search_section_infos = (second_search_adr, avoid_vh_current_section);
+                searchResult = tryFindAvoidAddress(passVh, avoidVh, second_search_section_infos, true);
+            }
+            return searchResult;
+        }
+
+        private string findTheOppositeOfAddress(string req_vh_cur_adr, ASECTION find_avoid_vh_current_section)
+        {
+            string opposite_address = "";
+            int from_distance = 0;
+            var from_adr_guide_result = scApp.GuideBLL.getGuideInfo(req_vh_cur_adr, find_avoid_vh_current_section.FROM_ADR_ID);
+            if (from_adr_guide_result.isSuccess)
+            {
+                from_distance = from_adr_guide_result.totalCost;
+            }
+            int to_distance = 0;
+            var to_adr_guide_result = scApp.GuideBLL.getGuideInfo(req_vh_cur_adr, find_avoid_vh_current_section.TO_ADR_ID);
+            if (to_adr_guide_result.isSuccess)
+            {
+                to_distance = to_adr_guide_result.totalCost;
+            }
+            if (from_distance > to_distance)
+            {
+                opposite_address = find_avoid_vh_current_section.FROM_ADR_ID;
+            }
+            else
+            {
+                opposite_address = find_avoid_vh_current_section.TO_ADR_ID;
+            }
+            return opposite_address;
+        }
+
+        private (bool isFind, ASECTION notConflictSection, string entryAdr, string avoidAdr) tryFindAvoidAddress
+    (AVEHICLE passVh, AVEHICLE avoidVh, (string next_address, ASECTION source_section) startSearchInfo, bool isForceCrossing)
+        {
+            int calculation_count = 0;
+            int max_calculation_count = 20;
+
+            List<(string next_address, ASECTION source_section)> next_search_infos =
+                new List<(string next_address, ASECTION source_section)>() { startSearchInfo };
+            List<(string next_address, ASECTION source_section)> next_search_address_temp =
+                new List<(string, ASECTION)>();
+
+            ASECTION not_conflict_section = null;
+            string avoid_address = null;
+            string orther_end_point = "";
+            //string virtual_vh_id = "";
+            List<string> virtual_vh_ids = new List<string>();
+
+            try
+            {
+                //在一開始的時候就先Set一台虛擬車在相同位置，防止找到鄰近的Address
+                //不然可能移動完成以後，還是無法讓出路徑讓另外一台車通過
+                var hlt_vh_obj = scApp.ReserveBLL.GetHltVehicle(avoidVh.VEHICLE_ID);
+                string virtual_vh_id = $"{VehicleVirtualSymbol}_{avoidVh.VEHICLE_ID}";
+                scApp.ReserveBLL.TryAddVehicleOrUpdate(virtual_vh_id, "", hlt_vh_obj.X, hlt_vh_obj.Y, hlt_vh_obj.Angle, 0,
+                    sensorDir: Mirle.Hlts.Utils.HltDirection.NESW,
+                      forkDir: Mirle.Hlts.Utils.HltDirection.None);
+                virtual_vh_ids.Add(virtual_vh_id);
+                do
+                {
+                    foreach (var search_info in next_search_infos.ToArray())
+                    {
+                        LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                           Data: $"start search address:{search_info.next_address}",
+                           VehicleID: passVh.VEHICLE_ID);
+                        //next_search_address.Clear();
+                        List<ASECTION> next_sections = scApp.SectionBLL.cache.GetSectionsByAddress(search_info.next_address);
+
+                        //先把上一段找過的Section移除，才不會又往已經找過的路段找回去
+                        next_sections.Remove(search_info.source_section);
+                        if (next_sections != null && next_sections.Count() > 0)
+                        {
+                            LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                               Data: $"next search section:{string.Join(",", next_sections.Select(sec => sec.SEC_ID).ToArray())}",
+                               VehicleID: passVh.VEHICLE_ID);
+                            //過濾掉已經Disable的Segment
+                            next_sections = next_sections.Where(sec => sec.IsActive(scApp.SegmentBLL)).ToList();
+                            if (next_sections != null && next_sections.Count() > 0)
+                            {
+                                LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                                   Data: $"next search section:{string.Join(",", next_sections.Select(sec => sec.SEC_ID).ToArray())} after filter not in active",
+                                   VehicleID: passVh.VEHICLE_ID);
+                            }
+                            else
+                            {
+                                LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                                   Data: $"search result is empty after filter not in active ,search adr:{search_info.next_address}",
+                                   VehicleID: passVh.VEHICLE_ID);
+                            }
+                        }
+                        else
+                        {
+                            LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                               Data: $"search result is empty,search adr:{search_info.next_address}",
+                               VehicleID: passVh.VEHICLE_ID);
+                            //如果找到最後已經沒路的，就用這個端點去嘗試Add 一台車看看能不能成功，
+                            //如果可以成功則代表這個點其實是可以閃避的
+                            string virtual_vh_section_id = $"{virtual_vh_id}_{search_info.next_address}";
+                            virtual_vh_ids.Add(virtual_vh_section_id);
+                            var check_result = scApp.ReserveBLL.TryAddVehicleOrUpdate(virtual_vh_section_id, search_info.next_address, 0);
+                            if (check_result.OK)
+                                check_result = scApp.ReserveBLL.TryAddVehicleOrUpdate(virtual_vh_section_id, search_info.next_address, 90);
+                            if (check_result.OK)
+                            {
+                                LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                                   Data: $"search result is empty,but finial adr:{search_info.next_address} it ok for avoid",
+                                   VehicleID: passVh.VEHICLE_ID);
+
+                                not_conflict_section = search_info.source_section;
+                                avoid_address = search_info.next_address;
+                                return (true, not_conflict_section, search_info.next_address, avoid_address);
+                            }
+                        }
+
+                        //當找出兩段以上的Section時且他的Source為會與另一台vh前進路徑交錯的車，
+                        //代表找到了叉路，因此要在入口加入一台虛擬車來幫助找避車路徑時確保不會卡住的點。
+                        if (next_sections.Count >= 2 &&
+                            hasCrossWithPredictSection(search_info.source_section.SEC_ID, passVh.WillPassSectionID))
+                        //hasCrossWithPredictSection(search_info.source_section.SEC_ID, requestVh.PredictSections))
+                        {
+                            string virtual_vh_section_id = $"{virtual_vh_id}_{search_info.next_address}";
+                            scApp.ReserveBLL.TryAddVehicleOrUpdate(virtual_vh_section_id, search_info.next_address);
+                            virtual_vh_ids.Add(virtual_vh_section_id);
+                            //scApp.ReserveBLL.ForceUpdateVehicle(virtual_vh_id, search_info.next_address);
+                            LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                               Data: $"Add virtual in reserve system vh:{virtual_vh_section_id} in address id:{search_info.next_address}",
+                               VehicleID: avoidVh.VEHICLE_ID);
+                        }
+                        foreach (ASECTION sec in next_sections)
+                        {
+                            //if (sec == search_info.source_section) continue;
+                            orther_end_point = sec.GetOrtherEndPoint(search_info.next_address);
+                            //如果跟目前找停車位的車子同一個點位時，代表找回到了原點，因此要把它濾掉。
+                            if (SCUtility.isMatche(avoidVh.CUR_ADR_ID, orther_end_point))
+                            {
+                                LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                                   Data: $"sec id:{SCUtility.Trim(sec.SEC_ID)} of orther end point:{orther_end_point} same with vh current address pass this section",
+                                   VehicleID: passVh.VEHICLE_ID);
+                                continue;
+                            }
+                            if (!isForceCrossing)
+                            {
+                                //確認可以避車的點，是否為Pass vh將要行走的路徑(代表是會相交的路線))，是的話就繼續往下找
+                                //if (requestVh.PredictSections != null && requestVh.PredictSections.Count() > 0)
+                                if (passVh.WillPassSectionID != null && passVh.WillPassSectionID.Count() > 0)
+                                {
+                                    //if (requestVh.PredictSections.Contains(SCUtility.Trim(sec.SEC_ID)))
+                                    if (passVh.WillPassSectionID.Contains(SCUtility.Trim(sec.SEC_ID)))
+                                    {
+                                        //next_search_address.Add(next_calculation_address);
+                                        next_search_address_temp.Add((orther_end_point, sec));
+                                        LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                                           Data: $"sec id:{SCUtility.Trim(sec.SEC_ID)} is request_vh of will sections:{string.Join(",", passVh.WillPassSectionID)}.by pass it,continue find next address{orther_end_point}",
+                                           VehicleID: passVh.VEHICLE_ID);
+                                        continue;
+                                    }
+                                }
+                            }
+                            //取得沒有相交的Section後，在確認是否該Orther end point是一個可以避車且不是R2000的任一端點，
+                            //如果是的話就可以拿來作為一個避車點
+
+                            AADDRESS orther_end_address = scApp.MapBLL.getAddressByID(orther_end_point);
+
+                            //AADDRESS orther_end_address = scApp.AddressesBLL.cache.GetAddress(orther_end_point);
+                            //if (!orther_end_address.canAvoidVhecle)
+                            if (!orther_end_address.canAvoidVhecle ||
+                                scApp.ReserveBLL.IsR2000Address(orther_end_point))
+                            {
+                                LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                                   Data: $"sec id:{SCUtility.Trim(sec.SEC_ID)} of orther end point:{orther_end_point} is not can avoid address, continue find next address{orther_end_point}",
+                                   VehicleID: passVh.VEHICLE_ID);
+                                next_search_address_temp.Add((orther_end_point, sec));
+                                continue;
+                            }
+                            //找到以後嘗試去預約看看，確保該路徑是可以走的，如果不行則就繼續往下找(避免剛好是在路口的地方，導致另一台車閃不過去)
+                            var reserve_check_result = scApp.ReserveBLL.TryAddReservedSection(avoidVh.VEHICLE_ID, sec.SEC_ID, isAsk: true);
+                            if (!reserve_check_result.OK)
+                            {
+                                LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                                   Data: $"sec id:{SCUtility.Trim(sec.SEC_ID)} try to reserve fail,result:{reserve_check_result.Description}. continue find next address{orther_end_point}.",
+                                   VehicleID: passVh.VEHICLE_ID);
+                                next_search_address_temp.Add((orther_end_point, sec));
+                                continue;
+                            }
+                            else
+                            {
+                                LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                                   Data: $"sec id:{SCUtility.Trim(sec.SEC_ID)} try to reserve success,result:{reserve_check_result.Description}.",
+                                   VehicleID: passVh.VEHICLE_ID);
+                            }
+                            not_conflict_section = sec;
+                            avoid_address = orther_end_point;
+                            return (true, not_conflict_section, search_info.next_address, avoid_address);
+                        }
+                    }
+                    next_search_infos = next_search_address_temp.ToList();
+                    next_search_address_temp.Clear();
+                    calculation_count++;
+                } while (next_search_infos.Count() != 0 && calculation_count < max_calculation_count);
+            }
+            finally
+            {
+                if (virtual_vh_ids != null && virtual_vh_ids.Count > 0)
+                {
+                    foreach (string virtual_vh_id in virtual_vh_ids)
+                    {
+                        scApp.ReserveBLL.RemoveVehicle(virtual_vh_id);
+                        //scApp.ReserveBLL.ForceUpdateVehicle(virtual_vh_id, 0, 0, 0);
+                        LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                           Data: $"remove virtual in reserve system vh:{virtual_vh_id} ",
+                           VehicleID: avoidVh.VEHICLE_ID);
+                    }
+                }
+            }
+            return (false, null, null, null);
+        }
+
+        private bool hasCrossWithPredictSection(string checkSection, List<string> willPassSection)
+        {
+            if (willPassSection == null || willPassSection.Count() == 0) return false;
+            if (SCUtility.isEmpty(checkSection)) return false;
+            return willPassSection.Contains(SCUtility.Trim(checkSection));
+        }
         private (bool isFind, string avoidAdr) findNotConflictSectionAndAvoidAddressNew
             (AVEHICLE requestVh, AVEHICLE reservedVh, List<string> reserveFailSections)
         {
@@ -2383,7 +2829,21 @@ namespace com.mirle.ibg3k0.sc.Service
             return (is_can, CAN_NOT_AVOID_RESULT.Normal);
         }
 
-
+        private (bool isSuccess, string reservedVhID, string reservedSecID) askReserveSuccess(string vhID, string sectionID, string addressID)
+        {
+            RepeatedField<ReserveInfo> reserveInfos = new RepeatedField<ReserveInfo>();
+            ASECTION current_section = scApp.SectionBLL.cache.GetSection(sectionID);
+            DriveDirction driveDirction = SCUtility.isMatche(current_section.FROM_ADR_ID, addressID) ?
+                DriveDirction.DriveDirForward : DriveDirction.DriveDirReverse;
+            ReserveInfo info = new ReserveInfo()
+            {
+                //DriveDirction = DriveDirction.DriveDirForward,
+                DriveDirction = driveDirction,
+                ReserveSectionID = sectionID
+            };
+            reserveInfos.Add(info);
+            return IsReserveSuccessNew(vhID, reserveInfos, isAsk: true);
+        }
         private (bool isSuccess, string reservedVhID, string reservedSecID) IsReserveSuccessNew(string vhID, RepeatedField<ReserveInfo> reserveInfos, bool isAsk = false)
         {
             try

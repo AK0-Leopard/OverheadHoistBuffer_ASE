@@ -947,6 +947,137 @@ namespace com.mirle.ibg3k0.sc.BLL
             return firstVh;
         }
 
+        public AVEHICLE findBestSuitableVhStepByNearestForASE_Line3(string source,string destnation, E_VH_TYPE vh_type, bool is_check_has_vh_carry = false)
+        {
+            AVEHICLE firstVh = null;
+            double dietance = double.MaxValue;
+            List<AVEHICLE> vhs = null;
+            int selectedCarNo = 0;
+            if (classificationCMDBySourceDest(source, destnation ,out selectedCarNo))
+            {
+                if (selectedCarNo == 1)
+                {
+                    AVEHICLE vh = cache.getVhByNum(1);
+                    vhs = new List<AVEHICLE>();
+                    vhs.Add(vh);
+                }
+                else if (selectedCarNo == 2)
+                {
+                    AVEHICLE vh = cache.getVhByNum(2);
+                    vhs = new List<AVEHICLE>();
+                    vhs.Add(vh);
+                }
+                else
+                {
+                    //列出所有車子
+                    vhs = cache.loadVhs().ToList();
+                }
+
+                //過濾掉狀態不符的
+                if (!is_check_has_vh_carry)
+                    filterVh(ref vhs, vh_type);
+
+                (firstVh, dietance) = FindNearestVh(source, vhs);
+            }
+            else
+            {
+                return null;
+            }
+
+
+            return firstVh;
+        }
+        private bool classificationCMDBySourceDest(string source, string destination, out int selectedCarNo)
+        {
+            int iSource;
+            int iDestination;
+            if (int.TryParse(source, out iSource) && int.TryParse(destination, out iDestination))
+            {
+                if (iSource > 10102)//命令起始點在北側 需由一號車搬運
+                {
+                    //1
+                    selectedCarNo = 1;
+                    return true;
+                }
+                else if (iSource < 10090)//命令起始點在南側 需由一號車搬運
+                {
+                    //2
+                    selectedCarNo = 2;
+                    return true;
+                }
+                else if (iSource == 10102) //命令起始點在北側CV Port
+                {
+                    if (iDestination > 10090)
+                    {
+                        //1
+                        selectedCarNo = 1;
+                        return true;
+                    }
+                    else if (iDestination == 10090)
+                    {
+                        //3
+                        selectedCarNo = 3;
+                        return true;
+                    }
+                    else
+                    {
+                        //2
+                        selectedCarNo = 2;
+                        return true;
+                    }
+
+                }
+                else if (iSource == 10090)
+                {
+                    if (iDestination < 10102)
+                    {
+                        //2
+                        selectedCarNo = 2;
+                        return true;
+                    }
+                    else if (iDestination == 10102)
+                    {
+                        //3
+                        selectedCarNo = 3;
+                        return true;
+                    }
+                    else
+                    {
+                        //1
+                        selectedCarNo = 1;
+                        return true;
+                    }
+                }
+                else
+                {
+                    if (iDestination >= 10102)
+                    {
+                        //1
+                        selectedCarNo = 1;
+                        return true;
+                    }
+                    else if (iDestination <= 10090)
+                    {
+                        //2
+                        selectedCarNo = 2;
+                        return true;
+                    }
+                    else
+                    {
+                        //3
+                        selectedCarNo = 3;
+                        return true;
+                    }
+                }
+
+            }
+            else
+            {
+                //0
+                selectedCarNo = 0;
+                return false;
+            }
+        }
         public (AVEHICLE firstVh, double dietance) findBestSuitableVhStepByNearest(string source)
         {
             //1.列出所有車子

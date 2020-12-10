@@ -58,6 +58,10 @@ namespace com.mirle.ibg3k0.sc
         /// </summary>
         public const int MAX_STATUS_REQUEST_FAIL_TIMES = 3;
         /// <summary>
+        /// 在一次死結的過程中，最多可以Override失敗的次數
+        /// </summary>
+        public static UInt16 MAX_FAIL_OVERRIDE_TIMES_IN_ONE_CASE { get; private set; } = 3;
+        /// <summary>
         /// 最大允許沒有通訊的時間
         /// </summary>
         public static UInt16 MAX_ALLOW_NO_COMMUNICATION_TIME_SECOND { get; private set; } = 60;
@@ -203,10 +207,12 @@ namespace com.mirle.ibg3k0.sc
         {
             public string BlockedSectionID { get; }
             public string BlockedVehicleID { get; }
-            public AvoidInfo(string blockedSectionID, string blockedVehicleID)
+            public List<string> GuideAddresses { get; }
+            public AvoidInfo(string blockedSectionID, string blockedVehicleID, List<string> guideAddresses)
             {
                 BlockedSectionID = SCUtility.Trim(blockedSectionID, true);
                 BlockedVehicleID = SCUtility.Trim(blockedVehicleID, true);
+                GuideAddresses = guideAddresses;
             }
         }
 
@@ -221,6 +227,8 @@ namespace com.mirle.ibg3k0.sc
         public virtual double Speed { get; set; }
         [JsonIgnore]
         public virtual string ObsVehicleID { get; set; }
+        [JsonIgnore]
+        public virtual int CurrentFailOverrideTimes { get; set; } = 0;
         [JsonIgnore]
         public virtual List<string> Alarms { get; set; }
 
@@ -389,6 +397,8 @@ namespace com.mirle.ibg3k0.sc
                     {
                         sw_speed.Restart();
                         watchObstacleTime.Stop();
+                        //如果stop single是 off則重置計算override fail的次數
+                        CurrentFailOverrideTimes = 0;
                     }
                     OnPropertyChanged(BCFUtility.getPropertyName(() => this.ObstacleStatus));
                 }
@@ -672,7 +682,12 @@ namespace com.mirle.ibg3k0.sc
             mapAction = getExcuteMapAction();
             return mapAction.send_Str71(send_gpp, out receive_gpp);
         }
-
+        public bool send_Str51(ID_51_AVOID_REQUEST send_gpp, out ID_151_AVOID_RESPONSE receive_gpp)
+        {
+            ValueDefMapActionBase mapAction = null;
+            mapAction = getExcuteMapAction();
+            return mapAction.send_Str51(send_gpp, out receive_gpp);
+        }
         private ValueDefMapActionBase getExcuteMapAction()
         {
             ValueDefMapActionBase mapAction;
