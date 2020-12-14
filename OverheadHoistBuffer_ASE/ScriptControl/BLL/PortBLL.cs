@@ -107,15 +107,15 @@ namespace com.mirle.ibg3k0.sc.BLL
             port_info.IsTransferComplete = portPLCInfo.IsTransferComplete;
             port_info.CstRemoveCheck = portPLCInfo.CstRemoveCheck;
             port_info.ErrorCode = portPLCInfo.ErrorCode;
-            port_info.BoxID = portPLCInfo.BoxID;
-            port_info.CassetteID = portPLCInfo.CassetteID;
-            port_info.PortID = portID;
+            port_info.BoxID = portPLCInfo.BoxID??"";
+            port_info.CassetteID = portPLCInfo.CassetteID ?? "";
+            port_info.PortID = portID ?? "";
 
-            port_info.LoadPositionBOX1 = portPLCInfo.LoadPositionBOX1;
-            port_info.LoadPositionBOX2 = portPLCInfo.LoadPositionBOX2;
-            port_info.LoadPositionBOX3 = portPLCInfo.LoadPositionBOX3;
-            port_info.LoadPositionBOX4 = portPLCInfo.LoadPositionBOX4;
-            port_info.LoadPositionBOX5 = portPLCInfo.LoadPositionBOX5;
+            port_info.LoadPositionBOX1 = portPLCInfo.LoadPositionBOX1 ?? "";
+            port_info.LoadPositionBOX2 = portPLCInfo.LoadPositionBOX2 ?? "";
+            port_info.LoadPositionBOX3 = portPLCInfo.LoadPositionBOX3 ?? "";
+            port_info.LoadPositionBOX4 = portPLCInfo.LoadPositionBOX4 ?? "";
+            port_info.LoadPositionBOX5 = portPLCInfo.LoadPositionBOX5 ?? "";
             port_info.FireAlarm = portPLCInfo.FireAlarm;
             
             byte[] arrayByte = new byte[port_info.CalculateSize()];

@@ -120,8 +120,8 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             , BCFUtility.getPropertyName(() => line.IsEarthquakeHappend)
                 , (s1, e1) =>
                 {
-                    lbl_earthqualeHappend.BackColor =
-                    line.IsEarthquakeHappend ? Color.Red : Color.Gray;
+                    //lbl_earthqualeHappend.BackColor =
+                    //line.IsEarthquakeHappend ? Color.Red : Color.Gray;
                     //if (line.IsEarthquakeHappend)
                     //{
                     //    aLARMs[0].ALAM_CODE = "AE001";
@@ -150,8 +150,8 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                 , BCFUtility.getPropertyName(() => line.DetectionSystemExist)
                     , (s1, e1) =>
                     {
-                        lbl_detectionSystemExist.BackColor =
-                        line.DetectionSystemExist == SCAppConstants.ExistStatus.Exist ? Color.Green : Color.Gray;
+                        //lbl_detectionSystemExist.BackColor =
+                        //line.DetectionSystemExist == SCAppConstants.ExistStatus.Exist ? Color.Green : Color.Gray;
                     }
                     );
             line.addEventHandler(this.Name
