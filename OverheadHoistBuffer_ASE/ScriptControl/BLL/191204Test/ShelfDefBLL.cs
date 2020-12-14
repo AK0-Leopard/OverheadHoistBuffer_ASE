@@ -186,14 +186,14 @@ namespace com.mirle.ibg3k0.sc.BLL
                 if(status == ShelfDef.E_ShelfState.EmptyShelf)
                 {
                     scApp.TransferService.OHBC_AlarmCleared(scApp.getEQObjCacheManager().getLine().LINE_ID, ((int)AlarmLst.LINE_NotEmptyShelf).ToString());
-                }
-                
+                }                
             }
             catch (Exception ex)
             {
                 logger.Error(ex, "Exception");
                 return false;
             }
+
             return true;
         }
 

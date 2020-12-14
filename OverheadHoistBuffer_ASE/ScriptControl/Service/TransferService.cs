@@ -1647,13 +1647,7 @@ namespace com.mirle.ibg3k0.sc.Service
             {
                 TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHT|OHT回應不能搬送 " + GetCmdLog(cmd));
 
-                //DateTime cmdTime = cmd.CMD_INSER_TIME;
-                //TimeSpan timeSpan = DateTime.Now - cmdTime;
-                //if (timeSpan.Minutes >= 1 + ohtCmdTimeOut)
-                //{
-                //    TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHT|OHT回應不能搬送 " + GetCmdLog(cmd));
-                //    ohtCmdTimeOut++;
-                //}
+                cmdBLL.CheckCmdShelfStatus(cmd);
             }
 
             return ohtReport;

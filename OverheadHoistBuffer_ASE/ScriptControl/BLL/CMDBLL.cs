@@ -1172,54 +1172,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
                 if (status == E_TRAN_STATUS.TransferCompleted)
                 {
-                    if (scApp.TransferService.isUnitType(cmd.HOSTSOURCE, Service.UnitType.SHELF))
-                    {
-                        if (scApp.CassetteDataBLL.loadCassetteDataByLoc(cmd.HOSTSOURCE) != null)
-                        {
-                            scApp.ShelfDefBLL.updateStatus(cmd.HOSTSOURCE, ShelfDef.E_ShelfState.Stored);
-                        }
-                        else
-                        {
-                            ACMD_MCS destCmd = GetCmdDataByDest(cmd.HOSTSOURCE).Where(cmdData => cmdData.CMD_ID.Trim() != cmd.CMD_ID.Trim()).FirstOrDefault();
-
-                            if (destCmd == null)
-                            {
-                                scApp.ShelfDefBLL.updateStatus(cmd.HOSTSOURCE, ShelfDef.E_ShelfState.EmptyShelf);
-                            }
-                        }
-                    }
-
-                    if (string.IsNullOrWhiteSpace(cmd.RelayStation) == false)
-                    {
-                        if (scApp.TransferService.isUnitType(cmd.RelayStation, Service.UnitType.SHELF))
-                        {
-                            if (scApp.CassetteDataBLL.loadCassetteDataByLoc(cmd.RelayStation) != null)
-                            {
-                                scApp.ShelfDefBLL.updateStatus(cmd.RelayStation, ShelfDef.E_ShelfState.Stored);
-                            }
-                            else
-                            {
-                                ACMD_MCS destCmd = GetCmdDataByDest(cmd.RelayStation).Where(cmdData => cmdData.CMD_ID.Trim() != cmd.CMD_ID.Trim()).FirstOrDefault();
-
-                                if (destCmd == null)
-                                {
-                                    scApp.ShelfDefBLL.updateStatus(cmd.RelayStation, ShelfDef.E_ShelfState.EmptyShelf);
-                                }
-                            }
-                        }
-                    }
-
-                    if (scApp.TransferService.isUnitType(cmd.HOSTDESTINATION, Service.UnitType.SHELF))
-                    {
-                        if (scApp.CassetteDataBLL.loadCassetteDataByLoc(cmd.HOSTDESTINATION) != null)
-                        {
-                            scApp.ShelfDefBLL.updateStatus(cmd.HOSTDESTINATION, ShelfDef.E_ShelfState.Stored);
-                        }
-                        else
-                        {
-                            scApp.ShelfDefBLL.updateStatus(cmd.HOSTDESTINATION, ShelfDef.E_ShelfState.EmptyShelf);
-                        }
-                    }
+                    CheckCmdShelfStatus(cmd);
 
                     if (scApp.TransferService.isCVPort(cmd.HOSTDESTINATION))
                     {
@@ -1242,6 +1195,36 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
 
             return isSuccess;
+        }
+        public void CheckCmdShelfStatus(ACMD_MCS cmd)
+        {
+            CheckShelfStatus(cmd.HOSTSOURCE, cmd.CMD_ID);
+
+            if (string.IsNullOrWhiteSpace(cmd.RelayStation) == false)
+            {
+                CheckShelfStatus(cmd.RelayStation, cmd.CMD_ID);
+            }
+
+            CheckShelfStatus(cmd.HOSTDESTINATION, cmd.CMD_ID);
+        }
+        public void CheckShelfStatus(string ShelfName, string cmdID)
+        {
+            if (scApp.TransferService.isUnitType(ShelfName, Service.UnitType.SHELF))
+            {
+                if (scApp.CassetteDataBLL.loadCassetteDataByLoc(ShelfName) != null)
+                {
+                    scApp.ShelfDefBLL.updateStatus(ShelfName, ShelfDef.E_ShelfState.Stored);
+                }
+                else
+                {
+                    ACMD_MCS destCmd = GetCmdDataByDest(ShelfName).Where(cmdData => cmdData.CMD_ID.Trim() != cmdID.Trim()).FirstOrDefault();
+
+                    if (destCmd == null)
+                    {
+                        scApp.ShelfDefBLL.updateStatus(ShelfName, ShelfDef.E_ShelfState.EmptyShelf);
+                    }
+                }
+            }
         }
         public bool updateCMD_MCS_CRANE(string cmd_id, string craneName)
         {
