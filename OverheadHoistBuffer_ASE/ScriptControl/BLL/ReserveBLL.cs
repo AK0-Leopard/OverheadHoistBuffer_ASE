@@ -100,7 +100,7 @@ namespace com.mirle.ibg3k0.sc.BLL
             //var hlt_vh = new HltVehicle(vhID, vehicleX, vehicleY, vehicleAngle, speedMmPerSecond, sensorDirection: sensorDir, forkDirection: forkDir, currentSectionID: currentSectionID);
             var hlt_vh = new HltVehicle(vhID, vehicleX, vehicleY, vehicleAngle, speedMmPerSecond, sensorDirection: sensorDir, forkDirection: forkDir);
             HltResult result = mapAPI.TryAddOrUpdateVehicle(hlt_vh);
-            mapAPI.KeepRestSection(hlt_vh);
+            //mapAPI.KeepRestSection(hlt_vh);
             onReserveStatusChange();
             return result;
         }

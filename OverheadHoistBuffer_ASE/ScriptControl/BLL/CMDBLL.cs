@@ -3497,7 +3497,38 @@ namespace com.mirle.ibg3k0.sc.BLL
 
         }
 
+        public bool updateCommand_OHTC_StatusByCmdID(string vhID, string cmd_id, E_CMD_STATUS status)
+        {
+            bool isSuccess = false;
+            //using (DBConnection_EF con = new DBConnection_EF())
+            using (DBConnection_EF con = DBConnection_EF.GetUContext())
+            {
+                ACMD_OHTC cmd = cmd_ohtcDAO.getByID(con, cmd_id);
+                if (cmd != null)
+                {
+                    if (status == E_CMD_STATUS.Execution)
+                    {
+                        cmd.CMD_START_TIME = DateTime.Now;
+                    }
+                    else if (status >= E_CMD_STATUS.NormalEnd)
+                    {
+                        cmd.CMD_END_TIME = DateTime.Now;
+                        cmd_ohtc_detailDAO.DeleteByBatch(con, cmd.CMD_ID);
+                    }
+                    cmd.CMD_STAUS = status;
+                    cmd_ohtcDAO.Update(con, cmd);
 
+                    if (status >= E_CMD_STATUS.NormalEnd)
+                    {
+                        //scApp.VehicleBLL.updateVehicleExcuteCMD(cmd.VH_ID, string.Empty, string.Empty);                    
+                        scApp.VehicleBLL.updateVehicleExcuteCMD(vhID, string.Empty, string.Empty);
+                    }
+
+                }
+                isSuccess = true;
+            }
+            return isSuccess;
+        }
         public bool updateCMD_OHxC_Status2ReadyToReWirte(string cmd_id, out ACMD_OHTC cmd_ohtc)
         {
             bool isSuccess = false;
@@ -3944,7 +3975,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                         return;
                     //找出目前再Queue的ACMD_OHTC
                     List<ACMD_OHTC> CMD_OHTC_Queues = null;
-                    if(scApp.BC_ID != "ASE_LINE3")
+                    if(scApp.BC_ID != "ASE_LINE3"&& scApp.BC_ID != "ASE_TEST")
                     {
                         CMD_OHTC_Queues = scApp.CMDBLL.loadCMD_OHTCMDStatusIsQueue();
                     }
@@ -4423,6 +4454,39 @@ namespace com.mirle.ibg3k0.sc.BLL
             if (vh != null)
                 vh.WillPassSectionID = null;
         }
+        public ActiveType convertECmdType2ActiveType(E_CMD_TYPE cmdType)
+        {
+            ActiveType activeType;
+            switch (cmdType)
+            {
+                case E_CMD_TYPE.Move:
+                case E_CMD_TYPE.Move_Park:
+                    activeType = ActiveType.Move;
+                    break;
+                case E_CMD_TYPE.Load:
+                    activeType = ActiveType.Load;
+                    break;
+                case E_CMD_TYPE.Unload:
+                    activeType = ActiveType.Unload;
+                    break;
+                case E_CMD_TYPE.LoadUnload:
+                    activeType = ActiveType.Loadunload;
+                    break;
+                case E_CMD_TYPE.Teaching:
+                    activeType = ActiveType.Home;
+                    break;
+                case E_CMD_TYPE.MTLHome:
+                    activeType = ActiveType.Mtlhome;
+                    break;
+                case E_CMD_TYPE.Override:
+                    activeType = ActiveType.Override;
+                    break;
+                default:
+                    throw new Exception(string.Format("OHT Command type:{0} , not in the definition"
+                                                     , cmdType.ToString()));
+            }
+            return activeType;
+        }
         public void removePassSection(string vhID, string passSection)
         {
             AVEHICLE vh = scApp.getEQObjCacheManager().getVehicletByVHID(vhID);
@@ -4755,7 +4819,38 @@ namespace com.mirle.ibg3k0.sc.BLL
         //{
 
         //}
-
+        public void CeratCmdDerails(string cmdID, string[] secIDs)
+        {
+            //using (DBConnection_EF con = new DBConnection_EF())
+            int start_seq_no = 0;
+            using (DBConnection_EF con = DBConnection_EF.GetUContext())
+            {
+                ACMD_OHTC_DETAIL last_cmd_detail = cmd_ohtc_detailDAO.getLastByID(con, cmdID);
+                if (last_cmd_detail != null)
+                {
+                    start_seq_no = last_cmd_detail.SEQ_NO;
+                }
+            }
+            List<ACMD_OHTC_DETAIL> cmd_details = new List<ACMD_OHTC_DETAIL>();
+            foreach (string sec_id in secIDs)
+            {
+                ASECTION section = scApp.MapBLL.getSectiontByID(sec_id);
+                ACMD_OHTC_DETAIL cmd_detail = new ACMD_OHTC_DETAIL()
+                {
+                    CMD_ID = cmdID,
+                    SEQ_NO = ++start_seq_no,
+                    ADD_ID = section.FROM_ADR_ID,
+                    SEC_ID = section.SEC_ID,
+                    SEG_NUM = section.SEG_NUM,
+                    ESTIMATED_TIME = 0
+                };
+                cmd_details.Add(cmd_detail);
+            }
+            using (DBConnection_EF con = DBConnection_EF.GetUContext())
+            {
+                cmd_ohtc_detailDAO.AddByBatch(con, cmd_details);
+            }
+        }
         public bool creatCmd_OHTC_Details(string cmd_id, List<string> sec_ids)
         {
             bool isSuccess = false;

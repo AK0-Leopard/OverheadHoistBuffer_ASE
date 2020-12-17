@@ -2113,30 +2113,9 @@ namespace com.mirle.ibg3k0.sc.Service
                 can_avoid_port = scApp.PortDefBLL.cache.loadCVPortDefs();
             }
             //2.找出離自己最近的一個CV點
-            var find_result = findTheNearestCVPort(willDrivenAwayVh, can_avoid_port);
-            if (find_result.isFind)
+            if (scApp.BC_ID != "ASE_LINE3"&& scApp.BC_ID != "ASE_TEST")
             {
-                return (true, find_result.PortDef.ADR_ID);
-            }
-            else
-            {
-                return (false, "");
-            }
-        }
-        private (bool isFind, string avoidAdr) findAvoidAddressNew(AVEHICLE willDrivenAwayVh)
-        {
-            var all_cv_port = scApp.PortDefBLL.cache.loadCVPortDefs();
-            //1.嘗試找出目前是in mode且離自己最近的in mode port
-            var all_cv_port_in_mode = all_cv_port.Where(port => IsPortInMode(port));
-            var find_result = findTheNearestCVPort(willDrivenAwayVh, all_cv_port_in_mode);
-            if (find_result.isFind)
-            {
-                return (true, find_result.PortDef.ADR_ID);
-            }
-            else
-            {
-                //如果沒找到，則改找下一個離自己最近的cv port
-                find_result = findTheNearestCVPort(willDrivenAwayVh, all_cv_port);
+                var find_result = findTheNearestCVPort(willDrivenAwayVh, can_avoid_port);
                 if (find_result.isFind)
                 {
                     return (true, find_result.PortDef.ADR_ID);
@@ -2146,6 +2125,60 @@ namespace com.mirle.ibg3k0.sc.Service
                     return (false, "");
                 }
             }
+            else
+            {
+                var find_result = findAvoidPortForLine3(willDrivenAwayVh, can_avoid_port);
+                if (find_result.isFind)
+                {
+                    return (true, find_result.PortDef.ADR_ID);
+                }
+                else
+                {
+                    return (false, "");
+                }
+            }
+
+        }
+        private (bool isFind, string avoidAdr) findAvoidAddressNew(AVEHICLE willDrivenAwayVh)
+        {
+            var all_cv_port = scApp.PortDefBLL.cache.loadCVPortDefs();
+            //1.嘗試找出目前是in mode且離自己最近的in mode port
+            if(scApp.BC_ID != "ASE_LINE3"&& scApp.BC_ID != "ASE_TEST")
+            {
+                var all_cv_port_in_mode = all_cv_port.Where(port => IsPortInMode(port));
+                var find_result = findTheNearestCVPort(willDrivenAwayVh, all_cv_port_in_mode);
+                if (find_result.isFind)
+                {
+                    return (true, find_result.PortDef.ADR_ID);
+                }
+                else
+                {
+                    //如果沒找到，則改找下一個離自己最近的cv port
+                    find_result = findTheNearestCVPort(willDrivenAwayVh, all_cv_port);
+                    if (find_result.isFind)
+                    {
+                        return (true, find_result.PortDef.ADR_ID);
+                    }
+                    else
+                    {
+                        return (false, "");
+                    }
+                }
+            }
+            else
+            {
+                //如果沒找到，則改找下一個離自己最近的cv port
+                var find_result = findAvoidPortForLine3(willDrivenAwayVh, all_cv_port);
+                if (find_result.isFind)
+                {
+                    return (true, find_result.PortDef.ADR_ID);
+                }
+                else
+                {
+                    return (false, "");
+                }
+            }
+
         }
         private bool IsPortInMode(PortDef port)
         {
@@ -2175,6 +2208,52 @@ namespace com.mirle.ibg3k0.sc.Service
                 }
             }
             return (nearest_cv_port != null, nearest_cv_port);
+        }
+
+
+        private (bool isFind, PortDef PortDef) findAvoidPortForLine3(AVEHICLE willDrivenAwayVh, IEnumerable<PortDef> all_cv_port_in_mode)
+        {
+            //int min_distance = int.MaxValue;
+            PortDef best_cv_port = null;
+            PortDef min_port = null;
+            PortDef max_port = null;
+
+            foreach (var port_def in all_cv_port_in_mode)
+            {
+                if (SCUtility.isMatche(port_def.ADR_ID, willDrivenAwayVh.CUR_ADR_ID)) continue;//如果目前所在的Address與要找的CV Port 一樣的話，要濾掉
+                var check_result = scApp.GuideBLL.IsRoadWalkable(willDrivenAwayVh.CUR_ADR_ID, port_def.ADR_ID);
+
+
+                if (check_result.isSuccess)
+                {
+                    if (min_port == null)
+                    {
+                        min_port = port_def;
+                    }
+                    else if(int.Parse(min_port.ADR_ID)> int.Parse(port_def.ADR_ID))
+                    {
+                        min_port = port_def;
+                    }
+                    if (max_port == null)
+                    {
+                        max_port = port_def;
+                    }
+                    else if (int.Parse(max_port.ADR_ID) < int.Parse(port_def.ADR_ID))
+                    {
+                        max_port = port_def;
+                    }
+                }
+
+                if(willDrivenAwayVh.Num == 1)
+                {
+                    best_cv_port = max_port;
+                }
+                else if(willDrivenAwayVh.Num == 2)
+                {
+                    best_cv_port = min_port;
+                }
+            }
+            return (best_cv_port != null, best_cv_port);
         }
 
         //[ClassAOPAspect]
@@ -2397,15 +2476,22 @@ namespace com.mirle.ibg3k0.sc.Service
                 if (ReserveResult.isSuccess)
                 {
                     //not thing...
+                    scApp.VehicleBLL.cache.ResetCanNotReserveInfo(eqpt.VEHICLE_ID);
                 }
                 else
                 {
+                    string reserve_fail_section = reserveInfos[0].ReserveSectionID;
+                    scApp.VehicleBLL.cache.SetUnsuccessReserveInfo(eqpt.VEHICLE_ID, new AVEHICLE.ReserveUnsuccessInfo(ReserveResult.reservedVhID, "", reserve_fail_section));
                     LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
                        Data: $"Reserve section fail,start try drive out vh:{ReserveResult.reservedVhID}",
                        VehicleID: eqpt.VEHICLE_ID,
                        CarrierID: eqpt.CST_ID);
                     //List<string> reserve_fail_sections = reserveInfos.Select(reserve => reserve.ReserveSectionID).ToList();
                     //Task.Run(() => tryNotifyVhAvoid_New(eqpt.VEHICLE_ID, ReserveResult.reservedVhID, reserve_fail_sections));
+
+
+
+
 
                     //在預約失敗以後，會嘗試看能不能將車子趕走
                     ALINE line = scApp.getEQObjCacheManager().getLine();
@@ -3949,7 +4035,573 @@ namespace com.mirle.ibg3k0.sc.Service
                     break;
             }
         }
+        #region Avoid Control
+        public void AvoidCompleteReport(BCFApplication bcfApp, AVEHICLE vh, ID_152_AVOID_COMPLETE_REPORT recive_str, int seq_num)
+        {
+            if (scApp.getEQObjCacheManager().getLine().ServerPreStop)
+                return;
+            LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+               Data: $"Process Avoid complete report.vh current address:{vh.CUR_ADR_ID}, current section:{vh.CUR_SEC_ID}",
+               VehicleID: vh.VEHICLE_ID,
+               CarrierID: vh.CST_ID);
 
+            bool is_avoid_complete = recive_str.CmpStatus == 0;
+            string current_adr = recive_str.CurrentAdrID;
+            string current_sec = recive_str.CurrentSecID;
+            uint sec_distance = recive_str.SecDistance;
+            double x_axis = recive_str.XAxis;
+            double y_axis = recive_str.YAxis;
+            double direction_angle = recive_str.DirectionAngle;
+            double vehicle_angle = recive_str.VehicleAngle;
+
+            ID_52_AVOID_COMPLETE_RESPONSE send_str = null;
+            SCUtility.RecodeReportInfo(vh.VEHICLE_ID, seq_num, recive_str);
+            send_str = new ID_52_AVOID_COMPLETE_RESPONSE
+            {
+                ReplyCode = 0
+            };
+            WrapperMessage wrapper = new WrapperMessage
+            {
+                SeqNum = seq_num,
+                AvoidCompleteResp = send_str
+            };
+
+            //Boolean resp_cmp = ITcpIpControl.sendGoogleMsg(bcfApp, tcpipAgentName, wrapper, true);
+            Boolean resp_cmp = vh.sendMessage(wrapper, true);
+
+            SCUtility.RecodeReportInfo(vh.VEHICLE_ID, seq_num, send_str, resp_cmp.ToString());
+            if (is_avoid_complete)
+            {
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                   Data: $"start override avoid complete of vh current address:{vh.CUR_ADR_ID}, current section:{vh.CUR_SEC_ID}",
+                   VehicleID: vh.VEHICLE_ID,
+                   CarrierID: vh.CST_ID);
+
+                ACMD_OHTC cmd_ohtc = scApp.CMDBLL.getCMD_OHTCByID(vh.OHTC_CMD);
+
+                scApp.ReserveBLL.RemoveAllReservedSectionsByVehicleID(vh.VEHICLE_ID);
+
+                bool is_success = trydoOverrideCommandToVh(vh, cmd_ohtc, "", true);
+                if (is_success)
+                {
+                    vh.VhAvoidInfo = null;
+                }
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                   Data: $"end override avoid complete of vh current address:{vh.CUR_ADR_ID}, current section:{vh.CUR_SEC_ID} ,result:{is_success}",
+                   VehicleID: vh.VEHICLE_ID,
+                   CarrierID: vh.CST_ID);
+            }
+            else
+            {
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                   Data: $"avoid fail,vh current address:{vh.CUR_ADR_ID}, current section:{vh.CUR_SEC_ID}",
+                   VehicleID: vh.VEHICLE_ID,
+                   CarrierID: vh.CST_ID);
+            }
+
+        }
+        public bool trydoOverrideCommandToVh(AVEHICLE assignVH, ACMD_OHTC cmd, string byPassSection, bool isAvoidComplete = false)
+        {
+            bool isSuccess = false;
+            try
+            {
+                string vh_id = SCUtility.Trim(cmd.VH_ID, true);
+                string cmd_id = cmd.CMD_ID;
+                string vh_current_address = assignVH.CUR_ADR_ID;
+                string vh_current_section = assignVH.CUR_SEC_ID;
+                string source_adr = cmd.SOURCE;
+                string dest_adr = cmd.DESTINATION;
+                bool has_carry = assignVH.HAS_CST == 1;
+                ActiveType active_type = scApp.CMDBLL.convertECmdType2ActiveType(cmd.CMD_TPYE);
+                //List<string> need_by_pass_adr_ids = new List<string>() { byPassAdr };
+                //List<string> need_by_pass_sec_ids = new List<string>() { byPassSection };
+                List<string> need_by_pass_sec_ids = new List<string>();
+                if (!SCUtility.isEmpty(byPassSection))
+                {
+                    need_by_pass_sec_ids.Add(byPassSection);
+                }
+                //if (isNeedByPassSection)
+                //{
+                //    switch (scApp.BC_ID)
+                //    {
+                //        case WorkVersion.VERSION_NAME_AUO_CAAGV100:
+                //            need_by_pass_sec_ids.AddRange(SpecifyOverrideFixedByPassSection_AUO_CAAGV100);
+                //            break;
+                //    }
+                //}
+                List<string> guide_start_to_from_segment_ids = null;
+                List<string> guide_start_to_from_section_ids = null;
+                List<string> guide_start_to_from_address_ids = null;
+                List<string> guide_to_dest_segment_ids = null;
+                List<string> guide_to_dest_section_ids = null;
+                List<string> guide_to_dest_address_ids = null;
+                int total_cost = 0;
+                SCUtility.TrimAllParameter(cmd);
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                   Data: $"start override vh:{assignVH.VEHICLE_ID} vh current address:{assignVH.CUR_ADR_ID} ,command :{cmd.CMD_ID} sourc:{cmd.SOURCE} destination:{cmd.DESTINATION}",
+                   VehicleID: assignVH.VEHICLE_ID,
+                   CarrierID: assignVH.CST_ID);
+                int current_find_count = 0;
+                int max_find_count = 10;
+                bool is_need_check_reserve_status = isAvoidComplete;
+                do
+                {
+                    (isSuccess, total_cost,
+                     guide_start_to_from_segment_ids,
+                     guide_start_to_from_section_ids,
+                     guide_start_to_from_address_ids,
+                     guide_to_dest_segment_ids,
+                     guide_to_dest_section_ids,
+                     guide_to_dest_address_ids)
+                    //= FindGuideInfo(vh_current_address, source_adr, dest_adr, active_type, has_carry, need_by_pass_adr_ids);
+                    = FindGuideInfo(vh_current_address, source_adr, dest_adr, active_type, has_carry, need_by_pass_sec_ids);
+                    //如果有找到路徑則確認一下段是否可以預約的到
+                    if (isSuccess)
+                    {
+                        //確認下一段Section，是否可以預約成功
+                        string next_walk_section = "";
+                        string next_walk_address = "";
+                        if (guide_start_to_from_section_ids != null && guide_start_to_from_section_ids.Count > 0)
+                        {
+                            next_walk_section = guide_start_to_from_section_ids[0];
+                            next_walk_address = guide_start_to_from_address_ids[0];
+                        }
+                        else if (guide_to_dest_section_ids != null && guide_to_dest_section_ids.Count > 0)
+                        {
+                            next_walk_section = guide_to_dest_section_ids[0];
+                            next_walk_address = guide_to_dest_address_ids[0];
+                        }
+                        if (!SCUtility.isEmpty(next_walk_section)) //由於有可能找出來後，是剛好在原地
+                        {
+                            if (isSuccess && is_need_check_reserve_status)
+                            {
+                                var reserve_result = askReserveSuccess(assignVH.VEHICLE_ID, next_walk_section, next_walk_address);
+                                if (reserve_result.isSuccess)
+                                {
+                                    isSuccess = true;
+                                }
+                                else
+                                {
+                                    isSuccess = false;
+                                    //need_by_pass_adr_ids.Add(reserve_result.reserveUnsuccessInfo.ReservedAdrID);
+                                    need_by_pass_sec_ids.Add(next_walk_section);
+                                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                                       Data: $"find the override path ,but section:{next_walk_section} is reserved for vh:{reserve_result.reservedVhID}" +
+                                             $"add to need by pass sec ids",
+                                       VehicleID: assignVH.VEHICLE_ID,
+                                       CarrierID: assignVH.CST_ID);
+                                }
+
+                                //4.在準備送出前，如果是因Avoid完成所下的Over ride，要判斷原本block section是否已經可以預約到了，事才可以下給車子
+                                //if (isSuccess && isAvoidComplete)
+                                //if (isSuccess && is_need_check_reserve_status)
+                                //{
+                                //先判斷，新的路徑是否會在經過之前Blocked的Section
+                                if (assignVH.VhAvoidInfo != null)
+                                {
+                                    bool is_pass_before_blocked_section = true;
+                                    if (guide_start_to_from_section_ids != null)
+                                    {
+                                        is_pass_before_blocked_section &= guide_start_to_from_section_ids.Contains(assignVH.VhAvoidInfo.BlockedSectionID);
+                                    }
+                                    //if (guide_to_dest_section_ids != null)
+                                    else if (guide_to_dest_section_ids != null)
+                                    {
+                                        is_pass_before_blocked_section &= guide_to_dest_section_ids.Contains(assignVH.VhAvoidInfo.BlockedSectionID);
+                                    }
+                                    else
+                                    {
+                                        is_pass_before_blocked_section = false;
+                                    }
+                                    if (is_pass_before_blocked_section)
+                                    {
+                                        //如果有則要嘗試去預約，如果等了20秒還是沒有釋放出來則嘗試別條路徑
+                                        string before_block_section_id = assignVH.VhAvoidInfo.BlockedSectionID;
+                                        if (!SpinWait.SpinUntil(() => scApp.ReserveBLL.TryAddReservedSection(vh_id, before_block_section_id, isAsk: true).OK, 20000))
+                                        {
+                                            isSuccess = false;
+                                            //need_by_pass_sec_ids.Add(next_walk_section);
+                                            need_by_pass_sec_ids.Add(before_block_section_id);
+                                            LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                                               Data: $"wait more than 20 seconds,before block section id:{before_block_section_id} not release, by pass section:{before_block_section_id} find next path.current by pass section:{string.Join(",", need_by_pass_sec_ids)}",
+                                               VehicleID: assignVH.VEHICLE_ID,
+                                               CarrierID: assignVH.CST_ID);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        ////如果在找不到路的時候，就把原本By pass的路徑給打開，然後再找一次
+                        ////該次就不檢查原本預約不到的路是否已經可以過了，即使不能過也再下一次走看看
+                        if (need_by_pass_sec_ids != null && need_by_pass_sec_ids.Count > 0)
+                        {
+                            isSuccess = false;
+                            need_by_pass_sec_ids.Clear();
+                            is_need_check_reserve_status = false;
+                            LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                               Data: $"override path fail vh:{assignVH.VEHICLE_ID} of command id:{cmd.CMD_ID} vh current address:{assignVH.CUR_ADR_ID} ," +
+                               $" by pass section:{string.Join(",", need_by_pass_sec_ids)},clear all by pass section and then continue find override path.",
+                               VehicleID: assignVH.VEHICLE_ID,
+                               CarrierID: assignVH.CST_ID);
+
+                        }
+                        else
+                        {
+                            //如果找不到路徑，則就直接跳出搜尋的Loop
+                            isSuccess = false;
+                            LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                               Data: $"override path fail vh:{assignVH.VEHICLE_ID} of command id:{cmd.CMD_ID} vh current address:{assignVH.CUR_ADR_ID} ," +
+                               $" by pass section{string.Join(",", need_by_pass_sec_ids)}",
+                               VehicleID: assignVH.VEHICLE_ID,
+                               CarrierID: assignVH.CST_ID);
+                            break;
+                        }
+                    }
+                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                       Data: $"find the override path result:{isSuccess} vh:{assignVH.VEHICLE_ID} vh current address:{assignVH.CUR_ADR_ID} ," +
+                       $". by pass section:{string.Join(",", need_by_pass_sec_ids)}",
+                       VehicleID: assignVH.VEHICLE_ID,
+                       CarrierID: assignVH.CST_ID);
+                }
+                while (!isSuccess && current_find_count++ < max_find_count);
+
+
+
+                if (isSuccess)
+                {
+                    bool start_section_is_same = true;
+                    if (guide_start_to_from_section_ids != null && guide_start_to_from_section_ids.Count > 0)
+                    {
+                        start_section_is_same = SCUtility.isMatche(guide_start_to_from_section_ids[0], vh_current_section);
+                        if (!start_section_is_same)
+                        {
+                            guide_start_to_from_section_ids.Insert(0, vh_current_section);
+                            ASECTION new_start_section = scApp.SectionBLL.cache.GetSection(vh_current_section);
+                            if (SCUtility.isMatche(guide_start_to_from_address_ids[0], new_start_section.FROM_ADR_ID))
+                            {
+                                guide_start_to_from_address_ids.Insert(0, new_start_section.TO_ADR_ID);
+                            }
+                            else
+                            {
+                                guide_start_to_from_address_ids.Insert(0, new_start_section.FROM_ADR_ID);
+                            }
+                            //if (!SCUtility.isMatche(guide_start_to_from_segment_ids[0], new_start_section.SEG_NUM))
+                            //{
+                            //    guide_start_to_from_segment_ids.Insert(0, new_start_section.SEG_NUM);
+                            //}
+                        }
+                    }
+                    else if (guide_to_dest_section_ids != null && guide_to_dest_section_ids.Count > 0)
+                    {
+                        start_section_is_same = SCUtility.isMatche(guide_to_dest_section_ids[0], vh_current_section);
+                        if (!start_section_is_same)
+                        {
+                            guide_to_dest_section_ids.Insert(0, vh_current_section);
+                            ASECTION new_start_section = scApp.SectionBLL.cache.GetSection(vh_current_section);
+                            if (SCUtility.isMatche(guide_to_dest_address_ids[0], new_start_section.FROM_ADR_ID))
+                            {
+                                guide_to_dest_address_ids.Insert(0, new_start_section.TO_ADR_ID);
+                            }
+                            else
+                            {
+                                guide_to_dest_address_ids.Insert(0, new_start_section.FROM_ADR_ID);
+                            }
+                            //if (!SCUtility.isMatche(guide_to_dest_segment_ids[0], new_start_section.SEG_NUM))
+                            //{
+                            //    guide_to_dest_segment_ids.Insert(0, new_start_section.SEG_NUM);
+                            //}
+                        }
+                    }
+
+                    //2.建立Cmd Details
+                    List<string> guide_section_ids = new List<string>();
+                    List<string> guide_segment_ids = new List<string>();
+
+                    if (guide_start_to_from_section_ids == null && guide_to_dest_section_ids == null)
+                    {
+                        //Not thing....
+                    }
+                    else
+                    {
+                        if (guide_start_to_from_section_ids != null)
+                            guide_section_ids.AddRange(guide_start_to_from_section_ids);
+                        if (guide_to_dest_section_ids != null)
+                            guide_section_ids.AddRange(guide_to_dest_section_ids);
+                        scApp.CMDBLL.CeratCmdDerails(cmd_id, guide_section_ids.ToArray());
+                    }
+                    if (guide_start_to_from_segment_ids == null && guide_to_dest_segment_ids == null)
+                    {
+                        //Not thing....
+                    }
+                    else
+                    {
+                        if (guide_start_to_from_segment_ids != null)
+                            guide_segment_ids.AddRange(guide_start_to_from_segment_ids);
+                        if (guide_to_dest_segment_ids != null)
+                            guide_segment_ids.AddRange(guide_to_dest_segment_ids);
+                    }
+
+
+
+
+                    //3.發送命令給VH
+                    //在發送Override之前要先判斷目前的產生的路徑是否跟車子正在執行的路徑相同，如果還是一樣的話代表產生了一筆相同的路徑
+                    //就不能再發送override了。
+                    //2019 12 30 - 換成新的方式後，Override 可能是同一條路徑
+                    //if (assignVH.PredictSections != null && assignVH.PredictSections.Count() > 0)
+                    //{
+                    //    List<string> assign_vh_current_predict_sections = assignVH.PredictSections.ToList();
+
+                    //    bool is_match = isMatche(assign_vh_current_predict_sections, guide_section_ids);
+                    //    //if (assign_vh_current_predict_sections.Except(guide_section_ids).Count() == 0)
+                    //    if (is_match)
+                    //    {
+                    //        LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_AGV,
+                    //           Data: $"find the override path :{string.Join(",", guide_section_ids)},but same with current vh predict path:{string.Join(",", assign_vh_current_predict_sections)} ," +
+                    //           $"can't send override to vh" +
+                    //           $"vh current address:{assignVH.CUR_ADR_ID} ," +
+                    //           $". by pass address:{string.Join(",", need_by_pass_sec_ids)}",
+                    //           VehicleID: assignVH.VEHICLE_ID,
+                    //           CarrierID: assignVH.CST_ID);
+                    //        return false;
+                    //    }
+                    //}
+                    scApp.CMDBLL.updateCommand_OHTC_StatusByCmdID(assignVH.VEHICLE_ID, cmd.CMD_ID, E_CMD_STATUS.Sending);
+                    isSuccess = ProcSendTransferCommandToVh(cmd, assignVH, ActiveType.Override,
+                     guide_start_to_from_segment_ids?.ToArray(), guide_start_to_from_section_ids?.ToArray(), guide_start_to_from_address_ids?.ToArray(),
+                     guide_to_dest_segment_ids?.ToArray(), guide_to_dest_section_ids?.ToArray(), guide_to_dest_address_ids?.ToArray());
+                    //4.更新命令狀態(HOST CMD)
+                    if (isSuccess)
+                    {
+                        scApp.ReserveBLL.RemoveAllReservedSectionsByVehicleID(assignVH.VEHICLE_ID);
+                        LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                           Data: $"Override success remove vh:{assignVH.VEHICLE_ID} all reserved section.",
+                           VehicleID: assignVH.VEHICLE_ID,
+                           CarrierID: assignVH.CST_ID);
+                        var result = scApp.ReserveBLL.TryAddReservedSection(assignVH.VEHICLE_ID, vh_current_section,
+                                                                  sensorDir: Mirle.Hlts.Utils.HltDirection.None);
+                        LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                           Data: $"Override success append vh:{assignVH.VEHICLE_ID} current section:{vh_current_section}.result:{result.ToString()}",
+                           VehicleID: assignVH.VEHICLE_ID,
+                           CarrierID: assignVH.CST_ID);
+
+                        if (!SCUtility.isEmpty(cmd.CMD_ID_MCS))
+                        {
+                            //TODO 在進行命令的改派後SysExecQity的資料要重新判斷一下要怎樣計算
+                            //scApp.SysExcuteQualityBLL.updateSysExecQity_PassSecInfo(cmd.CMD_ID_MCS, assignVH.VEHICLE_ID, assignVH.CUR_SEC_ID,
+                            //                        guide_to_dest_section_ids?.ToArray(), guide_to_dest_address_ids?.ToArray());
+                        }
+
+
+                        //scApp.CMDBLL.setVhExcuteCmdToShow(cmd, assignVH, guide_segment_ids, guide_section_ids?.ToArray(), guide_start_to_from_address_ids?.ToArray(),
+                        //                                  guide_start_to_from_section_ids, guide_to_dest_section_ids);
+                        scApp.CMDBLL.setVhExcuteCmdToShow(cmd, assignVH, guide_section_ids?.ToArray(),
+                                  guide_start_to_from_section_ids, guide_to_dest_section_ids,
+                                  null);
+
+                        assignVH.sw_speed.Restart();
+                    }
+                    else
+                    {
+                        BCFApplication.onWarningMsg($"doSendOverrideCommandToVh fail.vh:{vh_id}, cmd id:{cmd_id},from:{source_adr},to:{dest_adr},active type:{active_type}." +
+                                $"vh current adr:{vh_current_address},start section:{vh_current_section}");
+                    }
+                }
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                   Data: $"find the override path result:{isSuccess}, cmd id:{cmd_id},from:{source_adr},to:{dest_adr},active type:{active_type}." +
+                         $"vh current adr:{vh_current_address},start section:{vh_current_section}." +
+                         $" by pass section:{string.Join(",", need_by_pass_sec_ids)}",
+                   VehicleID: assignVH.VEHICLE_ID,
+                   CarrierID: assignVH.CST_ID);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exection:");
+                isSuccess = false;
+            }
+            return isSuccess;
+        }
+
+        private (bool isSuccess, int total_code,
+    List<string> guide_start_to_from_segment_ids, List<string> guide_start_to_from_section_ids, List<string> guide_start_to_from_address_ids,
+    List<string> guide_to_dest_segment_ids, List<string> guide_to_dest_section_ids, List<string> guide_to_dest_address_ids)
+    //FindGuideInfo(string vh_current_address, string source_adr, string dest_adr, ActiveType active_type, bool has_carray = false, List<string> byPassAddressIDs = null)
+    FindGuideInfo(string vh_current_address, string source_adr, string dest_adr, ActiveType active_type, bool has_carray = false, List<string> byPassSectionIDs = null)
+        {
+            bool isSuccess = false;
+            List<string> guide_start_to_from_segment_ids = null;
+            List<string> guide_start_to_from_section_ids = null;
+            List<string> guide_start_to_from_address_ids = null;
+            List<string> guide_to_dest_segment_ids = null;
+            List<string> guide_to_dest_section_ids = null;
+            List<string> guide_to_dest_address_ids = null;
+            int total_cost = 0;
+            //1.取得行走路徑的詳細資料
+            switch (active_type)
+            {
+                case ActiveType.Loadunload:
+                    if (has_carray)
+                    {
+                        if (!SCUtility.isMatche(vh_current_address, dest_adr))
+                        {
+                            (isSuccess, guide_to_dest_segment_ids, guide_to_dest_section_ids, guide_to_dest_address_ids, total_cost)
+                                = scApp.GuideBLL.getGuideInfo(vh_current_address, dest_adr, byPassSectionIDs);
+                        }
+                    }
+                    else
+                    {
+                        if (!SCUtility.isMatche(vh_current_address, source_adr))
+                        {
+                            (isSuccess, guide_start_to_from_segment_ids, guide_start_to_from_section_ids, guide_start_to_from_address_ids, total_cost)
+                                = scApp.GuideBLL.getGuideInfo(vh_current_address, source_adr, byPassSectionIDs);
+                        }
+                        else
+                        {
+                            isSuccess = true;//如果相同 代表是在同一個點上
+                        }
+                        if (isSuccess && !SCUtility.isMatche(source_adr, dest_adr))
+                        {
+                            (isSuccess, guide_to_dest_segment_ids, guide_to_dest_section_ids, guide_to_dest_address_ids, total_cost)
+                                = scApp.GuideBLL.getGuideInfo(source_adr, dest_adr, null);
+                        }
+                    }
+                    break;
+                case ActiveType.Load:
+                    if (!SCUtility.isMatche(vh_current_address, source_adr))
+                    {
+                        (isSuccess, guide_start_to_from_segment_ids, guide_start_to_from_section_ids, guide_start_to_from_address_ids, total_cost)
+                            = scApp.GuideBLL.getGuideInfo(vh_current_address, source_adr, byPassSectionIDs);
+                    }
+                    else
+                    {
+                        isSuccess = true; //如果相同 代表是在同一個點上
+                    }
+                    break;
+                case ActiveType.Unload:
+                    if (!SCUtility.isMatche(vh_current_address, dest_adr))
+                    {
+                        (isSuccess, guide_to_dest_segment_ids, guide_to_dest_section_ids, guide_to_dest_address_ids, total_cost)
+                            = scApp.GuideBLL.getGuideInfo(vh_current_address, dest_adr, byPassSectionIDs);
+                    }
+                    else
+                    {
+                        isSuccess = true;//如果相同 代表是在同一個點上
+                    }
+                    break;
+                case ActiveType.Move:
+                    if (!SCUtility.isMatche(vh_current_address, dest_adr))
+                    {
+                        (isSuccess, guide_to_dest_segment_ids, guide_to_dest_section_ids, guide_to_dest_address_ids, total_cost)
+                            = scApp.GuideBLL.getGuideInfo(vh_current_address, dest_adr, byPassSectionIDs);
+                    }
+                    else
+                    {
+                        //isSuccess = false;
+                        isSuccess = true;
+                    }
+                    break;
+
+            }
+            return (isSuccess, total_cost,
+                    guide_start_to_from_segment_ids, guide_start_to_from_section_ids, guide_start_to_from_address_ids,
+                    guide_to_dest_segment_ids, guide_to_dest_section_ids, guide_to_dest_address_ids);
+        }
+        private bool ProcSendTransferCommandToVh(ACMD_OHTC cmd, AVEHICLE assignVH, ActiveType activeType,
+    string[] guideSegmentStartToLoad, string[] guideSectionsStartToLoad, string[] guideAddressesStartToLoad,
+    string[] guideSegmentToDest, string[] guideSectionsToDest, string[] guideAddressesToDest
+    )
+        {
+            bool isSuccess = true;
+            string vh_id = assignVH.VEHICLE_ID;
+            try
+            {
+                List<AMCSREPORTQUEUE> reportqueues = new List<AMCSREPORTQUEUE>();
+                using (var tx = SCUtility.getTransactionScope())
+                {
+                    using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                    {
+                        switch (cmd.CMD_TPYE)
+                        {
+                            case E_CMD_TYPE.Move_Park:
+                                APARKZONEDETAIL aPARKZONEDETAIL = scApp.ParkBLL.getParkDetailByAdr(cmd.DESTINATION);
+                                if (assignVH.IS_PARKING)
+                                {
+                                    scApp.ParkBLL.resetParkAdr(assignVH.PARK_ADR_ID);
+                                }
+                                scApp.VehicleBLL.setVhIsParkingOnWay(cmd.VH_ID, cmd.DESTINATION);
+                                break;
+                            default:
+                                if (assignVH.IS_PARKING
+                                    || !SCUtility.isEmpty(assignVH.PARK_ADR_ID))
+                                {
+                                    //改成找出該VH是停在哪個位置，並更新狀態
+                                    scApp.ParkBLL.resetParkAdr(assignVH.PARK_ADR_ID);
+                                    scApp.VehicleBLL.resetVhIsInPark(assignVH.VEHICLE_ID);
+                                }
+                                break;
+                        }
+
+                        //isSuccess &= scApp.CMDBLL.updateCommand_OHTC_StatusByCmdID(cmd.CMD_ID, E_CMD_STATUS.Execution);
+                        isSuccess &= scApp.CMDBLL.updateCommand_OHTC_StatusByCmdID(vh_id, cmd.CMD_ID, E_CMD_STATUS.Execution);
+                        if (activeType != ActiveType.Override)
+                        {
+                            isSuccess &= scApp.VehicleBLL.updateVehicleExcuteCMD(cmd.VH_ID, cmd.CMD_ID, cmd.CMD_ID_MCS);
+
+                            if (!SCUtility.isEmpty(cmd.CMD_ID_MCS))
+                            {
+                                isSuccess &= scApp.VIDBLL.upDateVIDCommandInfo(cmd.VH_ID, cmd.CMD_ID_MCS);
+                                isSuccess &= scApp.ReportBLL.newReportBeginTransfer(assignVH.VEHICLE_ID, reportqueues);
+                                scApp.ReportBLL.insertMCSReport(reportqueues);
+                            }
+                        }
+
+                        if (isSuccess)
+                        {
+
+
+
+                            isSuccess &= TransferRequset
+    (cmd.VH_ID, cmd.CMD_ID, cmd.CMD_ID_MCS, activeType, cmd.CARRIER_ID, cmd.BOX_ID, cmd.LOT_ID
+    , guideSectionsStartToLoad, guideSectionsToDest, guideAddressesStartToLoad, guideAddressesToDest
+    , cmd.SOURCE, cmd.DESTINATION, cmd.SOURCE_ADR, cmd.DESTINATION_ADR);
+                            //isSuccess &= assignVH.sned_Str31(cmd.CMD_ID, activeType, cmd.CARRIER_ID, routeSections, cycleRunSections
+                            //    , cmd.SOURCE, cmd.DESTINATION, out Reason);
+                        }
+                        if (isSuccess)
+                        {
+                            tx.Complete();
+                        }
+                        else
+                        {
+                            scApp.getEQObjCacheManager().restoreVhDataFromDB(assignVH);
+                        }
+                    }
+                }
+
+                if (isSuccess)
+                {
+                    scApp.ReportBLL.newSendMCSMessage(reportqueues);
+                    Task.Run(() => scApp.FlexsimCommandDao.setCommandToFlexsimDB(cmd));
+                }
+                else
+                {
+                    scApp.getEQObjCacheManager().restoreVhDataFromDB(assignVH);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exection:");
+                isSuccess = false;
+                scApp.getEQObjCacheManager().restoreVhDataFromDB(assignVH);
+            }
+            return isSuccess;
+        }
+
+
+        #endregion Avoid Control
         private void PositionReport_AdrPassArrivals(BCFApplication bcfApp, AVEHICLE eqpt, ID_134_TRANS_EVENT_REP recive_str, string last_adr_id, string last_sec_id)
         {
             string current_adr_id = recive_str.CurrentAdrID;
@@ -4666,6 +5318,7 @@ namespace com.mirle.ibg3k0.sc.Service
             VhStopSingle pauseStat = recive_str.PauseStatus;
             VhStopSingle hidStat = recive_str.HIDStatus;
             VhStopSingle errorStat = recive_str.ErrorStatus;
+            VhStopSingle reserveStatus = recive_str.ReserveStatus;
             VhLoadCarrierStatus loadCSTStatus = recive_str.HasCst;
             VhLoadCarrierStatus loadBOXStatus = recive_str.HasBox;
             if (loadBOXStatus == VhLoadCarrierStatus.Exist) //B0.05
@@ -4701,7 +5354,10 @@ namespace com.mirle.ibg3k0.sc.Service
                 }
             }
 
-
+            if (eqpt.RESERVE_PAUSE != reserveStatus)
+            {
+                scApp.VehicleBLL.cache.SetReservePause(eqpt.VEHICLE_ID, reserveStatus);
+            }
             int obstacleDIST = recive_str.ObstDistance;
             string obstacleVhID = recive_str.ObstVehicleID;
             // 0317 Jason 此部分之loadBOXStatus 原為loadCSTStatus ，現在之狀況為暫時解法

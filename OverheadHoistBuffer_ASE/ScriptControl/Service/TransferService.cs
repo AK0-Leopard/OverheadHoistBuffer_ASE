@@ -873,7 +873,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                 #endregion                                
                                 #region 搬送命令
                                 bool result = false;
-                                if(scApp.BC_ID != "ASE_LINE3")
+                                if(scApp.BC_ID != "ASE_LINE3"&& scApp.BC_ID != "ASE_TEST")
                                 {
                                     result = TransferCommandHandler(v);
                                 }
@@ -941,7 +941,7 @@ namespace com.mirle.ibg3k0.sc.Service
 
                             foreach (var v in transferCmdData)
                             {
-                                if (scApp.BC_ID != "ASE_LINE3")
+                                if (scApp.BC_ID != "ASE_LINE3" && scApp.BC_ID != "ASE_TEST")
                                 {
                                     TransferCommandHandler(v);
                                 }
@@ -1626,23 +1626,29 @@ namespace com.mirle.ibg3k0.sc.Service
 
                     if (sourcePortType)
                     {
+                        string source_adr;
+                        string destnation_adr;
                         int iSource = 0;
                         int iDest= 0 ;
-
-
+                        scApp.MapBLL.getAddressID(mcsCmd.HOSTSOURCE, out source_adr);
+                        scApp.MapBLL.getAddressID(mcsCmd.HOSTDESTINATION, out destnation_adr);
+                        iSource = int.Parse(source_adr);
+                        iDest = int.Parse(destnation_adr);
                         //PortPLCInfo plcInfoSource = GetPLC_PortData(mcsCmd.HOSTSOURCE);
                         //PortPLCInfo plcInfoDest = GetPLC_PortData(mcsCmd.HOSTDESTINATION);
 
                         bool needHandoff = false;
                         bool checkToRelay = true;
                         List<ShelfDef> shelfData = null;
-                        if (iSource > 10102 && iDest<10090)
-                        {
-                            shelfData = shelfDefBLL.GetEmptyHandOffShelfNorth();
+                        //if (iSource > 10102 && iDest<10090)
+                        if (iSource > 10030 && iDest<10020)
+                            {
+                            shelfData = shelfDefBLL.GetEmptyHandOffShelfSouth();
                             needHandoff = true;
                         }
-                        else if(iSource < 10090 && iDest > 10102)
-                        {
+                        //else if(iSource < 10090 && iDest > 10102)
+                        else if(iSource < 10020 && iDest > 10030)
+                                {
                             shelfData = shelfDefBLL.GetEmptyHandOffShelfSouth();
                             needHandoff = true;
                         }
@@ -2003,7 +2009,7 @@ namespace com.mirle.ibg3k0.sc.Service
             }
 
             bool ohtReport = false;
-            if(scApp.BC_ID!= "ASE_LINE3")
+            if(scApp.BC_ID!= "ASE_LINE3"&&scApp.BC_ID!= "ASE_TEST")
             {
                 cmdBLL.generateOHTCommand(cmd); //OHT回傳是否可執行搬送命令
 

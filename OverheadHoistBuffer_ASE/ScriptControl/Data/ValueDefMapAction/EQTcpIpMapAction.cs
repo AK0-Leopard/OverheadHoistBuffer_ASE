@@ -295,7 +295,42 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             service.StatusReport(bcfApp, eqpt, recive_str, e.iSeqNum);
 
         }
+        protected void str152_Receive(object sender, TcpIpEventArgs e)
+        {
+            ID_152_AVOID_COMPLETE_REPORT recive_str = (ID_152_AVOID_COMPLETE_REPORT)e.objPacket;
+            if (checkAvoidCompletePositionInfoIsCorrect(recive_str))
+            {
+                scApp.VehicleBLL.setAndPublishPositionReportInfo2Redis(eqpt.VEHICLE_ID, recive_str);
+            }
+            else
+            {
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(EQTcpIpMapAction), Device: "AGVC",
+                   Data: $"Avoid complete info not correct,by pass it",
+                   VehicleID: eqpt.VEHICLE_ID,
+                   CarrierID: eqpt.CST_ID);
+            }
+            dynamic service = scApp.VehicleService;
+            service.AvoidCompleteReport(bcfApp, eqpt, recive_str, e.iSeqNum);
+        }
+        private bool checkAvoidCompletePositionInfoIsCorrect(ID_152_AVOID_COMPLETE_REPORT recive_str)
+        {
+            string current_adr = recive_str.CurrentAdrID;
+            string current_sec = recive_str.CurrentSecID;
+            uint sec_distance = recive_str.SecDistance;
+            double x_axis = recive_str.XAxis;
+            double y_axis = recive_str.YAxis;
+            double direction_angle = recive_str.DirectionAngle;
+            double vehicle_angle = recive_str.VehicleAngle;
 
+            if (!SCUtility.isEmpty(current_adr) &&
+               !SCUtility.isEmpty(current_sec) &&
+                x_axis != 0 &&
+                y_axis != 0)
+            {
+                return true;
+            }
+            return false;
+        }
         //todo 需掛上實際資料
         protected void str194_Receive(object sender, TcpIpEventArgs e)
         {
@@ -720,7 +755,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
         public override void RegisteredTcpIpProcEvent()
         {
             ITcpIpControl.addTcpIpReceivedHandler(bcfApp, tcpipAgentName, VHMSGIF.ID_ALARM_REPORT.ToString(), str194_Receive);
-
+            ITcpIpControl.addTcpIpReceivedHandler(bcfApp, tcpipAgentName, VHMSGIF.ID_AVIOD_COMPLETE_REPORT.ToString(), str152_Receive);
             ITcpIpControl.addTcpIpReceivedHandler(bcfApp, tcpipAgentName, VHMSGIF.ID_TRANS_COMPLETE_REPORT.ToString(), str132_Receive);
             ITcpIpControl.addTcpIpReceivedHandler(bcfApp, tcpipAgentName, VHMSGIF.ID_TRANS_PASS_EVENT_REPORT.ToString(), str134_Receive);
             ITcpIpControl.addTcpIpReceivedHandler(bcfApp, tcpipAgentName, VHMSGIF.ID_TRANS_EVENT_REPORT.ToString(), str136_Receive);
