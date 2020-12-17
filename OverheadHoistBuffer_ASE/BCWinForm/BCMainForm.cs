@@ -246,7 +246,7 @@ namespace com.mirle.ibg3k0.bc.winform
                 }
 #if DEBUG
                 //openForm(typeof(OHT_Form).Name);
-                if (SCUtility.isMatche(BCApp.SCApplication.BC_ID, "ASE_LOOP"))
+                if (SCUtility.isMatche(BCApp.SCApplication.BC_ID, "ASE_TEST"))
                 {
                     openForm(typeof(OHT_FormNew).Name, true, false);
                 }
