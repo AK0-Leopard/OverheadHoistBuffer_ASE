@@ -74,14 +74,14 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Components.WPFComponents
             //        });
             //updateVehicleStatus_vh1(vh1, vh_1);
 
-            //sc.AVEHICLE vh_2 = _bcApp.SCApplication.VehicleBLL.cache.getVhByID("B7_OHBLOOP_CR2");
-            //event_id = this.Name;
-            //vh_2.addEventHandler(event_id
-            //                    , nameof(vh_2.VhPositionChangeEvent)
-            //                    , (s1, e1) =>
-            //                    {
-            //                        updateVehiclePosition_vh1(vh2_position, s1 as sc.AVEHICLE);
-            //                    });
+            sc.AVEHICLE vh_2 = _bcApp.SCApplication.VehicleBLL.cache.getVhByID("B7_OHBLINE1_CR2");
+            event_id = this.Name;
+            vh_2.addEventHandler(event_id
+                                , nameof(vh_2.VhPositionChangeEvent)
+                                , (s1, e1) =>
+                                {
+                                    updateVehiclePosition_vh1(vh2_position, s1 as sc.AVEHICLE);
+                                });
             //updateVehicleStatus_vh1(vh2, vh_2);
 
 

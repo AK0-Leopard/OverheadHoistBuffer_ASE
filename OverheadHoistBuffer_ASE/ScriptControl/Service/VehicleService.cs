@@ -3125,13 +3125,22 @@ namespace com.mirle.ibg3k0.sc.Service
         private HltDirection CheckDirectionOfOHTVehicle(RepeatedField<ReserveInfo> reserveInfos)
         {
             HltDirection directionhlt = HltDirection.ForwardReverse; // default
-            if(reserveInfos.Count() == 1)
+            if (reserveInfos.Count() == 1)
             {
 
             }
-            else if(reserveInfos.Count() > 1)
+            else if (reserveInfos.Count() > 1)
             {
-
+                int firstSection = Convert.ToInt32(reserveInfos[0].ReserveSectionID);
+                int secondSection = Convert.ToInt32(reserveInfos[1].ReserveSectionID);
+                if (firstSection > secondSection)
+                {
+                    directionhlt = HltDirection.Reverse;
+                }
+                else
+                {
+                    directionhlt = HltDirection.Forward;
+                }
             }
 
             return directionhlt;
@@ -5654,7 +5663,7 @@ namespace com.mirle.ibg3k0.sc.Service
             scApp.CMDBLL.removeAllWillPassSection(eqpt.VEHICLE_ID);
             scApp.ReserveBLL.RemoveAllReservedSectionsByVehicleID(eqpt.VEHICLE_ID);
             scApp.ReserveBLL.TryAddReservedSection(eqpt.VEHICLE_ID, eqpt.CUR_SEC_ID);
-
+            eqpt.VhAvoidInfo = null;
             //回復結束後，若該筆命令是Mismatch、IDReadFail結束的話則要把原本車上的那顆CST Installed回來。
             if (vhLoadCSTStatus == VhLoadCarrierStatus.Exist)
             {
