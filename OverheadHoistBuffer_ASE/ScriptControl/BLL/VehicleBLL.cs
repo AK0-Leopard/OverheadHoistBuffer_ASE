@@ -993,28 +993,33 @@ namespace com.mirle.ibg3k0.sc.BLL
             int iDestination;
             if (int.TryParse(source, out iSource) && int.TryParse(destination, out iDestination))
             {
-                if (iSource > 10102)//命令起始點在北側 需由一號車搬運
-                {
+                //if (iSource > 10102)//命令起始點在北側 需由一號車搬運
+                if (iSource > 10030)//命令起始點在北側 需由一號車搬運
+                    {
                     //1
                     selectedCarNo = 1;
                     return true;
                 }
-                else if (iSource < 10090)//命令起始點在南側 需由一號車搬運
-                {
+                //else if (iSource < 10090)//命令起始點在南側 需由一號車搬運
+                else if (iSource < 10020)//命令起始點在南側 需由一號車搬運
+                        {
                     //2
                     selectedCarNo = 2;
                     return true;
                 }
-                else if (iSource == 10102) //命令起始點在北側CV Port
-                {
-                    if (iDestination > 10090)
-                    {
+                //else if (iSource == 10102) //命令起始點在北側CV Port
+                else if (iSource == 10030) //命令起始點在北側CV Port
+                        {
+                    //if (iDestination > 10090)
+                    if (iDestination > 10020)
+                        {
                         //1
                         selectedCarNo = 1;
                         return true;
                     }
-                    else if (iDestination == 10090)
-                    {
+                    //else if (iDestination == 10090)
+                    else if (iDestination == 10020)
+                            {
                         //3
                         selectedCarNo = 3;
                         return true;
@@ -1027,16 +1032,19 @@ namespace com.mirle.ibg3k0.sc.BLL
                     }
 
                 }
-                else if (iSource == 10090)
-                {
-                    if (iDestination < 10102)
-                    {
+                //else if (iSource == 10090)
+                else if (iSource == 10020)
+                        {
+                    //if (iDestination < 10102)
+                    if (iDestination < 10030)
+                        {
                         //2
                         selectedCarNo = 2;
                         return true;
                     }
-                    else if (iDestination == 10102)
-                    {
+                    //else if (iDestination == 10102)
+                    else if (iDestination == 10030)
+                            {
                         //3
                         selectedCarNo = 3;
                         return true;
@@ -1050,14 +1058,16 @@ namespace com.mirle.ibg3k0.sc.BLL
                 }
                 else
                 {
-                    if (iDestination >= 10102)
-                    {
+                    //if (iDestination >= 10102)
+                    if (iDestination >= 10030)
+                        {
                         //1
                         selectedCarNo = 1;
                         return true;
                     }
-                    else if (iDestination <= 10090)
-                    {
+                    //else if (iDestination <= 10090)
+                    else if (iDestination <= 10020)
+                            {
                         //2
                         selectedCarNo = 2;
                         return true;
@@ -1893,6 +1903,25 @@ namespace com.mirle.ibg3k0.sc.BLL
             setAndPublishPositionReportInfo2Redis(vh_id, id_134_trans_event_rep);
         }
 
+        public void setAndPublishPositionReportInfo2Redis(string vh_id, ID_152_AVOID_COMPLETE_REPORT report_obj)
+        {
+            AVEHICLE vh = getVehicleByID(vh_id);
+            string current_adr = report_obj.CurrentAdrID;
+            ID_134_TRANS_EVENT_REP id_134_trans_event_rep = new ID_134_TRANS_EVENT_REP()
+            {
+                //CSTID = report_obj.CSTID,
+                CurrentAdrID = report_obj.CurrentAdrID,
+                CurrentSecID = report_obj.CurrentSecID,
+                EventType = vh.VhRecentTranEvent,
+                LeftGuideLockStatus = VhGuideStatus.Unlock,
+                RightGuideLockStatus = VhGuideStatus.Unlock,
+                SecDistance = report_obj.SecDistance == 0 ? (uint)vh.ACC_SEC_DIST : report_obj.SecDistance,
+                XAxis = vh.X_Axis,
+                YAxis = vh.Y_Axis
+            };
+            setAndPublishPositionReportInfo2Redis(vh_id, id_134_trans_event_rep);
+        }
+
         public void setAndPublishPositionReportInfo2Redis(string vh_id, ID_143_STATUS_RESPONSE report_obj)
         {
             AVEHICLE vh = getVehicleByID(vh_id);
@@ -2287,6 +2316,28 @@ namespace com.mirle.ibg3k0.sc.BLL
                            ToList();
             }
 
+            public void ResetCanNotReserveInfo(string vhID)
+            {
+                var vh = eqObjCacheManager.getAllVehicle().Where(v => SCUtility.isMatche(v.VEHICLE_ID, vhID)).SingleOrDefault();
+                vh.CanNotReserveInfo = null;
+            }
+            public void SetUnsuccessReserveInfo(string vhID, AVEHICLE.ReserveUnsuccessInfo reserveUnsuccessInfo)
+            {
+                var vh = eqObjCacheManager.getAllVehicle().Where(v => SCUtility.isMatche(v.VEHICLE_ID, vhID)).SingleOrDefault();
+                vh.CanNotReserveInfo = reserveUnsuccessInfo;
+            }
+
+            public void SetReservePause(string vhID, VhStopSingle stopSingle)
+            {
+                var vh = eqObjCacheManager.getAllVehicle().Where(v => SCUtility.isMatche(v.VEHICLE_ID, vhID)).SingleOrDefault();
+                vh.RESERVE_PAUSE = stopSingle;
+                vh.NotifyVhStatusChange();
+                //如果stop single是 off則重置計算override fail的次數
+                if (stopSingle == VhStopSingle.StopSingleOff)
+                {
+                    vh.CurrentFailOverrideTimes = 0;
+                }
+            }
 
         }
         public class Web

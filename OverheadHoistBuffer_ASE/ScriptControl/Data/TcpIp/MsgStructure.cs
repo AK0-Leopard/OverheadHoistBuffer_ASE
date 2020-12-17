@@ -113,6 +113,9 @@ namespace com.mirle.ibg3k0.sc.Data.TcpIp
         public const int ID_ALARM_REPORT = 194;
         public const int ID_ALARM_RESPONSE = 94;
 
+        public const int ID_AVIOD_COMPLETE_REPORT = 152;
+        public const int ID_AVIOD_COMPLETE_RESPONSE = 52;
+
         public const int ID_LOG_UPLOAD_REQUEST = 95;
         public const int ID_LOG_UPLOAD_RESPONSE = 195;
 

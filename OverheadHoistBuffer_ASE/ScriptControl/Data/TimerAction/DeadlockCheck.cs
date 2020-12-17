@@ -203,7 +203,7 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
         {
             if (!SystemParameter.AutoOverride)
             {
-                LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(DeadlockCheck), Device: "AGVC",
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(DeadlockCheck), Device: "OHBC",
                    Data: $"auto override is:{SystemParameter.AutoOverride}.");
                 return;
             }

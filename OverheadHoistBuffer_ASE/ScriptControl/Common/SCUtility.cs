@@ -1097,7 +1097,37 @@ namespace com.mirle.ibg3k0.sc.Common
                 //recive_str.ToString(),
                 reply_result);//144          
         }
+        public static void RecodeReportInfo(string vh_id, int seq_num, ID_52_AVOID_COMPLETE_RESPONSE send_str, string reply_result)
+        {
+            AVEHICLE vh_DO = SCApplication.getInstance().getEQObjCacheManager().getVehicletByVHID(vh_id);
+            string fun_name = RenameFunName(send_str);
+            RecodeReportInfo(MSG_ROLE_OHXC, MSG_ROLE_VH,
+                fun_name, seq_num, vh_id, vh_DO.OHTC_CMD, string.Empty,
+                vh_DO.MCS_CMD, //S2F49
+                vh_DO.CUR_ADR_ID, vh_DO.CUR_SEC_ID, string.Empty, (uint)vh_DO.ACC_SEC_DIST, string.Empty, string.Empty, //134
+                0, 0,//134 reply
+                0,
+                vh_DO.ACT_STATUS.ToString(),
+                jsonFormatter.Format(send_str),
+                //send_str.ToString(),
+                reply_result);//144          
+        }
+        public static void RecodeReportInfo(string vh_id, int seq_num, ID_152_AVOID_COMPLETE_REPORT recive_str)
+        {
+            AVEHICLE vh_DO = SCApplication.getInstance().getEQObjCacheManager().getVehicletByVHID(vh_id);
+            string fun_name = RenameFunName(recive_str);
 
+            RecodeReportInfo(MSG_ROLE_VH, MSG_ROLE_OHXC,
+                fun_name, seq_num, vh_id, vh_DO.OHTC_CMD, string.Empty,
+                vh_DO.MCS_CMD, //S2F49
+                vh_DO.CUR_ADR_ID, vh_DO.CUR_SEC_ID, string.Empty, (uint)vh_DO.ACC_SEC_DIST, string.Empty, string.Empty, //134
+                0, 0,//134 reply
+                0,
+                vh_DO.ACT_STATUS.ToString(),
+                jsonFormatter.Format(recive_str),
+                //recive_str.ToString(),
+                string.Empty);//144
+        }
         public static void RecodeReportInfo(string vh_id, int seq_num, ID_51_AVOID_REQUEST send_str)
         {
             AVEHICLE vh_DO = SCApplication.getInstance().getEQObjCacheManager().getVehicletByVHID(vh_id);

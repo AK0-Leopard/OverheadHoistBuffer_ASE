@@ -643,10 +643,17 @@ message Timestamp {
   
   message ID_152_AVOID_COMPLETE_REPORT {
 	int32 CmpStatus = 1;
+	string CurrentAdrID =2;
+	string CurrentSecID = 3;
+	uint32 Sec_Distance = 4;
+	double XAxis = 5;
+	double YAxis = 6;
+	double DirectionAngle = 7;
+	double VehicleAngle = 8;
   }
   message ID_52_AVOID_COMPLETE_RESPONSE {
 	int32 ReplyCode = 1;
-  }	
+  }
 
   message ID_71_RANGE_TEACHING_REQUEST {
 	string FromAdr = 1;
@@ -1150,6 +1157,9 @@ message Timestamp {
 
 		ID_51_AVOID_REQUEST Avoid_Req = 51;
 		ID_151_AVOID_RESPONSE Avoid_Resp = 151;
+
+		ID_152_AVOID_COMPLETE_REPORT Avoid_Complete_Rep = 152;
+		ID_52_AVOID_COMPLETE_RESPONSE Avoid_Complete_Resp = 52;
 
 		ID_71_RANGE_TEACHING_REQUEST Range_Teaching_Req = 71;
 		ID_171_RANGE_TEACHING_RESPONSE Range_Teaching_Resp = 171;

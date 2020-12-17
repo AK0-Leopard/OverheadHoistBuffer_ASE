@@ -206,7 +206,7 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                 var result = conn.ShelfDef
                     .Where(x => x.ShelfState == ShelfDef.E_ShelfState.EmptyShelf &&
                                 x.Enable == "Y"
-                                && (int.Parse(x.ADR_ID) > 10090 && int.Parse(x.ADR_ID) < 10102))
+                              && (x.ZoneID == "B7_OHBLINE3-ZONE_ALTERNATE"))
                     .OrderByDescending(x => x.ShelfID).ToList();
                 //.FirstOrDefault();
                 return result;
@@ -225,7 +225,8 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                 var result = conn.ShelfDef
                     .Where(x => x.ShelfState == ShelfDef.E_ShelfState.EmptyShelf &&
                                 x.Enable == "Y"
-                                && ( int.Parse(x.ADR_ID) == 10103))
+                                //&& ( int.Parse(x.ADR_ID) == 10103))
+                                && (x.ZoneID == "B7_OHBLINE3-ZONE_HANDOFFNORTH"))
                     .OrderByDescending(x => x.ShelfID).ToList();
                 //.FirstOrDefault();
                 return result;
@@ -244,7 +245,8 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                 var result = conn.ShelfDef
                     .Where(x => x.ShelfState == ShelfDef.E_ShelfState.EmptyShelf &&
                                 x.Enable == "Y"
-                                && (int.Parse(x.ADR_ID) == 10089))
+                                //&& (int.Parse(x.ADR_ID) == 10089))
+                                && (x.ZoneID =="B7_OHBLINE3-ZONE_HANDOFFSOUTH"))
                     .OrderByDescending(x => x.ShelfID).ToList();
                 //.FirstOrDefault();
                 return result;
@@ -263,7 +265,8 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                 var result = conn.ShelfDef
                     .Where(x => x.ShelfState == ShelfDef.E_ShelfState.EmptyShelf &&
                                 x.Enable == "Y"
-                                && (int.Parse(x.ADR_ID) < 10089 && int.Parse(x.ADR_ID) > 10103)
+                                //&& (int.Parse(x.ADR_ID) < 10089 && int.Parse(x.ADR_ID) > 10103)
+                                && (x.ZoneID != "B7_OHBLINE3-ZONE_HANDOFFSOUTH") && (x.ZoneID != "B7_OHBLINE3-ZONE_HANDOFFNORTH") && (x.ZoneID != "B7_OHBLINE3-ZONE_ALTERNATE")
                                 )
                     .OrderByDescending(x => x.ShelfID).ToList();
                 //.FirstOrDefault();
