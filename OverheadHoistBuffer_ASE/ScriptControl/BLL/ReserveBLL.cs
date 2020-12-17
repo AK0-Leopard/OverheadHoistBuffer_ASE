@@ -107,7 +107,7 @@ namespace com.mirle.ibg3k0.sc.BLL
         public HltResult TryAddVehicleOrUpdate(string vhID, string adrID)
         {
             var adr_obj = mapAPI.GetAddressObjectByID(adrID);
-            var hlt_vh = new HltVehicle(vhID, adr_obj.X, adr_obj.Y, 0, sensorDirection: Mirle.Hlts.Utils.HltDirection.Forward);
+            var hlt_vh = new HltVehicle(vhID, adr_obj.X, adr_obj.Y, 0, sensorDirection: Mirle.Hlts.Utils.HltDirection.ForwardReverse);
             //HltResult result = mapAPI.TryAddVehicleOrUpdate(vhID, adr_obj.X, adr_obj.Y, 0, vehicleSensorDirection: Mirle.Hlts.Utils.HltDirection.NESW);
             HltResult result = mapAPI.TryAddOrUpdateVehicle(hlt_vh);
             onReserveStatusChange();
@@ -179,7 +179,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
         //    return result;
         //}
-        public HltResult TryAddReservedSection(string vhID, string sectionID, HltDirection sensorDir = HltDirection.Forward, HltDirection forkDir = HltDirection.None, bool isAsk = false)
+        public HltResult TryAddReservedSection(string vhID, string sectionID, HltDirection sensorDir = HltDirection.ForwardReverse, HltDirection forkDir = HltDirection.None, bool isAsk = false)
         {
             HltResult result = null;
             string sec_id = SCUtility.Trim(sectionID);
