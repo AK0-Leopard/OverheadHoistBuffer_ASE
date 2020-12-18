@@ -47,8 +47,15 @@ namespace com.mirle.ibg3k0.sc.BLL
                 min_stratFromRouteInfo = stratFromRouteInfoList.First();
                 is_success = true;
             }
+            if (min_stratFromRouteInfo != null)
+            {
+                return (is_success, null, min_stratFromRouteInfo.GetSectionIDs(), min_stratFromRouteInfo.GetAddressesIDs(), min_stratFromRouteInfo.total_cost);
 
-            return (is_success, null, min_stratFromRouteInfo.GetSectionIDs(), min_stratFromRouteInfo.GetAddressesIDs(), min_stratFromRouteInfo.total_cost);
+            }
+            else
+            {
+                return (is_success, null, null, null, 0);
+            }
         }
 
 

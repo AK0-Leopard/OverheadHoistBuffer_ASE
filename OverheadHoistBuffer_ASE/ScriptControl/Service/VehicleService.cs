@@ -5635,7 +5635,7 @@ namespace com.mirle.ibg3k0.sc.Service
             scApp.CMDBLL.removeAllWillPassSection(eqpt.VEHICLE_ID);
             scApp.ReserveBLL.RemoveAllReservedSectionsByVehicleID(eqpt.VEHICLE_ID);
             scApp.ReserveBLL.TryAddReservedSection(eqpt.VEHICLE_ID, eqpt.CUR_SEC_ID);
-
+            eqpt.VhAvoidInfo = null;
             //回復結束後，若該筆命令是Mismatch、IDReadFail結束的話則要把原本車上的那顆CST Installed回來。
             if (vhLoadCSTStatus == VhLoadCarrierStatus.Exist)
             {
