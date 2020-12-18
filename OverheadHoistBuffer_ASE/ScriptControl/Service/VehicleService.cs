@@ -34,6 +34,7 @@ using com.mirle.ibg3k0.sc.Data.VO;
 using com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage;
 using Google.Protobuf.Collections;
 using KingAOP;
+using Mirle.Hlts.Utils;
 using Newtonsoft.Json.Linq;
 using NLog;
 using System;
@@ -2962,7 +2963,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 string reserve_section_id = reserveInfos[0].ReserveSectionID;
 
 
-                Mirle.Hlts.Utils.HltDirection hltDirection = Mirle.Hlts.Utils.HltDirection.Forward;
+                Mirle.Hlts.Utils.HltDirection hltDirection = Mirle.Hlts.Utils.HltDirection.ForwardReverse;
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
                    Data: $"vh:{vhID} Try add reserve section:{reserve_section_id} ,hlt dir:{hltDirection}...",
                    VehicleID: vhID);
@@ -3038,6 +3039,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 bool has_success = false;
                 string final_blocked_vh_id = string.Empty;
                 Mirle.Hlts.Utils.HltResult result = default(Mirle.Hlts.Utils.HltResult);
+                Mirle.Hlts.Utils.HltDirection directionOHT = CheckDirectionOfOHTVehicle(reserveInfos);
                 foreach (var reserve_info in reserveInfos)
                 {
                     string reserve_section_id = reserve_info.ReserveSectionID;
@@ -3049,7 +3051,8 @@ namespace com.mirle.ibg3k0.sc.Service
                     {
                         if (scApp.SectionBLL.cache.IsNeedReserveChcek(reserve_section_id))
                         {
-                            Mirle.Hlts.Utils.HltDirection hltDirection = Mirle.Hlts.Utils.HltDirection.Forward;
+                            //Mirle.Hlts.Utils.HltDirection hltDirection = Mirle.Hlts.Utils.HltDirection.Forward; //  Jason-- 20201217
+                            Mirle.Hlts.Utils.HltDirection hltDirection = directionOHT; // Jason++ 20201217
                             LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
                                Data: $"vh:{vhID} Try add reserve section:{reserve_section_id} ,hlt dir:{hltDirection}...",
                                VehicleID: vhID);
@@ -3065,23 +3068,23 @@ namespace com.mirle.ibg3k0.sc.Service
                                VehicleID: vhID);
                             //如果預約不到的時候，確認目前要的Section是否為CurrentAdr的上一段Section
                             //式的話就代表已經走過了，就給他直接通過
-                            if (!result.OK)
-                            {
-                                string current_adr = vh.CUR_ADR_ID;
-                                var last_sections = scApp.SectionBLL.cache.GetSectionsByToAddress(current_adr);
-                                if (last_sections.Count > 0)
-                                {
-                                    ASECTION last_sec = last_sections[0];
-                                    if (SCUtility.isMatche(reserve_section_id, last_sec.SEC_ID))
-                                    {
-                                        result.OK = true;
-                                        LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
-                                           Data: $"Froce pass reserve section:{reserve_section_id},becuse it is last section of adr:{current_adr}",
-                                           VehicleID: vhID);
+                            //if (!result.OK)
+                            //{
+                            //    string current_adr = vh.CUR_ADR_ID;
+                            //    var last_sections = scApp.SectionBLL.cache.GetSectionsByToAddress(current_adr);
+                            //    if (last_sections.Count > 0)
+                            //    {
+                            //        ASECTION last_sec = last_sections[0];
+                            //        if (SCUtility.isMatche(reserve_section_id, last_sec.SEC_ID))
+                            //        {
+                            //            result.OK = true;
+                            //            LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                            //               Data: $"Froce pass reserve section:{reserve_section_id},becuse it is last section of adr:{current_adr}",
+                            //               VehicleID: vhID);
 
-                                    }
-                                }
-                            }
+                            //        }
+                            //    }
+                            //}
                         }
                         else
                         {
@@ -3118,6 +3121,31 @@ namespace com.mirle.ibg3k0.sc.Service
                 return (false, string.Empty, null);
             }
         }
+
+        private HltDirection CheckDirectionOfOHTVehicle(RepeatedField<ReserveInfo> reserveInfos)
+        {
+            HltDirection directionhlt = HltDirection.ForwardReverse; // default
+            if (reserveInfos.Count() == 1)
+            {
+
+            }
+            else if (reserveInfos.Count() > 1)
+            {
+                int firstSection = Convert.ToInt32(reserveInfos[0].ReserveSectionID);
+                int secondSection = Convert.ToInt32(reserveInfos[1].ReserveSectionID);
+                if (firstSection > secondSection)
+                {
+                    directionhlt = HltDirection.Reverse;
+                }
+                else
+                {
+                    directionhlt = HltDirection.Forward;
+                }
+            }
+
+            return directionhlt;
+        }
+
         private void TransferReportBCRRead(BCFApplication bcfApp, AVEHICLE eqpt, int seqNum,
                                              EventType eventType, string read_carrier_id, BCRReadResult bCRReadResult)
         {
