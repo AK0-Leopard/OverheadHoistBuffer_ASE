@@ -906,6 +906,27 @@ namespace com.mirle.ibg3k0.sc.BLL
         }
         public int MCSCmdCompare_MoreThan1(ACMD_MCS MCSCmd1, ACMD_MCS MCSCmd2)
         {
+            //A20.12.18.0
+            // 0.判斷命令是否為relayCmd，是者優先進行。
+            bool isMCSCmd1_isRelayCmd = !string.IsNullOrWhiteSpace(MCSCmd1.RelayStation);
+            bool isMCSCmd2_isRelayCmd = !string.IsNullOrWhiteSpace(MCSCmd2.RelayStation);
+
+            if ((isMCSCmd1_isRelayCmd == true) && (isMCSCmd2_isRelayCmd == true) ||
+                (isMCSCmd1_isRelayCmd == false) && (isMCSCmd2_isRelayCmd == false))
+            {
+                //代表兩者相等，不動，且接著判斷距離
+            }
+            else if ((isMCSCmd1_isRelayCmd == true) && (isMCSCmd2_isRelayCmd == false))
+            {
+                return -1;
+                //代表前者較優先，不動
+            }
+            else if ((isMCSCmd1_isRelayCmd == false) && (isMCSCmd2_isRelayCmd == true))
+            {
+                return 1;
+                //代表後者較優先，換位
+            }
+
             //A20.06.09.0
             // 0.判斷命令來源是否為shelf，非shelf者優先進行。
             bool isCmd1_SourceTypeShelf = MCSCmd1.IsCmdSourceTypeShelf(MCSCmd1.HOSTSOURCE);
@@ -965,6 +986,26 @@ namespace com.mirle.ibg3k0.sc.BLL
         }
         public int MCSCmdCompare_LessThan2(ACMD_MCS MCSCmd1, ACMD_MCS MCSCmd2)
         {
+            //A20.12.18.0
+            // 0.判斷命令是否為relayCmd，是者優先進行。
+            bool isMCSCmd1_isRelayCmd = !string.IsNullOrWhiteSpace(MCSCmd1.RelayStation);
+            bool isMCSCmd2_isRelayCmd = !string.IsNullOrWhiteSpace(MCSCmd2.RelayStation);
+
+            if ((isMCSCmd1_isRelayCmd == true) && (isMCSCmd2_isRelayCmd == true) ||
+                (isMCSCmd1_isRelayCmd == false) && (isMCSCmd2_isRelayCmd == false))
+            {
+                //代表兩者相等，不動，且接著判斷距離
+            }
+            else if ((isMCSCmd1_isRelayCmd == true) && (isMCSCmd2_isRelayCmd == false))
+            {
+                return -1;
+                //代表前者較優先，不動
+            }
+            else if ((isMCSCmd1_isRelayCmd == false) && (isMCSCmd2_isRelayCmd == true))
+            {
+                return 1;
+                //代表後者較優先，換位
+            }
             //A20.08.04
             // -1. 判斷目的 port 為AGV者優先
             bool isCmd1_SourceTypeAGV = MCSCmd1.IsCmdSourceTypeAGV(MCSCmd1.HOSTDESTINATION);
@@ -2495,7 +2536,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                     AVEHICLE bestSuitableVh = null;
                     E_VH_TYPE vh_type = E_VH_TYPE.None;
                     int priority = mcs_cmd.PRIORITY_SUM;
-                    if(!string.IsNullOrWhiteSpace(mcs_cmd.RelayStation))
+                    if (!string.IsNullOrWhiteSpace(mcs_cmd.RelayStation))
                     {
                         priority = 99;//relay命令要先做
                     }
@@ -2508,7 +2549,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                         scApp.MapBLL.getAddressID(hostdest, out to_adr, out vh_type);
 
                         //bestSuitableVh = scApp.VehicleBLL.findBestSuitableVhStepByNearest(from_adr, vh_type);
-                        bestSuitableVh = scApp.VehicleBLL.findBestSuitableVhStepByNearestForASE_Line3(from_adr,to_adr, vh_type);
+                        bestSuitableVh = scApp.VehicleBLL.findBestSuitableVhStepByNearestForASE_Line3(from_adr, to_adr, vh_type);
 
                         if (bestSuitableVh == null)
                         {
@@ -2563,7 +2604,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                         {
                             scApp.MapBLL.getAddressID(hostsource, out from_adr, out vh_type);
                             scApp.MapBLL.getAddressID(hostdest, out to_adr, out vh_type);
-                            bestSuitableVh = scApp.VehicleBLL.findBestSuitableVhStepByNearestForASE_Line3(from_adr,to_adr, vh_type);
+                            bestSuitableVh = scApp.VehicleBLL.findBestSuitableVhStepByNearestForASE_Line3(from_adr, to_adr, vh_type);
                             cmd_type = E_CMD_TYPE.LoadUnload;
                         }
 
@@ -3975,7 +4016,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                         return;
                     //找出目前再Queue的ACMD_OHTC
                     List<ACMD_OHTC> CMD_OHTC_Queues = null;
-                    if(scApp.BC_ID != "ASE_LINE3"&& scApp.BC_ID != "ASE_TEST")
+                    if (scApp.BC_ID != "ASE_LINE3" && scApp.BC_ID != "ASE_TEST")
                     {
                         CMD_OHTC_Queues = scApp.CMDBLL.loadCMD_OHTCMDStatusIsQueue();
                     }

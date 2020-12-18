@@ -947,13 +947,13 @@ namespace com.mirle.ibg3k0.sc.BLL
             return firstVh;
         }
 
-        public AVEHICLE findBestSuitableVhStepByNearestForASE_Line3(string source,string destnation, E_VH_TYPE vh_type, bool is_check_has_vh_carry = false)
+        public AVEHICLE findBestSuitableVhStepByNearestForASE_Line3(string source, string destnation, E_VH_TYPE vh_type, bool is_check_has_vh_carry = false)
         {
             AVEHICLE firstVh = null;
             double dietance = double.MaxValue;
             List<AVEHICLE> vhs = null;
             int selectedCarNo = 0;
-            if (classificationCMDBySourceDest(source, destnation ,out selectedCarNo))
+            if (classificationCMDBySourceDest(source, destnation, out selectedCarNo))
             {
                 if (selectedCarNo == 1)
                 {
@@ -995,91 +995,33 @@ namespace com.mirle.ibg3k0.sc.BLL
             {
                 //if (iSource > 10102)//命令起始點在北側 需由一號車搬運
                 if (iSource > 10030)//命令起始點在北側 需由一號車搬運
-                    {
+                {
                     //1
                     selectedCarNo = 1;
-                    return true;
                 }
                 //else if (iSource < 10090)//命令起始點在南側 需由一號車搬運
-                else if (iSource < 10020)//命令起始點在南側 需由一號車搬運
-                        {
+                else if (iSource < 10017)//命令起始點在南側 需由一號車搬運
+                {
                     //2
                     selectedCarNo = 2;
-                    return true;
                 }
                 //else if (iSource == 10102) //命令起始點在北側CV Port
-                else if (iSource == 10030) //命令起始點在北側CV Port
-                        {
-                    //if (iDestination > 10090)
-                    if (iDestination > 10020)
-                        {
-                        //1
-                        selectedCarNo = 1;
-                        return true;
-                    }
-                    //else if (iDestination == 10090)
-                    else if (iDestination == 10020)
-                            {
-                        //3
-                        selectedCarNo = 3;
-                        return true;
-                    }
-                    else
+                else 
+                { 
+                    if(iDestination > 10030) // 若大於北側CV Port 則1號車負責
                     {
-                        //2
-                        selectedCarNo = 2;
-                        return true;
-                    }
-
-                }
-                //else if (iSource == 10090)
-                else if (iSource == 10020)
-                        {
-                    //if (iDestination < 10102)
-                    if (iDestination < 10030)
-                        {
-                        //2
-                        selectedCarNo = 2;
-                        return true;
-                    }
-                    //else if (iDestination == 10102)
-                    else if (iDestination == 10030)
-                            {
-                        //3
-                        selectedCarNo = 3;
-                        return true;
-                    }
-                    else
-                    {
-                        //1
                         selectedCarNo = 1;
-                        return true;
+                    }
+                    else if(iDestination < 10017) // 若小於南側handoff 區 則2號車負責
+                    {
+                        selectedCarNo = 2;
+                    }
+                    else //於10030-10017 2車皆可以
+                    {
+                        selectedCarNo = 3;
                     }
                 }
-                else
-                {
-                    //if (iDestination >= 10102)
-                    if (iDestination >= 10030)
-                        {
-                        //1
-                        selectedCarNo = 1;
-                        return true;
-                    }
-                    //else if (iDestination <= 10090)
-                    else if (iDestination <= 10020)
-                            {
-                        //2
-                        selectedCarNo = 2;
-                        return true;
-                    }
-                    else
-                    {
-                        //3
-                        selectedCarNo = 3;
-                        return true;
-                    }
-                }
-
+                return true;
             }
             else
             {
