@@ -1641,13 +1641,13 @@ namespace com.mirle.ibg3k0.sc.Service
                         bool checkToRelay = true;
                         List<ShelfDef> shelfData = null;
                         //if (iSource > 10102 && iDest<10090)
-                        if (iSource > 10030 && iDest<10020)
+                        if (iSource > 10030 && iDest<10017)
                             {
                             shelfData = shelfDefBLL.GetEmptyHandOffShelfSouth();
                             needHandoff = true;
                         }
                         //else if(iSource < 10090 && iDest > 10102)
-                        else if(iSource < 10020 && iDest > 10030)
+                        else if(iSource < 10017 && iDest > 10030)
                                 {
                             shelfData = shelfDefBLL.GetEmptyHandOffShelfSouth();
                             needHandoff = true;

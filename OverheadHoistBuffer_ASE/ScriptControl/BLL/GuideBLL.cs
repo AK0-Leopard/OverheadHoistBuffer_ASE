@@ -50,7 +50,6 @@ namespace com.mirle.ibg3k0.sc.BLL
             if (min_stratFromRouteInfo != null)
             {
                 return (is_success, null, min_stratFromRouteInfo.GetSectionIDs(), min_stratFromRouteInfo.GetAddressesIDs(), min_stratFromRouteInfo.total_cost);
-
             }
             else
             {

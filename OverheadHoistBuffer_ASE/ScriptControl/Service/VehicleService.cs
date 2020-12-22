@@ -4148,8 +4148,8 @@ namespace com.mirle.ibg3k0.sc.Service
                 string cmd_id = cmd.CMD_ID;
                 string vh_current_address = assignVH.CUR_ADR_ID;
                 string vh_current_section = assignVH.CUR_SEC_ID;
-                string source_adr = cmd.SOURCE;
-                string dest_adr = cmd.DESTINATION;
+                string source_adr = cmd.SOURCE_ADR;
+                string dest_adr = cmd.DESTINATION_ADR;
                 bool has_carry = assignVH.HAS_CST == 1;
                 ActiveType active_type = scApp.CMDBLL.convertECmdType2ActiveType(cmd.CMD_TPYE);
                 //List<string> need_by_pass_adr_ids = new List<string>() { byPassAdr };
