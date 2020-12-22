@@ -873,7 +873,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                 #endregion                                
                                 #region 搬送命令
                                 bool result = false;
-                                if(scApp.BC_ID != "ASE_LINE3"&& scApp.BC_ID != "ASE_TEST")
+                                if((scApp.BC_ID != "ASE_LINE3"&& scApp.BC_ID != "ASE_TEST" )|| !scApp.VehicleService.multiplecar_active)
                                 {
                                     result = TransferCommandHandler(v);
                                 }
@@ -941,7 +941,7 @@ namespace com.mirle.ibg3k0.sc.Service
 
                             foreach (var v in transferCmdData)
                             {
-                                if (scApp.BC_ID != "ASE_LINE3" && scApp.BC_ID != "ASE_TEST")
+                                if ((scApp.BC_ID != "ASE_LINE3" && scApp.BC_ID != "ASE_TEST") || !scApp.VehicleService.multiplecar_active)
                                 {
                                     TransferCommandHandler(v);
                                 }
@@ -2009,14 +2009,14 @@ namespace com.mirle.ibg3k0.sc.Service
             }
 
             bool ohtReport = false;
-            if(scApp.BC_ID!= "ASE_LINE3"&&scApp.BC_ID!= "ASE_TEST")
+            if((scApp.BC_ID!= "ASE_LINE3"&&scApp.BC_ID!= "ASE_TEST") || !scApp.VehicleService.multiplecar_active)
             {
-                cmdBLL.generateOHTCommand(cmd); //OHT回傳是否可執行搬送命令
+                ohtReport = cmdBLL.generateOHTCommand(cmd); //OHT回傳是否可執行搬送命令
 
             }
             else
             {
-                cmdBLL.generateOHTCommandForASELine3(cmd); //OHT回傳是否可執行搬送命令
+                ohtReport = cmdBLL.generateOHTCommandForASELine3(cmd); //OHT回傳是否可執行搬送命令
             }
 
 
@@ -6762,6 +6762,46 @@ namespace com.mirle.ibg3k0.sc.Service
                 return false;
             }
         }
+
+        public bool isUnitTypeAndZone(string portName, UnitType unitType,string zone_id)  //Port種類與Zone判斷
+        {
+            try
+            {
+                bool b = false;
+
+                if (portINIData != null)
+                {
+                    if (isLocExist(portName))
+                    {
+                        if (unitType.ToString().Trim() == portINIData[portName.Trim()].UnitType
+                            && zone_id.Trim() == portINIData[portName.Trim()].ZoneName)
+                        {
+                            b = true;
+                        }
+                    }
+                }
+
+                return b;
+            }
+            catch (Exception ex)
+            {
+                string st_details = "";
+
+                try
+                {
+                    System.Diagnostics.StackTrace st = new System.Diagnostics.StackTrace(true);
+                    st_details = st.ToString();
+                }
+                catch (Exception eex)
+                {
+                    TransferServiceLogger.Error(eex);
+                }
+
+                TransferServiceLogger.Error(ex, "isUnitType    portName:" + portName + "  unitType:" + unitType + "\n" + " 推疊：" + st_details);
+                return false;
+            }
+        }
+
         public bool isCVPort(string portName)
         {
             try
@@ -8152,6 +8192,7 @@ namespace com.mirle.ibg3k0.sc.Service
 
             return portName;
         }
+
         #endregion
 
         #endregion

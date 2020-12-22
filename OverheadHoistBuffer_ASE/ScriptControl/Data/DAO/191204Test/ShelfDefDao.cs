@@ -66,6 +66,21 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                 throw;
             }
         }
+        public List<ShelfDef> LoadShelfDefByZoneID(DBConnection_EF conn,string zone_id)
+        {
+            try
+            {
+                var port = from a in conn.ShelfDef
+                           where a.ZoneID.Trim() == zone_id
+                           select a;
+                return port.ToList();
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex);
+                throw;
+            }
+        }
 
         public IQueryable getQueryAllSQL(DBConnection_EF conn)
         {
@@ -206,7 +221,7 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                 var result = conn.ShelfDef
                     .Where(x => x.ShelfState == ShelfDef.E_ShelfState.EmptyShelf &&
                                 x.Enable == "Y"
-                              && (x.ZoneID == "B7_OHBLINE3-ZONE_ALTERNATE"))
+                              && (x.ZoneID == "B7_OHBLINE3-ZONEALT"))
                     .OrderByDescending(x => x.ShelfID).ToList();
                 //.FirstOrDefault();
                 return result;
@@ -218,15 +233,15 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
             }
         }
 
-        public List<ShelfDef> GetEmptyHandOffShelfNorth(DBConnection_EF conn)
+
+        public List<ShelfDef> GetEmptyShelfByZone(DBConnection_EF conn, string zone_id)
         {
             try
             {
                 var result = conn.ShelfDef
                     .Where(x => x.ShelfState == ShelfDef.E_ShelfState.EmptyShelf &&
                                 x.Enable == "Y"
-                                //&& ( int.Parse(x.ADR_ID) == 10103))
-                                && (x.ZoneID == "B7_OHBLINE3-ZONE_HANDOFFNORTH"))
+                              && (x.ZoneID == zone_id.Trim()))
                     .OrderByDescending(x => x.ShelfID).ToList();
                 //.FirstOrDefault();
                 return result;
@@ -237,6 +252,25 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                 throw;
             }
         }
+        //public List<ShelfDef> GetEmptyHandOffShelfNorth(DBConnection_EF conn)
+        //{
+        //    try
+        //    {
+        //        var result = conn.ShelfDef
+        //            .Where(x => x.ShelfState == ShelfDef.E_ShelfState.EmptyShelf &&
+        //                        x.Enable == "Y"
+        //                        //&& ( int.Parse(x.ADR_ID) == 10103))
+        //                        && (x.ZoneID == "B7_OHBLINE3-ZONE_HANDOFFNORTH"))
+        //            .OrderByDescending(x => x.ShelfID).ToList();
+        //        //.FirstOrDefault();
+        //        return result;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        logger.Warn(ex);
+        //        throw;
+        //    }
+        //}
 
         public List<ShelfDef> GetEmptyHandOffShelfSouth(DBConnection_EF conn)
         {
@@ -246,7 +280,7 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                     .Where(x => x.ShelfState == ShelfDef.E_ShelfState.EmptyShelf &&
                                 x.Enable == "Y"
                                 //&& (int.Parse(x.ADR_ID) == 10089))
-                                && (x.ZoneID =="B7_OHBLINE3-ZONE_HANDOFFSOUTH"))
+                                && (x.ZoneID == "B7_OHBLINE3-ZONEHF"))
                     .OrderByDescending(x => x.ShelfID).ToList();
                 //.FirstOrDefault();
                 return result;
@@ -266,7 +300,7 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                     .Where(x => x.ShelfState == ShelfDef.E_ShelfState.EmptyShelf &&
                                 x.Enable == "Y"
                                 //&& (int.Parse(x.ADR_ID) < 10089 && int.Parse(x.ADR_ID) > 10103)
-                                && (x.ZoneID != "B7_OHBLINE3-ZONE_HANDOFFSOUTH") && (x.ZoneID != "B7_OHBLINE3-ZONE_HANDOFFNORTH") && (x.ZoneID != "B7_OHBLINE3-ZONE_ALTERNATE")
+                                && (x.ZoneID != "B7_OHBLINE3-ZONEHF") && (x.ZoneID != "B7_OHBLINE3-ZONEALT")
                                 )
                     .OrderByDescending(x => x.ShelfID).ToList();
                 //.FirstOrDefault();

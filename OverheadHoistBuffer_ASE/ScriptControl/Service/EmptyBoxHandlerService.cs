@@ -174,6 +174,143 @@ namespace com.mirle.ibg3k0.sc.Service
             }
         }
 
+
+        public void CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3()
+        {
+            emptyBoxLogger.Info("[CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3]");
+
+            zoneDatas = zoneBLL.loadZoneData();
+            boxDatas = cassette_dataBLL.loadCassetteData();
+            shelfDatas = shelfDefBLL.LoadShelf();
+            //List<ShelfDef> zone1ShelfData = shelfDefBLL.LoadShelfByZoneID("B7_OHBLINE1-ZONE1");
+            //List<ShelfDef> zone2ShelfData = shelfDefBLL.LoadShelfByZoneID("B7_OHBLINE1-ZONE2");
+            //var emptyBox = GetTotalEmptyBoxNumber();
+            //var zone1EmptyBox = GetTotalEmptyBoxNumberByZoneID("B7_OHBLINE1-ZONE1");
+            //var zone2EmptyBox = GetTotalEmptyBoxNumberByZoneID("B7_OHBLINE1-ZONE1");
+            if (!initializedFlag)
+            {
+                zoneCacheDatas = new List<ZoneDef>(zoneDatas);
+                foreach (var zoneCache in zoneCacheDatas)
+                {
+                    zoneCache.EmptyBoxList = new List<string>();
+                    zoneCache.SolidBoxList = new List<string>();
+                    zoneCache.WaitForRecycleBoxList = new List<string>();
+                }
+                initializedFlag = true;
+                emptyBoxLogger.Info("===== EmptyBoxHandlerService initialized =====");
+            }
+
+            //更新zone內的空箱實箱列表
+            UpdateZoneData();
+
+
+            ZoneDef zone1Def = null;
+            ZoneDef zone2Def = null;
+            //B2: 檢查各個zone是否需要補空box
+            foreach (ZoneDef zoneData in zoneCacheDatas)
+            {
+                if (zone1Def == null && zoneData.ZoneID.Trim() == "B7_OHBLINE1-ZONE1")
+                {
+                    zone1Def = zoneData;
+                    continue;
+                }
+                if (zone2Def == null && zoneData.ZoneID.Trim() == "B7_OHBLINE1-ZONE2")
+                {
+                    zone2Def = zoneData;
+                    continue;
+                }
+                if (zone1Def != null && zone2Def != null)
+                {
+                    break;
+                }
+
+                if (zoneData.EmptyBoxList.Count() < zoneData.LowWaterMark)
+                {
+                    emptyBoxLogger.Info($"{zoneData.ZoneID} has {zoneData.EmptyBoxList.Count()} empty box(es), reaches low water level: {zoneData.LowWaterMark}, request for empty box...");
+                    //空box不足，呼叫MCS補充
+                    DoSendRequireEmptyBoxToMCS(zoneData.ZoneID, (int)(zoneData.LowWaterMark - zoneData.EmptyBoxList.Count()));
+                }
+            }
+
+            if (zone1Def == null || zone2Def == null)
+            {
+                emptyBoxLogger.Info($"Not Found B7_OHBLINE1-ZONE1 or B7_OHBLINE1-ZONE2 in CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3");
+                return;
+            }
+
+            if (zone1Def.EmptyBoxList.Count() < zone1Def.LowWaterMark)
+            {
+                emptyBoxLogger.Info($"{zone1Def.ZoneID} has {zone1Def.EmptyBoxList.Count()} empty box(es), reaches low water level: {zone1Def.LowWaterMark}");
+                //空box不足，看看另一邊Zone有沒有多的空
+
+                if (zone2Def.EmptyBoxList.Count() > zone2Def.LowWaterMark)
+                {
+                    //找out mode下的STK port，沒有就找out mode下的OHCV port
+                    List<ShelfDef> zone1EmptyShelfData = shelfDefBLL.GetEmptyShelfByZoneID("B7_OHBLINE1-ZONE1");
+
+                    if(zone1EmptyShelfData!=null&& zone1EmptyShelfData.Count > 0)
+                    {
+                        string dest = zone1EmptyShelfData.FirstOrDefault().ADR_ID;
+                        if (string.IsNullOrWhiteSpace(dest) == false)
+                        {
+                            var zone2EmptyBox = GetTotalEmptyBoxNumberByZoneID("B7_OHBLINE1-ZONE2");
+                            string emptyBoxID = FindBestEmptyBoxID(zone2EmptyBox.emptyBox);
+                            string emptyBoxLoc = cassette_dataBLL.GetCassetteLocByBoxID(emptyBoxID);
+                            scApp.TransferService.Manual_InsertCmd(emptyBoxLoc, dest, 5, "CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3", ACMD_MCS.CmdType.OHBC);
+                        }
+                        else
+                        {
+                            //do nothing
+
+                        }
+                    }
+                    else
+                    {
+                        //do nothing
+                    }
+
+                }
+
+            }
+            if (zone2Def.EmptyBoxList.Count() < zone2Def.LowWaterMark)
+            {
+                emptyBoxLogger.Info($"{zone2Def.ZoneID} has {zone2Def.EmptyBoxList.Count()} empty box(es), reaches low water level: {zone2Def.LowWaterMark}");
+                //空box不足，看看另一邊Zone有沒有多的空
+
+                if (zone1Def.EmptyBoxList.Count() > zone1Def.LowWaterMark)
+                {
+                    //找out mode下的STK port，沒有就找out mode下的OHCV port
+                    List<ShelfDef> zone2EmptyShelfData = shelfDefBLL.GetEmptyShelfByZoneID("B7_OHBLINE1-ZONE2");
+
+                    if (zone2EmptyShelfData != null && zone2EmptyShelfData.Count > 0)
+                    {
+                        string dest = zone2EmptyShelfData.FirstOrDefault().ShelfID;
+                        if (string.IsNullOrWhiteSpace(dest) == false)
+                        {
+                            var zone1EmptyBox = GetTotalEmptyBoxNumberByZoneID("B7_OHBLINE1-ZONE1");
+                            string emptyBoxID = FindBestEmptyBoxID(zone1EmptyBox.emptyBox);
+                            string emptyBoxLoc = cassette_dataBLL.GetCassetteLocByBoxID(emptyBoxID);
+                            scApp.TransferService.Manual_InsertCmd(emptyBoxLoc, dest, 5, "CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3", ACMD_MCS.CmdType.OHBC);
+                        }
+                        else
+                        {
+                            //do nothing
+
+                        }
+                    }
+                    else
+                    {
+                        //do nothing
+                    }
+
+                }
+
+            }
+
+
+
+        }
+
         private string FindBestRecycleBoxID(ZoneDef zoneData, List<CassetteData> _emptyBoxList)
         {
             string recycleBlockID = "";
@@ -190,6 +327,20 @@ namespace com.mirle.ibg3k0.sc.Service
                 recycleBlockID = zoneData.SolidBoxList.FirstOrDefault();
             }
             return recycleBlockID;
+        }
+
+        private string FindBestEmptyBoxID(List<CassetteData> _emptyBoxList)
+        {
+            string emptyBoxID = null;
+            if (_emptyBoxList != null && _emptyBoxList.Count > 0)
+            {
+                emptyBoxID = _emptyBoxList.FirstOrDefault().BOXID;
+            }
+            else
+            {
+                // do nothing
+            }
+            return emptyBoxID;
         }
 
         private void RecycleBoxByMCS(ZoneDef zoneData, int boxCount)
@@ -238,6 +389,30 @@ namespace com.mirle.ibg3k0.sc.Service
             return (emptyBox_, isSuccess_);
         }
 
+        //A20.05.28.0 取得特定除為列表空BOX數量 並同時回復是否執行成功
+        private (List<CassetteData> emptyBox, bool isSuccess) GetTotalEmptyBoxNumberByZoneID(string zone_id)
+        {
+            List<CassetteData> emptyBox_ = new List<CassetteData>();
+            bool isSuccess_ = false;
+            try
+            {
+                emptyBox_ = cassette_dataBLL.loadCassetteData().
+                    Where(data => data.CSTID == "" &&
+                    scApp.TransferService.isUnitTypeAndZone(data.Carrier_LOC, UnitType.SHELF, zone_id)
+                    ).ToList();
+
+                if (emptyBox_ != null)
+                {
+                    isSuccess_ = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception:");
+                emptyBoxLogger.Error(ex, "[GetTotalEmptyBoxNumberByZoneID]");
+            }
+            return (emptyBox_, isSuccess_);
+        }
         //*******************
         //A20.05.28.0 判斷目前的空BOX數量是否滿足需求數量(目前需求數量是用AGV Station 數量判斷)
         private (bool isEnough, bool isSuccess) CheckIsEnoughEmptyBox(int emptyBoxNumber, out int requireBox)

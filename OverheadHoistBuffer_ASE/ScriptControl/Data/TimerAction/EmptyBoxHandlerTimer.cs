@@ -33,7 +33,12 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
             {
                 try
                 {
+                    if ((scApp.BC_ID == "ASE_LINE3" || scApp.BC_ID == "ASE_TEST") && scApp.VehicleService.multiplecar_active)
+                    {
+                        scApp.EmptyBoxHandlerService.CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3();
+                    }
                     scApp.EmptyBoxHandlerService.CheckTheEmptyBoxStockLevel();
+
                 }
                 catch (Exception ex)
                 {

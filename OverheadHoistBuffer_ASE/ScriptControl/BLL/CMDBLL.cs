@@ -3975,7 +3975,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                         return;
                     //找出目前再Queue的ACMD_OHTC
                     List<ACMD_OHTC> CMD_OHTC_Queues = null;
-                    if(scApp.BC_ID != "ASE_LINE3"&& scApp.BC_ID != "ASE_TEST")
+                    if((scApp.BC_ID != "ASE_LINE3"&& scApp.BC_ID != "ASE_TEST")||!scApp.VehicleService.multiplecar_active)
                     {
                         CMD_OHTC_Queues = scApp.CMDBLL.loadCMD_OHTCMDStatusIsQueue();
                     }

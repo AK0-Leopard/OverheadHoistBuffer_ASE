@@ -81,6 +81,8 @@ namespace com.mirle.ibg3k0.sc.Service
         public const string DEVICE_NAME_OHx = "OHx";
         Logger logger = LogManager.GetCurrentClassLogger();
         TransferService transferService = null;
+        public bool multiplecar_active = false;
+
         SCApplication scApp = null;
 
 
@@ -110,6 +112,15 @@ namespace com.mirle.ibg3k0.sc.Service
             }
 
             transferService = app.TransferService;
+            if (scApp.VehicleBLL.cache.getVhCurrentInstalledCount() > 1)
+            {
+                multiplecar_active = true;
+            }
+            else
+            {
+                multiplecar_active = false;
+            }
+
         }
 
 
@@ -2114,7 +2125,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 can_avoid_port = scApp.PortDefBLL.cache.loadCVPortDefs();
             }
             //2.找出離自己最近的一個CV點
-            if (scApp.BC_ID != "ASE_LINE3"&& scApp.BC_ID != "ASE_TEST")
+            if ((scApp.BC_ID != "ASE_LINE3"&& scApp.BC_ID != "ASE_TEST") || !scApp.VehicleService.multiplecar_active)
             {
                 var find_result = findTheNearestCVPort(willDrivenAwayVh, can_avoid_port);
                 if (find_result.isFind)
@@ -2144,7 +2155,7 @@ namespace com.mirle.ibg3k0.sc.Service
         {
             var all_cv_port = scApp.PortDefBLL.cache.loadCVPortDefs();
             //1.嘗試找出目前是in mode且離自己最近的in mode port
-            if(scApp.BC_ID != "ASE_LINE3"&& scApp.BC_ID != "ASE_TEST")
+            if((scApp.BC_ID != "ASE_LINE3"&& scApp.BC_ID != "ASE_TEST") || !scApp.VehicleService.multiplecar_active)
             {
                 var all_cv_port_in_mode = all_cv_port.Where(port => IsPortInMode(port));
                 var find_result = findTheNearestCVPort(willDrivenAwayVh, all_cv_port_in_mode);
@@ -6327,7 +6338,18 @@ namespace com.mirle.ibg3k0.sc.Service
                 if (is_success)
                 {
                     AVEHICLE vh_vo = scApp.VehicleBLL.cache.getVhByID(vhID);
-                    vh_vo.VehicleInstall();
+                    bool result = vh_vo.VehicleInstall();
+                    if (result)
+                    {
+                        if (scApp.VehicleBLL.cache.getVhCurrentInstalledCount() > 1)
+                        {
+                            multiplecar_active = true;
+                        }
+                        else
+                        {
+                            multiplecar_active = false;
+                        }
+                    }
                 }
                 List<AMCSREPORTQUEUE> reportqueues = new List<AMCSREPORTQUEUE>();
                 is_success = is_success && scApp.ReportBLL.newReportVehicleInstalled(vhID, reportqueues);
@@ -6351,7 +6373,18 @@ namespace com.mirle.ibg3k0.sc.Service
                 if (is_success)
                 {
                     AVEHICLE vh_vo = scApp.VehicleBLL.cache.getVhByID(vhID);
-                    vh_vo.VechileRemove();
+                    bool result = vh_vo.VechileRemove();
+                    if (result)
+                    {
+                        if (scApp.VehicleBLL.cache.getVhCurrentInstalledCount()>1)
+                        {
+                            multiplecar_active = true;
+                        }
+                        else
+                        {
+                            multiplecar_active = false;
+                        }
+                    }
                 }
                 List<AMCSREPORTQUEUE> reportqueues = new List<AMCSREPORTQUEUE>();
                 is_success = is_success && scApp.ReportBLL.newReportVehicleRemoved(vhID, reportqueues);

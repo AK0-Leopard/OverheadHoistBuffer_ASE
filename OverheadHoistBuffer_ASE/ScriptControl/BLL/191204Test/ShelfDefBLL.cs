@@ -59,6 +59,24 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
 
         }
+
+        public List<ShelfDef> LoadShelfByZoneID(string zone_id)
+        {
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    return shelfdefDao.LoadShelfDefByZoneID(con,zone_id);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return null;
+            }
+
+        }
+
         public List<ShelfDef> LoadEnableShelf()
         {
             try
@@ -318,13 +336,13 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
         }
 
-        public List<ShelfDef> GetEmptyHandOffShelfNorth()
+        public List<ShelfDef> GetEmptyShelfByZoneID(string zone_id)
         {
             try
             {
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
-                    return shelfdefDao.GetEmptyHandOffShelfNorth(con);
+                    return shelfdefDao.GetEmptyShelfByZone(con,zone_id);
                 }
             }
             catch (Exception ex)
@@ -333,6 +351,22 @@ namespace com.mirle.ibg3k0.sc.BLL
                 return null;
             }
         }
+
+        //public List<ShelfDef> GetEmptyHandOffShelfNorth()
+        //{
+        //    try
+        //    {
+        //        using (DBConnection_EF con = DBConnection_EF.GetUContext())
+        //        {
+        //            return shelfdefDao.GetEmptyHandOffShelfNorth(con);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        logger.Error(ex, "Exception");
+        //        return null;
+        //    }
+        //}
 
         public List<ShelfDef> GetEmptyHandOffShelfSouth()
         {

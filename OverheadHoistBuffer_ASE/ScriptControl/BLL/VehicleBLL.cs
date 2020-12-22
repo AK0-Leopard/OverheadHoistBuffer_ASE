@@ -995,31 +995,31 @@ namespace com.mirle.ibg3k0.sc.BLL
             {
                 //if (iSource > 10102)//命令起始點在北側 需由一號車搬運
                 if (iSource > 10030)//命令起始點在北側 需由一號車搬運
-                    {
+                {
                     //1
                     selectedCarNo = 1;
                     return true;
                 }
                 //else if (iSource < 10090)//命令起始點在南側 需由一號車搬運
-                else if (iSource < 10020)//命令起始點在南側 需由一號車搬運
-                        {
+                else if (iSource < 10017)//命令起始點在南側 需由一號車搬運
+                {
                     //2
                     selectedCarNo = 2;
                     return true;
                 }
                 //else if (iSource == 10102) //命令起始點在北側CV Port
                 else if (iSource == 10030) //命令起始點在北側CV Port
-                        {
+                {
                     //if (iDestination > 10090)
-                    if (iDestination > 10020)
-                        {
+                    if (iDestination > 10017)
+                    {
                         //1
                         selectedCarNo = 1;
                         return true;
                     }
                     //else if (iDestination == 10090)
-                    else if (iDestination == 10020)
-                            {
+                    else if (iDestination == 10017)
+                    {
                         //3
                         selectedCarNo = 3;
                         return true;
@@ -1033,18 +1033,18 @@ namespace com.mirle.ibg3k0.sc.BLL
 
                 }
                 //else if (iSource == 10090)
-                else if (iSource == 10020)
-                        {
+                else if (iSource == 10017)
+                {
                     //if (iDestination < 10102)
                     if (iDestination < 10030)
-                        {
+                    {
                         //2
                         selectedCarNo = 2;
                         return true;
                     }
                     //else if (iDestination == 10102)
                     else if (iDestination == 10030)
-                            {
+                    {
                         //3
                         selectedCarNo = 3;
                         return true;
@@ -1060,14 +1060,14 @@ namespace com.mirle.ibg3k0.sc.BLL
                 {
                     //if (iDestination >= 10102)
                     if (iDestination >= 10030)
-                        {
+                    {
                         //1
                         selectedCarNo = 1;
                         return true;
                     }
                     //else if (iDestination <= 10090)
-                    else if (iDestination <= 10020)
-                            {
+                    else if (iDestination <= 10017)
+                    {
                         //2
                         selectedCarNo = 2;
                         return true;
@@ -2215,6 +2215,14 @@ namespace com.mirle.ibg3k0.sc.BLL
                        Where(vh => vh.MODE_STATUS == VHModeStatus.AutoRemote &&
                                    vh.ACT_STATUS == VHActionStatus.NoCommand &&
                                    !vh.IsError).
+                       Count();
+            }
+
+            public UInt16 getVhCurrentInstalledCount()
+            {
+                var vhs = eqObjCacheManager.getAllVehicle();
+                return (UInt16)vhs.
+                       Where(vh => vh.IS_INSTALLED).
                        Count();
             }
 
