@@ -993,14 +993,12 @@ namespace com.mirle.ibg3k0.sc.BLL
             int iDestination;
             if (int.TryParse(source, out iSource) && int.TryParse(destination, out iDestination))
             {
-                //if (iSource > 10102)//命令起始點在北側 需由一號車搬運
-                if (iSource > 10030)//命令起始點在北側 需由一號車搬運
+                if (iSource > SystemParameter.iOHCVPortNorthAdr)//命令起始點在北側 需由一號車搬運
                 {
                     //1
                     selectedCarNo = 1;
                 }
-                //else if (iSource < 10090)//命令起始點在南側 需由一號車搬運
-                else if (iSource < 10017)//命令起始點在南側 需由一號車搬運
+                else if (iSource < SystemParameter.iHandoffBoundary)//命令起始點在南側 需由二號車搬運
                 {
                     //2
                     selectedCarNo = 2;
@@ -1008,15 +1006,15 @@ namespace com.mirle.ibg3k0.sc.BLL
                 //else if (iSource == 10102) //命令起始點在北側CV Port
                 else 
                 { 
-                    if(iDestination > 10030) // 若大於北側CV Port 則1號車負責
+                    if(iDestination > SystemParameter.iOHCVPortNorthAdr) // 若大於北側CV Port 則1號車負責
                     {
                         selectedCarNo = 1;
                     }
-                    else if(iDestination < 10017) // 若小於南側handoff 區 則2號車負責
+                    else if(iDestination < SystemParameter.iHandoffBoundary) // 若小於南側handoff 區 則2號車負責
                     {
                         selectedCarNo = 2;
                     }
-                    else //於10030-10017 2車皆可以
+                    else //於北側CV Port-南側handoff區 2車皆可以
                     {
                         selectedCarNo = 3;
                     }

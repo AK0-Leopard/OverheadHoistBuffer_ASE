@@ -1640,14 +1640,12 @@ namespace com.mirle.ibg3k0.sc.Service
                         bool needHandoff = false;
                         bool checkToRelay = true;
                         List<ShelfDef> shelfData = null;
-                        //if (iSource > 10102 && iDest<10090)
-                        if (iSource > 10030 && iDest<10017)
+                        if (iSource > SystemParameter.iOHCVPortNorthAdr && iDest< SystemParameter.iHandoffBoundary)
                             {
                             shelfData = shelfDefBLL.GetEmptyHandOffShelfSouth();
                             needHandoff = true;
                         }
-                        //else if(iSource < 10090 && iDest > 10102)
-                        else if(iSource < 10017 && iDest > 10030)
+                        else if(iSource < SystemParameter.iHandoffBoundary && iDest > SystemParameter.iOHCVPortNorthAdr)
                                 {
                             shelfData = shelfDefBLL.GetEmptyHandOffShelfSouth();
                             needHandoff = true;
@@ -1769,7 +1767,7 @@ namespace com.mirle.ibg3k0.sc.Service
 
                             //List<ShelfDef> shelfData = shelfDefBLL.GetEmptyAndEnableShelf();\
                             List<ShelfDef> shelfData;
-                            if (isUnitType(mcsCmd.HOSTSOURCE, UnitType.OHCV))
+                            if (isUnitType(mcsCmd.HOSTDESTINATION, UnitType.OHCV))
                             {
                                 shelfData = shelfDefBLL.GetEmptyHandOffShelf();
                             }

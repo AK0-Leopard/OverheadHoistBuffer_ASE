@@ -906,6 +906,28 @@ namespace com.mirle.ibg3k0.sc.BLL
         }
         public int MCSCmdCompare_MoreThan1(ACMD_MCS MCSCmd1, ACMD_MCS MCSCmd2)
         {
+
+            //A20.12.23.0
+            // 0.判斷命令是否為relayCmd且relayStation是HandOff區，是者優先進行。
+            bool isMCSCmd1_isHandoffRelayCmd = isHandoffShelf(MCSCmd1.RelayStation);
+            bool isMCSCmd2_isHandoffRelayCmd = isHandoffShelf(MCSCmd2.RelayStation);
+
+            if ((isMCSCmd1_isHandoffRelayCmd == true) && (isMCSCmd2_isHandoffRelayCmd == true) ||
+                (isMCSCmd1_isHandoffRelayCmd == false) && (isMCSCmd2_isHandoffRelayCmd == false))
+            {
+                //代表兩者相等，不動，且接著判斷距離
+            }
+            else if ((isMCSCmd1_isHandoffRelayCmd == true) && (isMCSCmd2_isHandoffRelayCmd == false))
+            {
+                return -1;
+                //代表前者較優先，不動
+            }
+            else if ((isMCSCmd1_isHandoffRelayCmd == false) && (isMCSCmd2_isHandoffRelayCmd == true))
+            {
+                return 1;
+                //代表後者較優先，換位
+            }
+
             //A20.12.18.0
             // 0.判斷命令是否為relayCmd，是者優先進行。
             bool isMCSCmd1_isRelayCmd = !string.IsNullOrWhiteSpace(MCSCmd1.RelayStation);
@@ -986,6 +1008,26 @@ namespace com.mirle.ibg3k0.sc.BLL
         }
         public int MCSCmdCompare_LessThan2(ACMD_MCS MCSCmd1, ACMD_MCS MCSCmd2)
         {
+            //A20.12.23.0
+            // 0.判斷命令是否為relayCmd且relayStation是HandOff區，是者優先進行。
+            bool isMCSCmd1_isHandoffRelayCmd = isHandoffShelf(MCSCmd1.RelayStation);
+            bool isMCSCmd2_isHandoffRelayCmd = isHandoffShelf(MCSCmd2.RelayStation);
+
+            if ((isMCSCmd1_isHandoffRelayCmd == true) && (isMCSCmd2_isHandoffRelayCmd == true) ||
+                (isMCSCmd1_isHandoffRelayCmd == false) && (isMCSCmd2_isHandoffRelayCmd == false))
+            {
+                //代表兩者相等，不動，且接著判斷距離
+            }
+            else if ((isMCSCmd1_isHandoffRelayCmd == true) && (isMCSCmd2_isHandoffRelayCmd == false))
+            {
+                return -1;
+                //代表前者較優先，不動
+            }
+            else if ((isMCSCmd1_isHandoffRelayCmd == false) && (isMCSCmd2_isHandoffRelayCmd == true))
+            {
+                return 1;
+                //代表後者較優先，換位
+            }
             //A20.12.18.0
             // 0.判斷命令是否為relayCmd，是者優先進行。
             bool isMCSCmd1_isRelayCmd = !string.IsNullOrWhiteSpace(MCSCmd1.RelayStation);
@@ -1101,6 +1143,30 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
 
             return _checkAGVCmdNumMoreThan1;
+        }
+        private bool isHandoffShelf(string shelf_id)
+        {
+            if (string.IsNullOrWhiteSpace(shelf_id))
+            {
+                return false;
+            }
+
+            ShelfDef shelf = scApp.ShelfDefBLL.loadShelfDataByID(shelf_id);
+            if (shelf != null)
+            {
+                if(SCUtility.isMatche(shelf.ZoneID, SystemParameter.HandoffZoneID))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
         }
 
         //*************************************************

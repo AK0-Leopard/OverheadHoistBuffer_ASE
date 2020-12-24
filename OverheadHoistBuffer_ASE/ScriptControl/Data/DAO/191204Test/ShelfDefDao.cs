@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using com.mirle.ibg3k0.bcf.Data;
+using com.mirle.ibg3k0.sc.App;
 using NLog;
 
 namespace com.mirle.ibg3k0.sc.Data.DAO
@@ -221,7 +222,7 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                 var result = conn.ShelfDef
                     .Where(x => x.ShelfState == ShelfDef.E_ShelfState.EmptyShelf &&
                                 x.Enable == "Y"
-                              && (x.ZoneID == "B7_OHBLINE3-ZONEALT"))
+                              && (x.ZoneID == SystemParameter.AlternateZoneID))
                     .OrderByDescending(x => x.ShelfID).ToList();
                 //.FirstOrDefault();
                 return result;
@@ -280,7 +281,7 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                     .Where(x => x.ShelfState == ShelfDef.E_ShelfState.EmptyShelf &&
                                 x.Enable == "Y"
                                 //&& (int.Parse(x.ADR_ID) == 10089))
-                                && (x.ZoneID == "B7_OHBLINE3-ZONEHF"))
+                                && (x.ZoneID == SystemParameter.HandoffZoneID))
                     .OrderByDescending(x => x.ShelfID).ToList();
                 //.FirstOrDefault();
                 return result;
@@ -300,7 +301,7 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                     .Where(x => x.ShelfState == ShelfDef.E_ShelfState.EmptyShelf &&
                                 x.Enable == "Y"
                                 //&& (int.Parse(x.ADR_ID) < 10089 && int.Parse(x.ADR_ID) > 10103)
-                                && (x.ZoneID != "B7_OHBLINE3-ZONEHF") && (x.ZoneID != "B7_OHBLINE3-ZONEALT")
+                                && (x.ZoneID != SystemParameter.HandoffZoneID) && (x.ZoneID != SystemParameter.AlternateZoneID)
                                 )
                     .OrderByDescending(x => x.ShelfID).ToList();
                 //.FirstOrDefault();

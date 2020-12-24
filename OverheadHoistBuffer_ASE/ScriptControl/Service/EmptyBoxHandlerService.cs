@@ -250,13 +250,14 @@ namespace com.mirle.ibg3k0.sc.Service
 
                     if(zone1EmptyShelfData!=null&& zone1EmptyShelfData.Count > 0)
                     {
-                        string dest = zone1EmptyShelfData.FirstOrDefault().ADR_ID;
+                        string dest = zone1EmptyShelfData.FirstOrDefault().ShelfID;
                         if (string.IsNullOrWhiteSpace(dest) == false)
                         {
                             var zone2EmptyBox = GetTotalEmptyBoxNumberByZoneID("B7_OHBLINE1-ZONE2");
                             string emptyBoxID = FindBestEmptyBoxID(zone2EmptyBox.emptyBox);
                             string emptyBoxLoc = cassette_dataBLL.GetCassetteLocByBoxID(emptyBoxID);
                             scApp.TransferService.Manual_InsertCmd(emptyBoxLoc, dest, 5, "CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3", ACMD_MCS.CmdType.OHBC);
+                            return;
                         }
                         else
                         {
@@ -291,6 +292,7 @@ namespace com.mirle.ibg3k0.sc.Service
                             string emptyBoxID = FindBestEmptyBoxID(zone1EmptyBox.emptyBox);
                             string emptyBoxLoc = cassette_dataBLL.GetCassetteLocByBoxID(emptyBoxID);
                             scApp.TransferService.Manual_InsertCmd(emptyBoxLoc, dest, 5, "CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3", ACMD_MCS.CmdType.OHBC);
+                            return;
                         }
                         else
                         {
@@ -307,7 +309,65 @@ namespace com.mirle.ibg3k0.sc.Service
 
             }
 
+            if (zone1Def.BoxCount > zone1Def.HighWaterMark && zone2Def.BoxCount < zone2Def.HighWaterMark)
+            {
+                List<ShelfDef> zone2EmptyShelfData = shelfDefBLL.GetEmptyShelfByZoneID("B7_OHBLINE1-ZONE2");
+                string dest = zone2EmptyShelfData.FirstOrDefault().ShelfID;
+                if (string.IsNullOrWhiteSpace(dest) == false)
+                {
+                    if (zone1Def.EmptyBoxList.Count> zone1Def.LowWaterMark)
+                    {
+                        var zone1EmptyBox = GetTotalEmptyBoxNumberByZoneID("B7_OHBLINE1-ZONE1");
+                        string emptyBoxID = FindBestEmptyBoxID(zone1EmptyBox.emptyBox);
+                        string emptyBoxLoc = cassette_dataBLL.GetCassetteLocByBoxID(emptyBoxID);
+                        scApp.TransferService.Manual_InsertCmd(emptyBoxLoc, dest, 5, "CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3", ACMD_MCS.CmdType.OHBC);
+                        return;
+                    }
+                    else
+                    {
+                        var zone1SolidBox = GetTotalSoildBoxNumberByZoneID("B7_OHBLINE1-ZONE1");
+                        string solidBoxID = FindBestSolidBoxID(zone1SolidBox.solidBox);
+                        string solidBoxLoc = cassette_dataBLL.GetCassetteLocByBoxID(solidBoxID);
+                        scApp.TransferService.Manual_InsertCmd(solidBoxLoc, dest, 5, "CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3", ACMD_MCS.CmdType.OHBC);
+                        return;
+                    }
+                }
+                else
+                {
+                    //do nothing
 
+                }
+            }
+
+            if (zone2Def.BoxCount > zone2Def.HighWaterMark && zone1Def.BoxCount < zone1Def.HighWaterMark)
+            {
+                List<ShelfDef> zone1EmptyShelfData = shelfDefBLL.GetEmptyShelfByZoneID("B7_OHBLINE1-ZONE1");
+                string dest = zone1EmptyShelfData.FirstOrDefault().ShelfID;
+                if (string.IsNullOrWhiteSpace(dest) == false)
+                {
+                    if (zone2Def.EmptyBoxList.Count > zone2Def.LowWaterMark)
+                    {
+                        var zone2EmptyBox = GetTotalEmptyBoxNumberByZoneID("B7_OHBLINE1-ZONE2");
+                        string emptyBoxID = FindBestEmptyBoxID(zone2EmptyBox.emptyBox);
+                        string emptyBoxLoc = cassette_dataBLL.GetCassetteLocByBoxID(emptyBoxID);
+                        scApp.TransferService.Manual_InsertCmd(emptyBoxLoc, dest, 5, "CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3", ACMD_MCS.CmdType.OHBC);
+                        return;
+                    }
+                    else
+                    {
+                        var zone2SolidBox = GetTotalSoildBoxNumberByZoneID("B7_OHBLINE1-ZONE2");
+                        string solidBoxID = FindBestSolidBoxID(zone2SolidBox.solidBox);
+                        string solidBoxLoc = cassette_dataBLL.GetCassetteLocByBoxID(solidBoxID);
+                        scApp.TransferService.Manual_InsertCmd(solidBoxLoc, dest, 5, "CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3", ACMD_MCS.CmdType.OHBC);
+                        return;
+                    }
+                }
+                else
+                {
+                    //do nothing
+
+                }
+            }
 
         }
 
@@ -327,6 +387,20 @@ namespace com.mirle.ibg3k0.sc.Service
                 recycleBlockID = zoneData.SolidBoxList.FirstOrDefault();
             }
             return recycleBlockID;
+        }
+
+        private string FindBestSolidBoxID(List<CassetteData> solidBoxList)
+        {
+            string solidBoxID = null;
+            if (solidBoxList != null && solidBoxList.Count > 0)
+            {
+                solidBoxID = solidBoxList.FirstOrDefault().BOXID;
+            }
+            else
+            {
+                // do nothing
+            }
+            return solidBoxID;
         }
 
         private string FindBestEmptyBoxID(List<CassetteData> _emptyBoxList)
@@ -412,6 +486,30 @@ namespace com.mirle.ibg3k0.sc.Service
                 emptyBoxLogger.Error(ex, "[GetTotalEmptyBoxNumberByZoneID]");
             }
             return (emptyBox_, isSuccess_);
+        }
+
+        private (List<CassetteData> solidBox, bool isSuccess) GetTotalSoildBoxNumberByZoneID(string zone_id)
+        {
+            List<CassetteData> soildBox_ = new List<CassetteData>();
+            bool isSuccess_ = false;
+            try
+            {
+                soildBox_ = cassette_dataBLL.loadCassetteData().
+                    Where(data => data.CSTID != "" &&
+                    scApp.TransferService.isUnitTypeAndZone(data.Carrier_LOC, UnitType.SHELF, zone_id)
+                    ).ToList();
+
+                if (soildBox_ != null)
+                {
+                    isSuccess_ = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception:");
+                emptyBoxLogger.Error(ex, "[GetTotalSoildBoxNumberByZoneID]");
+            }
+            return (soildBox_, isSuccess_);
         }
         //*******************
         //A20.05.28.0 判斷目前的空BOX數量是否滿足需求數量(目前需求數量是用AGV Station 數量判斷)

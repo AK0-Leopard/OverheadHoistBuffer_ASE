@@ -801,6 +801,10 @@ namespace com.mirle.ibg3k0.sc.App
 
             initialReserveSectionAPI();//A0.01
             iniOHBC_Data();
+            if(BC_ID == "ASE_LINE3"|| BC_ID == "ASE_TEST")
+            {
+                iniOHBC_ASE_Line3_Data();
+            }
             startBLL();
             initWIF();      //Initial WIF   //A0.01
             initialCatchDataFromDB();
@@ -870,6 +874,15 @@ namespace com.mirle.ibg3k0.sc.App
             }
         }
 
+
+        private void iniOHBC_ASE_Line3_Data()
+        {
+            SystemParameter.iOHCVPortNorthAdr = getInt("OHCVPortNorthAdr", 0);
+            SystemParameter.iOHCVPortSouthAdr = getInt("OHCVPortSouthAdr", 0);
+            SystemParameter.iHandoffBoundary = getInt("HandoffBoundary", 0);
+            SystemParameter.HandoffZoneID = getString("HandoffZoneID", "");
+            SystemParameter.AlternateZoneID = getString("AlternateZoneID", "");
+        }
         //A0.01
         private void setHltVehicleInfo()
         {
@@ -2182,6 +2195,13 @@ namespace com.mirle.ibg3k0.sc.App
         public static int cmdTimeOutToAlternate = 30;
 
         public static bool AutoOverride = true;
+
+        public static string HandoffZoneID = "";
+        public static string AlternateZoneID = "";
+        public static int iOHCVPortNorthAdr = 0;
+        public static int iOHCVPortSouthAdr = 0;
+        public static int iHandoffBoundary = 0;
+
         /// <summary>
         /// Sets the secs conversaction timeout.
         /// </summary>
