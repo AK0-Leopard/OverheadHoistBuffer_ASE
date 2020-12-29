@@ -957,13 +957,13 @@ namespace com.mirle.ibg3k0.sc.BLL
             {
                 if (selectedCarNo == 1)
                 {
-                    AVEHICLE vh = cache.getVhByNum(1);
+                    AVEHICLE vh = cache.getVhBySide(ServiceSide.North);
                     vhs = new List<AVEHICLE>();
                     vhs.Add(vh);
                 }
                 else if (selectedCarNo == 2)
                 {
-                    AVEHICLE vh = cache.getVhByNum(2);
+                    AVEHICLE vh = cache.getVhBySide(ServiceSide.South);
                     vhs = new List<AVEHICLE>();
                     vhs.Add(vh);
                 }
@@ -2188,6 +2188,13 @@ namespace com.mirle.ibg3k0.sc.BLL
             public AVEHICLE getVhByNum(int vhNum)
             {
                 var vh = eqObjCacheManager.getAllVehicle().Where(v => v.Num == vhNum).FirstOrDefault();
+
+                return vh;
+            }
+
+            public AVEHICLE getVhBySide(ServiceSide side)
+            {
+                var vh = eqObjCacheManager.getAllVehicle().Where(v => v.ServiceSide == side).FirstOrDefault();
 
                 return vh;
             }

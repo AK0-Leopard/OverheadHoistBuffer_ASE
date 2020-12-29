@@ -381,7 +381,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Components
                     pic_CstIcon.Image = Resources.Action__Cassette_;
 
                     m_objItemNewVhcl[ii] = new uctlNewVehicle(lstEq[ii], this, pic_AlarmStatus, pic_CstIcon);
-                    m_objItemNewVhcl[ii].Num = ii + 1;
+                    m_objItemNewVhcl[ii].Num = lstEq[ii].Num;
                     //m_objItemNewVhcl[ii].p_SizeW = m_objItemVhcl[ii].Width;
                     //m_objItemNewVhcl[ii].p_SizeH = m_objItemVhcl[ii].Height;
                     //m_objItemNewVhcl[ii].Width = Resources.Vehicle__Unconnected_.Width / 2;

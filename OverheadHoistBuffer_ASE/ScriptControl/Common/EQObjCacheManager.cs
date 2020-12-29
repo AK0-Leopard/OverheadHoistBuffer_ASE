@@ -36,9 +36,9 @@ namespace com.mirle.ibg3k0.sc.Common
     {
         private List<VEHICLEMAP> VEHICLEMAPs = new List<VEHICLEMAP>()
         {
-            new VEHICLEMAP(){  ID ="OHx01",REAL_ID="M101"},
-            new VEHICLEMAP(){  ID ="OHx02",REAL_ID="M102"},
-            new VEHICLEMAP(){  ID ="OHx03",REAL_ID="M103"},
+            new VEHICLEMAP(){  ID ="B7_OHBLINE3_CR1",REAL_ID="B7_OHBLINE3_CR1",Num =7,Side= ServiceSide.South},
+            new VEHICLEMAP(){  ID ="B7_OHBLINE3_CR2",REAL_ID="B7_OHBLINE3_CR2",Num =8,Side= ServiceSide.North},
+            //new VEHICLEMAP(){  ID ="B7_OHBLINE3_CRT",REAL_ID="M103",Num =8,Side= ServiceSide.North},
             new VEHICLEMAP(){  ID ="OHx04",REAL_ID="M104"},
             new VEHICLEMAP(){  ID ="OHx05",REAL_ID="M105"},
             new VEHICLEMAP(){  ID ="OHx06",REAL_ID="M106"},
@@ -550,12 +550,14 @@ namespace com.mirle.ibg3k0.sc.Common
                         AVEHICLE vhTemp = new AVEHICLE()
                         {
                             VEHICLE_ID = vh_id,
-                            Num = vh_nmu++,
+                            //Num = vh_nmu++,
+                            Num = getVhNum(vh_id),
                             Real_ID = getVhRealID(vh_id),
+                            ServiceSide = getVhServiceSide(vh_id),
                             TcpIpAgentName = vehicleConfig.TcpIpAgentName,
                             CUR_ADR_ID = "",
                             CUR_SEC_ID = "",
-                            NODE_ID = node_id
+                            NODE_ID = node_id,
                         };
                         vhList.Add(vhTemp);
                     }
@@ -574,6 +576,29 @@ namespace com.mirle.ibg3k0.sc.Common
             }
             return real_id;
         }
+
+        private int getVhNum(string vhID)
+        {
+            var map = VEHICLEMAPs.Where(id => id.ID.Trim() == vhID.Trim()).SingleOrDefault();
+            int num = 0;
+            if (map != null)
+            {
+                num = map.Num;
+            }
+            return num;
+        }
+        private ServiceSide getVhServiceSide(string vhID)
+        {
+            var map = VEHICLEMAPs.Where(m => m.ID.Trim() == vhID.Trim()).SingleOrDefault();
+            ServiceSide side = ServiceSide.None;
+            if (map != null)
+            {
+                side = map.Side;
+            }
+            return side;
+        }
+
+
         private MTSSetting getMTSSetting(string mtsID)
         {
             var setting = MTSSettings.Where(id => id.ID.Trim() == mtsID.Trim()).SingleOrDefault();

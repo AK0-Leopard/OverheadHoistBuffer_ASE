@@ -182,11 +182,7 @@ namespace com.mirle.ibg3k0.sc.Service
             zoneDatas = zoneBLL.loadZoneData();
             boxDatas = cassette_dataBLL.loadCassetteData();
             shelfDatas = shelfDefBLL.LoadShelf();
-            //List<ShelfDef> zone1ShelfData = shelfDefBLL.LoadShelfByZoneID("B7_OHBLINE1-ZONE1");
-            //List<ShelfDef> zone2ShelfData = shelfDefBLL.LoadShelfByZoneID("B7_OHBLINE1-ZONE2");
-            //var emptyBox = GetTotalEmptyBoxNumber();
-            //var zone1EmptyBox = GetTotalEmptyBoxNumberByZoneID("B7_OHBLINE1-ZONE1");
-            //var zone2EmptyBox = GetTotalEmptyBoxNumberByZoneID("B7_OHBLINE1-ZONE1");
+
             if (!initializedFlag)
             {
                 zoneCacheDatas = new List<ZoneDef>(zoneDatas);
@@ -206,55 +202,63 @@ namespace com.mirle.ibg3k0.sc.Service
 
             ZoneDef zone1Def = null;
             ZoneDef zone2Def = null;
+            ZoneDef zone3Def = null;
             //B2: 檢查各個zone是否需要補空box
             foreach (ZoneDef zoneData in zoneCacheDatas)
             {
-                if (zone1Def == null && zoneData.ZoneID.Trim() == "B7_OHBLINE1-ZONE1")
+                if (zone1Def == null && zoneData.ZoneID.Trim() == "B7_OHBLINE3-ZONE1")
                 {
                     zone1Def = zoneData;
                     continue;
                 }
-                if (zone2Def == null && zoneData.ZoneID.Trim() == "B7_OHBLINE1-ZONE2")
+                if (zone2Def == null && zoneData.ZoneID.Trim() == "B7_OHBLINE3-ZONE2")
                 {
                     zone2Def = zoneData;
                     continue;
                 }
-                if (zone1Def != null && zone2Def != null)
+                if (zone3Def == null && zoneData.ZoneID.Trim() == "B7_OHBLINE3-ZONE3")
+                {
+                    zone3Def = zoneData;
+                    continue;
+                }
+                if (zone1Def != null && zone2Def != null && zone3Def != null)
                 {
                     break;
                 }
 
-                if (zoneData.EmptyBoxList.Count() < zoneData.LowWaterMark)
-                {
-                    emptyBoxLogger.Info($"{zoneData.ZoneID} has {zoneData.EmptyBoxList.Count()} empty box(es), reaches low water level: {zoneData.LowWaterMark}, request for empty box...");
-                    //空box不足，呼叫MCS補充
-                    DoSendRequireEmptyBoxToMCS(zoneData.ZoneID, (int)(zoneData.LowWaterMark - zoneData.EmptyBoxList.Count()));
-                }
+                //if (zoneData.EmptyBoxList.Count() < zoneData.LowWaterMark)
+                //{
+                //    emptyBoxLogger.Info($"{zoneData.ZoneID} has {zoneData.EmptyBoxList.Count()} empty box(es), reaches low water level: {zoneData.LowWaterMark}, request for empty box...");
+                //    //空box不足，呼叫MCS補充
+                //    DoSendRequireEmptyBoxToMCS(zoneData.ZoneID, (int)(zoneData.LowWaterMark - zoneData.EmptyBoxList.Count()));
+                //}
             }
 
-            if (zone1Def == null || zone2Def == null)
+            if (zone1Def == null || zone2Def == null || zone3Def == null)
             {
-                emptyBoxLogger.Info($"Not Found B7_OHBLINE1-ZONE1 or B7_OHBLINE1-ZONE2 in CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3");
+                emptyBoxLogger.Info($"Not Found B7_OHBLINE3-ZONE1 or B7_OHBLINE3-ZONE2 or B7_OHBLINE3-ZONE3  in CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3");
                 return;
             }
 
-            if (zone1Def.EmptyBoxList.Count() < zone1Def.LowWaterMark)
+            if (zone1Def.EmptyBoxList.Count()+ zone2Def.EmptyBoxList.Count() < SystemParameter.iSouthLowWaterLevel)
             {
-                emptyBoxLogger.Info($"{zone1Def.ZoneID} has {zone1Def.EmptyBoxList.Count()} empty box(es), reaches low water level: {zone1Def.LowWaterMark}");
+                emptyBoxLogger.Info($"{zone1Def.ZoneID} + {zone2Def.ZoneID} has {zone1Def.EmptyBoxList.Count() + zone2Def.EmptyBoxList.Count()} empty box(es), reaches low water level: {SystemParameter.iSouthLowWaterLevel}");
                 //空box不足，看看另一邊Zone有沒有多的空
 
-                if (zone2Def.EmptyBoxList.Count() > zone2Def.LowWaterMark)
+                if (zone3Def.EmptyBoxList.Count() > SystemParameter.iNorthLowWaterLevel)
                 {
-                    //找out mode下的STK port，沒有就找out mode下的OHCV port
-                    List<ShelfDef> zone1EmptyShelfData = shelfDefBLL.GetEmptyShelfByZoneID("B7_OHBLINE1-ZONE1");
 
-                    if(zone1EmptyShelfData!=null&& zone1EmptyShelfData.Count > 0)
+                    List<ShelfDef> zone1EmptyShelfData = shelfDefBLL.GetEmptyShelfByZoneID("B7_OHBLINE3-ZONE1");
+                    List<ShelfDef> zone2EmptyShelfData = shelfDefBLL.GetEmptyShelfByZoneID("B7_OHBLINE3-ZONE2");
+                    List<ShelfDef> southEmptyShelfData = zone1EmptyShelfData;
+                    southEmptyShelfData.AddRange(zone2EmptyShelfData);
+                    if (southEmptyShelfData != null&& southEmptyShelfData.Count > 0)
                     {
-                        string dest = zone1EmptyShelfData.FirstOrDefault().ShelfID;
+                        string dest = southEmptyShelfData.FirstOrDefault().ShelfID;
                         if (string.IsNullOrWhiteSpace(dest) == false)
                         {
-                            var zone2EmptyBox = GetTotalEmptyBoxNumberByZoneID("B7_OHBLINE1-ZONE2");
-                            string emptyBoxID = FindBestEmptyBoxID(zone2EmptyBox.emptyBox);
+                            var zone3EmptyBox = GetTotalEmptyBoxNumberByZoneID("B7_OHBLINE3-ZONE3");
+                            string emptyBoxID = FindBestEmptyBoxID(zone3EmptyBox.emptyBox);
                             string emptyBoxLoc = cassette_dataBLL.GetCassetteLocByBoxID(emptyBoxID);
                             scApp.TransferService.Manual_InsertCmd(emptyBoxLoc, dest, 5, "CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3", ACMD_MCS.CmdType.OHBC);
                             return;
@@ -273,23 +277,26 @@ namespace com.mirle.ibg3k0.sc.Service
                 }
 
             }
-            if (zone2Def.EmptyBoxList.Count() < zone2Def.LowWaterMark)
+            if (zone3Def.EmptyBoxList.Count() < SystemParameter.iNorthLowWaterLevel)
             {
-                emptyBoxLogger.Info($"{zone2Def.ZoneID} has {zone2Def.EmptyBoxList.Count()} empty box(es), reaches low water level: {zone2Def.LowWaterMark}");
-                //空box不足，看看另一邊Zone有沒有多的空
+                emptyBoxLogger.Info($"{zone3Def.ZoneID} has {zone3Def.EmptyBoxList.Count()} empty box(es), reaches low water level: {SystemParameter.iNorthLowWaterLevel}");
+                //空box不足，看看另一邊Zone有沒有多的空box
 
-                if (zone1Def.EmptyBoxList.Count() > zone1Def.LowWaterMark)
+                if (zone1Def.EmptyBoxList.Count()+ zone2Def.EmptyBoxList.Count() > SystemParameter.iSouthLowWaterLevel)
                 {
                     //找out mode下的STK port，沒有就找out mode下的OHCV port
-                    List<ShelfDef> zone2EmptyShelfData = shelfDefBLL.GetEmptyShelfByZoneID("B7_OHBLINE1-ZONE2");
+                    List<ShelfDef> NorthEmptyShelfData = shelfDefBLL.GetEmptyShelfByZoneID("B7_OHBLINE3-ZONE3");
 
-                    if (zone2EmptyShelfData != null && zone2EmptyShelfData.Count > 0)
+                    if (NorthEmptyShelfData != null && NorthEmptyShelfData.Count > 0)
                     {
-                        string dest = zone2EmptyShelfData.FirstOrDefault().ShelfID;
+                        string dest = NorthEmptyShelfData.FirstOrDefault().ShelfID;
                         if (string.IsNullOrWhiteSpace(dest) == false)
                         {
-                            var zone1EmptyBox = GetTotalEmptyBoxNumberByZoneID("B7_OHBLINE1-ZONE1");
-                            string emptyBoxID = FindBestEmptyBoxID(zone1EmptyBox.emptyBox);
+                            var zone1EmptyBox = GetTotalEmptyBoxNumberByZoneID("B7_OHBLINE3-ZONE1");
+                            var zone2EmptyBox = GetTotalEmptyBoxNumberByZoneID("B7_OHBLINE3-ZONE2");
+                            var southEmptyBox = zone1EmptyBox;
+                            southEmptyBox.emptyBox.AddRange(zone2EmptyBox.emptyBox);
+                            string emptyBoxID = FindBestEmptyBoxID(southEmptyBox.emptyBox);
                             string emptyBoxLoc = cassette_dataBLL.GetCassetteLocByBoxID(emptyBoxID);
                             scApp.TransferService.Manual_InsertCmd(emptyBoxLoc, dest, 5, "CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3", ACMD_MCS.CmdType.OHBC);
                             return;
@@ -309,24 +316,30 @@ namespace com.mirle.ibg3k0.sc.Service
 
             }
 
-            if (zone1Def.BoxCount > zone1Def.HighWaterMark && zone2Def.BoxCount < zone2Def.HighWaterMark)
+            if (zone1Def.BoxCount + zone2Def.BoxCount > SystemParameter.iSouthHighWaterLevel && zone3Def.BoxCount < SystemParameter.iNorthHighWaterLevel)
             {
-                List<ShelfDef> zone2EmptyShelfData = shelfDefBLL.GetEmptyShelfByZoneID("B7_OHBLINE1-ZONE2");
-                string dest = zone2EmptyShelfData.FirstOrDefault().ShelfID;
+                List<ShelfDef> zone3EmptyShelfData = shelfDefBLL.GetEmptyShelfByZoneID("B7_OHBLINE3-ZONE3");
+                string dest = zone3EmptyShelfData.FirstOrDefault().ShelfID;
                 if (string.IsNullOrWhiteSpace(dest) == false)
                 {
-                    if (zone1Def.EmptyBoxList.Count> zone1Def.LowWaterMark)
+                    if (zone1Def.EmptyBoxList.Count+ zone2Def.EmptyBoxList.Count > SystemParameter.iSouthLowWaterLevel)
                     {
-                        var zone1EmptyBox = GetTotalEmptyBoxNumberByZoneID("B7_OHBLINE1-ZONE1");
-                        string emptyBoxID = FindBestEmptyBoxID(zone1EmptyBox.emptyBox);
+                        var zone1EmptyBox = GetTotalEmptyBoxNumberByZoneID("B7_OHBLINE3-ZONE1");
+                        var zone2EmptyBox = GetTotalEmptyBoxNumberByZoneID("B7_OHBLINE3-ZONE2");
+                        var southEmptyBox = zone1EmptyBox;
+                        southEmptyBox.emptyBox.AddRange(zone2EmptyBox.emptyBox);
+                        string emptyBoxID = FindBestEmptyBoxID(southEmptyBox.emptyBox);
                         string emptyBoxLoc = cassette_dataBLL.GetCassetteLocByBoxID(emptyBoxID);
                         scApp.TransferService.Manual_InsertCmd(emptyBoxLoc, dest, 5, "CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3", ACMD_MCS.CmdType.OHBC);
                         return;
                     }
                     else
                     {
-                        var zone1SolidBox = GetTotalSoildBoxNumberByZoneID("B7_OHBLINE1-ZONE1");
-                        string solidBoxID = FindBestSolidBoxID(zone1SolidBox.solidBox);
+                        var zone1SolidBox = GetTotalSoildBoxNumberByZoneID("B7_OHBLINE3-ZONE1");
+                        var zone2SolidBox = GetTotalSoildBoxNumberByZoneID("B7_OHBLINE3-ZONE2");
+                        var southSolidBox = zone1SolidBox;
+                        southSolidBox.solidBox.AddRange(zone2SolidBox.solidBox);
+                        string solidBoxID = FindBestSolidBoxID(southSolidBox.solidBox);
                         string solidBoxLoc = cassette_dataBLL.GetCassetteLocByBoxID(solidBoxID);
                         scApp.TransferService.Manual_InsertCmd(solidBoxLoc, dest, 5, "CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3", ACMD_MCS.CmdType.OHBC);
                         return;
@@ -339,24 +352,27 @@ namespace com.mirle.ibg3k0.sc.Service
                 }
             }
 
-            if (zone2Def.BoxCount > zone2Def.HighWaterMark && zone1Def.BoxCount < zone1Def.HighWaterMark)
+            if (zone3Def.BoxCount > SystemParameter.iNorthHighWaterLevel && zone1Def.BoxCount+ zone2Def.BoxCount < SystemParameter.iSouthHighWaterLevel)
             {
-                List<ShelfDef> zone1EmptyShelfData = shelfDefBLL.GetEmptyShelfByZoneID("B7_OHBLINE1-ZONE1");
-                string dest = zone1EmptyShelfData.FirstOrDefault().ShelfID;
+                List<ShelfDef> zone1EmptyShelfData = shelfDefBLL.GetEmptyShelfByZoneID("B7_OHBLINE3-ZONE1");
+                List<ShelfDef> zone2EmptyShelfData = shelfDefBLL.GetEmptyShelfByZoneID("B7_OHBLINE3-ZONE2");
+                List<ShelfDef> southEmptyShelfData = zone1EmptyShelfData;
+                southEmptyShelfData.AddRange(zone2EmptyShelfData);
+                string dest = southEmptyShelfData.FirstOrDefault().ShelfID;
                 if (string.IsNullOrWhiteSpace(dest) == false)
                 {
-                    if (zone2Def.EmptyBoxList.Count > zone2Def.LowWaterMark)
+                    if (zone3Def.EmptyBoxList.Count > SystemParameter.iNorthLowWaterLevel)
                     {
-                        var zone2EmptyBox = GetTotalEmptyBoxNumberByZoneID("B7_OHBLINE1-ZONE2");
-                        string emptyBoxID = FindBestEmptyBoxID(zone2EmptyBox.emptyBox);
+                        var zone3EmptyBox = GetTotalEmptyBoxNumberByZoneID("B7_OHBLINE3-ZONE3");
+                        string emptyBoxID = FindBestEmptyBoxID(zone3EmptyBox.emptyBox);
                         string emptyBoxLoc = cassette_dataBLL.GetCassetteLocByBoxID(emptyBoxID);
                         scApp.TransferService.Manual_InsertCmd(emptyBoxLoc, dest, 5, "CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3", ACMD_MCS.CmdType.OHBC);
                         return;
                     }
                     else
                     {
-                        var zone2SolidBox = GetTotalSoildBoxNumberByZoneID("B7_OHBLINE1-ZONE2");
-                        string solidBoxID = FindBestSolidBoxID(zone2SolidBox.solidBox);
+                        var zone3SolidBox = GetTotalSoildBoxNumberByZoneID("B7_OHBLINE3-ZONE3");
+                        string solidBoxID = FindBestSolidBoxID(zone3SolidBox.solidBox);
                         string solidBoxLoc = cassette_dataBLL.GetCassetteLocByBoxID(solidBoxID);
                         scApp.TransferService.Manual_InsertCmd(solidBoxLoc, dest, 5, "CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3", ACMD_MCS.CmdType.OHBC);
                         return;
@@ -394,7 +410,7 @@ namespace com.mirle.ibg3k0.sc.Service
             string solidBoxID = null;
             if (solidBoxList != null && solidBoxList.Count > 0)
             {
-                solidBoxID = solidBoxList.FirstOrDefault().BOXID;
+                solidBoxID = solidBoxList.OrderByDescending(o => o.CSTInDT).FirstOrDefault().BOXID;
             }
             else
             {

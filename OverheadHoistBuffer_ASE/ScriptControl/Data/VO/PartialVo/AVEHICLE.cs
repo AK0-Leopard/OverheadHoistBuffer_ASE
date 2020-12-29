@@ -8,6 +8,7 @@ using com.mirle.ibg3k0.sc.App;
 using com.mirle.ibg3k0.sc.Common;
 using com.mirle.ibg3k0.sc.Data.PLC_Functions;
 using com.mirle.ibg3k0.sc.Data.ValueDefMapAction;
+using com.mirle.ibg3k0.sc.Data.VO;
 using com.mirle.ibg3k0.sc.Data.VO.Interface;
 using com.mirle.ibg3k0.sc.ObjectRelay;
 using com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage;
@@ -934,7 +935,9 @@ namespace com.mirle.ibg3k0.sc
         [BaseElement(NonChangeFromOtherVO = true)]
         public int Num { get; set; }
 
-
+        [JsonIgnore]
+        [BaseElement(NonChangeFromOtherVO = true)]
+        public ServiceSide ServiceSide;
         void TransitionedHandler(Stateless.StateMachine<VehicleState, VehicleTrigger>.Transition transition)
         {
             string Destination = transition.Destination.ToString();

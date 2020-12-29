@@ -2114,7 +2114,7 @@ namespace com.mirle.ibg3k0.sc.Service
             return is_success;
         }
 
-        private (bool isFind, string avoidAdr) findAvoidAddressForFixPort(AVEHICLE willDrivenAwayVh)
+        public (bool isFind, string avoidAdr) findAvoidAddressForFixPort(AVEHICLE willDrivenAwayVh)
         {
             //1.找看看是否有設定的固定避車點。
             //List<PortDef> can_avoid_cv_port = scApp.PortDefBLL.cache.loadCanAvoidCVPortDefs();
@@ -2125,7 +2125,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 can_avoid_port = scApp.PortDefBLL.cache.loadCVPortDefs();
             }
             //2.找出離自己最近的一個CV點
-            if ((scApp.BC_ID != "ASE_LINE3"&& scApp.BC_ID != "ASE_TEST") || !scApp.VehicleService.multiplecar_active)
+            if ((scApp.BC_ID != "ASE_LINE3" && scApp.BC_ID != "ASE_TEST") || !scApp.VehicleService.multiplecar_active)
             {
                 var find_result = findTheNearestCVPort(willDrivenAwayVh, can_avoid_port);
                 if (find_result.isFind)
@@ -2155,7 +2155,7 @@ namespace com.mirle.ibg3k0.sc.Service
         {
             var all_cv_port = scApp.PortDefBLL.cache.loadCVPortDefs();
             //1.嘗試找出目前是in mode且離自己最近的in mode port
-            if((scApp.BC_ID != "ASE_LINE3"&& scApp.BC_ID != "ASE_TEST") || !scApp.VehicleService.multiplecar_active)
+            if ((scApp.BC_ID != "ASE_LINE3" && scApp.BC_ID != "ASE_TEST") || !scApp.VehicleService.multiplecar_active)
             {
                 var all_cv_port_in_mode = all_cv_port.Where(port => IsPortInMode(port));
                 var find_result = findTheNearestCVPort(willDrivenAwayVh, all_cv_port_in_mode);
@@ -2179,8 +2179,9 @@ namespace com.mirle.ibg3k0.sc.Service
             }
             else
             {
+                var all_avoid_port = scApp.PortDefBLL.cache.loadCanAvoidPortDefs();
                 //如果沒找到，則改找下一個離自己最近的cv port
-                var find_result = findAvoidPortForLine3(willDrivenAwayVh, all_cv_port);
+                var find_result = findAvoidPortForLine3(willDrivenAwayVh, all_avoid_port);
                 if (find_result.isFind)
                 {
                     return (true, find_result.PortDef.ADR_ID);
@@ -2242,7 +2243,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     {
                         min_port = port_def;
                     }
-                    else if(int.Parse(min_port.ADR_ID)> int.Parse(port_def.ADR_ID))
+                    else if (int.Parse(min_port.ADR_ID) > int.Parse(port_def.ADR_ID))
                     {
                         min_port = port_def;
                     }
@@ -2256,11 +2257,11 @@ namespace com.mirle.ibg3k0.sc.Service
                     }
                 }
 
-                if(willDrivenAwayVh.Num == 1)
+                if (willDrivenAwayVh.ServiceSide == ServiceSide.North)
                 {
                     best_cv_port = max_port;
                 }
-                else if(willDrivenAwayVh.Num == 2)
+                else if (willDrivenAwayVh.ServiceSide == ServiceSide.South)
                 {
                     best_cv_port = min_port;
                 }
@@ -3919,7 +3920,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     scApp.CMDBLL.setWillPassSectionInfo(eqpt.VEHICLE_ID, eqpt.PredictSectionsToDesination);
                     scApp.VIDBLL.upDateVIDPortID(eqpt.VEHICLE_ID, eqpt.CUR_ADR_ID);
                     scApp.ReserveBLL.RemoveAllReservedSectionsByVehicleID(eqpt.VEHICLE_ID);
-                    scApp.ReserveBLL.TryAddReservedSection(eqpt.VEHICLE_ID, eqpt.CUR_SEC_ID);
+                    //scApp.ReserveBLL.TryAddReservedSection(eqpt.VEHICLE_ID, eqpt.CUR_SEC_ID);
                     break;
                 case EventType.UnloadArrivals:
                     if (!SCUtility.isEmpty(eqpt.MCS_CMD))
@@ -3928,7 +3929,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     }
                     scApp.VIDBLL.upDateVIDPortID(eqpt.VEHICLE_ID, eqpt.CUR_ADR_ID);
                     scApp.ReserveBLL.RemoveAllReservedSectionsByVehicleID(eqpt.VEHICLE_ID);
-                    scApp.ReserveBLL.TryAddReservedSection(eqpt.VEHICLE_ID, eqpt.CUR_SEC_ID);
+                    //scApp.ReserveBLL.TryAddReservedSection(eqpt.VEHICLE_ID, eqpt.CUR_SEC_ID);
                     break;
                 case EventType.LoadComplete:
                     scApp.CMDBLL.setWillPassSectionInfo(eqpt.VEHICLE_ID, eqpt.PredictSectionsToDesination);
@@ -5673,7 +5674,7 @@ namespace com.mirle.ibg3k0.sc.Service
             replyCommandComplete(eqpt, seq_num, finish_ohxc_cmd, finish_mcs_cmd);
             scApp.CMDBLL.removeAllWillPassSection(eqpt.VEHICLE_ID);
             scApp.ReserveBLL.RemoveAllReservedSectionsByVehicleID(eqpt.VEHICLE_ID);
-            scApp.ReserveBLL.TryAddReservedSection(eqpt.VEHICLE_ID, eqpt.CUR_SEC_ID);
+            //scApp.ReserveBLL.TryAddReservedSection(eqpt.VEHICLE_ID, eqpt.CUR_SEC_ID);
             eqpt.VhAvoidInfo = null;
             //回復結束後，若該筆命令是Mismatch、IDReadFail結束的話則要把原本車上的那顆CST Installed回來。
             if (vhLoadCSTStatus == VhLoadCarrierStatus.Exist)
@@ -6376,7 +6377,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     bool result = vh_vo.VechileRemove();
                     if (result)
                     {
-                        if (scApp.VehicleBLL.cache.getVhCurrentInstalledCount()>1)
+                        if (scApp.VehicleBLL.cache.getVhCurrentInstalledCount() > 1)
                         {
                             multiplecar_active = true;
                         }
