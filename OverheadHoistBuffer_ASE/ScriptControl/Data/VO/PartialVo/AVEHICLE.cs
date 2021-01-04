@@ -69,6 +69,10 @@ namespace com.mirle.ibg3k0.sc
         /// <summary>
         /// 單筆命令，最大允許的搬送時間
         /// </summary>
+        /// 
+        public bool ForceReservePass { get; set; } = false;
+        public bool ForceReserveReject { get; set; } = false;
+
         public static UInt16 MAX_ALLOW_ACTION_TIME_SECOND { get; private set; } = 1200;
 
         public event EventHandler<LocationChangeEventArgs> LocationChange;

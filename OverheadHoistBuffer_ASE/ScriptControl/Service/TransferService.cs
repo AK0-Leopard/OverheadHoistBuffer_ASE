@@ -1629,6 +1629,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     }
                     #endregion
                     #region 檢查目的狀態
+                    string destReservedInShelf = null;
                     if (isUnitType(mcsCmd.HOSTDESTINATION, UnitType.ZONE))  //若 Zone 上沒有儲位，目的 Port 會為 ZoneName，並上報 MCS
                     {
                         string zoneID = mcsCmd.HOSTDESTINATION;
@@ -1649,7 +1650,7 @@ namespace com.mirle.ibg3k0.sc.Service
                             TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|TransferCommandHandler 目的 Zone: " + mcsCmd.HOSTDESTINATION + " 可用儲位數量: " + shelfData.Count);
 
                             string shelfID = scApp.TransferService.GetShelfRecentLocation(shelfData, mcsCmd.HOSTSOURCE);
-
+                            destReservedInShelf = shelfID;
                             if (string.IsNullOrWhiteSpace(shelfID) == false)
                             {
                                 TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|TransferCommandHandler: 目的 Zone: " + mcsCmd.HOSTDESTINATION + " 找到 " + shelfID);
@@ -1741,6 +1742,13 @@ namespace com.mirle.ibg3k0.sc.Service
                                     {
                                         ShelfReserved(cmdRelay.HOSTSOURCE, cmdRelay.HOSTDESTINATION);
 
+                                        //修正Shelf到Shelf的Handoff命令會不正確的佔用一個目的地Zone的儲位 20210101 markchou
+                                        if (destReservedInShelf!=null)
+                                        {
+                                            shelfDefBLL.updateStatus(destReservedInShelf, ShelfDef.E_ShelfState.EmptyShelf);
+                                        }
+
+
                                         cmdBLL.updateCMD_MCS_RelayStation(mcsCmd.CMD_ID, cmdRelay.HOSTDESTINATION);
 
                                         TransferServiceLogger.Info
@@ -1814,7 +1822,7 @@ namespace com.mirle.ibg3k0.sc.Service
                             mcsCmd.HOSTDESTINATION = agvName;
                         }
 
-                        PortPLCInfo plcInfoSource = GetPLC_PortData(mcsCmd.HOSTSOURCE);
+                        PortPLCInfo plcInfoSource = !isShelfPort(mcsCmd.HOSTSOURCE)? GetPLC_PortData(mcsCmd.HOSTSOURCE):null;
                         PortPLCInfo plcInfoDest = GetPLC_PortData(mcsCmd.HOSTDESTINATION);
 
                         if ((isShelfPort(mcsCmd.HOSTSOURCE) || (plcInfoSource.OpAutoMode && plcInfoSource.IsReadyToUnload))
@@ -1833,7 +1841,6 @@ namespace com.mirle.ibg3k0.sc.Service
                             {
                                 shelfData = shelfDefBLL.GetEmptyNonHandOffShelf();
                             }
-
                             cmdRelay.HOSTDESTINATION = GetShelfRecentLocation(shelfData, mcsCmd.HOSTDESTINATION);
 
                             string source_adr;
@@ -1950,31 +1957,33 @@ namespace com.mirle.ibg3k0.sc.Service
                                 }
                             }
 
-
-
-
-
-
-
-
-
-
-
-
-
                         }
                         else
                         {
-                            TransferServiceLogger.Info
-                            (
-                                DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB| 觸發將卡匣送至中繼站失敗: "
-                                + " plcInfo_Source.EQ_ID: " + plcInfoSource.EQ_ID
-                                + " plcInfo_Source.OpAutoMode 要 True 實際是 " + plcInfoSource.OpAutoMode
-                                + " plcInfo_Source.IsReadyToUnload 要 True 實際是 " + plcInfoSource.IsReadyToUnload
-                                + " plcInfo_Dest.EQ_ID: " + plcInfoDest.EQ_ID
-                                + " plcInfo_Dest.OpAutoMode 要 True 實際是 " + plcInfoDest.OpAutoMode
-                                + " plcInfo_Dest.IsReadyToLoad 要 false 實際是 " + plcInfoDest.IsReadyToLoad
-                            );
+                            if (plcInfoSource != null)
+                            {
+                                TransferServiceLogger.Info
+                                (
+                                    DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB| 觸發將卡匣送至中繼站失敗: "
+                                    + " plcInfo_Source.EQ_ID: " + plcInfoSource.EQ_ID
+                                    + " plcInfo_Source.OpAutoMode 要 True 實際是 " + plcInfoSource.OpAutoMode
+                                    + " plcInfo_Source.IsReadyToUnload 要 True 實際是 " + plcInfoSource.IsReadyToUnload
+                                    + " plcInfo_Dest.EQ_ID: " + plcInfoDest.EQ_ID
+                                    + " plcInfo_Dest.OpAutoMode 要 True 實際是 " + plcInfoDest.OpAutoMode
+                                    + " plcInfo_Dest.IsReadyToLoad 要 false 實際是 " + plcInfoDest.IsReadyToLoad
+                                );
+                            }
+                            else
+                            {
+                                TransferServiceLogger.Info
+                                (
+                                    DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB| 觸發將卡匣送至中繼站失敗: "
+                                    + " plcInfo_Dest.EQ_ID: " + plcInfoDest.EQ_ID
+                                    + " plcInfo_Dest.OpAutoMode 要 True 實際是 " + plcInfoDest.OpAutoMode
+                                    + " plcInfo_Dest.IsReadyToLoad 要 false 實際是 " + plcInfoDest.IsReadyToLoad
+                                );
+                            }
+
                         }
                     }
 
@@ -3695,7 +3704,14 @@ namespace com.mirle.ibg3k0.sc.Service
                 datainfo.BOXID = plcInfo.BoxID.Trim();        //填BOXID
                 datainfo.Carrier_LOC = plcInfo.EQ_ID.Trim();  //填Port 名稱
 
-                PortCarrierRemoved(datainfo, plcInfo.IsAGVMode, "PortCstPositionOFF");
+                if (isUnitType(plcInfo.EQ_ID, UnitType.AGV))
+                {
+                    PortCarrierRemoved(datainfo, plcInfo.IsAGVMode, "PortPositionOFF", true);
+                }
+                else
+                {
+                    PortCarrierRemoved(datainfo, plcInfo.IsAGVMode, "PortPositionOFF");
+                }
             }
         }
         public void PortWaitOut(CassetteData cstData)
@@ -4263,14 +4279,14 @@ namespace com.mirle.ibg3k0.sc.Service
                 TransferServiceLogger.Error(ex, "PortToOHT");
             }
         }
-        public void PortCarrierRemoved(CassetteData cstData, bool isAGV, string cmdSource)
+        public void PortCarrierRemoved(CassetteData cstData, bool isAGV, string cmdSource, bool isCEID152 = false)
         {
             try
             {
                 TransferServiceLogger.Info
                 (
                     DateTime.Now.ToString("HH:mm:ss.fff ") +
-                    "PLC >> OHB|PortCarrierRemoved  誰呼叫:" + cmdSource + GetCstLog(cstData)
+                    "PLC >> OHB|PortCarrierRemoved  誰呼叫:" + cmdSource + GetCstLog(cstData) + " isCEID152：" + isCEID152
                 );
 
                 int stage = portINIData[cstData.Carrier_LOC.Trim()].Stage;
@@ -4307,20 +4323,23 @@ namespace com.mirle.ibg3k0.sc.Service
                     return;
                 }
 
-                if (isUnitType(dbData.Carrier_LOC, UnitType.AGV))
+                if (isCEID152)
                 {
-                    DeleteCst(dbData.CSTID, dbData.BOXID, "PortCarrierRemoved");    //201127 AGV Port 改報 152
-
-                    if (isAGV)
-                    {
-                        PLC_AGV_Station(GetPLC_PortData(dbData.Carrier_LOC), "PortCarrierRemoved");
-                    }
+                    reportBLL.ReportCarrierRemovedCompleted(dbData.CSTID, dbData.BOXID);
                 }
                 else
                 {
                     reportBLL.ReportCarrierRemovedFromPort(dbData, HandoffType);
 
                     cassette_dataBLL.DeleteCSTbyCstBoxID(dbData.CSTID, dbData.BOXID);
+                }
+
+                if (isUnitType(dbData.Carrier_LOC, UnitType.AGV))
+                {
+                    if (isAGV)
+                    {
+                        PLC_AGV_Station(GetPLC_PortData(dbData.Carrier_LOC), "PortCarrierRemoved");
+                    }
                 }
             }
             catch (Exception ex)

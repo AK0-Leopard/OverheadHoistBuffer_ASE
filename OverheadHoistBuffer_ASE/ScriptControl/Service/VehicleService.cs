@@ -2964,6 +2964,24 @@ namespace com.mirle.ibg3k0.sc.Service
                     return (false, string.Empty, string.Empty);
                 }
                 AVEHICLE vh = scApp.getEQObjCacheManager().getVehicletByVHID(vhID);
+
+                if (vh.ForceReservePass)
+                {
+                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                       Data: "Vehicle force pass reserve is open, will driect reply to vh pass",
+                       VehicleID: vhID);
+                    return (true, string.Empty, string.Empty);
+                }
+
+                //強制拒絕Reserve的要求
+                if (vh.ForceReserveReject)
+                {
+                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                       Data: "Vehicle force reject reserve is open, will driect reply to vh can't pass",
+                       VehicleID: vhID);
+                    return (false, string.Empty, string.Empty);
+                }
+
                 if (vh.IsPrepareAvoid)
                 {
                     LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
@@ -3038,6 +3056,24 @@ namespace com.mirle.ibg3k0.sc.Service
                     return (false, string.Empty, null);
                 }
                 AVEHICLE vh = scApp.getEQObjCacheManager().getVehicletByVHID(vhID);
+                if (vh.ForceReservePass)
+                {
+                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                       Data: "Vehicle force pass reserve is open, will driect reply to vh pass",
+                       VehicleID: vhID);
+                    return (true, string.Empty, reserveInfos);
+                }
+
+                //強制拒絕Reserve的要求
+                if (vh.ForceReserveReject)
+                {
+                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                       Data: "Vehicle force reject reserve is open, will driect reply to vh can't pass",
+                       VehicleID: vhID);
+                    return (false, string.Empty, null);
+                }
+
+
                 if (vh.IsPrepareAvoid)
                 {
                     LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
@@ -4409,6 +4445,75 @@ namespace com.mirle.ibg3k0.sc.Service
                     //        return false;
                     //    }
                     //}
+
+
+                    //override且原本是loadunload命令，需要檢查是否已經取得box
+                    if ((active_type == ActiveType.Scan || active_type == ActiveType.Load || active_type == ActiveType.Loadunload) && assignVH.HAS_BOX == 0)
+                    {
+                        // B0.04 補上原地取貨狀態之說明
+                        // B0.04 若取貨之section address 為空 (原地取貨) 則在該guide section 與 guide address 去補上該車目前之位置資訊(因為目前新架構OHT版本需要至少一段section 去判定
+                        if (guide_start_to_from_section_ids == null || guide_start_to_from_address_ids == null)
+                        {
+                            if (assignVH.CUR_SEC_ID != null && assignVH.CUR_ADR_ID != null)
+                            {
+                                guide_start_to_from_section_ids = new List<string> { assignVH.CUR_SEC_ID };
+                                guide_start_to_from_address_ids = new List<string> { assignVH.CUR_ADR_ID };
+                            }
+                            else
+                            {
+                                LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: string.Empty,
+                                   Data: $"can't generate command road data, something is null,id:{SCUtility.Trim(cmd.CMD_ID)},vh id:{SCUtility.Trim(cmd.VH_ID)} current status not allowed." +
+                                   $"assignVH.CUR_ADR_ID:{assignVH.CUR_ADR_ID }, assignVH.CUR_SEC_ID:{assignVH.CUR_SEC_ID } , current assign ohtc cmd id:{assignVH.OHTC_CMD}." +
+                                   $"assignVH.ACT_STATUS:{assignVH.ACT_STATUS}.");
+                                return isSuccess;
+                            }
+                        }
+                        // B0.04 補上 LoadUnload 原地放貨狀態之說明 與修改
+                        // B0.04 若放貨之section address 為空 (原地放貨) 則在該guide section 與 guide address 去補上該車需要之資訊
+                        if (active_type == ActiveType.Loadunload)
+                        {
+
+
+                            if (guide_to_dest_section_ids == null || guide_to_dest_address_ids == null)
+                            {
+                                // B0.04 對該string array 補上要去 load 路徑資訊的最後一段address與 section 資料
+                                guide_to_dest_section_ids = new List<string> { guide_start_to_from_section_ids[guide_start_to_from_section_ids.Count - 1] };
+                                guide_to_dest_address_ids = new List<string> { guide_start_to_from_address_ids[guide_start_to_from_address_ids.Count - 1] };
+                            }
+                        }
+                    }
+                    // B0.04 補上 Unload 原地放貨狀態之說明 與修改
+                    // B0.04 若放貨之section address 為空 (原地放貨) 則在該guide section 與 guide address 去補上該車需要之資訊
+                    if (active_type == ActiveType.Unload) //B0.04 若為單獨放貨命令，在該空值處補上該車當下之位置資訊。
+                    {
+                        if (guide_to_dest_section_ids == null || guide_to_dest_address_ids == null)
+                        {
+                            if (assignVH.CUR_SEC_ID != null && assignVH.CUR_ADR_ID != null)
+                            {
+                                guide_to_dest_section_ids = new List<string> { assignVH.CUR_SEC_ID };
+                                guide_to_dest_address_ids = new List<string> { assignVH.CUR_ADR_ID };
+                            }
+                            else
+                            {
+                                LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: string.Empty,
+                                   Data: $"can't generate command road data, something is null,id:{SCUtility.Trim(cmd.CMD_ID)},vh id:{SCUtility.Trim(cmd.VH_ID)} current status not allowed." +
+                                   $"assignVH.CUR_ADR_ID:{assignVH.CUR_ADR_ID }, assignVH.CUR_SEC_ID:{assignVH.CUR_SEC_ID } , current assign ohtc cmd id:{assignVH.OHTC_CMD}." +
+                                   $"assignVH.ACT_STATUS:{assignVH.ACT_STATUS}.");
+                                return isSuccess;
+                            }
+                        }
+                    }
+
+
+
+
+
+
+
+
+
+
+
                     scApp.CMDBLL.updateCommand_OHTC_StatusByCmdID(assignVH.VEHICLE_ID, cmd.CMD_ID, E_CMD_STATUS.Sending);
                     isSuccess = ProcSendTransferCommandToVh(cmd, assignVH, ActiveType.Override,
                      guide_start_to_from_segment_ids?.ToArray(), guide_start_to_from_section_ids?.ToArray(), guide_start_to_from_address_ids?.ToArray(),
@@ -6248,6 +6353,29 @@ namespace com.mirle.ibg3k0.sc.Service
             }
         }
         #endregion Vehicle Change The Path
+
+        public bool VehicleForceReservePassChange(string vh_id, bool flag)
+        {
+            AVEHICLE vh = scApp.VehicleBLL.getVehicleByID(vh_id);
+            if (vh.ForceReservePass != flag)
+            {
+                vh.ForceReservePass = flag;
+                return true;
+            }
+            return false;
+        }
+
+        public bool VehicleForceReserveRejectChange(string vh_id, bool flag)
+        {
+            AVEHICLE vh = scApp.VehicleBLL.getVehicleByID(vh_id);
+            if (vh.ForceReserveReject != flag)
+            {
+                vh.ForceReserveReject = flag;
+                return true;
+            }
+            return false;
+        }
+
         public bool VehicleAutoModeCahnge(string vh_id, VHModeStatus mode_status)
         {
             AVEHICLE vh = scApp.VehicleBLL.getVehicleByID(vh_id);

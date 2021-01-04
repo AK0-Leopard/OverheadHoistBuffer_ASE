@@ -13,6 +13,7 @@ namespace com.mirle.ibg3k0.sc.BLL
         NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private Mirle.Hlts.ReserveSection.Map.ViewModels.HltMapViewModel mapAPI { get; set; }
         private sc.Common.CommObjCacheManager commObjCacheManager { get; set; }
+        private SCApplication scApp { get; set; }
 
 
         private EventHandler reserveStatusChange;
@@ -46,6 +47,7 @@ namespace com.mirle.ibg3k0.sc.BLL
         }
         public void start(SCApplication _app)
         {
+            scApp = _app;
             mapAPI = _app.getReserveSectionAPI();
             commObjCacheManager = _app.getCommObjCacheManager();
         }
@@ -181,30 +183,73 @@ namespace com.mirle.ibg3k0.sc.BLL
         //}
         public HltResult TryAddReservedSection(string vhID, string sectionID, HltDirection sensorDir = HltDirection.ForwardReverse, HltDirection forkDir = HltDirection.None, bool isAsk = false)
         {
-            HltResult result = null;
-            string sec_id = SCUtility.Trim(sectionID);
-            //如果詢問的Section是Reserve Enhance的section時，
-            //則要判斷該區塊且之後的Section是否要得到
-            var reserve_enhance_info_check_result = IsReserveEnhanceSection(sectionID);
-            if (reserve_enhance_info_check_result.isEnhanceInfo)
+            try
             {
-                List<string> enhance_control_sections = reserve_enhance_info_check_result.info.EnhanceControlSections;
-                int section_index = enhance_control_sections.IndexOf(sectionID);
-                for (int i = section_index; i < enhance_control_sections.Count; i++)
+                HltResult result = null;
+                string sec_id = SCUtility.Trim(sectionID);
+                //如果詢問的Section是Reserve Enhance的section時，
+                //則要判斷該區塊且之後的Section是否要得到
+                var reserve_enhance_info_check_result = IsReserveEnhanceSection(sectionID);
+                if (reserve_enhance_info_check_result.isEnhanceInfo)
                 {
-                    result = mapAPI.TryAddReservedSection(vhID, enhance_control_sections[i], sensorDir, forkDir, true);
-                    if (!result.OK)
+                    //如果車輛已經在section group內 則不需多檢查section group的section能否預約
+                    AVEHICLE vh = scApp.VehicleBLL.cache.getVhByID(vhID);
+                    if (vh != null)
                     {
-                        result.Description += $",section:{sectionID} is reserve enhance group:{reserve_enhance_info_check_result.info.GroupID}," +
-                                              $"current has vh:{result.VehicleID}";
-                        return result;
-                    }
-                }
-            }
-            result = mapAPI.TryAddReservedSection(vhID, sec_id, sensorDir, forkDir, isAsk);
-            onReserveStatusChange();
+                        var _result = IsReserveEnhanceSection(vh.CUR_SEC_ID);
+                        if (!_result.isEnhanceInfo)
+                        {
+                            LogHelper.Log(logger: logger, LogLevel: NLog.LogLevel.Info, Class: nameof(ReserveBLL), Device: "OHT",
+                            Data: $"TryAddReservedSection Vehicle is not in section group: vh:{vhID},reserve section id:{sectionID},vh cur section:{vh.CUR_SEC_ID}",
+                            VehicleID: vhID);
+                            List<string> enhance_control_sections = reserve_enhance_info_check_result.info.EnhanceControlSections;
+                            int section_index = enhance_control_sections.IndexOf(sectionID);
+                            for (int i = section_index; i < enhance_control_sections.Count; i++)
+                            {
+                                result = mapAPI.TryAddReservedSection(vhID, enhance_control_sections[i], sensorDir, forkDir, true);
+                                if (!result.OK)
+                                {
+                                    result.Description += $",section:{sectionID} is reserve enhance group:{reserve_enhance_info_check_result.info.GroupID}," +
+                                                          $"current has vh:{result.VehicleID}";
+                                    return result;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            LogHelper.Log(logger: logger, LogLevel: NLog.LogLevel.Info, Class: nameof(ReserveBLL), Device: "OHT",
+                            Data: $"TryAddReservedSection Vehicle is in section group: vh:{vhID},reserve section id:{sectionID},vh cur section:{vh.CUR_SEC_ID}",
+                            VehicleID: vhID);
+                        }
 
-            return result;
+                    }
+                    else
+                    {
+                        LogHelper.Log(logger: logger, LogLevel: NLog.LogLevel.Info, Class: nameof(ReserveBLL), Device: "OHT",
+                        Data: $"TryAddReservedSection Vehicle is not found. vh:{vhID},reserve section id:{sectionID}",
+                        VehicleID: vhID);
+                    }
+
+
+
+                }
+                result = mapAPI.TryAddReservedSection(vhID, sec_id, sensorDir, forkDir, isAsk);
+                onReserveStatusChange();
+
+                return result;
+            }
+            catch(Exception ex)
+            {
+                LogHelper.Log(logger: logger, LogLevel: NLog.LogLevel.Info, Class: nameof(ReserveBLL), Device: "OHT",
+                Data: $"TryAddReservedSection have exception happen.exception:{ex.Message} vh:{vhID},reserve section id:{sectionID}",
+                VehicleID: vhID);
+                return null;
+            }
+            finally
+            {
+
+            }
+
         }
 
         private (bool isEnhanceInfo, Data.VO.ReserveEnhanceInfo info) IsReserveEnhanceSection(string sectionID)

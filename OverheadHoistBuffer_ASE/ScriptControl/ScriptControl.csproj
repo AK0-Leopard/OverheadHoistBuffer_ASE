@@ -257,7 +257,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="TCPIPTrxControl, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="TCPIPTrxControl, Version=1.0.0.7, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>DLL\TCPIPTrxControl.dll</HintPath>
     </Reference>

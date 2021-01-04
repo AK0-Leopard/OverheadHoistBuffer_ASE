@@ -116,7 +116,12 @@ namespace com.mirle.ibg3k0.bc.winform.UI
 
         private void cb_FroceReservePass_CheckedChanged(object sender, EventArgs e)
         {
-            DebugParameter.isForcedPassReserve = cb_FroceReservePass.Checked;
+            //DebugParameter.isForcedPassReserve = cb_FroceReservePass.Checked;
+            if (noticeCar != null)
+            {
+                bcApp.SCApplication.VehicleService.VehicleForceReservePassChange(vh_id, cb_FroceReservePass.Checked);
+            }
+
         }
 
 
@@ -130,6 +135,10 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             lbl_id_37_cmdID_value.Text = noticeCar?.OHTC_CMD;
             lbl_install_status.Text = noticeCar?.IS_INSTALLED.ToString();
             lbl_listening_status.Text = noticeCar?.IsTcpIpListening(bcApp.SCApplication.getBCFApplication()).ToString();
+
+            cb_FroceReservePass.Checked = noticeCar.ForceReservePass;
+            cb_FroceReserveReject.Checked = noticeCar.ForceReserveReject;
+
         }
 
         private void uctl_Btn1_Click(object sender, EventArgs e)
@@ -432,7 +441,11 @@ namespace com.mirle.ibg3k0.bc.winform.UI
 
         private void cb_FroceReserveReject_CheckedChanged(object sender, EventArgs e)
         {
-            DebugParameter.isForcedRejectReserve = cb_FroceReserveReject.Checked;
+            //DebugParameter.isForcedRejectReserve = cb_FroceReserveReject.Checked;
+            if (noticeCar != null)
+            {
+                bcApp.SCApplication.VehicleService.VehicleForceReserveRejectChange(vh_id, cb_FroceReserveReject.Checked);
+            }
         }
 
         private void button8_Click(object sender, EventArgs e)
