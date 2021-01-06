@@ -4448,7 +4448,9 @@ namespace com.mirle.ibg3k0.sc.Service
 
 
                     //override且原本是loadunload命令，需要檢查是否已經取得box
-                    if ((active_type == ActiveType.Scan || active_type == ActiveType.Load || active_type == ActiveType.Loadunload) && assignVH.HAS_BOX == 0)
+                    //if ((active_type == ActiveType.Scan || active_type == ActiveType.Load || active_type == ActiveType.Loadunload) && assignVH.HAS_BOX == 0)
+                    //判斷使用HAS_BOX改為HAS_CST,因為HAS_BOX並不會更新 V1.8.8 20210106 MarkChou
+                    if ((active_type == ActiveType.Scan || active_type == ActiveType.Load || active_type == ActiveType.Loadunload) && assignVH.HAS_CST == 0)
                     {
                         // B0.04 補上原地取貨狀態之說明
                         // B0.04 若取貨之section address 為空 (原地取貨) 則在該guide section 與 guide address 去補上該車目前之位置資訊(因為目前新架構OHT版本需要至少一段section 去判定

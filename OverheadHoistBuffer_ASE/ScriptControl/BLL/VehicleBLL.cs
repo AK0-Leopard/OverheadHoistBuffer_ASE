@@ -1016,7 +1016,8 @@ namespace com.mirle.ibg3k0.sc.BLL
                     }
                     else //於北側CV Port-南側handoff區 2車皆可以
                     {
-                        selectedCarNo = 3;
+                        //selectedCarNo = 3;
+                        selectedCarNo = 2;//20210105 V1.8.7 於北側CV Port-南側handoff區皆由2號車執行
                     }
                 }
                 return true;
