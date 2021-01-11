@@ -390,6 +390,8 @@ namespace com.mirle.ibg3k0.sc.Data.SECS.ASE
         public const string VID_Enhanced_Transfer_Cmd = "13";
         public const string VID_Empty_Carrier = "15";
 
+        public const string VID_EnhancedAlarmsSet = "41";
+
         public const string VID_Carrier_ID = "54";
         public const string VID_Carrier_Info = "55";
         public const string VID_Carrier_Loc = "56";
@@ -455,6 +457,7 @@ namespace com.mirle.ibg3k0.sc.Data.SECS.ASE
         public const string VID_Monitored_CraneInfo = "893";
         //-------Synchronize---------
         public const string VID_Alarms_Set = "4";
+        public const string VID_EnhancedALID = "40";
         public const string VID_Control_State = "6";
         public const string VID_Enhanced_Carriers = "51";
         public const string VID_SC_State = "73";

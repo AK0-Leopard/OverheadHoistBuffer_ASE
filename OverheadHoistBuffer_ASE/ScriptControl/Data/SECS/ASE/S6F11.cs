@@ -62,7 +62,7 @@ namespace com.mirle.ibg3k0.sc.Data.SECS.ASE
                 }
                 public class ALID_DVVAL : SXFY
                 {
-                    [SecsElement(Index = 1, ListSpreadOut = true, Type = SecsElement.SecsElementType.TYPE_4_BYTE_UNSIGNED_INTEGER,Length =1)]
+                    [SecsElement(Index = 1, ListSpreadOut = true, Type = SecsElement.SecsElementType.TYPE_4_BYTE_UNSIGNED_INTEGER, Length = 1)]
                     public string ALID;
                 }
 
@@ -77,11 +77,41 @@ namespace com.mirle.ibg3k0.sc.Data.SECS.ASE
                         CONTROLSTATE = string.Empty;
                     }
                 }
+                [Serializable]
+                public class VIDITEM_40 : SXFY
+                {
+                    [SecsElement(Index = 1, ListSpreadOut = true)]
+                    public ENHANCEDALID[] ENHANCED_ALIDs;
+                }
+                [Serializable]
+                public class VIDITEM_41 : SXFY
+                {
+                    [SecsElement(Index = 1, ListSpreadOut = true)]
+                    public ENHANCEDALID ENHANCED_ALID;
+                }
+                [Serializable]
+                public class ENHANCEDALID : SXFY
+                {
+                    [SecsElement(Index = 1, Type = SecsElement.SecsElementType.TYPE_ASCII, Length = 64)]
+                    public string ALID;
+                    [SecsElement(Index = 2, ListSpreadOut = true)]
+                    public UNITINFO UnitInfo = new UNITINFO();
+                    [SecsElement(Index = 3, Type = SecsElement.SecsElementType.TYPE_ASCII, Length = 128)]
+                    public string AlarmText;
+                }
+                [Serializable]
+                public class UNITINFO : SXFY
+                {
+                    [SecsElement(Index = 1, Type = SecsElement.SecsElementType.TYPE_ASCII, Length = 64)]
+                    public string UnitID;
+                    [SecsElement(Index = 2, Type = SecsElement.SecsElementType.TYPE_2_BYTE_UNSIGNED_INTEGER, Length = 1)]
+                    public string UnitState;
+                }
 
                 [Serializable]
                 public class VIDITEM_51_SV : SXFY
                 {
-                    [SecsElement(Index = 1,ListSpreadOut = true)]
+                    [SecsElement(Index = 1, ListSpreadOut = true)]
                     public VIDITEM_10_SV[] ENHANCED_CARRIER_INFO;
 
                     public VIDITEM_51_SV()
@@ -93,7 +123,7 @@ namespace com.mirle.ibg3k0.sc.Data.SECS.ASE
                 [Serializable]
                 public class VIDITEM_73_SV : SXFY
                 {
-                    [SecsElement(Index = 1, ListSpreadOut = true,Type = SecsElement.SecsElementType.TYPE_2_BYTE_UNSIGNED_INTEGER, Length = 1)]
+                    [SecsElement(Index = 1, ListSpreadOut = true, Type = SecsElement.SecsElementType.TYPE_2_BYTE_UNSIGNED_INTEGER, Length = 1)]
                     public string SC_STATE; //1=Init 2=Paused 3=Auto 4=Pausing
 
                     public VIDITEM_73_SV()
@@ -253,31 +283,31 @@ namespace com.mirle.ibg3k0.sc.Data.SECS.ASE
                         ENPTY_CARRIER = string.Empty;
                     }
                 }
-               //[Serializable]
-               //public class VIDITEM_51_SV : SXFY
-               //{
-               //    [SecsElement(Index = 1, ListSpreadOut = true)]
-               //    //public VIDITEM_10[] ENHANCED_CARRIER_INFO;
-               //    public VIDITEM_55_SV[] CARRIER_INFO_OBJ;
-               //}
+                //[Serializable]
+                //public class VIDITEM_51_SV : SXFY
+                //{
+                //    [SecsElement(Index = 1, ListSpreadOut = true)]
+                //    //public VIDITEM_10[] ENHANCED_CARRIER_INFO;
+                //    public VIDITEM_55_SV[] CARRIER_INFO_OBJ;
+                //}
 
-               //[Serializable]
-               //public class VIDITEM_52_SV : SXFY
-               //{
-               //    [SecsElement(Index = 1, ListSpreadOut = true)]
-               //    //public VIDITEM_10[] ENHANCED_CARRIER_INFO;
-               //    public VIDITEM_66_SV[] TRANSFER_COMMAND_OBJ;
-               //}
+                //[Serializable]
+                //public class VIDITEM_52_SV : SXFY
+                //{
+                //    [SecsElement(Index = 1, ListSpreadOut = true)]
+                //    //public VIDITEM_10[] ENHANCED_CARRIER_INFO;
+                //    public VIDITEM_66_SV[] TRANSFER_COMMAND_OBJ;
+                //}
 
-               //[Serializable]
-               //public class VIDITEM_53_SV : SXFY
-               //{
-               //    [SecsElement(Index = 1, ListSpreadOut = true)]
-               //    public VIDITEM_71_SV[] VEHICLEINFO_OBJ;
-               //}
+                //[Serializable]
+                //public class VIDITEM_53_SV : SXFY
+                //{
+                //    [SecsElement(Index = 1, ListSpreadOut = true)]
+                //    public VIDITEM_71_SV[] VEHICLEINFO_OBJ;
+                //}
 
 
-               [Serializable]
+                [Serializable]
                 public class VIDITEM_54_DVVAL : SXFY
                 {
                     [SecsElement(Index = 1, ListSpreadOut = true, Type = SecsElement.SecsElementType.TYPE_ASCII, Length = 64)]
@@ -618,7 +648,7 @@ namespace com.mirle.ibg3k0.sc.Data.SECS.ASE
                 public class VIDITEM_67_DVVAL : SXFY
                 {
                     [SecsElement(Index = 1, ListSpreadOut = true, Type = SecsElement.SecsElementType.TYPE_2_BYTE_UNSIGNED_INTEGER, Length = 1)]
-                    public string Carrier_ID_Read_Status ; //0: successful; 1: failed; 2: duplicate; 3: mismatch
+                    public string Carrier_ID_Read_Status; //0: successful; 1: failed; 2: duplicate; 3: mismatch
                     public VIDITEM_67_DVVAL()
                     {
                         Carrier_ID_Read_Status = string.Empty;
@@ -670,7 +700,6 @@ namespace com.mirle.ibg3k0.sc.Data.SECS.ASE
                     }
                 }
                 [Serializable]
-
                 public class VIDITEM_74_DVVAL : SXFY
                 {
                     [SecsElement(Index = 1, ListSpreadOut = true, Type = SecsElement.SecsElementType.TYPE_2_BYTE_UNSIGNED_INTEGER, Length = 1)]
@@ -876,7 +905,7 @@ namespace com.mirle.ibg3k0.sc.Data.SECS.ASE
                     {
                         PORT_TYPE = string.Empty;
                     }
-                        
+
                 }
 
                 [Serializable]
@@ -1487,7 +1516,7 @@ namespace com.mirle.ibg3k0.sc.Data.SECS.ASE
                 [Serializable]
                 public class VIDITEM_370_DVVAL : SXFY
                 {
-                    [SecsElement(Index = 1, ListSpreadOut = true,Type = SecsElement.SecsElementType.TYPE_ASCII, Length = 64)]
+                    [SecsElement(Index = 1, ListSpreadOut = true, Type = SecsElement.SecsElementType.TYPE_ASCII, Length = 64)]
                     public string CARRIER_ZONE_NAME;
                     public VIDITEM_370_DVVAL()
                     {
@@ -1521,7 +1550,7 @@ namespace com.mirle.ibg3k0.sc.Data.SECS.ASE
                 [Serializable]
                 public class VIDITEM_602_DVVAL : SXFY
                 {
-                    [SecsElement(Index = 1,ListSpreadOut =true, Type = SecsElement.SecsElementType.TYPE_2_BYTE_UNSIGNED_INTEGER, Length = 1)]
+                    [SecsElement(Index = 1, ListSpreadOut = true, Type = SecsElement.SecsElementType.TYPE_2_BYTE_UNSIGNED_INTEGER, Length = 1)]
                     public string PORT_UNIT_TYPE; //0= Input 1= Output
                     public VIDITEM_602_DVVAL()
                     {
@@ -1535,11 +1564,11 @@ namespace com.mirle.ibg3k0.sc.Data.SECS.ASE
                     [SecsElement(Index = 1)]
                     public VIDITEM_54_DVVAL CARRIER_ID_OBJ;
                     [SecsElement(Index = 2)]
-                    public VIDITEM_179_DVVAL BOX_ID_OBJ; 
+                    public VIDITEM_179_DVVAL BOX_ID_OBJ;
                     [SecsElement(Index = 3)]
-                    public VIDITEM_65_DVVAL SOURCE_ID_OBJ ;
+                    public VIDITEM_65_DVVAL SOURCE_ID_OBJ;
                     [SecsElement(Index = 4)]
-                    public VIDITEM_60_DVVAL DESTINATION_ID_OBJ ;
+                    public VIDITEM_60_DVVAL DESTINATION_ID_OBJ;
                     public VIDITEM_720_SV()
                     {
                         CARRIER_ID_OBJ = new VIDITEM_54_DVVAL();
@@ -1551,7 +1580,7 @@ namespace com.mirle.ibg3k0.sc.Data.SECS.ASE
                 [Serializable]
                 public class VIDITEM_722_DVVAL : SXFY
                 {
-                    [SecsElement(Index = 1,ListSpreadOut =true, Type = SecsElement.SecsElementType.TYPE_2_BYTE_UNSIGNED_INTEGER, Length = 1)]
+                    [SecsElement(Index = 1, ListSpreadOut = true, Type = SecsElement.SecsElementType.TYPE_2_BYTE_UNSIGNED_INTEGER, Length = 1)]
                     public string Transfer_State; //1=Queued 2=Transferring 3=Paused 4=Canceling 5=Aborting
                     public VIDITEM_722_DVVAL()
                     {
@@ -1584,9 +1613,9 @@ namespace com.mirle.ibg3k0.sc.Data.SECS.ASE
                 public class VIDITEM_889_SV : SXFY
                 {
                     [SecsElement(Index = 1, ListSpreadOut = true)]
-                    public VIDITEM_56_DVVAL CARRIER_LOC_OBJ; 
+                    public VIDITEM_56_DVVAL CARRIER_LOC_OBJ;
                     [SecsElement(Index = 2, ListSpreadOut = true)]
-                    public VIDITEM_54_DVVAL CARRIER_ID_OBJ; 
+                    public VIDITEM_54_DVVAL CARRIER_ID_OBJ;
                     public VIDITEM_889_SV()
                     {
                         CARRIER_LOC_OBJ = new VIDITEM_56_DVVAL();
@@ -1806,7 +1835,7 @@ namespace com.mirle.ibg3k0.sc.Data.SECS.ASE
         public com.mirle.ibg3k0.sc.Data.SECS.ASE.S6F11.RPTINFO.RPTITEM.VIDITEM_66_DVVAL VIDITEM_66_DVVAL_HandoffType;
         public com.mirle.ibg3k0.sc.Data.SECS.ASE.S6F11.RPTINFO.RPTITEM.VIDITEM_67_DVVAL VIDITEM_67_DVVAL_IDreadStatus;
         public com.mirle.ibg3k0.sc.Data.SECS.ASE.S6F11.RPTINFO.RPTITEM.VIDITEM_68_DVVAL VIDITEM_68_DVVAL_RecoeryOption;
-      
+
         public com.mirle.ibg3k0.sc.Data.SECS.ASE.S6F11.RPTINFO.RPTITEM.VIDITEM_70_DVVAL VIDITEM_70_DVVAL_CraneID;
         public com.mirle.ibg3k0.sc.Data.SECS.ASE.S6F11.RPTINFO.RPTITEM.VIDITEM_70_SV VIDITEM_70_SV_CraneID;
         public com.mirle.ibg3k0.sc.Data.SECS.ASE.S6F11.RPTINFO.RPTITEM.VIDITEM_72_SV VIDITEM_72_SV_UnitInfo;
@@ -1817,7 +1846,7 @@ namespace com.mirle.ibg3k0.sc.Data.SECS.ASE
         public com.mirle.ibg3k0.sc.Data.SECS.ASE.S6F11.RPTINFO.RPTITEM.VIDITEM_82_DVVAL VIDITEM_82_DVVAL_AlarmText;
         public com.mirle.ibg3k0.sc.Data.SECS.ASE.S6F11.RPTINFO.RPTITEM.VIDITEM_83_DVVAL VIDITEM_83_DVVAL_UnitID;
         public com.mirle.ibg3k0.sc.Data.SECS.ASE.S6F11.RPTINFO.RPTITEM.VIDITEM_84_DVVAL VIDITEM_84_DVVAL_ErrorNumber;
-        
+
         public com.mirle.ibg3k0.sc.Data.SECS.ASE.S6F11.RPTINFO.RPTITEM.VIDITEM_114_DVVAL VIDITEM_114_DVVAL_SpecVersion;
         public com.mirle.ibg3k0.sc.Data.SECS.ASE.S6F11.RPTINFO.RPTITEM.VIDITEM_115_DVVAL VIDITEM_115_DVVAL_PortID;
         public com.mirle.ibg3k0.sc.Data.SECS.ASE.S6F11.RPTINFO.RPTITEM.VIDITEM_115_SV VIDITEM_115_SV_PortID;
