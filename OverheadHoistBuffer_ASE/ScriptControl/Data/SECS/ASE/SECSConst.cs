@@ -390,6 +390,8 @@ namespace com.mirle.ibg3k0.sc.Data.SECS.ASE
         public const string VID_Enhanced_Transfer_Cmd = "13";
         public const string VID_Empty_Carrier = "15";
 
+        public const string VID_EnhancedAlarmsSet = "41";
+
         public const string VID_Carrier_ID = "54";
         public const string VID_Carrier_Info = "55";
         public const string VID_Carrier_Loc = "56";
@@ -466,6 +468,7 @@ namespace com.mirle.ibg3k0.sc.Data.SECS.ASE
         public const string VID_Port_Types = "351";
         //public const string VID_Enhanced_Zone_Datas = "352";
         public const string VID_Unit_Alarm_List = "360";
+        public const string VID_EnhancedALID = "40";
 
 
 

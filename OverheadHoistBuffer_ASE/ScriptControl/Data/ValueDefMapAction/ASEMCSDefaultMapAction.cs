@@ -439,7 +439,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                             {
                                 bool isCreatScuess = true;
                                 if (SCUtility.isMatche(SECSConst.HCACK_Confirm, s2f50.HCACK)    //!SCUtility.isMatche(SECSConst.HCACK_Rejected_Already_Requested, s2f50.HCACK
-                                    //|| SCUtility.isMatche(SECSConst.HCACK_Confirm_Executed, s2f50.HCACK)
+                                                                                                //|| SCUtility.isMatche(SECSConst.HCACK_Confirm_Executed, s2f50.HCACK)
                                    )
                                 {
                                     isCreatScuess &= scApp.CMDBLL.doCreatMCSCommand(cmdID, priority, "0", cstID, source, dest, boxID, lotID, boxLoc, s2f50.HCACK, isFromVh);
@@ -889,7 +889,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             }
             else if (!string.IsNullOrWhiteSpace(cstID))
             {
-                if(string.IsNullOrWhiteSpace(cstID) == false)
+                if (string.IsNullOrWhiteSpace(cstID) == false)
                 {
                     cstData = scApp.CassetteDataBLL.loadCassetteDataByCSTID(cstID);
 
@@ -905,7 +905,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 check_result = SECSConst.HCACK_Param_Invalid;
                 return (is_ok, check_result, cstID, boxID, loc);
             }
-            
+
             if (scApp.TransferService.isShelfPort(loc))  //SCAN 只能針對儲位
             {
                 ShelfDef shelfData = scApp.ShelfDefBLL.loadShelfDataByID(loc);
@@ -1120,7 +1120,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             }
             else
             {
-                if(port_type == 0 | port_type == 1)
+                if (port_type == 0 | port_type == 1)
                 {
                     if ((int)port_item.State == SECSConst.PortState_OutService)
                     {
@@ -1170,7 +1170,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             }
             else
             {
-                if(scApp.TransferService.isLocExist(LocID))
+                if (scApp.TransferService.isLocExist(LocID))
                 {
                     is_ok = true;
                 }
@@ -1422,7 +1422,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
 
             var cstID_item = s2F41.REPITEMS.Where(item => SCUtility.isMatche(item.CPNAME, SECSConst.CPNAME_CarrierID)).FirstOrDefault();
             var lotID_item = s2F41.REPITEMS.Where(item => SCUtility.isMatche(item.CPNAME, SECSConst.CPNAME_LotID)).FirstOrDefault();
-            
+
             if (cstID_item != null && lotID_item != null)
             {
                 cstID = cstID_item.CPVAL?.Trim() ?? "";
@@ -1438,7 +1438,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 {
                     is_ok = scApp.CassetteDataBLL.UpdateCSTID(cstData.Carrier_LOC, cstData.BOXID, cstData.CSTID, lotID.Trim());
 
-                    if(is_ok == false)
+                    if (is_ok == false)
                     {
 
                     }
@@ -1525,6 +1525,12 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                         line.UnitAlarmStateListChecked = true;
                         s1f4.SV[i] = buildUnitAlarmListVIDItem();
                     }
+                    else if (s1f3.SVID[i] == SECSConst.VID_EnhancedALID)
+                    {
+                        line.AlarmSetChecked = true;
+                        s1f4.SV[i] = buildEnhancedAlarmsSetVIDItem();
+                    }
+
                     //else if (s1f3.SVID[i] == SECSConst.VID_CurrEq_Port_Status)
                     //{
                     //    line.EnhancedTransfersChecked = true;
@@ -1629,7 +1635,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             S6F11.RPTINFO.RPTITEM.VIDITEM_04_SV viditem_04 = new S6F11.RPTINFO.RPTITEM.VIDITEM_04_SV();
 
             //AlarmsSet，只報會造成設備不能跑貨的狀況(S5F1)，因為會造成此狀況的只有車子的 Alarm ，這邊就濾掉 Port 的異常
-            List<ALARM> alarms = scApp.AlarmBLL.loadSetAlarmListByError();  
+            List<ALARM> alarms = scApp.AlarmBLL.loadSetAlarmListByError();
 
             viditem_04.ALIDs = new S6F11.RPTINFO.RPTITEM.ALID_DVVAL[alarms.Count];
             //viditem_04.SystemByte = 100;
@@ -1640,6 +1646,47 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             }
             return viditem_04;
         }
+
+        private S6F11.RPTINFO.RPTITEM.VIDITEM_40 buildEnhancedAlarmsSetVIDItem()
+        {
+            //var alarms = scApp.AlarmBLL.getCurrentAlarms();
+            List<ALARM> alarms = scApp.AlarmBLL.loadSetAlarmListByError();
+            S6F11.RPTINFO.RPTITEM.ENHANCEDALID[] alarm_enhanced_alids = new S6F11.RPTINFO.RPTITEM.ENHANCEDALID[alarms.Count];
+            for (int i = 0; i < alarms.Count; i++)
+            {
+                var alarm = alarms[i];
+                string alid = alarm.ALAM_CODE;
+                string eq_id = alarm.EQPT_ID;
+                string text = alarm.ALAM_DESC;
+                string state = SCUtility.Trim(alarm.UnitState, true);
+
+                var check_result = scApp.VehicleBLL.cache.IsVehicleExist(eq_id);
+                S6F11.RPTINFO.RPTITEM.UNITINFO uNITINFO = new S6F11.RPTINFO.RPTITEM.UNITINFO();
+                if (check_result.isExist)
+                {
+                    uNITINFO.UnitID = check_result.vh.VEHICLE_ID;
+                    uNITINFO.UnitState = state;
+                }
+                else
+                {
+                    uNITINFO.UnitID = SCUtility.Trim(eq_id, true);
+                    uNITINFO.UnitState = "0";
+                }
+                alarm_enhanced_alids[i] = new S6F11.RPTINFO.RPTITEM.ENHANCEDALID()
+                {
+                    ALID = alid,
+                    UnitInfo = uNITINFO,
+                    AlarmText = text
+                };
+            }
+
+            S6F11.RPTINFO.RPTITEM.VIDITEM_40 item = new S6F11.RPTINFO.RPTITEM.VIDITEM_40()
+            {
+                ENHANCED_ALIDs = alarm_enhanced_alids
+            };
+            return item;
+        }
+
         private S6F11.RPTINFO.RPTITEM.VIDITEM_118_SV buildCurrentPortStatesVIDItem()
         {
             //List<APORTSTATION> port_station = scApp.getEQObjCacheManager().getALLPortStation();
@@ -1705,7 +1752,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
         {
             //List<ALARM> occurred_alarms = scApp.AlarmBLL.getCurrentAlarmsFromRedis();
             //List<ALARM> occurred_error_alarms = occurred_alarms.Where(alarm => alarm.ALAM_LVL == E_ALARM_LVL.Error).ToList();
-            
+
             List<ALARM> alarms = scApp.AlarmBLL.loadSetAlarmListByWarn();
 
             S6F11.RPTINFO.RPTITEM.VIDITEM_360_SV viditem_360 = new S6F11.RPTINFO.RPTITEM.VIDITEM_360_SV();
@@ -2775,7 +2822,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 {
                     cassette = scApp.CassetteDataBLL.loadCassetteDataByBoxID(cmd.BOX_ID.Trim());
                 }
-                
+
                 string zonename = scApp.CassetteDataBLL.GetZoneName(cassette.Carrier_LOC);
 
                 Vids.VIDITEM_58_DVVAL_CommandID.COMMAND_ID = cmd?.CMD_ID ?? "";
@@ -3294,7 +3341,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 AMCSREPORTQUEUE mcs_queue = S6F11BulibMessage(SECSConst.CEID_Carrier_Wait_Out, Vids);
                 if (reportQueues == null)
                 {
-                    if(S6F11SendMessage(mcs_queue))
+                    if (S6F11SendMessage(mcs_queue))
                     {
                         scApp.CassetteDataBLL.UpdateCSTState(cst.BOXID, (int)E_CSTState.WaitOut);
                         scApp.TransferService.SetWaitInOutLog(cst, E_CSTState.WaitOut);
@@ -3626,7 +3673,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 string loc = cassette?.Carrier_LOC ?? "";
                 string zonename = scApp.CassetteDataBLL.GetZoneName(loc);
 
-                Vids.VIDITEM_58_DVVAL_CommandID.COMMAND_ID = cmd.CMD_ID;                
+                Vids.VIDITEM_58_DVVAL_CommandID.COMMAND_ID = cmd.CMD_ID;
                 Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cstID;
                 Vids.VIDITEM_56_DVVAL_CarrierLoc.CARRIER_LOC = loc;
                 Vids.VIDITEM_370_DVVAL_CarrierZoneName.CARRIER_ZONE_NAME = zonename;
@@ -4249,7 +4296,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 }
                 TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> MCS|S6F11 CEID:" + s6f11.CEID + "  " + log);
                 #endregion
-                
+
                 TrxSECS.ReturnCode rtnCode = ISECSControl.sendRecv<S6F12>(bcfApp, s6f11, out s6f12,
                     out abortSecs, out rtnMsg, null);
 
