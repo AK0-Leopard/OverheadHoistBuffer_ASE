@@ -73,7 +73,7 @@ namespace com.mirle.ibg3k0.sc
         public bool ForceReservePass { get; set; } = false;
         public bool ForceReserveReject { get; set; } = false;
 
-        public static UInt16 MAX_ALLOW_ACTION_TIME_SECOND { get; private set; } = 1200;
+        public static UInt16 MAX_ALLOW_ACTION_TIME_SECOND { get; private set; } = 180;
 
         public event EventHandler<LocationChangeEventArgs> LocationChange;
         public event EventHandler<SegmentChangeEventArgs> SegmentChange;
@@ -157,6 +157,8 @@ namespace com.mirle.ibg3k0.sc
         public virtual int CMD_Priority { get; set; } = 0;
         public virtual string CUR_SEG_ID { get; set; } = string.Empty;
         private int assigncommandfailtimes = 0;
+        public virtual bool isLongTimeInaction { get; private set; }
+        public virtual string isLongTimeInactionCMDID { get; private set; }
         public virtual int AssignCommandFailTimes
         {
             get { return assigncommandfailtimes; }
@@ -1348,11 +1350,30 @@ namespace com.mirle.ibg3k0.sc
                         {
                             vh.onLongTimeNoCommuncation();
                         }
-                        //double action_time = vh.CurrentCommandExcuteTime.Elapsed.TotalSeconds;
-                        //if (action_time > AVEHICLE.MAX_ALLOW_ACTION_TIME_SECOND)
-                        //{
-                        //    vh.onLongTimeInaction(vh.OHTC_CMD);
-                        //}
+                        double action_time = vh.CurrentCommandExcuteTime.Elapsed.TotalSeconds;
+                        if (action_time > AVEHICLE.MAX_ALLOW_ACTION_TIME_SECOND)
+                        {
+                            if (!vh.isLongTimeInaction)
+                            {
+                                vh.isLongTimeInaction = true;
+                                vh.isLongTimeInactionCMDID = vh.OHTC_CMD;
+                                vh.onLongTimeInaction(vh.OHTC_CMD);
+                            }
+                            else
+                            {
+                                //do nothing
+                            }
+                        }
+                        else
+                        {
+                            if (vh.isLongTimeInaction)
+                            {
+                                //clear
+                                scApp.TransferService.OHBC_AlarmCleared(scApp.getEQObjCacheManager().getLine().LINE_ID, ((int)Service.AlarmLst.OHT_CommandNotFinishedInTime).ToString());
+
+                            }
+                            vh.isLongTimeInaction = false;
+                        }
                     }
                     catch (Exception ex)
                     {

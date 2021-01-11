@@ -75,6 +75,7 @@ namespace com.mirle.ibg3k0.sc.Service
         PORT_BP4_WaitOutTimeOut = 100028,
         PORT_BP5_WaitOutTimeOut = 100029,
         PORT_LP_WaitOutTimeOut = 100030,
+        OHT_CommandNotFinishedInTime = 100031,
     }
     public class VehicleService : IDynamicMetaObjectProvider
     {
@@ -108,6 +109,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 vh.AssignCommandFailOverTimes += Vh_AssignCommandFailOverTimes;
                 vh.StatusRequestFailOverTimes += Vh_StatusRequestFailOverTimes;
                 vh.LongTimeNoCommuncation += Vh_LongTimeNoCommuncation;
+                vh.LongTimeInaction += Vh_LongTimeInaction;
                 vh.TimerActionStart();
             }
 
@@ -159,6 +161,34 @@ namespace com.mirle.ibg3k0.sc.Service
             }
         }
 
+        private void Vh_LongTimeInaction(object sender, string cmdID)
+        {
+            AVEHICLE vh = sender as AVEHICLE;
+            if (vh == null) return;
+            try
+            {
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                   Data: $"Process vehicle long time inaction, cmd id:{cmdID}",
+                   VehicleID: vh.VEHICLE_ID,
+                   CarrierID: vh.CST_ID);
+                //vh.Stop();
+                //上報Alamr Rerport給MCS
+                scApp.TransferService.OHBC_AlarmSet(scApp.getEQObjCacheManager().getLine().LINE_ID, ((int)AlarmLst.OHT_CommandNotFinishedInTime).ToString());
+                Task.Run(() => scApp.VehicleBLL.web.vehicleLongTimeNoAction(scApp));
+
+                //scApp.LineService.ProcessAlarmReport(
+                //    vh.NODE_ID, vh.VEHICLE_ID, vh.Real_ID, "",
+                //    SCAppConstants.SystemAlarmCode.OHT_Issue.OHTLongInaction,
+                //    ProtocolFormat.OHTMessage.ErrorStatus.ErrSet);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                   Data: ex,
+                   VehicleID: vh.VEHICLE_ID,
+                   CarrierID: vh.CST_ID);
+            }
+        }
         private void Vh_StatusRequestFailOverTimes(object sender, int e)
         {
             try
@@ -2611,23 +2641,33 @@ namespace com.mirle.ibg3k0.sc.Service
             ASECTION avoid_vh_current_section = scApp.SectionBLL.cache.GetSection(avoidVh.CUR_SEC_ID);
             //先找出哪個Address是距離pass vh比較遠的距離，即代表是反方向
             //就可以先從那邊開始往上找
+
             string first_search_adr = findTheOppositeOfAddress(pass_vh_cur_adr, avoid_vh_current_section);
 
             //設定開始找路的起點
             (string next_address, ASECTION source_section) first_search_section_infos = (first_search_adr, avoid_vh_current_section);
             //先朝著相反的路徑找
-            var searchResult = tryFindAvoidAddress(passVh, avoidVh, first_search_section_infos, false);
-            if (!isDeadLock && !searchResult.isFind)
+            if ((scApp.BC_ID != "ASE_LINE3" && scApp.BC_ID != "ASE_TEST") || !scApp.VehicleService.multiplecar_active)
             {
-                //如果相反方向找不到路，且並不是在執行解Dead lock邏輯時(如:趕車邏輯)則可以試著往同一方向找看看。
-                //(即可能會需要穿過另外一台車)
-                string second_search_adr = SCUtility.isMatche(first_search_adr, avoid_vh_current_section.FROM_ADR_ID) ?
-                    avoid_vh_current_section.TO_ADR_ID : avoid_vh_current_section.FROM_ADR_ID;
+                var searchResult = tryFindAvoidAddress(passVh, avoidVh, first_search_section_infos, false);
+                if (!isDeadLock && !searchResult.isFind)
+                {
+                    //如果相反方向找不到路，且並不是在執行解Dead lock邏輯時(如:趕車邏輯)則可以試著往同一方向找看看。
+                    //(即可能會需要穿過另外一台車)
+                    string second_search_adr = SCUtility.isMatche(first_search_adr, avoid_vh_current_section.FROM_ADR_ID) ?
+                        avoid_vh_current_section.TO_ADR_ID : avoid_vh_current_section.FROM_ADR_ID;
 
-                (string next_address, ASECTION source_section) second_search_section_infos = (second_search_adr, avoid_vh_current_section);
-                searchResult = tryFindAvoidAddress(passVh, avoidVh, second_search_section_infos, true);
+                    (string next_address, ASECTION source_section) second_search_section_infos = (second_search_adr, avoid_vh_current_section);
+                    searchResult = tryFindAvoidAddress(passVh, avoidVh, second_search_section_infos, true);
+                }
+                return searchResult;
             }
-            return searchResult;
+            else
+            {
+                var searchResult = tryFindAvoidAddressForASELine3(passVh, avoidVh, first_search_section_infos, false);
+                return searchResult;
+            }
+
         }
 
         private string findTheOppositeOfAddress(string req_vh_cur_adr, ASECTION find_avoid_vh_current_section)
@@ -2840,6 +2880,20 @@ namespace com.mirle.ibg3k0.sc.Service
                 }
             }
             return (false, null, null, null);
+        }
+
+        private (bool isFind, ASECTION notConflictSection, string entryAdr, string avoidAdr) tryFindAvoidAddressForASELine3 //用於ASE_line3的查找避車點
+(AVEHICLE passVh, AVEHICLE avoidVh, (string next_address, ASECTION source_section) startSearchInfo, bool isForceCrossing)
+        {
+            var find_result = findAvoidAddressForFixPort(avoidVh);
+            if (find_result.isFind)
+            {
+                return (true, null, null, find_result.avoidAdr);
+            }
+            else
+            {
+                return (false, null, null, null);
+            }
         }
 
         private bool hasCrossWithPredictSection(string checkSection, List<string> willPassSection)
@@ -3088,6 +3142,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 string final_blocked_vh_id = string.Empty;
                 Mirle.Hlts.Utils.HltResult result = default(Mirle.Hlts.Utils.HltResult);
                 Mirle.Hlts.Utils.HltDirection directionOHT = CheckDirectionOfOHTVehicle(reserveInfos);
+                bool isFirst = true;
                 foreach (var reserve_info in reserveInfos)
                 {
                     string reserve_section_id = reserve_info.ReserveSectionID;
@@ -3133,6 +3188,80 @@ namespace com.mirle.ibg3k0.sc.Service
                             //        }
                             //    }
                             //}
+
+                            //2021/01/07 MarkChou 
+                            //如果預約不到的時候，確認目前要的Section是否為所有Section的第一段
+                            //且車輛所在Address是否在有被該Section與下一段Section連接
+                            //是的話就給他直接通過
+                            if (!result.OK)
+                            {
+                                if (isFirst && reserveInfos.Count >= 2 && vh.HAS_CST == 1)
+                                {
+                                    string current_adr = vh.CUR_ADR_ID;
+                                    ACMD_OHTC cmd = scApp.CMDBLL.getCMD_OHTCByID(vh.OHTC_CMD);
+
+                                    //2021/01/08 MarkChou 
+                                    //新增判斷條件，僅有在執行LoadUnload命令且當前adr在loadport並已取得Box才套用此例外判斷
+                                    if (cmd != null && SCUtility.isMatche(cmd.SOURCE_ADR, current_adr) && cmd.CMD_TPYE == E_CMD_TYPE.LoadUnload)
+                                    {
+
+                                        var sections = scApp.SectionBLL.cache.GetSectionsByAddress(current_adr);
+                                        if (sections.Count >= 2)
+                                        {
+                                            var next_reserve_info = reserveInfos[1];
+                                            string next_reserve_section_id = next_reserve_info.ReserveSectionID;
+                                            bool isFind = false;
+                                            foreach (var s in sections)
+                                            {
+                                                if (SCUtility.isMatche(reserve_section_id, s.SEC_ID))
+                                                {
+                                                    isFind = true;
+                                                    break;
+                                                }
+                                            }
+                                            if (isFind)
+                                            {
+                                                isFind = false;
+                                                foreach (var s in sections)
+                                                {
+                                                    if (SCUtility.isMatche(next_reserve_section_id, s.SEC_ID))
+                                                    {
+                                                        isFind = true;
+                                                        break;
+                                                    }
+                                                }
+                                                if (isFind)
+                                                {
+                                                    result.OK = true;
+                                                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                                                       Data: $"Froce pass reserve section:{reserve_section_id},becuse it is already through this section. adr:{current_adr}",
+                                                       VehicleID: vhID);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                //do nothing
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //do nothing
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        //do nothing
+                                    }
+
+                                }
+                                else
+                                {
+                                    //do nothing
+                                }
+
+                            }
+
                         }
                         else
                         {
@@ -3157,6 +3286,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         final_blocked_vh_id = result.VehicleID;
                         break;
                     }
+                    isFirst = false;
                 }
 
                 return (has_success, final_blocked_vh_id, reserve_success_section);
@@ -6455,6 +6585,8 @@ namespace com.mirle.ibg3k0.sc.Service
             }
             Task.Run(() => scApp.VehicleBLL.web.vehicleDisconnection(scApp));
         }
+
+
         #endregion Vh Connection / disconnention
 
         #region Vehicle Install/Remove

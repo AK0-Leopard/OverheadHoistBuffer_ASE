@@ -196,8 +196,8 @@ namespace com.mirle.ibg3k0.sc.BLL
                     AVEHICLE vh = scApp.VehicleBLL.cache.getVhByID(vhID);
                     if (vh != null)
                     {
-                        var _result = IsReserveEnhanceSection(vh.CUR_SEC_ID);
-                        if (!_result.isEnhanceInfo)
+                        bool _result = IsReserveEnhanceSection(vh.CUR_SEC_ID, reserve_enhance_info_check_result.info);
+                        if (!_result)
                         {
                             LogHelper.Log(logger: logger, LogLevel: NLog.LogLevel.Info, Class: nameof(ReserveBLL), Device: "OHT",
                             Data: $"TryAddReservedSection Vehicle is not in section group: vh:{vhID},reserve section id:{sectionID},vh cur section:{vh.CUR_SEC_ID}",
@@ -230,9 +230,8 @@ namespace com.mirle.ibg3k0.sc.BLL
                         VehicleID: vhID);
                     }
 
-
-
                 }
+
                 result = mapAPI.TryAddReservedSection(vhID, sec_id, sensorDir, forkDir, isAsk);
                 onReserveStatusChange();
 
@@ -260,6 +259,25 @@ namespace com.mirle.ibg3k0.sc.BLL
                               Where(info => info.EnhanceControlSections.Contains(sectionID)).
                               FirstOrDefault();
             return (reserve_enhance_info != null, reserve_enhance_info);
+        }
+
+        private bool IsReserveEnhanceSection(string sectionID, Data.VO.ReserveEnhanceInfo info)
+        {
+            if (info != null)
+            {
+                if (info.EnhanceControlSections.Contains(sectionID))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
         }
 
 

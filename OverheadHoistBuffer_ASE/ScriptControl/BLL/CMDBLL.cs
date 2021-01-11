@@ -4521,6 +4521,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 }
                 _vhCatchObject.CyclingPath = cycle_run_sections;
                 _vhCatchObject.vh_CMD_Status = E_CMD_STATUS.Execution;
+                _vhCatchObject.Action();
                 _vhCatchObject.NotifyVhExcuteCMDStatusChange();
                 //_vhCatchObject.VID_Collection.VID_58_CommandID.COMMAND_ID = acmd_ohtc.CMD_ID_MCS;
             }

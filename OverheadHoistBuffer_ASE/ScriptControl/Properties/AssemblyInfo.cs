@@ -32,10 +32,15 @@ using System.Runtime.InteropServices;
 // 您可以指定所有的值，也可以依照以下的方式，使用 '*' 將組建和修訂編號
 // 指定為預設值:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.8.8")]
-[assembly: AssemblyFileVersion("1.8.8")]
+[assembly: AssemblyVersion("1.9.0")]
+[assembly: AssemblyFileVersion("1.9.0")]
 
 //版號 + Tab + 日期 + Tab + 修改人 + Tab + 敘述
+
+//1.9.0 2021/01/08  MarkChou 新增釋放已進入Section釋放的判斷條件，僅有在執行LoadUnload命令且當前adr在loadport並已取得Box才套用此例外判斷
+//1.8.9 2021/01/07  MarkChou 1.修正命令檢查不能執行時不會把Handoff命令終點站解除Reserve的問題
+//                           2.OHT過久沒有執行完當前命令會上報Alarm給MCS並發出語音通知
+//                           3.Line3 51避車命令查找避車點改為固定點位
 //1.8.8 2021/01/06  MarkChou 產生Override命令判斷使用HAS_BOX改為HAS_CST,因為HAS_BOX並不會更新
 //1.8.7 2021/01/05  MarkChou 於北側CV Port-南側handoff區皆由2號車執行
 //1.6.8 2020/12/10  MarkChou 新增ASE_LINE3 雙車處理與避車邏輯

@@ -1017,7 +1017,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                     else //於北側CV Port-南側handoff區 2車皆可以
                     {
                         //selectedCarNo = 3;
-                        selectedCarNo = 2;//20210105 V1.8.7 於北側CV Port-南側handoff區皆由2號車執行
+                        selectedCarNo = 1;//20210105 V1.8.7 於北側CV Port-南側handoff區皆由1號車執行
                     }
                 }
                 return true;
@@ -1681,6 +1681,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 vh.vh_CMD_Status = E_CMD_STATUS.NormalEnd;
 
                 vh.VehicleUnassign();
+                vh.Stop();
                 E_CMD_STATUS ohtc_cmd_status = CompleteStatusToCmdStatus(completeStatus);
 
                 ////isSuccess &= scApp.CMDBLL.updateCommand_OHTC_StatusByCmdID(cmd_id, E_CMD_STATUS.NormalEnd);
@@ -2309,6 +2310,63 @@ namespace com.mirle.ibg3k0.sc.BLL
             public Web(WebClientManager _webClient)
             {
                 webClientManager = _webClient;
+            }
+
+            public void vehicleLongTimeNoAction(SCApplication app)
+            {
+                try
+                {
+                    string lineName = SCUtility.Trim(app.BC_ID, true);
+                    if (SCUtility.isMatche(lineName, "ASE"))
+                    {
+                        lineName = "line1";
+                    }
+                    else
+                    {
+                        if (lineName.Contains("_"))
+                        {
+                            lineName = lineName.Split('_')[1];
+                        }
+                        else
+                        {
+                            return;
+                        }
+                    }
+                    lineName = lineName.ToLower();
+                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleBLL), Device: "OHxC",
+                       Data: $"Has vh long time no action,notify start.Line name:{lineName}");
+                    vehicleLongTimeNoAction(lineName);
+                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleBLL), Device: "OHxC",
+                       Data: $"Has vh long time no action,notify end.Line name:{lineName}");
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex, "Exception:");
+                }
+            }
+            public void vehicleLongTimeNoAction(string lineName)
+            {
+                try
+                {
+                    lineName = lineName.ToLower();
+                    string notify_name = $"{lineName}_VehicleHasCMDNoAction";
+                    string[] action_targets = new string[]
+                    {
+                    "weatherforecast"
+                    };
+                    string[] param = new string[]
+                    {
+                        notify_name,
+                    };
+                    foreach (string notify_url in notify_urls)
+                    {
+                        string result = webClientManager.GetInfoFromServer(notify_url, action_targets, param);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex, "Exception");
+                }
             }
 
             public void vehicleDisconnection(SCApplication app)

@@ -1760,6 +1760,11 @@ namespace com.mirle.ibg3k0.sc.Service
                                     }
                                     else
                                     {
+                                        //修正不能執行時不會把Handoff命令終點站解除Reserve的問題 20210107 v1.8.9 markchou
+                                        if (destReservedInShelf != null)
+                                        {
+                                            shelfDefBLL.updateStatus(destReservedInShelf, ShelfDef.E_ShelfState.EmptyShelf);
+                                        }
                                         //釋放於GetShelfRecentLocation中 提前預約的shelf
                                         shelfDefBLL.updateStatus(cmdRelay.HOSTDESTINATION, ShelfDef.E_ShelfState.EmptyShelf);
                                     }
