@@ -2125,7 +2125,7 @@ namespace com.mirle.ibg3k0.sc.Service
 
                         if (cmd.RelayStation == ohtCmd.SOURCE && string.IsNullOrWhiteSpace(ohtCmd.SOURCE) == false)
                         {
-                            reportBLL.ReportCarrierResumed(cmd.CMD_ID);
+                            //reportBLL.ReportCarrierResumed(cmd.CMD_ID); // 20200114 若有alternate 的情況，需改到Loadcomplete 之後再報
                         }
                         else
                         {
@@ -2146,7 +2146,10 @@ namespace com.mirle.ibg3k0.sc.Service
                         {
                             break;
                         }
-
+                        if (cmd.RelayStation == ohtCmd.SOURCE && string.IsNullOrWhiteSpace(ohtCmd.SOURCE) == false)
+                        {
+                            reportBLL.ReportCarrierResumed(cmd.CMD_ID); // 20200114 若有alternate 的情況，需改到Loadcomplete 之後再報
+                        }
                         cmd.HOSTSOURCE = ohtCmd.SOURCE;
                         CassetteData LoadCSTData = cassette_dataBLL.loadCassetteDataByLoc(cmd.HOSTSOURCE);
 
