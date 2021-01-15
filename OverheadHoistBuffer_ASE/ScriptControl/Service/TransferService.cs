@@ -1834,11 +1834,20 @@ namespace com.mirle.ibg3k0.sc.Service
                          && plcInfoDest.OpAutoMode && plcInfoDest.IsReadyToLoad == false
                            )
                         {
+                            string _mcs_destnation_adr;
+                            int _mcsDest = 0;
+                            scApp.MapBLL.getAddressID(mcsCmd.HOSTDESTINATION, out _mcs_destnation_adr);
+                            _mcsDest = int.Parse(_mcs_destnation_adr);
                             ACMD_MCS cmdRelay = mcsCmd.Clone();
 
                             //List<ShelfDef> shelfData = shelfDefBLL.GetEmptyAndEnableShelf();\
                             List<ShelfDef> shelfData;
                             if (isUnitType(mcsCmd.HOSTDESTINATION, UnitType.OHCV))
+                            {
+                                shelfData = shelfDefBLL.GetEmptyHandOffShelf();
+                            }
+                            else if((isUnitType(mcsCmd.HOSTDESTINATION, UnitType.AGV)|| isUnitType(mcsCmd.HOSTDESTINATION, UnitType.NTB))
+                                && _mcsDest < SystemParameter.iHandoffBoundary)//如果目的是南側Station就先放到Alternate區，避免CV塞車過久。
                             {
                                 shelfData = shelfDefBLL.GetEmptyHandOffShelf();
                             }
