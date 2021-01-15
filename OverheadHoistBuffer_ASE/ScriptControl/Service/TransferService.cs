@@ -2694,7 +2694,7 @@ namespace com.mirle.ibg3k0.sc.Service
 
                         if (cmd.RelayStation == ohtCmd.SOURCE && string.IsNullOrWhiteSpace(ohtCmd.SOURCE) == false)
                         {
-                            reportBLL.ReportCarrierResumed(cmd.CMD_ID);
+                            //reportBLL.ReportCarrierResumed(cmd.CMD_ID);
                         }
                         else
                         {
@@ -3128,7 +3128,15 @@ namespace com.mirle.ibg3k0.sc.Service
                             if (isUnitType(loadCstData.Carrier_LOC, UnitType.CRANE) == false)
                             {
                                 loadCstData.Carrier_LOC = ohtName;
-                                reportBLL.ReportCarrierTransferring(cmd, loadCstData, ohtName);
+                                if (cmd.RelayStation == ohtCmd.SOURCE && string.IsNullOrWhiteSpace(ohtCmd.SOURCE) == false)
+                                {
+                                    reportBLL.ReportCarrierResumed(cmd.CMD_ID); // 20200114 若有alternate 的情況，需改到Loadcomplete 之後再報
+                                }
+                                else
+                                {
+                                    reportBLL.ReportCarrierTransferring(cmd, loadCstData, ohtName);
+                                }
+                                //reportBLL.ReportCarrierTransferring(cmd, loadCstData, ohtName);
                             }
 
                             if (shelfDefBLL.isExist(cmd.HOSTSOURCE))

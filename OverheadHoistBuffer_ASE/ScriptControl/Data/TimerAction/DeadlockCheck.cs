@@ -259,7 +259,6 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
                                     if (key_blocked_vh == null) continue;
                                     if (avoid_vh.isTcpIpConnect)
                                     {
-                                        ACMD_OHTC cmd_ohtc = scApp.CMDBLL.getCMD_OHTCByID(avoid_vh.OHTC_CMD);
                                         LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(DeadlockCheck), Device: "AGVC",
                                            Data: $"dead lock happend ,ask vh:{avoid_vh.VEHICLE_ID} chnage path.",
                                            VehicleID: avoid_vh.VEHICLE_ID,

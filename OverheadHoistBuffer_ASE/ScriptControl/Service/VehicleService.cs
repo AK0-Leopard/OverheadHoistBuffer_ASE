@@ -2260,10 +2260,12 @@ namespace com.mirle.ibg3k0.sc.Service
             PortDef best_cv_port = null;
             PortDef min_port = null;
             PortDef max_port = null;
-
+            ACMD_OHTC cmd_ohtc = scApp.CMDBLL.getCMD_OHTCByID(willDrivenAwayVh.OHTC_CMD);
+            string cmd_to_adr = cmd_ohtc == null ? "" : cmd_ohtc.DESTINATION_ADR;
             foreach (var port_def in all_cv_port_in_mode)
             {
                 if (SCUtility.isMatche(port_def.ADR_ID, willDrivenAwayVh.CUR_ADR_ID)) continue;//如果目前所在的Address與要找的CV Port 一樣的話，要濾掉
+                if (SCUtility.isMatche(port_def.ADR_ID, cmd_to_adr)) continue;//如果要避車的點與目的地的點一樣，就先把它濾掉 2021/01/14 kevin
                 var check_result = scApp.GuideBLL.IsRoadWalkable(willDrivenAwayVh.CUR_ADR_ID, port_def.ADR_ID);
 
 
