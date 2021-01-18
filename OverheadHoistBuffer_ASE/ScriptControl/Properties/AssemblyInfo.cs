@@ -32,11 +32,12 @@ using System.Runtime.InteropServices;
 // 您可以指定所有的值，也可以依照以下的方式，使用 '*' 將組建和修訂編號
 // 指定為預設值:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.9.2")]
-[assembly: AssemblyFileVersion("1.9.2")]
+[assembly: AssemblyVersion("1.9.4")]
+[assembly: AssemblyFileVersion("1.9.4")]
 
 //版號 + Tab + 日期 + Tab + 修改人 + Tab + 敘述
 
+//1.9.4 2021/01/18  MarkChou Line3 CV Port到南側儲位命令因七號車太忙沒有搬的情況，則先由八號車取出放到Alternate區
 //1.9.0 2021/01/08  MarkChou 新增釋放已進入Section釋放的判斷條件，僅有在執行LoadUnload命令且當前adr在loadport並已取得Box才套用此例外判斷
 //1.8.9 2021/01/07  MarkChou 1.修正命令檢查不能執行時不會把Handoff命令終點站解除Reserve的問題
 //                           2.OHT過久沒有執行完當前命令會上報Alarm給MCS並發出語音通知

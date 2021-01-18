@@ -1792,6 +1792,57 @@ namespace com.mirle.ibg3k0.sc.Service
                             TransferIng = true;
                             cmdBLL.updateCMD_MCS_Dest(mcsCmd.CMD_ID, mcsCmd.HOSTDESTINATION);
                         }
+                        #region 對應七號車無法及時從CV搬出Box的邏輯
+                        else //長時間沒有執行，可能是車輛太忙
+                        {
+                            TimeSpan timeSpan = DateTime.Now - mcsCmd.CMD_INSER_TIME;
+                            if (timeSpan.TotalSeconds > SystemParameter.cmdTimeOutToAlternate)//命令超時
+                            {
+                                string destnation_adr;
+                                int iDest = 0;
+                                scApp.MapBLL.getAddressID(mcsCmd.HOSTDESTINATION, out destnation_adr);
+                                iDest = int.Parse(destnation_adr);
+                                //起點是CVPort，目的地是南側儲位
+                                if (isOHCVPort(mcsCmd.HOSTSOURCE) && isShelfPort(mcsCmd.HOSTDESTINATION) && iDest < SystemParameter.iHandoffBoundary)
+                                {
+                                    ACMD_MCS cmdRelay = mcsCmd.Clone();
+                                    List<ShelfDef> shelfData;
+                                    shelfData = shelfDefBLL.GetEmptyHandOffShelf();
+
+                                    cmdRelay.HOSTDESTINATION = GetShelfRecentLocation(shelfData, mcsCmd.HOSTDESTINATION);
+
+                                    if (string.IsNullOrWhiteSpace(cmdRelay.HOSTDESTINATION) == false)
+                                    {
+                                        if (OHT_TransportRequest(cmdRelay))
+                                        {
+                                            ShelfReserved(cmdRelay.HOSTSOURCE, cmdRelay.HOSTDESTINATION);
+
+                                            cmdBLL.updateCMD_MCS_RelayStation(mcsCmd.CMD_ID, cmdRelay.HOSTDESTINATION);
+
+                                            TransferServiceLogger.Info
+                                            (
+                                                DateTime.Now.ToString("HH:mm:ss.fff ") + "產生CV Port至Alternate區中繼命令 中繼站: " + cmdRelay.HOSTDESTINATION
+                                            );
+
+                                            TransferIng = true;
+                                        }
+                                        else
+                                        {
+                                            //釋放於GetShelfRecentLocation中 提前預約的shelf
+                                            shelfDefBLL.updateStatus(cmdRelay.HOSTDESTINATION, ShelfDef.E_ShelfState.EmptyShelf);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        TransferServiceLogger.Info
+                                        (
+                                            DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB|搬到中繼站，沒有儲位"
+                                        );
+                                    }
+                                }
+                            }
+                        }
+                        #endregion 對應七號車無法及時從CV搬出Box的邏輯
                     }
                     else if (sourcePortType && isNonHandoffShelfPort(mcsCmd.HOSTSOURCE) == false
                           && destPortType == false && isCVPort(mcsCmd.HOSTDESTINATION))
@@ -7053,6 +7104,26 @@ namespace com.mirle.ibg3k0.sc.Service
             catch (Exception ex)
             {
                 TransferServiceLogger.Error(ex, "isCVPort    portName:" + portName);
+                return false;
+            }
+        }
+        public bool isOHCVPort(string portName)
+        {
+            try
+            {
+                portName = portName.Trim();
+                if (portINIData[portName].UnitType == UnitType.OHCV.ToString())
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                TransferServiceLogger.Error(ex, "isOHCVPort    portName:" + portName);
                 return false;
             }
         }
