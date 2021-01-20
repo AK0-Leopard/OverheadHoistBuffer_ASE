@@ -94,6 +94,24 @@ namespace com.mirle.ibg3k0.sc.BLL
 
         }
 
+        public List<ShelfDef> LoadNonHanoffEnableShelf()
+        {
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    return shelfdefDao.LoadNonHanoffEnableShelf(con);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return null;
+            }
+
+        }
+
+
         public bool UpdateEnableByID(string shelfid, bool enable)
         {
             bool isSuccsess = true;

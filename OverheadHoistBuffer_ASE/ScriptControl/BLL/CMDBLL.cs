@@ -248,6 +248,31 @@ namespace com.mirle.ibg3k0.sc.BLL
                 return null;
             }
         }
+
+        public bool isWaterLevelCMDExist() 
+        {
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                  List<ACMD_MCS> aCMD_MCs =   cmd_mcsDao.GetCmdDataByCmdType(con, ACMD_MCS.CmdType.WaterLevel);
+                    if (aCMD_MCs != null && aCMD_MCs.Count > 0) 
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return false;
+            }
+        }
+        
         public ACMD_MCS GetCmdDataBySHELFtoAGV(string DestPortName)  //取得補BOX的命令
         {
             try

@@ -131,6 +131,24 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
             }
         }
 
+        public List<ShelfDef> LoadNonHanoffEnableShelf(DBConnection_EF conn)
+        {
+            try
+            {
+                var result = from a in conn.ShelfDef
+                             where a.Enable == "Y"
+                             && (a.ZoneID != SystemParameter.AlternateZoneID && a.ZoneID != SystemParameter.HandoffZoneID)
+                             select a;
+                return result.ToList();
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex);
+                throw;
+            }
+        }
+
+
         public List<ShelfDef> LoadDisableShelf(DBConnection_EF conn)
         {
             try

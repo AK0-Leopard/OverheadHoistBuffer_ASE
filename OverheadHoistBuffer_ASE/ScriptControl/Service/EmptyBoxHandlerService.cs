@@ -49,6 +49,7 @@ namespace com.mirle.ibg3k0.sc.Service
         private List<ZoneDef> zoneDatas;
         private List<CassetteData> boxDatas;
         private List<ShelfDef> shelfDatas;
+        private int CheckLine3LevelCount = 0;
 
         public void start(SCApplication _app)
         {
@@ -65,108 +66,112 @@ namespace com.mirle.ibg3k0.sc.Service
         }
 
         #region Use for check the empty box number and transport for empty box
+        object objLock = new object();
         public void CheckTheEmptyBoxStockLevel()
         {
-            emptyBoxLogger.Info("[CheckTheEmptyBoxStockLevel]");
-
-            zoneDatas = zoneBLL.loadZoneData();
-            boxDatas = cassette_dataBLL.loadCassetteData();
-            shelfDatas = shelfDefBLL.LoadShelf();
-            var emptyBox = GetTotalEmptyBoxNumber();
-            if (!initializedFlag)
+            lock (objLock)
             {
-                zoneCacheDatas = new List<ZoneDef>(zoneDatas);
-                foreach (var zoneCache in zoneCacheDatas)
-                {
-                    zoneCache.EmptyBoxList = new List<string>();
-                    zoneCache.SolidBoxList = new List<string>();
-                    zoneCache.WaitForRecycleBoxList = new List<string>();
-                }
-                initializedFlag = true;
-                emptyBoxLogger.Info("===== EmptyBoxHandlerService initialized =====");
-            }
+                emptyBoxLogger.Info("[CheckTheEmptyBoxStockLevel]");
 
-            //更新zone內的空箱實箱列表
-            UpdateZoneData();
-
-            //2020/06/22 Hsinyu Chang
-            //A. 高水位檢查: 30秒一次
-            //A1: zone內有沒有已經標記成待退的空box，有則跳過這次檢查
-            //A2: 檢查是否達緊急水位，有則強制送往STK
-            // A2-1: 如果沒有STK可以送，就送往其他OHB
-            // A2-2: 連其他OHB也送不過去，呼叫MCS幫忙(to A3)
-            //A3: 檢查是否達高水位，是則請求MCS幫退空box
-            //B. 低水位檢查: 2分鐘一次
-            //B1: 先確認目前的line 上shelf的空box 是否夠用(目前標準為AGV station 數量)
-            //B2: 檢查各個zone是否需要補空box
-
-            //高水位檢查
-            foreach (ZoneDef zoneData in zoneCacheDatas)
-            {
-                //A1: zone內有沒有已經標記成待退的空box，有則跳過這次檢查
-                if (zoneData.WaitForRecycleBoxList.Count() != 0)
+                zoneDatas = zoneBLL.loadZoneData();
+                boxDatas = cassette_dataBLL.loadCassetteData();
+                shelfDatas = shelfDefBLL.LoadShelf();
+                var emptyBox = GetTotalEmptyBoxNumber();
+                if (!initializedFlag)
                 {
-                    continue;
-                }
-                //A2: 檢查是否達緊急水位，有則強制送往STK，沒有STK就送往OHCV
-                if (zoneData.BoxCount > zoneData.ZoneSize * emergencyWaterLevel)
-                {
-                    //已達緊急水位，產生往Loop or STK的manual command退box
-                    emptyBoxLogger.Info($"{zoneData.ZoneID} reaches emergency water level: {zoneData.ZoneSize * emergencyWaterLevel}, force to send empty box to STK or OHCV...");
-                    //找out mode下的STK port，沒有就找out mode下的OHCV port
-                    string dest = scApp.TransferService.GetSTKorOHCV_OutModePortName();
-                    if (string.IsNullOrWhiteSpace(dest) == false)
+                    zoneCacheDatas = new List<ZoneDef>(zoneDatas);
+                    foreach (var zoneCache in zoneCacheDatas)
                     {
-                        string recycleBoxID = FindBestRecycleBoxID(zoneData, emptyBox.emptyBox);
-                        string recycleBoxLoc = cassette_dataBLL.GetCassetteLocByBoxID(recycleBoxID);
-                        scApp.TransferService.Manual_InsertCmd(recycleBoxLoc, dest, 5, "CheckTheEmptyBoxStockLevel", ACMD_MCS.CmdType.OHBC);
+                        zoneCache.EmptyBoxList = new List<string>();
+                        zoneCache.SolidBoxList = new List<string>();
+                        zoneCache.WaitForRecycleBoxList = new List<string>();
                     }
-                    else
+                    initializedFlag = true;
+                    emptyBoxLogger.Info("===== EmptyBoxHandlerService initialized =====");
+                }
+
+                //更新zone內的空箱實箱列表
+                UpdateZoneData();
+
+                //2020/06/22 Hsinyu Chang
+                //A. 高水位檢查: 30秒一次
+                //A1: zone內有沒有已經標記成待退的空box，有則跳過這次檢查
+                //A2: 檢查是否達緊急水位，有則強制送往STK
+                // A2-1: 如果沒有STK可以送，就送往其他OHB
+                // A2-2: 連其他OHB也送不過去，呼叫MCS幫忙(to A3)
+                //A3: 檢查是否達高水位，是則請求MCS幫退空box
+                //B. 低水位檢查: 2分鐘一次
+                //B1: 先確認目前的line 上shelf的空box 是否夠用(目前標準為AGV station 數量)
+                //B2: 檢查各個zone是否需要補空box
+
+                //高水位檢查
+                foreach (ZoneDef zoneData in zoneCacheDatas)
+                {
+                    //A1: zone內有沒有已經標記成待退的空box，有則跳過這次檢查
+                    if (zoneData.WaitForRecycleBoxList.Count() != 0)
                     {
-                        //沒有找到STK、OHCV為OutMode => 請求MCS幫退
-                        emptyBoxLogger.Info($"No port is avaliable for recycling box directly, notice MCS and wait transfer command to recycling...");
+                        continue;
+                    }
+                    //A2: 檢查是否達緊急水位，有則強制送往STK，沒有STK就送往OHCV
+                    if (zoneData.BoxCount > zoneData.ZoneSize * emergencyWaterLevel)
+                    {
+                        //已達緊急水位，產生往Loop or STK的manual command退box
+                        emptyBoxLogger.Info($"{zoneData.ZoneID} reaches emergency water level: {zoneData.ZoneSize * emergencyWaterLevel}, force to send empty box to STK or OHCV...");
+                        //找out mode下的STK port，沒有就找out mode下的OHCV port
+                        string dest = scApp.TransferService.GetSTKorOHCV_OutModePortName();
+                        if (string.IsNullOrWhiteSpace(dest) == false)
+                        {
+                            string recycleBoxID = FindBestRecycleBoxID(zoneData, emptyBox.emptyBox);
+                            string recycleBoxLoc = cassette_dataBLL.GetCassetteLocByBoxID(recycleBoxID);
+                            scApp.TransferService.Manual_InsertCmd(recycleBoxLoc, dest, 5, "CheckTheEmptyBoxStockLevel", ACMD_MCS.CmdType.OHBC);
+                        }
+                        else
+                        {
+                            //沒有找到STK、OHCV為OutMode => 請求MCS幫退
+                            emptyBoxLogger.Info($"No port is avaliable for recycling box directly, notice MCS and wait transfer command to recycling...");
+                            RecycleBoxByMCS(zoneData, zoneData.BoxCount);
+                        }
+                    }
+                    //A3: 檢查是否達高水位，是則請求MCS幫退空box
+                    else if (zoneData.BoxCount > zoneData.HighWaterMark)
+                    {
+                        //還沒到緊急水位走這邊
+                        //過多box，呼叫MCS退掉(優先退空的)
+                        emptyBoxLogger.Info($"{zoneData.ZoneID} do not reach emergency water level, just notice MCS and wait transfer command to recycling...");
                         RecycleBoxByMCS(zoneData, zoneData.BoxCount);
                     }
                 }
-                //A3: 檢查是否達高水位，是則請求MCS幫退空box
-                else if (zoneData.BoxCount > zoneData.HighWaterMark)
-                {
-                    //還沒到緊急水位走這邊
-                    //過多box，呼叫MCS退掉(優先退空的)
-                    emptyBoxLogger.Info($"{zoneData.ZoneID} do not reach emergency water level, just notice MCS and wait transfer command to recycling...");
-                    RecycleBoxByMCS(zoneData, zoneData.BoxCount);
-                }
-            }
 
-            //低水位檢查
-            if (lowLevelCheckCount < lowLevelCheckTime)
-            {
-                lowLevelCheckCount++;
-            }
-            else
-            {
-                lowLevelCheckCount = 0;
-                //B1: 先確認目前的line 上shelf的空box 是否夠用(目前標準為AGV station 數量)
-                if (emptyBox.isSuccess == true)
+                //低水位檢查
+                if (lowLevelCheckCount < lowLevelCheckTime)
                 {
-                    int requriedBoxAGV;
-                    List<CassetteData> emptyBoxList = new List<CassetteData>(emptyBox.emptyBox);
-                    var isEnoughEmptyBox = CheckIsEnoughEmptyBox(emptyBoxList.Count, out requriedBoxAGV);
-                    if (isEnoughEmptyBox.isEnough == false)
+                    lowLevelCheckCount++;
+                }
+                else
+                {
+                    lowLevelCheckCount = 0;
+                    //B1: 先確認目前的line 上shelf的空box 是否夠用(目前標準為AGV station 數量)
+                    if (emptyBox.isSuccess == true)
                     {
-                        emptyBoxLogger.Info($"Not enough empty box for AGV ST use, request for empty box...");
-                        DoSendRequireEmptyBoxToMCS(zoneCacheDatas.FirstOrDefault().ZoneID, requriedBoxAGV);
-                    }
-                    else
-                    {
-                        //B2: 檢查各個zone是否需要補空box
-                        foreach (ZoneDef zoneData in zoneCacheDatas)
+                        int requriedBoxAGV;
+                        List<CassetteData> emptyBoxList = new List<CassetteData>(emptyBox.emptyBox);
+                        var isEnoughEmptyBox = CheckIsEnoughEmptyBox(emptyBoxList.Count, out requriedBoxAGV);
+                        if (isEnoughEmptyBox.isEnough == false)
                         {
-                            if (zoneData.EmptyBoxList.Count() < zoneData.LowWaterMark)
+                            emptyBoxLogger.Info($"Not enough empty box for AGV ST use, request for empty box...");
+                            DoSendRequireEmptyBoxToMCS(zoneCacheDatas.FirstOrDefault().ZoneID, requriedBoxAGV);
+                        }
+                        else
+                        {
+                            //B2: 檢查各個zone是否需要補空box
+                            foreach (ZoneDef zoneData in zoneCacheDatas)
                             {
-                                emptyBoxLogger.Info($"{zoneData.ZoneID} has {zoneData.EmptyBoxList.Count()} empty box(es), reaches low water level: {zoneData.LowWaterMark}, request for empty box...");
-                                //空box不足，呼叫MCS補充
-                                DoSendRequireEmptyBoxToMCS(zoneData.ZoneID, (int)(zoneData.LowWaterMark - zoneData.EmptyBoxList.Count()));
+                                if (zoneData.EmptyBoxList.Count() < zoneData.LowWaterMark)
+                                {
+                                    emptyBoxLogger.Info($"{zoneData.ZoneID} has {zoneData.EmptyBoxList.Count()} empty box(es), reaches low water level: {zoneData.LowWaterMark}, request for empty box...");
+                                    //空box不足，呼叫MCS補充
+                                    DoSendRequireEmptyBoxToMCS(zoneData.ZoneID, (int)(zoneData.LowWaterMark - zoneData.EmptyBoxList.Count()));
+                                }
                             }
                         }
                     }
@@ -174,123 +179,166 @@ namespace com.mirle.ibg3k0.sc.Service
             }
         }
 
+        #region 平衡Line3南北側的空Box水位與儲位數量
 
         public void CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3()
         {
-            emptyBoxLogger.Info("[CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3]");
-
-            zoneDatas = zoneBLL.loadZoneData();
-            boxDatas = cassette_dataBLL.loadCassetteData();
-            shelfDatas = shelfDefBLL.LoadShelf();
-
-            if (!initializedFlag)
+            lock (objLock)
             {
-                zoneCacheDatas = new List<ZoneDef>(zoneDatas);
-                foreach (var zoneCache in zoneCacheDatas)
+                emptyBoxLogger.Info("[CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3]");
+
+                zoneDatas = zoneBLL.loadZoneData();
+                boxDatas = cassette_dataBLL.loadCassetteData();
+                shelfDatas = shelfDefBLL.LoadShelf();
+
+                if (!initializedFlag)
                 {
-                    zoneCache.EmptyBoxList = new List<string>();
-                    zoneCache.SolidBoxList = new List<string>();
-                    zoneCache.WaitForRecycleBoxList = new List<string>();
-                }
-                initializedFlag = true;
-                emptyBoxLogger.Info("===== EmptyBoxHandlerService initialized =====");
-            }
-
-            //更新zone內的空箱實箱列表
-            UpdateZoneData();
-
-
-            ZoneDef zone1Def = null;
-            ZoneDef zone2Def = null;
-            ZoneDef zone3Def = null;
-            //B2: 檢查各個zone是否需要補空box
-            foreach (ZoneDef zoneData in zoneCacheDatas)
-            {
-                if (zone1Def == null && zoneData.ZoneID.Trim() == "B7_OHBLINE3-ZONE1")
-                {
-                    zone1Def = zoneData;
-                    continue;
-                }
-                if (zone2Def == null && zoneData.ZoneID.Trim() == "B7_OHBLINE3-ZONE2")
-                {
-                    zone2Def = zoneData;
-                    continue;
-                }
-                if (zone3Def == null && zoneData.ZoneID.Trim() == "B7_OHBLINE3-ZONE3")
-                {
-                    zone3Def = zoneData;
-                    continue;
-                }
-                if (zone1Def != null && zone2Def != null && zone3Def != null)
-                {
-                    break;
-                }
-
-                //if (zoneData.EmptyBoxList.Count() < zoneData.LowWaterMark)
-                //{
-                //    emptyBoxLogger.Info($"{zoneData.ZoneID} has {zoneData.EmptyBoxList.Count()} empty box(es), reaches low water level: {zoneData.LowWaterMark}, request for empty box...");
-                //    //空box不足，呼叫MCS補充
-                //    DoSendRequireEmptyBoxToMCS(zoneData.ZoneID, (int)(zoneData.LowWaterMark - zoneData.EmptyBoxList.Count()));
-                //}
-            }
-
-            if (zone1Def == null || zone2Def == null || zone3Def == null)
-            {
-                emptyBoxLogger.Info($"Not Found B7_OHBLINE3-ZONE1 or B7_OHBLINE3-ZONE2 or B7_OHBLINE3-ZONE3  in CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3");
-                return;
-            }
-
-            if (zone1Def.EmptyBoxList.Count()+ zone2Def.EmptyBoxList.Count() < SystemParameter.iSouthLowWaterLevel)
-            {
-                emptyBoxLogger.Info($"{zone1Def.ZoneID} + {zone2Def.ZoneID} has {zone1Def.EmptyBoxList.Count() + zone2Def.EmptyBoxList.Count()} empty box(es), reaches low water level: {SystemParameter.iSouthLowWaterLevel}");
-                //空box不足，看看另一邊Zone有沒有多的空
-
-                if (zone3Def.EmptyBoxList.Count() > SystemParameter.iNorthLowWaterLevel)
-                {
-
-                    List<ShelfDef> zone1EmptyShelfData = shelfDefBLL.GetEmptyShelfByZoneID("B7_OHBLINE3-ZONE1");
-                    List<ShelfDef> zone2EmptyShelfData = shelfDefBLL.GetEmptyShelfByZoneID("B7_OHBLINE3-ZONE2");
-                    List<ShelfDef> southEmptyShelfData = zone1EmptyShelfData;
-                    southEmptyShelfData.AddRange(zone2EmptyShelfData);
-                    if (southEmptyShelfData != null&& southEmptyShelfData.Count > 0)
+                    zoneCacheDatas = new List<ZoneDef>(zoneDatas);
+                    foreach (var zoneCache in zoneCacheDatas)
                     {
-                        string dest = southEmptyShelfData.FirstOrDefault().ShelfID;
-                        if (string.IsNullOrWhiteSpace(dest) == false)
+                        zoneCache.EmptyBoxList = new List<string>();
+                        zoneCache.SolidBoxList = new List<string>();
+                        zoneCache.WaitForRecycleBoxList = new List<string>();
+                    }
+                    initializedFlag = true;
+                    emptyBoxLogger.Info("===== EmptyBoxHandlerService initialized =====");
+                }
+
+                //更新zone內的空箱實箱列表
+                UpdateZoneData();
+
+
+                ZoneDef zone1Def = null;
+                ZoneDef zone2Def = null;
+                ZoneDef zone3Def = null;
+                //B2: 檢查各個zone是否需要補空box
+                foreach (ZoneDef zoneData in zoneCacheDatas)
+                {
+                    if (zone1Def == null && zoneData.ZoneID.Trim() == "B7_OHBLINE3-ZONE1")
+                    {
+                        zone1Def = zoneData;
+                        continue;
+                    }
+                    if (zone2Def == null && zoneData.ZoneID.Trim() == "B7_OHBLINE3-ZONE2")
+                    {
+                        zone2Def = zoneData;
+                        continue;
+                    }
+                    if (zone3Def == null && zoneData.ZoneID.Trim() == "B7_OHBLINE3-ZONE3")
+                    {
+                        zone3Def = zoneData;
+                        continue;
+                    }
+                    if (zone1Def != null && zone2Def != null && zone3Def != null)
+                    {
+                        break;
+                    }
+
+                    //if (zoneData.EmptyBoxList.Count() < zoneData.LowWaterMark)
+                    //{
+                    //    emptyBoxLogger.Info($"{zoneData.ZoneID} has {zoneData.EmptyBoxList.Count()} empty box(es), reaches low water level: {zoneData.LowWaterMark}, request for empty box...");
+                    //    //空box不足，呼叫MCS補充
+                    //    DoSendRequireEmptyBoxToMCS(zoneData.ZoneID, (int)(zoneData.LowWaterMark - zoneData.EmptyBoxList.Count()));
+                    //}
+                }
+
+                if (zone1Def == null || zone2Def == null || zone3Def == null)
+                {
+                    emptyBoxLogger.Info($"Not Found B7_OHBLINE3-ZONE1 or B7_OHBLINE3-ZONE2 or B7_OHBLINE3-ZONE3  in CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3");
+                    return;
+                }
+
+                if (zone1Def.EmptyBoxList.Count() + zone2Def.EmptyBoxList.Count() < SystemParameter.iSouthLowWaterLevel)
+                {
+                    emptyBoxLogger.Info($"{zone1Def.ZoneID} + {zone2Def.ZoneID} has {zone1Def.EmptyBoxList.Count() + zone2Def.EmptyBoxList.Count()} empty box(es), reaches low water level: {SystemParameter.iSouthLowWaterLevel}");
+                    //空box不足，看看另一邊Zone有沒有多的空
+
+                    if (zone3Def.EmptyBoxList.Count() > SystemParameter.iNorthLowWaterLevel)
+                    {
+
+                        List<ShelfDef> zone1EmptyShelfData = shelfDefBLL.GetEmptyShelfByZoneID("B7_OHBLINE3-ZONE1");
+                        List<ShelfDef> zone2EmptyShelfData = shelfDefBLL.GetEmptyShelfByZoneID("B7_OHBLINE3-ZONE2");
+                        List<ShelfDef> southEmptyShelfData = zone1EmptyShelfData;
+                        southEmptyShelfData.AddRange(zone2EmptyShelfData);
+                        if (southEmptyShelfData != null && southEmptyShelfData.Count > 0)
                         {
-                            var zone3EmptyBox = GetTotalEmptyBoxNumberByZoneID("B7_OHBLINE3-ZONE3");
-                            string emptyBoxID = FindBestEmptyBoxID(zone3EmptyBox.emptyBox);
-                            string emptyBoxLoc = cassette_dataBLL.GetCassetteLocByBoxID(emptyBoxID);
-                            scApp.TransferService.Manual_InsertCmd(emptyBoxLoc, dest, 5, "CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3", ACMD_MCS.CmdType.OHBC);
-                            return;
+                            string dest;
+                            if (zone1EmptyShelfData.Count > zone2EmptyShelfData.Count)
+                            {
+                                dest = "B7_OHBLINE3-ZONE1";
+                            }
+                            else
+                            {
+                                dest = "B7_OHBLINE3-ZONE2";
+                            }
+                            if (string.IsNullOrWhiteSpace(dest) == false)
+                            {
+                                var zone3EmptyBox = GetTotalEmptyBoxNumberByZoneID("B7_OHBLINE3-ZONE3");
+                                string emptyBoxID = FindBestEmptyBoxID(zone3EmptyBox.emptyBox);
+                                string emptyBoxLoc = cassette_dataBLL.GetCassetteLocByBoxID(emptyBoxID);
+                                scApp.TransferService.Manual_InsertCmd(emptyBoxLoc, dest, 5, "CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3", ACMD_MCS.CmdType.WaterLevel);
+                                return;
+                            }
+                            else
+                            {
+                                //do nothing
+
+                            }
                         }
                         else
                         {
                             //do nothing
-
                         }
+
                     }
-                    else
+
+                }
+                if (zone3Def.EmptyBoxList.Count() < SystemParameter.iNorthLowWaterLevel)
+                {
+                    emptyBoxLogger.Info($"{zone3Def.ZoneID} has {zone3Def.EmptyBoxList.Count()} empty box(es), reaches low water level: {SystemParameter.iNorthLowWaterLevel}");
+                    //空box不足，看看另一邊Zone有沒有多的空box
+
+                    if (zone1Def.EmptyBoxList.Count() + zone2Def.EmptyBoxList.Count() > SystemParameter.iSouthLowWaterLevel)
                     {
-                        //do nothing
+                        //找out mode下的STK port，沒有就找out mode下的OHCV port
+                        List<ShelfDef> NorthEmptyShelfData = shelfDefBLL.GetEmptyShelfByZoneID("B7_OHBLINE3-ZONE3");
+
+                        if (NorthEmptyShelfData != null && NorthEmptyShelfData.Count > 0)
+                        {
+                            string dest = "B7_OHBLINE3-ZONE3";
+                            if (string.IsNullOrWhiteSpace(dest) == false)
+                            {
+                                var zone1EmptyBox = GetTotalEmptyBoxNumberByZoneID("B7_OHBLINE3-ZONE1");
+                                var zone2EmptyBox = GetTotalEmptyBoxNumberByZoneID("B7_OHBLINE3-ZONE2");
+                                var southEmptyBox = zone1EmptyBox;
+                                southEmptyBox.emptyBox.AddRange(zone2EmptyBox.emptyBox);
+                                string emptyBoxID = FindBestEmptyBoxID(southEmptyBox.emptyBox);
+                                string emptyBoxLoc = cassette_dataBLL.GetCassetteLocByBoxID(emptyBoxID);
+                                scApp.TransferService.Manual_InsertCmd(emptyBoxLoc, dest, 5, "CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3", ACMD_MCS.CmdType.WaterLevel);
+                                return;
+                            }
+                            else
+                            {
+                                //do nothing
+
+                            }
+                        }
+                        else
+                        {
+                            //do nothing
+                        }
+
                     }
 
                 }
 
-            }
-            if (zone3Def.EmptyBoxList.Count() < SystemParameter.iNorthLowWaterLevel)
-            {
-                emptyBoxLogger.Info($"{zone3Def.ZoneID} has {zone3Def.EmptyBoxList.Count()} empty box(es), reaches low water level: {SystemParameter.iNorthLowWaterLevel}");
-                //空box不足，看看另一邊Zone有沒有多的空box
-
-                if (zone1Def.EmptyBoxList.Count()+ zone2Def.EmptyBoxList.Count() > SystemParameter.iSouthLowWaterLevel)
+                if (zone1Def.BoxCount + zone2Def.BoxCount > SystemParameter.iSouthHighWaterLevel && zone3Def.BoxCount < SystemParameter.iNorthHighWaterLevel)
                 {
-                    //找out mode下的STK port，沒有就找out mode下的OHCV port
-                    List<ShelfDef> NorthEmptyShelfData = shelfDefBLL.GetEmptyShelfByZoneID("B7_OHBLINE3-ZONE3");
-
-                    if (NorthEmptyShelfData != null && NorthEmptyShelfData.Count > 0)
+                    //List<ShelfDef> zone3EmptyShelfData = shelfDefBLL.GetEmptyShelfByZoneID("B7_OHBLINE3-ZONE3");
+                    string dest = "B7_OHBLINE3-ZONE3";
+                    if (string.IsNullOrWhiteSpace(dest) == false)
                     {
-                        string dest = NorthEmptyShelfData.FirstOrDefault().ShelfID;
-                        if (string.IsNullOrWhiteSpace(dest) == false)
+                        if (zone1Def.EmptyBoxList.Count + zone2Def.EmptyBoxList.Count > SystemParameter.iSouthLowWaterLevel)
                         {
                             var zone1EmptyBox = GetTotalEmptyBoxNumberByZoneID("B7_OHBLINE3-ZONE1");
                             var zone2EmptyBox = GetTotalEmptyBoxNumberByZoneID("B7_OHBLINE3-ZONE2");
@@ -298,94 +346,89 @@ namespace com.mirle.ibg3k0.sc.Service
                             southEmptyBox.emptyBox.AddRange(zone2EmptyBox.emptyBox);
                             string emptyBoxID = FindBestEmptyBoxID(southEmptyBox.emptyBox);
                             string emptyBoxLoc = cassette_dataBLL.GetCassetteLocByBoxID(emptyBoxID);
-                            scApp.TransferService.Manual_InsertCmd(emptyBoxLoc, dest, 5, "CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3", ACMD_MCS.CmdType.OHBC);
+                            scApp.TransferService.Manual_InsertCmd(emptyBoxLoc, dest, 5, "CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3", ACMD_MCS.CmdType.WaterLevel);
                             return;
                         }
                         else
                         {
-                            //do nothing
-
+                            var zone1SolidBox = GetTotalSoildBoxNumberByZoneID("B7_OHBLINE3-ZONE1");
+                            var zone2SolidBox = GetTotalSoildBoxNumberByZoneID("B7_OHBLINE3-ZONE2");
+                            var southSolidBox = zone1SolidBox;
+                            southSolidBox.solidBox.AddRange(zone2SolidBox.solidBox);
+                            string solidBoxID = FindBestSolidBoxID(southSolidBox.solidBox);
+                            string solidBoxLoc = cassette_dataBLL.GetCassetteLocByBoxID(solidBoxID);
+                            scApp.TransferService.Manual_InsertCmd(solidBoxLoc, dest, 5, "CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3", ACMD_MCS.CmdType.WaterLevel);
+                            return;
                         }
                     }
                     else
                     {
                         //do nothing
-                    }
 
+                    }
                 }
 
-            }
-
-            if (zone1Def.BoxCount + zone2Def.BoxCount > SystemParameter.iSouthHighWaterLevel && zone3Def.BoxCount < SystemParameter.iNorthHighWaterLevel)
-            {
-                List<ShelfDef> zone3EmptyShelfData = shelfDefBLL.GetEmptyShelfByZoneID("B7_OHBLINE3-ZONE3");
-                string dest = zone3EmptyShelfData.FirstOrDefault().ShelfID;
-                if (string.IsNullOrWhiteSpace(dest) == false)
+                if (zone3Def.BoxCount > SystemParameter.iNorthHighWaterLevel && zone1Def.BoxCount + zone2Def.BoxCount < SystemParameter.iSouthHighWaterLevel)
                 {
-                    if (zone1Def.EmptyBoxList.Count+ zone2Def.EmptyBoxList.Count > SystemParameter.iSouthLowWaterLevel)
+                    List<ShelfDef> zone1EmptyShelfData = shelfDefBLL.GetEmptyShelfByZoneID("B7_OHBLINE3-ZONE1");
+                    List<ShelfDef> zone2EmptyShelfData = shelfDefBLL.GetEmptyShelfByZoneID("B7_OHBLINE3-ZONE2");
+                    string dest;
+                    if (zone1EmptyShelfData.Count> zone2EmptyShelfData.Count)
                     {
-                        var zone1EmptyBox = GetTotalEmptyBoxNumberByZoneID("B7_OHBLINE3-ZONE1");
-                        var zone2EmptyBox = GetTotalEmptyBoxNumberByZoneID("B7_OHBLINE3-ZONE2");
-                        var southEmptyBox = zone1EmptyBox;
-                        southEmptyBox.emptyBox.AddRange(zone2EmptyBox.emptyBox);
-                        string emptyBoxID = FindBestEmptyBoxID(southEmptyBox.emptyBox);
-                        string emptyBoxLoc = cassette_dataBLL.GetCassetteLocByBoxID(emptyBoxID);
-                        scApp.TransferService.Manual_InsertCmd(emptyBoxLoc, dest, 5, "CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3", ACMD_MCS.CmdType.OHBC);
-                        return;
+                        dest = "B7_OHBLINE3-ZONE1";
                     }
                     else
                     {
-                        var zone1SolidBox = GetTotalSoildBoxNumberByZoneID("B7_OHBLINE3-ZONE1");
-                        var zone2SolidBox = GetTotalSoildBoxNumberByZoneID("B7_OHBLINE3-ZONE2");
-                        var southSolidBox = zone1SolidBox;
-                        southSolidBox.solidBox.AddRange(zone2SolidBox.solidBox);
-                        string solidBoxID = FindBestSolidBoxID(southSolidBox.solidBox);
-                        string solidBoxLoc = cassette_dataBLL.GetCassetteLocByBoxID(solidBoxID);
-                        scApp.TransferService.Manual_InsertCmd(solidBoxLoc, dest, 5, "CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3", ACMD_MCS.CmdType.OHBC);
-                        return;
+                        dest = "B7_OHBLINE3-ZONE2";
                     }
-                }
-                else
-                {
-                    //do nothing
-
-                }
-            }
-
-            if (zone3Def.BoxCount > SystemParameter.iNorthHighWaterLevel && zone1Def.BoxCount+ zone2Def.BoxCount < SystemParameter.iSouthHighWaterLevel)
-            {
-                List<ShelfDef> zone1EmptyShelfData = shelfDefBLL.GetEmptyShelfByZoneID("B7_OHBLINE3-ZONE1");
-                List<ShelfDef> zone2EmptyShelfData = shelfDefBLL.GetEmptyShelfByZoneID("B7_OHBLINE3-ZONE2");
-                List<ShelfDef> southEmptyShelfData = zone1EmptyShelfData;
-                southEmptyShelfData.AddRange(zone2EmptyShelfData);
-                string dest = southEmptyShelfData.FirstOrDefault().ShelfID;
-                if (string.IsNullOrWhiteSpace(dest) == false)
-                {
-                    if (zone3Def.EmptyBoxList.Count > SystemParameter.iNorthLowWaterLevel)
+                    if (string.IsNullOrWhiteSpace(dest) == false)
                     {
-                        var zone3EmptyBox = GetTotalEmptyBoxNumberByZoneID("B7_OHBLINE3-ZONE3");
-                        string emptyBoxID = FindBestEmptyBoxID(zone3EmptyBox.emptyBox);
-                        string emptyBoxLoc = cassette_dataBLL.GetCassetteLocByBoxID(emptyBoxID);
-                        scApp.TransferService.Manual_InsertCmd(emptyBoxLoc, dest, 5, "CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3", ACMD_MCS.CmdType.OHBC);
-                        return;
+                        if (zone3Def.EmptyBoxList.Count > SystemParameter.iNorthLowWaterLevel)
+                        {
+                            var zone3EmptyBox = GetTotalEmptyBoxNumberByZoneID("B7_OHBLINE3-ZONE3");
+                            string emptyBoxID = FindBestEmptyBoxID(zone3EmptyBox.emptyBox);
+                            string emptyBoxLoc = cassette_dataBLL.GetCassetteLocByBoxID(emptyBoxID);
+                            scApp.TransferService.Manual_InsertCmd(emptyBoxLoc, dest, 5, "CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3", ACMD_MCS.CmdType.WaterLevel);
+                            return;
+                        }
+                        else
+                        {
+                            var zone3SolidBox = GetTotalSoildBoxNumberByZoneID("B7_OHBLINE3-ZONE3");
+                            string solidBoxID = FindBestSolidBoxID(zone3SolidBox.solidBox);
+                            string solidBoxLoc = cassette_dataBLL.GetCassetteLocByBoxID(solidBoxID);
+                            scApp.TransferService.Manual_InsertCmd(solidBoxLoc, dest, 5, "CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3", ACMD_MCS.CmdType.WaterLevel);
+                            return;
+                        }
                     }
                     else
                     {
-                        var zone3SolidBox = GetTotalSoildBoxNumberByZoneID("B7_OHBLINE3-ZONE3");
-                        string solidBoxID = FindBestSolidBoxID(zone3SolidBox.solidBox);
-                        string solidBoxLoc = cassette_dataBLL.GetCassetteLocByBoxID(solidBoxID);
-                        scApp.TransferService.Manual_InsertCmd(solidBoxLoc, dest, 5, "CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3", ACMD_MCS.CmdType.OHBC);
-                        return;
+                        //do nothing
+
                     }
                 }
-                else
-                {
-                    //do nothing
-
-                }
             }
-
         }
+
+        public void addCheckLine3Count()
+        {
+            CheckLine3LevelCount++;
+        }
+        public void resetCheckLine3Count()
+        {
+            CheckLine3LevelCount = 0;
+        }
+        public bool isNeedCheckLine3Level()
+        {
+            if (CheckLine3LevelCount > 10)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        #endregion 平衡Line3南北側的空Box水位與儲位數量
 
         private string FindBestRecycleBoxID(ZoneDef zoneData, List<CassetteData> _emptyBoxList)
         {
@@ -687,6 +730,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                  where b.Carrier_LOC == s.ShelfID &&
                                     !string.IsNullOrEmpty(b.CSTID) &&
                                     s.ZoneID == z.ZoneID
+                                     && s.ShelfState != ShelfDef.E_ShelfState.RetrievalReserved
                                  orderby b.StoreDT 
                                  select b.BOXID;
                 z.EmptyBoxList = emptyBoxes.ToList();

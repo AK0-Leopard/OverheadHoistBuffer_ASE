@@ -129,6 +129,16 @@ namespace com.mirle.ibg3k0.sc.Data.DAO.EntityFramework
                         select cmd;
             return query.SingleOrDefault();
         }
+
+        public List<ACMD_MCS> GetCmdDataByCmdType(DBConnection_EF con, ACMD_MCS.CmdType cmdType)
+        {
+            var query = from cmd in con.ACMD_MCS
+                        where cmd.CMDTYPE.Trim() == cmdType.ToString()
+                           && cmd.TRANSFERSTATE != E_TRAN_STATUS.TransferCompleted
+                        select cmd;
+            return query.ToList();
+        }
+
         public ACMD_MCS GetCmdDataBySHELFtoAGV(DBConnection_EF con, String DestPortName)
         {
             var query = from cmd in con.ACMD_MCS
