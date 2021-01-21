@@ -744,6 +744,7 @@ namespace com.mirle.ibg3k0.sc.Service
             {
                 try
                 {
+
                     if (iniStatus == false)
                     {
                         if (line.ServiceMode == SCAppConstants.AppServiceMode.Active)
@@ -839,8 +840,16 @@ namespace com.mirle.ibg3k0.sc.Service
                                 AutoReMarkCSTBOXDataFromAGVPort();
                             }
                             #endregion
+                            if ((scApp.BC_ID != "ASE_LINE3" && scApp.BC_ID != "ASE_TEST"))
+                            {
+                                queueCmdData = scApp.CMDBLL.doSortMCSCmdDataByDistanceFromHostSourceToVehicle(queueCmdData, vehicleData);
+                            }
+                            else
+                            {
+                                queueCmdData = scApp.CMDBLL.doSortMCSCmdDataByDistanceFromHostSourceToVehicleForLine3(queueCmdData, vehicleData);
 
-                            queueCmdData = scApp.CMDBLL.doSortMCSCmdDataByDistanceFromHostSourceToVehicle(queueCmdData, vehicleData);
+                            }
+
 
                             if (queueCmdData.Count != 0)
                             {
@@ -1727,13 +1736,13 @@ namespace com.mirle.ibg3k0.sc.Service
                         bool needHandoff = false;
                         bool checkToRelay = true;
                         List<ShelfDef> shelfData = null;
-                        if (iSource > SystemParameter.iOHCVPortNorthAdr && iDest< SystemParameter.iHandoffBoundary)
-                            {
+                        if (iSource > SystemParameter.iOHCVPortNorthAdr && iDest < SystemParameter.iHandoffBoundary)
+                        {
                             shelfData = shelfDefBLL.GetEmptyHandOffShelfSouth();
                             needHandoff = true;
                         }
-                        else if(iSource < SystemParameter.iHandoffBoundary && iDest > SystemParameter.iOHCVPortNorthAdr)
-                                {
+                        else if (iSource < SystemParameter.iHandoffBoundary && iDest > SystemParameter.iOHCVPortNorthAdr)
+                        {
                             shelfData = shelfDefBLL.GetEmptyHandOffShelfSouth();
                             needHandoff = true;
                         }
@@ -1824,7 +1833,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         else //長時間沒有執行，可能是車輛太忙
                         {
                             TimeSpan timeSpan = DateTime.Now - mcsCmd.CMD_INSER_TIME;
-                            if (timeSpan.TotalSeconds > SystemParameter.cmdTimeOutToAlternate)//命令超時
+                            if (timeSpan.TotalSeconds > SystemParameter.iCVPortWatingTime)//命令超時
                             {
                                 string destnation_adr;
                                 int iDest = 0;
@@ -1956,10 +1965,21 @@ namespace com.mirle.ibg3k0.sc.Service
                         //來源是CV Port或HandoffShelf目的是 CV Port 且 目的不能搬，觸發將卡匣送至中繼站
                         TimeSpan timeSpan = DateTime.Now - mcsCmd.CMD_INSER_TIME;
 
-                        if (timeSpan.TotalSeconds < SystemParameter.cmdTimeOutToAlternate)  //200806 SCC+ 目的Port不能搬，超過30秒才產生搬往中繼站，防止 AGV Port正準備做退補 BOX 跟 車子剛好放在 CV 上，造成 CV 短暫不能放貨之情況
+                        if(isUnitType(mcsCmd.HOSTSOURCE, UnitType.OHCV))
                         {
-                            break;
+                            if (timeSpan.TotalSeconds < SystemParameter.iCVPortWatingTime) 
+                            {
+                                break;
+                            }
                         }
+                        else
+                        {
+                            if (timeSpan.TotalSeconds < SystemParameter.cmdTimeOutToAlternate)  //200806 SCC+ 目的Port不能搬，超過30秒才產生搬往中繼站，防止 AGV Port正準備做退補 BOX 跟 車子剛好放在 CV 上，造成 CV 短暫不能放貨之情況
+                            {
+                                break;
+                            }
+                        }
+
 
                         if (isAGVZone(mcsCmd.HOSTDESTINATION))
                         {
@@ -2003,7 +2023,7 @@ namespace com.mirle.ibg3k0.sc.Service
                             {
                                 shelfData = shelfDefBLL.GetEmptyHandOffShelf();
                             }
-                            else if((isUnitType(mcsCmd.HOSTDESTINATION, UnitType.AGV)|| isUnitType(mcsCmd.HOSTDESTINATION, UnitType.NTB))
+                            else if(isUnitType(mcsCmd.HOSTSOURCE, UnitType.OHCV) &&(isUnitType(mcsCmd.HOSTDESTINATION, UnitType.AGV)|| isUnitType(mcsCmd.HOSTDESTINATION, UnitType.NTB))
                                 && _mcsDest < SystemParameter.iHandoffBoundary)//如果目的是南側Station就先放到Alternate區，避免CV塞車過久。
                             {
                                 shelfData = shelfDefBLL.GetEmptyHandOffShelf();
@@ -2232,23 +2252,29 @@ namespace com.mirle.ibg3k0.sc.Service
                                 success = true;
                             }
 
-                            if (cst.CSTState == E_CSTState.Installed && plcInfo.IsInputMode && plcInfo.PortWaitIn)
+                            if ((cst.CSTState == E_CSTState.Installed|| cst.CSTState == E_CSTState.WaitIn) && plcInfo.IsInputMode && plcInfo.PortWaitIn)
+                            //if (cst.CSTState == E_CSTState.Installed && plcInfo.IsInputMode && plcInfo.PortWaitIn) 20210120 markchou
                             {
                                 TimeSpan timeSpan = DateTime.Now - DateTime.Parse(cst.TrnDT);
 
-                                if (timeSpan.TotalSeconds >= 20)
+                                //if (timeSpan.TotalSeconds >= 20)
+                                if (timeSpan.TotalSeconds >= 5)//改為5秒 20210120 markchou
                                 {
-                                    TransferServiceLogger.Info
-                                    (
-                                        DateTime.Now.ToString("HH:mm:ss.fff ")
-                                        + "OHB >> OHB| BoxDataHandler 卡匣狀態: " + cst.CSTState
-                                        + " 重新上報 IDRead、WaitIn " + GetCstLog(cst)
-                                    );
+                                    if (scApp.CMDBLL.GetBoxFromCmd(cst.BOXID) == null)//沒有產生對應命令 20210120 markchou
+                                    {
+                                        TransferServiceLogger.Info
+                                        (
+                                            DateTime.Now.ToString("HH:mm:ss.fff ")
+                                            + "OHB >> OHB| BoxDataHandler 卡匣狀態: " + cst.CSTState
+                                            + " 重新上報 IDRead、WaitIn " + GetCstLog(cst)
+                                        );
 
-                                    cassette_dataBLL.UpdateCST_DateTime(cst.BOXID, UpdateCassetteTimeType.TrnDT);
-                                    reportBLL.ReportCarrierIDRead(cst, cst.ReadStatus);
-                                    reportBLL.ReportCarrierWaitIn(cst);
-                                    //PLC_ReportPortWaitIn(plcInfo, "CSTState = Installed");
+                                        //20210120 markchou cassette_dataBLL.UpdateCST_DateTime(cst.BOXID, UpdateCassetteTimeType.TrnDT);
+                                        reportBLL.ReportCarrierIDRead(cst, cst.ReadStatus);
+                                        reportBLL.ReportCarrierWaitIn(cst);
+                                        //PLC_ReportPortWaitIn(plcInfo, "CSTState = Installed");
+                                    }
+
                                 }
                             }
                         }

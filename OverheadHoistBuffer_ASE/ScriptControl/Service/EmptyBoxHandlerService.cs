@@ -332,7 +332,27 @@ namespace com.mirle.ibg3k0.sc.Service
 
                 }
 
-                if (zone1Def.BoxCount + zone2Def.BoxCount > SystemParameter.iSouthHighWaterLevel && zone3Def.BoxCount < SystemParameter.iNorthHighWaterLevel)
+                List<ShelfDef> Zone1EmptyEnableDefs = scApp.ShelfDefBLL.GetEmptyAndEnableShelfByZone("B7_OHBLINE3-ZONE1");
+                List<ShelfDef> Zone2EmptyEnableDefs = scApp.ShelfDefBLL.GetEmptyAndEnableShelfByZone("B7_OHBLINE3-ZONE2");
+                List<ShelfDef> Zone3EmptyEnableDefs = scApp.ShelfDefBLL.GetEmptyAndEnableShelfByZone("B7_OHBLINE3-ZONE3");
+                if(Zone1EmptyEnableDefs == null)
+                {
+                    return;
+                }
+                if (Zone2EmptyEnableDefs == null)
+                {
+                    return;
+                }
+                if (Zone3EmptyEnableDefs == null)
+                {
+                    return;
+                }
+
+                int southEmptyShelfCount = Zone1EmptyEnableDefs.Count + Zone2EmptyEnableDefs.Count;
+                int northEmptyShelfCount = Zone3EmptyEnableDefs.Count;
+
+                //南側空儲位太少
+                if (southEmptyShelfCount < SystemParameter.iSouthEmptyShelfLowWaterLevel && northEmptyShelfCount > SystemParameter.iNorthEmptyShelfLowWaterLevel)
                 {
                     //List<ShelfDef> zone3EmptyShelfData = shelfDefBLL.GetEmptyShelfByZoneID("B7_OHBLINE3-ZONE3");
                     string dest = "B7_OHBLINE3-ZONE3";
@@ -367,13 +387,13 @@ namespace com.mirle.ibg3k0.sc.Service
 
                     }
                 }
-
-                if (zone3Def.BoxCount > SystemParameter.iNorthHighWaterLevel && zone1Def.BoxCount + zone2Def.BoxCount < SystemParameter.iSouthHighWaterLevel)
+                //北側空儲位太少
+                if (northEmptyShelfCount < SystemParameter.iNorthEmptyShelfLowWaterLevel && southEmptyShelfCount > SystemParameter.iSouthEmptyShelfLowWaterLevel)
                 {
-                    List<ShelfDef> zone1EmptyShelfData = shelfDefBLL.GetEmptyShelfByZoneID("B7_OHBLINE3-ZONE1");
-                    List<ShelfDef> zone2EmptyShelfData = shelfDefBLL.GetEmptyShelfByZoneID("B7_OHBLINE3-ZONE2");
+                    //List<ShelfDef> zone1EmptyShelfData = shelfDefBLL.GetEmptyShelfByZoneID("B7_OHBLINE3-ZONE1");
+                    //List<ShelfDef> zone2EmptyShelfData = shelfDefBLL.GetEmptyShelfByZoneID("B7_OHBLINE3-ZONE2");
                     string dest;
-                    if (zone1EmptyShelfData.Count> zone2EmptyShelfData.Count)
+                    if (Zone1EmptyEnableDefs.Count > Zone2EmptyEnableDefs.Count)
                     {
                         dest = "B7_OHBLINE3-ZONE1";
                     }

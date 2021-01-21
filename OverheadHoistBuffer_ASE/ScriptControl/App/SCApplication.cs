@@ -883,10 +883,12 @@ namespace com.mirle.ibg3k0.sc.App
             SystemParameter.HandoffZoneID = getString("HandoffZoneID", "");
             SystemParameter.AlternateZoneID = getString("AlternateZoneID", "");
 
-            SystemParameter.iSouthHighWaterLevel = getInt("SouthHighWaterLevel", 0);
-            SystemParameter.iNorthHighWaterLevel = getInt("NorthHighWaterLevel", 0);
-            SystemParameter.iSouthLowWaterLevel = getInt("SouthLowWaterLevel", 0);
-            SystemParameter.iNorthLowWaterLevel = getInt("NorthLowWaterLevel", 0);
+            SystemParameter.iSouthEmptyShelfLowWaterLevel = getInt("SouthEmptyShelfLowWaterLevel", 3);
+            SystemParameter.iNorthEmptyShelfLowWaterLevel = getInt("NorthEmptyShelfLowWaterLevel", 3);
+            SystemParameter.iSouthLowWaterLevel = getInt("SouthLowWaterLevel", 3);
+            SystemParameter.iNorthLowWaterLevel = getInt("NorthLowWaterLevel", 3);
+            SystemParameter.iCVPortWatingTime = getInt("CVPortWatingTime", 15);
+            
         }
         //A0.01
         private void setHltVehicleInfo()
@@ -2207,11 +2209,12 @@ namespace com.mirle.ibg3k0.sc.App
         public static int iOHCVPortSouthAdr = 0;
         public static int iHandoffBoundary = 0;
 
-        public static int iSouthHighWaterLevel = 0;
-        public static int iNorthHighWaterLevel = 0;
+        public static int iSouthEmptyShelfLowWaterLevel = 0;
+        public static int iNorthEmptyShelfLowWaterLevel = 0;
         public static int iSouthLowWaterLevel = 0;
         public static int iNorthLowWaterLevel = 0;
-
+        public static int iCVPortWatingTime = 0;
+        
         /// <summary>
         /// Sets the secs conversaction timeout.
         /// </summary>

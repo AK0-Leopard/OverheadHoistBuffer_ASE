@@ -19,6 +19,7 @@ using com.mirle.ibg3k0.sc.Data.SECS;
 using com.mirle.ibg3k0.sc.Data.ValueDefMapAction;
 using com.mirle.ibg3k0.sc.Data.VO;
 using com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage;
+using com.mirle.ibg3k0.sc.Service;
 using Mirle.Hlts.Utils;
 using NLog;
 using System;
@@ -1151,6 +1152,397 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
             return 0;
         }
+
+        public List<ACMD_MCS> doSortMCSCmdDataByDistanceFromHostSourceToVehicleForLine3(List<ACMD_MCS> originMCSCmdData, List<AVEHICLE> vehicleData)
+        {
+            try
+            {
+                //************
+                //A20.05.27
+                string cmdMCSSort = "";
+                cmdMCSSort = scApp.CMDBLL.CombineMCSLogData(originMCSCmdData);
+                bool isCmdPriorityMoreThan99 = false;
+                if (cmdMCSSort != oldBeforeSortingLog)
+                {
+                    TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> DB|MCS排序前 前 5 筆: " + cmdMCSSort);
+                    oldBeforeSortingLog = cmdMCSSort;
+                }
+
+                #region Deep clone the origin list to the new list
+                //List<ACMD_MCS> sortedMCSData = new List<ACMD_MCS>();
+                //2020/05/28 Hsinyu Chang: 這行就可以deep clone list
+                List<ACMD_MCS> sortedMCSData = new List<ACMD_MCS>(originMCSCmdData);
+                ////A20.05.21    
+                ////先clone 出一個新的list
+                //foreach (var elementt in originMCSCmdData)
+                //{
+                //    sortedMCSData.Add((ACMD_MCS)elementt.Clone()); // 此處是否會有問題？
+                //}
+                #endregion
+
+
+
+                #region Sort the new list of MCS cmd by the distance of vehicle to the host source of the mcs cmd.
+                foreach (var cmdMCS in sortedMCSData)
+                {
+                    string sourceAddr;
+                    if (!scApp.MapBLL.getAddressID(cmdMCS.HOSTSOURCE, out sourceAddr))
+                    {
+                        cmdMCS.DistanceFromVehicleToHostSource = int.MaxValue;
+                    }
+                    else
+                    {
+                        (_, double distance) = scApp.VehicleBLL.findBestSuitableVhStepByNearest(sourceAddr);
+                        cmdMCS.DistanceFromVehicleToHostSource = (int)distance;
+                    }
+                    if (cmdMCS.PRIORITY_SUM >= 99)
+                    {
+                        isCmdPriorityMoreThan99 = true;
+                    }
+                }
+                bool isAGVCmdNumMoreThan1 = false;
+                if (isCmdPriorityMoreThan99 != true)
+                {
+                    isAGVCmdNumMoreThan1 = IsAGVCmdNumMoreThanOne(originMCSCmdData);
+                    if (isAGVCmdNumMoreThan1 == true)
+                    {
+                        sortedMCSData.Sort(MCSCmdCompare_MoreThan1ForLine3);
+                    }
+                    else
+                    {
+                        sortedMCSData.Sort(MCSCmdCompare_LessThan2ForLine3);
+                    }
+                }
+                else
+                {
+                    TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> DB|MCS排序因有命令之Priority >= 99 ");
+                    isAGVCmdNumMoreThan1 = IsAGVCmdNumMoreThanOne(originMCSCmdData);
+                    if (isAGVCmdNumMoreThan1 == true)
+                    {
+                        sortedMCSData.Sort(MCSCmdCompare_MoreThan1ForLine3);
+                    }
+                    else
+                    {
+                        sortedMCSData.Sort(MCSCmdCompare_LessThan2ForLine3);
+                    }
+                }
+                #endregion
+
+                cmdMCSSort = scApp.CMDBLL.CombineMCSLogData(sortedMCSData);
+
+                if (cmdMCSSort != oldAfterSortingLog)
+                {
+                    TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> DB|MCS排序後 前 5 筆: " + cmdMCSSort);
+                    oldAfterSortingLog = cmdMCSSort;
+                }
+
+                return sortedMCSData;
+            }
+            catch (Exception ex)
+            {
+                //************
+                //A20.05.27
+                TransferServiceLogger.Error(ex, "doSortMCSCmdDataByDistanceFromHostSourceToVehicle");
+                logger.Error(ex, "Exception");
+                return originMCSCmdData;
+            }
+        }
+
+        public int MCSCmdCompare_MoreThan1ForLine3(ACMD_MCS MCSCmd1, ACMD_MCS MCSCmd2)
+        {
+            bool isMCSCmd1_isPriority99 = MCSCmd1.PRIORITY_SUM >= 99;
+            bool isMCSCmd2_isPriority99 = MCSCmd2.PRIORITY_SUM >= 99;
+
+            if ((isMCSCmd1_isPriority99 == true) && (isMCSCmd2_isPriority99 == true) ||
+            (isMCSCmd1_isPriority99 == false) && (isMCSCmd2_isPriority99 == false))
+            {
+                //代表兩者相等，不動且接著判斷
+            }
+            else if ((isMCSCmd1_isPriority99 == true) && (isMCSCmd2_isPriority99 == false))
+            {
+                return -1;
+                //代表前者較優先，不動
+            }
+            else if ((isMCSCmd1_isPriority99 == false) && (isMCSCmd2_isPriority99 == true))
+            {
+                return 1;
+                //代表後者較優先，換位
+            }
+
+            bool isMCSCmd1_isCVPortIN = scApp.TransferService.isUnitType(MCSCmd1.HOSTSOURCE, UnitType.OHCV);
+            bool isMCSCmd2_isCVPortIN = scApp.TransferService.isUnitType(MCSCmd2.HOSTSOURCE, UnitType.OHCV);
+            if ((isMCSCmd1_isCVPortIN == true) && (isMCSCmd2_isCVPortIN == true) ||
+                (isMCSCmd1_isCVPortIN == false) && (isMCSCmd2_isCVPortIN == false))
+            {
+                //代表兩者相等，不動且接著判斷
+            }
+            else if ((isMCSCmd1_isCVPortIN == true) && (isMCSCmd2_isCVPortIN == false))
+            {
+                return -1;
+                //代表前者較優先，不動
+            }
+            else if ((isMCSCmd1_isCVPortIN == false) && (isMCSCmd2_isCVPortIN == true))
+            {
+                return 1;
+                //代表後者較優先，換位
+            }
+            //A20.12.23.0
+            // 0.判斷命令是否為relayCmd且relayStation是HandOff區，是者優先進行。
+            bool isMCSCmd1_isHandoffRelayCmd = isHandoffShelf(MCSCmd1.RelayStation);
+            bool isMCSCmd2_isHandoffRelayCmd = isHandoffShelf(MCSCmd2.RelayStation);
+
+            if ((isMCSCmd1_isHandoffRelayCmd == true) && (isMCSCmd2_isHandoffRelayCmd == true) ||
+                (isMCSCmd1_isHandoffRelayCmd == false) && (isMCSCmd2_isHandoffRelayCmd == false))
+            {
+                //代表兩者相等，不動且接著判斷
+            }
+            else if ((isMCSCmd1_isHandoffRelayCmd == true) && (isMCSCmd2_isHandoffRelayCmd == false))
+            {
+                return -1;
+                //代表前者較優先，不動
+            }
+            else if ((isMCSCmd1_isHandoffRelayCmd == false) && (isMCSCmd2_isHandoffRelayCmd == true))
+            {
+                return 1;
+                //代表後者較優先，換位
+            }
+
+            //A20.12.18.0
+            // 0.判斷命令是否為relayCmd，是者優先進行。
+            bool isMCSCmd1_isRelayCmd = !string.IsNullOrWhiteSpace(MCSCmd1.RelayStation);
+            bool isMCSCmd2_isRelayCmd = !string.IsNullOrWhiteSpace(MCSCmd2.RelayStation);
+
+            if ((isMCSCmd1_isRelayCmd == true) && (isMCSCmd2_isRelayCmd == true) ||
+                (isMCSCmd1_isRelayCmd == false) && (isMCSCmd2_isRelayCmd == false))
+            {
+                //代表兩者相等，不動且接著判斷
+            }
+            else if ((isMCSCmd1_isRelayCmd == true) && (isMCSCmd2_isRelayCmd == false))
+            {
+                return -1;
+                //代表前者較優先，不動
+            }
+            else if ((isMCSCmd1_isRelayCmd == false) && (isMCSCmd2_isRelayCmd == true))
+            {
+                return 1;
+                //代表後者較優先，換位
+            }
+
+            //A20.06.09.0
+            // 0.判斷命令來源是否為shelf，非shelf者優先進行。
+            bool isCmd1_SourceTypeShelf = MCSCmd1.IsCmdSourceTypeShelf(MCSCmd1.HOSTSOURCE);
+            bool isCmd2_SourceTypeShelf = MCSCmd1.IsCmdSourceTypeShelf(MCSCmd2.HOSTSOURCE);
+
+            if ((isCmd1_SourceTypeShelf == true) && (isCmd2_SourceTypeShelf == true) ||
+                (isCmd1_SourceTypeShelf == false) && (isCmd2_SourceTypeShelf == false))
+            {
+                //代表兩者相等，不動，且接著判斷距離
+            }
+            if ((isCmd1_SourceTypeShelf == true) && (isCmd2_SourceTypeShelf == false))
+            {
+                return 1;
+                //代表後者較優先，換位
+            }
+            if ((isCmd1_SourceTypeShelf == false) && (isCmd2_SourceTypeShelf == true))
+            {
+                return -1;
+                //代表前者較優先，不動
+            }
+
+            //A20.06.04
+            // 1.先取priority 判斷
+            if ((MCSCmd1.PRIORITY_SUM >= 99 && MCSCmd2.PRIORITY_SUM >= 99) ||
+                (MCSCmd1.PRIORITY_SUM < 99 && MCSCmd2.PRIORITY_SUM < 99))
+            {
+                //代表兩者相等，不動，且接著判斷距離
+            }
+            if (MCSCmd1.PRIORITY_SUM < 99 && MCSCmd2.PRIORITY_SUM >= 99)
+            {
+                return 1;
+                //代表後者較優先，換位
+            }
+            if (MCSCmd1.PRIORITY_SUM >= 99 && MCSCmd2.PRIORITY_SUM < 99)
+            {
+                return -1;
+                //代表前者較優先，不動
+            }
+
+            // 2. 若priority 相同，則獲得各自 shelf 的 address 與起始 address的距離
+            if (MCSCmd1.DistanceFromVehicleToHostSource == MCSCmd2.DistanceFromVehicleToHostSource)
+            {
+                return 0;
+                //代表兩者相等，不動
+            }
+            if (MCSCmd1.DistanceFromVehicleToHostSource > MCSCmd2.DistanceFromVehicleToHostSource)
+            {
+                return 1;
+                //代表後者較優先，換位
+            }
+            if (MCSCmd1.DistanceFromVehicleToHostSource < MCSCmd2.DistanceFromVehicleToHostSource)
+            {
+                return -1;
+                //代表前者較優先，不動
+            }
+            return 0;
+        }
+        public int MCSCmdCompare_LessThan2ForLine3(ACMD_MCS MCSCmd1, ACMD_MCS MCSCmd2)
+        {
+            bool isMCSCmd1_isPriority99 = MCSCmd1.PRIORITY_SUM >= 99;
+            bool isMCSCmd2_isPriority99 = MCSCmd2.PRIORITY_SUM >= 99;
+
+            if ((isMCSCmd1_isPriority99 == true) && (isMCSCmd2_isPriority99 == true) ||
+            (isMCSCmd1_isPriority99 == false) && (isMCSCmd2_isPriority99 == false))
+            {
+                //代表兩者相等，不動且接著判斷
+            }
+            else if ((isMCSCmd1_isPriority99 == true) && (isMCSCmd2_isPriority99 == false))
+            {
+                return -1;
+                //代表前者較優先，不動
+            }
+            else if ((isMCSCmd1_isPriority99 == false) && (isMCSCmd2_isPriority99 == true))
+            {
+                return 1;
+                //代表後者較優先，換位
+            }
+
+            bool isMCSCmd1_isCVPortIN = scApp.TransferService.isUnitType(MCSCmd1.HOSTSOURCE, UnitType.OHCV);
+            bool isMCSCmd2_isCVPortIN = scApp.TransferService.isUnitType(MCSCmd2.HOSTSOURCE, UnitType.OHCV);
+            if ((isMCSCmd1_isCVPortIN == true) && (isMCSCmd2_isCVPortIN == true) ||
+                (isMCSCmd1_isCVPortIN == false) && (isMCSCmd2_isCVPortIN == false))
+            {
+                //代表兩者相等，不動且接著判斷
+            }
+            else if ((isMCSCmd1_isCVPortIN == true) && (isMCSCmd2_isCVPortIN == false))
+            {
+                return -1;
+                //代表前者較優先，不動
+            }
+            else if ((isMCSCmd1_isCVPortIN == false) && (isMCSCmd2_isCVPortIN == true))
+            {
+                return 1;
+                //代表後者較優先，換位
+            }
+            //A20.12.23.0
+            // 0.判斷命令是否為relayCmd且relayStation是HandOff區，是者優先進行。
+            bool isMCSCmd1_isHandoffRelayCmd = isHandoffShelf(MCSCmd1.RelayStation);
+            bool isMCSCmd2_isHandoffRelayCmd = isHandoffShelf(MCSCmd2.RelayStation);
+
+            if ((isMCSCmd1_isHandoffRelayCmd == true) && (isMCSCmd2_isHandoffRelayCmd == true) ||
+                (isMCSCmd1_isHandoffRelayCmd == false) && (isMCSCmd2_isHandoffRelayCmd == false))
+            {
+                //代表兩者相等，不動，且接著判斷距離
+            }
+            else if ((isMCSCmd1_isHandoffRelayCmd == true) && (isMCSCmd2_isHandoffRelayCmd == false))
+            {
+                return -1;
+                //代表前者較優先，不動
+            }
+            else if ((isMCSCmd1_isHandoffRelayCmd == false) && (isMCSCmd2_isHandoffRelayCmd == true))
+            {
+                return 1;
+                //代表後者較優先，換位
+            }
+            //A20.12.18.0
+            // 0.判斷命令是否為relayCmd，是者優先進行。
+            bool isMCSCmd1_isRelayCmd = !string.IsNullOrWhiteSpace(MCSCmd1.RelayStation);
+            bool isMCSCmd2_isRelayCmd = !string.IsNullOrWhiteSpace(MCSCmd2.RelayStation);
+
+            if ((isMCSCmd1_isRelayCmd == true) && (isMCSCmd2_isRelayCmd == true) ||
+                (isMCSCmd1_isRelayCmd == false) && (isMCSCmd2_isRelayCmd == false))
+            {
+                //代表兩者相等，不動，且接著判斷距離
+            }
+            else if ((isMCSCmd1_isRelayCmd == true) && (isMCSCmd2_isRelayCmd == false))
+            {
+                return -1;
+                //代表前者較優先，不動
+            }
+            else if ((isMCSCmd1_isRelayCmd == false) && (isMCSCmd2_isRelayCmd == true))
+            {
+                return 1;
+                //代表後者較優先，換位
+            }
+            //A20.08.04
+            // -1. 判斷目的 port 為AGV者優先
+            bool isCmd1_SourceTypeAGV = MCSCmd1.IsCmdSourceTypeAGV(MCSCmd1.HOSTDESTINATION);
+            bool isCmd2_SourceTypeAGV = MCSCmd1.IsCmdSourceTypeAGV(MCSCmd2.HOSTDESTINATION);
+
+            if ((isCmd1_SourceTypeAGV == true) && (isCmd2_SourceTypeAGV == true) ||
+                (isCmd1_SourceTypeAGV == false) && (isCmd2_SourceTypeAGV == false))
+            {
+                //代表兩者相等，不動，且接著判斷距離
+            }
+            if ((isCmd1_SourceTypeAGV == false) && (isCmd2_SourceTypeAGV == true))
+            {
+                return 1;
+                //代表後者較優先，換位
+            }
+            if ((isCmd1_SourceTypeAGV == true) && (isCmd2_SourceTypeAGV == false))
+            {
+                return -1;
+                //代表前者較優先，不動
+            }
+
+            //A20.06.09.0
+            // 0.判斷命令來源是否為shelf，非shelf者優先進行。
+            bool isCmd1_SourceTypeShelf = MCSCmd1.IsCmdSourceTypeShelf(MCSCmd1.HOSTSOURCE);
+            bool isCmd2_SourceTypeShelf = MCSCmd1.IsCmdSourceTypeShelf(MCSCmd2.HOSTSOURCE);
+
+            if ((isCmd1_SourceTypeShelf == true) && (isCmd2_SourceTypeShelf == true) ||
+                (isCmd1_SourceTypeShelf == false) && (isCmd2_SourceTypeShelf == false))
+            {
+                //代表兩者相等，不動，且接著判斷距離
+            }
+            if ((isCmd1_SourceTypeShelf == true) && (isCmd2_SourceTypeShelf == false))
+            {
+                return 1;
+                //代表後者較優先，換位
+            }
+            if ((isCmd1_SourceTypeShelf == false) && (isCmd2_SourceTypeShelf == true))
+            {
+                return -1;
+                //代表前者較優先，不動
+            }
+
+            //A20.06.04
+            // 1.先取priority 判斷
+            if ((MCSCmd1.PRIORITY_SUM >= 99 && MCSCmd2.PRIORITY_SUM >= 99) ||
+                (MCSCmd1.PRIORITY_SUM < 99 && MCSCmd2.PRIORITY_SUM < 99))
+            {
+                //代表兩者相等，不動，且接著判斷距離
+            }
+            if (MCSCmd1.PRIORITY_SUM < 99 && MCSCmd2.PRIORITY_SUM >= 99)
+            {
+                return 1;
+                //代表後者較優先，換位
+            }
+            if (MCSCmd1.PRIORITY_SUM >= 99 && MCSCmd2.PRIORITY_SUM < 99)
+            {
+                return -1;
+                //代表前者較優先，不動
+            }
+
+            // 2. 若priority 相同，則獲得各自 shelf 的 address 與起始 address的距離
+            if (MCSCmd1.DistanceFromVehicleToHostSource == MCSCmd2.DistanceFromVehicleToHostSource)
+            {
+                return 0;
+                //代表兩者相等，不動
+            }
+            if (MCSCmd1.DistanceFromVehicleToHostSource > MCSCmd2.DistanceFromVehicleToHostSource)
+            {
+                return 1;
+                //代表後者較優先，換位
+            }
+            if (MCSCmd1.DistanceFromVehicleToHostSource < MCSCmd2.DistanceFromVehicleToHostSource)
+            {
+                return -1;
+                //代表前者較優先，不動
+            }
+            return 0;
+        }
+
+
         private static bool IsAGVCmdNumMoreThanOne(List<ACMD_MCS> originMCSCmdData)
         {
             bool _checkAGVCmdNumMoreThan1 = false;
