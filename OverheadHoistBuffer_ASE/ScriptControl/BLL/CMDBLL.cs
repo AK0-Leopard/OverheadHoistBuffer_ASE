@@ -48,6 +48,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
         protected static Logger logger_VhRouteLog = LogManager.GetLogger("VhRoute");
         NLog.Logger TransferServiceLogger = NLog.LogManager.GetLogger("TransferServiceLogger");
+        public Logger TransferRunLogger = NLog.LogManager.GetLogger("TransferRunLogger");
 
         private string[] ByPassSegment = null;
         ParkZoneTypeDao parkZoneTypeDao = null;
@@ -584,7 +585,7 @@ namespace com.mirle.ibg3k0.sc.BLL
             string cmdMCSSort = "";
             foreach (var v in cmdMCSData.Take(5).ToList())
             {
-                cmdMCSSort = cmdMCSSort + v.CMD_ID + " Source ：" + v.HOSTSOURCE + " Priority_SUM ：" + v.PRIORITY_SUM + " distance：" + v.DistanceFromVehicleToHostSource + "，";
+                cmdMCSSort = cmdMCSSort + v.CMD_ID + " Source ：" + v.HOSTSOURCE + " Destination ：" + v.HOSTDESTINATION + " Priority_SUM ：" + v.PRIORITY_SUM + " distance：" + v.DistanceFromVehicleToHostSource + "，";
             }
 
             return cmdMCSSort;
@@ -1157,11 +1158,13 @@ namespace com.mirle.ibg3k0.sc.BLL
         {
             try
             {
+
                 //************
                 //A20.05.27
                 string cmdMCSSort = "";
                 cmdMCSSort = scApp.CMDBLL.CombineMCSLogData(originMCSCmdData);
                 bool isCmdPriorityMoreThan99 = false;
+                TransferRunLogger.Info($"排序前MCS命令前五筆:[{cmdMCSSort}]");
                 if (cmdMCSSort != oldBeforeSortingLog)
                 {
                     TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> DB|MCS排序前 前 5 筆: " + cmdMCSSort);
@@ -1230,6 +1233,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
                 cmdMCSSort = scApp.CMDBLL.CombineMCSLogData(sortedMCSData);
 
+                TransferRunLogger.Info($"排序後MCS命令前五筆:[{cmdMCSSort}]");
                 if (cmdMCSSort != oldAfterSortingLog)
                 {
                     TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> DB|MCS排序後 前 5 筆: " + cmdMCSSort);

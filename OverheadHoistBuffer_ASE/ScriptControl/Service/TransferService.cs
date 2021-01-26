@@ -153,7 +153,8 @@ namespace com.mirle.ibg3k0.sc.Service
         Logger logger = NLog.LogManager.GetCurrentClassLogger();
         public Logger TransferServiceLogger = NLog.LogManager.GetLogger("TransferServiceLogger");
         public Logger AGVCTriggerLogger = NLog.LogManager.GetLogger("TransferServiceLogger");
-
+        public Logger TransferRunLogger = NLog.LogManager.GetLogger("TransferRunLogger");
+        
         private SCApplication scApp = null;
         private ReportBLL reportBLL = null;
         private LineBLL lineBLL = null;
@@ -740,8 +741,10 @@ namespace com.mirle.ibg3k0.sc.Service
         private long syncTranCmdPoint = 0;
         public void TransferRun()
         {
+            TransferRunLogger.Info("Into TransferRun method.");
             if (Interlocked.Exchange(ref syncTranCmdPoint, 1) == 0)
             {
+                TransferRunLogger.Info("Enter Inferlock, TransferRun Start.");
                 try
                 {
 
@@ -793,11 +796,12 @@ namespace com.mirle.ibg3k0.sc.Service
                     var vehicleData = scApp.VehicleBLL.cache.loadVhs();
 
                     int ohtIdle = vehicleData.Where(data => string.IsNullOrWhiteSpace(data.OHTC_CMD)).Count();
+                    TransferRunLogger.Info($"Idle Car Count:[{ohtIdle}]");
 
                     if (ohtIdle != 0)    //有閒置的車輛在開始派命令
                     {
                         var cmdData = cmdBLL.LoadCmdData();
-
+                        TransferRunLogger.Info($"Not Complete Command Count:[{cmdData.Count}]");
                         if (cmdData.Count != 0)
                         {
                             #region 說明
@@ -833,6 +837,7 @@ namespace com.mirle.ibg3k0.sc.Service
                             var transferCmdData = cmdData.Where(data => data.CMDTYPE != CmdType.PortTypeChange.ToString() && data.TRANSFERSTATE != E_TRAN_STATUS.Queue).ToList();
 
                             var portTypeChangeCmdData = cmdData.Where(data => data.CMDTYPE == CmdType.PortTypeChange.ToString()).ToList();
+                            TransferRunLogger.Info($"Queue Command Count:[{queueCmdData.Count}]");
 
                             #region 檢查救資料用AGV Port 狀態是否正確
                             if (autoRemarkBOXCSTData == true)
@@ -842,6 +847,7 @@ namespace com.mirle.ibg3k0.sc.Service
                             #endregion
                             if ((scApp.BC_ID != "ASE_LINE3" && scApp.BC_ID != "ASE_TEST"))
                             {
+
                                 queueCmdData = scApp.CMDBLL.doSortMCSCmdDataByDistanceFromHostSourceToVehicle(queueCmdData, vehicleData);
                             }
                             else
@@ -1108,11 +1114,16 @@ namespace com.mirle.ibg3k0.sc.Service
                 catch (Exception ex)
                 {
                     TransferServiceLogger.Error(ex, "TransferRun");
+                    TransferRunLogger.Error(ex, "TransferRun");
                 }
                 finally
                 {
                     Interlocked.Exchange(ref syncTranCmdPoint, 0);
                 }
+            }
+            else
+            {
+                TransferRunLogger.Info("Could not get Interlock,leave transferRun method.");
             }
         }
 
@@ -1614,6 +1625,7 @@ namespace com.mirle.ibg3k0.sc.Service
             {
                 #region E_TRAN_STATUS.Queue
                 case E_TRAN_STATUS.Queue:
+                    TransferRunLogger.Info($"檢查命令能否執行 ID:[{mcsCmd.CMD_ID}] Source:[{mcsCmd.HOSTSOURCE}] Destnation:[{mcsCmd.HOSTDESTINATION}]  Destnation:[{mcsCmd.RelayStation}] Priority:[{mcsCmd.PRIORITY_SUM}]");
 
                     bool sourcePortType = false;
                     bool destPortType = false;
@@ -1719,6 +1731,9 @@ namespace com.mirle.ibg3k0.sc.Service
                         destPortType = AreDestEnable(mcsCmd.HOSTDESTINATION);
                     }
                     #endregion
+
+                    TransferRunLogger.Info($"檢查命令起點與終點是否Ready ID:[{mcsCmd.CMD_ID}] Source:[{mcsCmd.HOSTSOURCE}] SourceReady:[{mcsCmd.PRIORITY_SUM}] Destnation:[{mcsCmd.RelayStation}] ");
+
 
                     if (sourcePortType)
                     {
