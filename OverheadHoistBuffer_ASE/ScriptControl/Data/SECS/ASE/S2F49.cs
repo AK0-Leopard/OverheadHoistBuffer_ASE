@@ -262,12 +262,34 @@ namespace com.mirle.ibg3k0.sc.Data.SECS.ASE
                     [SecsElement(Index = 1)]
                     public LOT_ID LOTIDINFO;
 
+                    [SecsElement(Index = 2)]
+                    public REQ_DEV REQDEVINFO;
+
+                    [SecsElement(Index = 3)]
+                    public REQ_LOC REQLOCINFO;
+
                     public class LOT_ID : SXFY
                     {
                         [SecsElement(Index = 1, ListElementType = SecsElement.SecsElementType.TYPE_ASCII, Length = 40)]
                         public string LOT_ID1;
                         [SecsElement(Index = 2, ListElementType = SecsElement.SecsElementType.TYPE_ASCII, Length = 64)] //Modify Length 1 > 10 By Kevin
                         public string Lot_ID;
+                    }
+
+                    public class REQ_DEV : SXFY
+                    {
+                        [SecsElement(Index = 1, ListElementType = SecsElement.SecsElementType.TYPE_ASCII, Length = 40)]
+                        public string REQ_DEV1;
+                        [SecsElement(Index = 2, ListElementType = SecsElement.SecsElementType.TYPE_ASCII, Length = 64)] //Modify Length 1 > 10 By Kevin
+                        public string Req_Dev;
+                    }
+
+                    public class REQ_LOC : SXFY
+                    {
+                        [SecsElement(Index = 1, ListElementType = SecsElement.SecsElementType.TYPE_ASCII, Length = 40)]
+                        public string REQ_LOC1;
+                        [SecsElement(Index = 2, ListElementType = SecsElement.SecsElementType.TYPE_ASCII, Length = 64)] //Modify Length 1 > 10 By Kevin
+                        public string Req_Loc;
                     }
                 }
             }
