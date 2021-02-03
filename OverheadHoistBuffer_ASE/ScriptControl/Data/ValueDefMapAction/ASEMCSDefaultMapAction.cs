@@ -398,6 +398,14 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                         string dest = s2f49_transfer.REPITEMS.TRANINFO.CARRINFO.DESTINFO.Dest;
                         string lotID = s2f49_transfer.REPITEMS.CSTINFO.CARRINFO.LOTIDINFO.Lot_ID ?? "0";
                         string boxLoc = scApp.CassetteDataBLL.loadCassetteDataByBoxID(boxID)?.Carrier_LOC;
+                        string Req_Dev = s2f49_transfer.REPITEMS.CSTINFO.CARRINFO.REQDEVINFO.Req_Dev;
+                        string Req_Loc = s2f49_transfer.REPITEMS.CSTINFO.CARRINFO.REQLOCINFO.Req_Loc;
+
+                        string Req_EQ = null;
+                        string Req_Port = null;
+                        extractEQPortInfoFromLoc(Req_Loc,out Req_EQ,out Req_Port);
+
+
                         string rtnStr = "";
                         bool isFromVh = false;
 
@@ -418,6 +426,8 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                             + "    dest:" + dest
                             + "    lotID:" + lotID
                             + "    cstLoc:" + boxLoc
+                            + "    req_dev:" + Req_Dev
+                            + "    req_loc:" + Req_Loc
                         );
 
                         SCUtility.RecodeReportInfo(s2f49, cmdID);
@@ -442,7 +452,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                                                                                                 //|| SCUtility.isMatche(SECSConst.HCACK_Confirm_Executed, s2f50.HCACK)
                                    )
                                 {
-                                    isCreatScuess &= scApp.CMDBLL.doCreatMCSCommand(cmdID, priority, "0", cstID, source, dest, boxID, lotID, boxLoc, s2f50.HCACK, isFromVh);
+                                    isCreatScuess &= scApp.CMDBLL.doCreatMCSCommand(cmdID, priority, "0", cstID, source, dest, boxID, lotID, boxLoc, s2f50.HCACK, isFromVh, Req_EQ, Req_Port);
                                 }
 
                                 if (s2f50.HCACK == SECSConst.HCACK_Confirm)
@@ -530,6 +540,52 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
 
                 logger.Error("MESDefaultMapAction has Error[Line Name:{0}],[Error method:{1}],[Error Message:{2}", line.LINE_ID, "S2F49_Receive_Remote_Command", ex);
             }
+        }
+
+        private void extractEQPortInfoFromLoc(string loc,out string eq,out string port)
+        {
+            if (loc != null)
+            {
+                 string[] temp_arr = loc.Trim().Split('_');
+                int total_length =0;
+                if(temp_arr!=null)
+                {
+                    total_length = temp_arr.Length;
+                }
+                if (total_length >= 2)
+                {
+                    port = temp_arr[total_length - 1];
+                    string tmp_str = string.Empty; 
+                    for(int i=0;i< total_length-1; i++)
+                    {
+                        if(i!= 0)
+                        {
+                            tmp_str += "_" + temp_arr[i];
+                        }
+                        else
+                        {
+                            tmp_str += temp_arr[i];
+                        }
+                    }
+                    eq = tmp_str;
+                    if (!scApp.getEQObjCacheManager().isEQInList(eq))
+                    {
+                        eq = null;
+                        port = null;
+                    }
+                }
+                else
+                {
+                    eq = null;
+                    port = null;
+                }
+            }
+            else
+            {
+                eq = null;
+                port = null;
+            }
+
         }
 
 

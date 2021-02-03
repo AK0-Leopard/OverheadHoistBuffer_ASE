@@ -525,6 +525,7 @@
     <Compile Include="Data\DAO\191204Test\ZoneDefDao.cs" />
     <Compile Include="Data\DAO\ADDRESSDao.cs" />
     <Compile Include="Data\DAO\AddressDataDao.cs" />
+    <Compile Include="Data\DAO\EQListInfoDao.cs" />
     <Compile Include="Data\DAO\EqptLocationInfoDao.cs" />
     <Compile Include="Data\DAO\191204Test\PortDefDao.cs" />
     <Compile Include="Data\DAO\ReserveEnhanceInfoDao.cs" />
@@ -812,6 +813,7 @@
     <Compile Include="Data\ValueDefMapAction\ValueDefMapActionBase.cs" />
     <Compile Include="Data\ValueDefMapAction\EQTcpIpMapAction.cs" />
     <Compile Include="Data\VO\AlarmHisList.cs" />
+    <Compile Include="Data\VO\EQListInfo.cs" />
     <Compile Include="Data\VO\Interface\IConnectionStatusChange.cs" />
     <Compile Include="Data\VO\Interface\IMaintainDevice.cs" />
     <Compile Include="Data\VO\OHCV.cs" />

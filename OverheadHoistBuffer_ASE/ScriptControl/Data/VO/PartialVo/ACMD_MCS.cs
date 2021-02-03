@@ -50,6 +50,11 @@ namespace com.mirle.ibg3k0.sc
             get { return _distanceFromVehicleToHostSource; }
             set { _distanceFromVehicleToHostSource = value; }
         }
+        public bool isRecentStart;
+        public int  recentStartCount;
+        public bool isChangeOrderByGroupEQ;
+        public int OrderBeforeGroupEQSort;
+        public int OrderAfterGroupEQSort;
 
         public enum CmdType
         {

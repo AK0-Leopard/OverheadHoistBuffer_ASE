@@ -141,6 +141,8 @@
           <Property Name="CARRIER_ID_ON_CRANE" Type="varchar" MaxLength="64" />
           <Property Name="CMDTYPE" Type="varchar" MaxLength="64" />
           <Property Name="CRANE" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="REQ_EQ" Type="varchar" MaxLength="64" />
+          <Property Name="REQ_PORT" Type="varchar" MaxLength="64" />
         </EntityType>
         <EntityType Name="ACMD_OHTC">
           <Key>
@@ -332,7 +334,7 @@
           <Property Name="CMD_ID" Type="varchar" MaxLength="64" />
         </EntityType>
         <!--產生期間發現錯誤:
-警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE1.dbo.ALARMMAP' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
+警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE3_V2.dbo.ALARMMAP' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
         <EntityType Name="ALARMMAP">
           <Key>
             <PropertyRef Name="EQPT_ID" />
@@ -1141,7 +1143,7 @@
           <Property Name="TrnDT" Type="varchar" MaxLength="20" />
         </EntityType>
         <!--產生期間發現錯誤:
-警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE1.dbo.VACMD_MCS' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
+警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE3_V2.dbo.VACMD_MCS' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
         <EntityType Name="VACMD_MCS">
           <Key>
             <PropertyRef Name="CMD_ID" />
@@ -1177,7 +1179,7 @@
           <Property Name="VH_ID" Type="char" MaxLength="32" />
         </EntityType>
         <!--產生期間發現錯誤:
-警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE1.dbo.VSECTION_100' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
+警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE3_V2.dbo.VSECTION_100' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
         <EntityType Name="VSECTION_100">
           <Key>
             <PropertyRef Name="SEC_ID" />
@@ -2656,6 +2658,8 @@
           <Property Name="CMDTYPE" Type="String" MaxLength="64" Unicode="false" FixedLength="false" />
           <Property Name="CRANE" Type="String" MaxLength="64" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="RelayStation" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="REQ_EQ" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="REQ_PORT" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="CassetteData">
           <Key>
@@ -2829,20 +2833,20 @@
           <Property Name="SEC_ID" Type="String" Nullable="false" MaxLength="5" FixedLength="true" Unicode="false" />
           <Property Name="SEC_ORDER_NUM" Type="Int32" />
           <Property Name="SEG_ORDER_NUM" Type="Int32" Nullable="false" />
-          <Property Name="DIRC_DRIV" Type="OHTC_DevModel.E_DIRC_DRIV" Nullable="false" />
-          <Property Name="DIRC_GUID" Type="OHTC_DevModel.E_DIRC_GUID" Nullable="false" />
+          <Property Name="DIRC_DRIV" Type="Int32" Nullable="false" />
+          <Property Name="DIRC_GUID" Type="Int32" Nullable="false" />
           <Property Name="SEG_NUM" Type="String" MaxLength="3" FixedLength="true" Unicode="false" />
           <Property Name="FROM_ADR_ID" Type="String" MaxLength="5" FixedLength="true" Unicode="false" />
           <Property Name="TO_ADR_ID" Type="String" MaxLength="5" FixedLength="true" Unicode="false" />
           <Property Name="SEC_DIS" Type="Double" Nullable="false" />
           <Property Name="SEC_SPD" Type="Double" />
           <Property Name="DIS_FROM_ORIGIN" Type="Int32" Nullable="false" />
-          <Property Name="CDOG_1" Type="OHTC_DevModel.E_DIRC_GUID" Nullable="false" />
+          <Property Name="CDOG_1" Type="Int32" Nullable="false" />
           <Property Name="CHG_SEG_NUM_1" Type="String" MaxLength="3" FixedLength="true" Unicode="false" />
-          <Property Name="CDOG_2" Type="OHTC_DevModel.E_DIRC_GUID" Nullable="false" />
+          <Property Name="CDOG_2" Type="Int32" Nullable="false" />
           <Property Name="CHG_SEG_NUM_2" Type="String" MaxLength="3" FixedLength="true" Unicode="false" />
           <Property Name="PRE_BLO_REQ" Type="Int32" Nullable="false" />
-          <Property Name="SEC_TYPE" Type="OHTC_DevModel.SectionType" Nullable="false" />
+          <Property Name="SEC_TYPE" Type="Int32" Nullable="false" />
           <Property Name="SEC_DIR" Type="Int32" Nullable="false" />
           <Property Name="PADDING" Type="Int32" Nullable="false" />
           <Property Name="ENB_CHG_G_AREA" Type="Int32" Nullable="false" />
@@ -2860,8 +2864,8 @@
           <Property Name="END_BC2" Type="Int32" Nullable="false" />
           <Property Name="START_BC3" Type="Int32" Nullable="false" />
           <Property Name="END_BC3" Type="Int32" Nullable="false" />
-          <Property Name="CHG_AREA_SECSOR_1" Type="OHTC_DevModel.E_AreaSensorDir" Nullable="false" />
-          <Property Name="CHG_AREA_SECSOR_2" Type="OHTC_DevModel.E_AreaSensorDir" Nullable="false" />
+          <Property Name="CHG_AREA_SECSOR_1" Type="Int32" Nullable="false" />
+          <Property Name="CHG_AREA_SECSOR_2" Type="Int32" Nullable="false" />
           <Property Name="OBS_SENSOR_F" Type="Int32" Nullable="false" />
           <Property Name="OBS_SENSOR_R" Type="Int32" Nullable="false" />
           <Property Name="OBS_SENSOR_L" Type="Int32" Nullable="false" />
@@ -2870,7 +2874,7 @@
           <Property Name="CAN_GUIDE_CHG" Type="Boolean" Nullable="false" />
           <Property Name="HID_CONTROL" Type="Boolean" Nullable="false" />
           <Property Name="BRANCH_FLAG" Type="Boolean" Nullable="false" />
-          <Property Name="AREA_SECSOR" Type="OHTC_DevModel.E_AreaSensorDir" />
+          <Property Name="AREA_SECSOR" Type="Int32" />
           <Property Name="LAST_TECH_TIME" Type="DateTime" Precision="7" />
         </EntityType>
       </Schema>
@@ -3083,8 +3087,7 @@
     <EntitySetMapping Name="ACMD_OHTC">
       <EntityTypeMapping TypeName="IsTypeOf(OHTC_DevModel.ACMD_OHTC)">
         <MappingFragment StoreEntitySet="ACMD_OHTC">
-          <ScalarProperty Name="CMD_INSER_TIME" ColumnName="CMD_INSER_TIME" />
-                <ScalarProperty Name="CMD_ID" ColumnName="CMD_ID" />
+          <ScalarProperty Name="CMD_ID" ColumnName="CMD_ID" />
           <ScalarProperty Name="VH_ID" ColumnName="VH_ID" />
           <ScalarProperty Name="CARRIER_ID" ColumnName="CARRIER_ID" />
           <ScalarProperty Name="CMD_ID_MCS" ColumnName="CMD_ID_MCS" />
@@ -3104,6 +3107,7 @@
           <ScalarProperty Name="DESTINATION_ADR" ColumnName="DESTINATION_ADR" />
           <ScalarProperty Name="BOX_ID" ColumnName="BOX_ID" />
           <ScalarProperty Name="LOT_ID" ColumnName="LOT_ID" />
+          <ScalarProperty Name="CMD_INSER_TIME" ColumnName="CMD_INSER_TIME" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -3797,8 +3801,7 @@
     <EntitySetMapping Name="AVEHICLE">
       <EntityTypeMapping TypeName="IsTypeOf(OHTC_DevModel.AVEHICLE)">
         <MappingFragment StoreEntitySet="AVEHICLE">
-          <ScalarProperty Name="HAS_BOX" ColumnName="HAS_BOX" />
-                <ScalarProperty Name="VEHICLE_ID" ColumnName="VEHICLE_ID" />
+          <ScalarProperty Name="VEHICLE_ID" ColumnName="VEHICLE_ID" />
           <ScalarProperty Name="VEHICLE_TYPE" ColumnName="VEHICLE_TYPE" />
           <ScalarProperty Name="CUR_ADR_ID" ColumnName="CUR_ADR_ID" />
           <ScalarProperty Name="CUR_SEC_ID" ColumnName="CUR_SEC_ID" />
@@ -3839,6 +3842,7 @@
           <ScalarProperty Name="IS_INSTALLED" ColumnName="IS_INSTALLED" />
           <ScalarProperty Name="INSTALLED_TIME" ColumnName="INSTALLED_TIME" />
           <ScalarProperty Name="REMOVED_TIME" ColumnName="REMOVED_TIME" />
+          <ScalarProperty Name="HAS_BOX" ColumnName="HAS_BOX" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -3886,10 +3890,7 @@
     <EntitySetMapping Name="ALARM">
       <EntityTypeMapping TypeName="IsTypeOf(OHTC_DevModel.ALARM)">
         <MappingFragment StoreEntitySet="ALARM">
-          <ScalarProperty Name="END_TIME" ColumnName="END_TIME" />
-                <ScalarProperty Name="CMD_ID" ColumnName="CMD_ID" />
-                <ScalarProperty Name="RecoveryOption" ColumnName="RecoveryOption" />
-                <ScalarProperty Name="EQPT_ID" ColumnName="EQPT_ID" />
+          <ScalarProperty Name="EQPT_ID" ColumnName="EQPT_ID" />
           <ScalarProperty Name="UNIT_NUM" ColumnName="UNIT_NUM" />
           <ScalarProperty Name="RPT_DATE_TIME" ColumnName="RPT_DATE_TIME" />
           <ScalarProperty Name="ALAM_CODE" ColumnName="ALAM_CODE" />
@@ -3899,6 +3900,9 @@
           <ScalarProperty Name="ERROR_ID" ColumnName="ERROR_ID" />
           <ScalarProperty Name="UnitID" ColumnName="UnitID" />
           <ScalarProperty Name="UnitState" ColumnName="UnitState" />
+          <ScalarProperty Name="RecoveryOption" ColumnName="RecoveryOption" />
+          <ScalarProperty Name="CMD_ID" ColumnName="CMD_ID" />
+          <ScalarProperty Name="END_TIME" ColumnName="END_TIME" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -3933,7 +3937,8 @@
     <EntitySetMapping Name="ACMD_MCS">
       <EntityTypeMapping TypeName="IsTypeOf(OHTC_DevModel.ACMD_MCS)">
         <MappingFragment StoreEntitySet="ACMD_MCS">
-          <ScalarProperty Name="RelayStation" ColumnName="RelayStation" />
+          <ScalarProperty Name="REQ_PORT" ColumnName="REQ_PORT" />
+                <ScalarProperty Name="REQ_EQ" ColumnName="REQ_EQ" />
                 <ScalarProperty Name="CMD_ID" ColumnName="CMD_ID" />
           <ScalarProperty Name="CARRIER_ID" ColumnName="CARRIER_ID" />
           <ScalarProperty Name="TRANSFERSTATE" ColumnName="TRANSFERSTATE" />
@@ -3956,6 +3961,7 @@
           <ScalarProperty Name="CARRIER_ID_ON_CRANE" ColumnName="CARRIER_ID_ON_CRANE" />
           <ScalarProperty Name="CMDTYPE" ColumnName="CMDTYPE" />
           <ScalarProperty Name="CRANE" ColumnName="CRANE" />
+          <ScalarProperty Name="RelayStation" ColumnName="RelayStation" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -4011,8 +4017,7 @@
     <EntitySetMapping Name="PortDef">
       <EntityTypeMapping TypeName="IsTypeOf(OHTC_DevModel.PortDef)">
         <MappingFragment StoreEntitySet="PortDef">
-          <ScalarProperty Name="ZoneName" ColumnName="ZoneName" />
-                <ScalarProperty Name="PLCPortID" ColumnName="PLCPortID" />
+          <ScalarProperty Name="PLCPortID" ColumnName="PLCPortID" />
           <ScalarProperty Name="StockerID" ColumnName="StockerID" />
           <ScalarProperty Name="OHBName" ColumnName="OHBName" />
           <ScalarProperty Name="State" ColumnName="State" />
@@ -4046,6 +4051,7 @@
           <ScalarProperty Name="ADR_ID" ColumnName="ADR_ID" />
           <ScalarProperty Name="PortTypeDef" ColumnName="PortTypeDef" />
           <ScalarProperty Name="PRIORITY" ColumnName="PRIORITY" />
+          <ScalarProperty Name="ZoneName" ColumnName="ZoneName" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -4125,7 +4131,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-  </EntityContainerMapping>
+    </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>
   <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->

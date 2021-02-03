@@ -158,6 +158,15 @@ namespace com.mirle.ibg3k0.sc.Data.DAO.EntityFramework
 
             return query.ToList();
         }
+
+        public List<ACMD_MCS> loadCMD_ByRecentTime(DBConnection_EF con,DateTime dateTime)
+        {
+            var query = from cmd in con.ACMD_MCS.AsNoTracking()
+                        where cmd.TRANSFERSTATE > E_TRAN_STATUS.Queue && (cmd.CMD_START_TIME > dateTime)
+                        select cmd;
+            return query.ToList();
+        }
+
         public List<ACMD_MCS> loadCMD_ByTransferring(DBConnection_EF con)
         {
             var query = from cmd in con.ACMD_MCS.AsNoTracking()

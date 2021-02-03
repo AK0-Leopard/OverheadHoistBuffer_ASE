@@ -562,6 +562,9 @@
     <None Include="Config\ASE\CSV\ALARMMAP.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Config\ASE_LINE3\CSV\EQLIST.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Config\ASE_TEST\AddressBaseDefs_simple.config">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

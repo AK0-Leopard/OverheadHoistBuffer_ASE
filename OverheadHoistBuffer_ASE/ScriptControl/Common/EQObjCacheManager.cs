@@ -615,6 +615,16 @@ namespace com.mirle.ibg3k0.sc.Common
             return setting.SEGMENT_ID;
         }
 
+        public bool isEQInList(string eqpt_id)
+        {
+            var setting = scApp.EQLisInfoDao.getEQListInfo(scApp, eqpt_id);
+            if (setting == null)
+            {
+                return false;
+            }
+            return true;
+        }
+
         /// <summary>
         /// 如果要以MPLC目前資料為主，則需先清除DB內舊有資料，再重新rebuild，並透過腳本更新
         /// </summary>

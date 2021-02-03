@@ -438,6 +438,9 @@ namespace com.mirle.ibg3k0.sc.App
         private EqptLocationInfoDao eqptLocationInfoDao = null;
         public EqptLocationInfoDao EqptLocationInfoDao { get { return eqptLocationInfoDao; } }
 
+        private EQListInfoDao eqLisInfoDao = null;
+        public EQListInfoDao EQLisInfoDao { get { return eqLisInfoDao; } }
+
         private HIDZoneMasterDao hidzonemasterDao = null;
         public HIDZoneMasterDao HIDZoneMasterDao { get { return hidzonemasterDao; } }
         private HIDZoneDetailDao hidzonedetailDao = null;
@@ -888,7 +891,10 @@ namespace com.mirle.ibg3k0.sc.App
             SystemParameter.iSouthLowWaterLevel = getInt("SouthLowWaterLevel", 3);
             SystemParameter.iNorthLowWaterLevel = getInt("NorthLowWaterLevel", 3);
             SystemParameter.iCVPortWatingTime = getInt("CVPortWatingTime", 15);
+            SystemParameter.iEQCommandInterval = getInt("EQCommandInterval",600);
             
+
+
         }
         //A0.01
         private void setHltVehicleInfo()
@@ -1191,6 +1197,7 @@ namespace com.mirle.ibg3k0.sc.App
             vehicleControlDao = new VehicleControlDao();
             dataCollectionDao = new DataCollectionDao();
             eqptLocationInfoDao = new EqptLocationInfoDao();
+            eqLisInfoDao = new EQListInfoDao();
             apsettiongDao = new APSettingDao();
 
             hidzonemasterDao = new HIDZoneMasterDao();
@@ -1222,6 +1229,7 @@ namespace com.mirle.ibg3k0.sc.App
                 loadCSVToDataset(ohxcConfig, "APSETTING");
                 loadCSVToDataset(ohxcConfig, "RETURNCODEMAP");
                 loadCSVToDataset(ohxcConfig, "EQPTLOCATIONINFO");
+                loadCSVToDataset(ohxcConfig, "EQLIST");
                 loadCSVToDataset(ohxcConfig, "RESERVEENHANCEINFO");
                 loadMapInfoCSVToDataset(ohxcConfig, "AADDRESS");
                 loadMapInfoCSVToDataset(ohxcConfig, "ASECTION");
@@ -2214,7 +2222,9 @@ namespace com.mirle.ibg3k0.sc.App
         public static int iSouthLowWaterLevel = 0;
         public static int iNorthLowWaterLevel = 0;
         public static int iCVPortWatingTime = 0;
+        public static int iEQCommandInterval = 0;
         
+
         /// <summary>
         /// Sets the secs conversaction timeout.
         /// </summary>

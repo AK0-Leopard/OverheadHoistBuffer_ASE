@@ -17,20 +17,20 @@ namespace com.mirle.ibg3k0.sc
         public string SEC_ID { get; set; }
         public Nullable<int> SEC_ORDER_NUM { get; set; }
         public int SEG_ORDER_NUM { get; set; }
-        public E_DIRC_DRIV DIRC_DRIV { get; set; }
-        public E_DIRC_GUID DIRC_GUID { get; set; }
+        public int DIRC_DRIV { get; set; }
+        public int DIRC_GUID { get; set; }
         public string SEG_NUM { get; set; }
         public string FROM_ADR_ID { get; set; }
         public string TO_ADR_ID { get; set; }
         public double SEC_DIS { get; set; }
         public Nullable<double> SEC_SPD { get; set; }
         public int DIS_FROM_ORIGIN { get; set; }
-        public E_DIRC_GUID CDOG_1 { get; set; }
+        public int CDOG_1 { get; set; }
         public string CHG_SEG_NUM_1 { get; set; }
-        public E_DIRC_GUID CDOG_2 { get; set; }
+        public int CDOG_2 { get; set; }
         public string CHG_SEG_NUM_2 { get; set; }
         public int PRE_BLO_REQ { get; set; }
-        public com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.SectionType SEC_TYPE { get; set; }
+        public int SEC_TYPE { get; set; }
         public int SEC_DIR { get; set; }
         public int PADDING { get; set; }
         public int ENB_CHG_G_AREA { get; set; }
@@ -48,8 +48,8 @@ namespace com.mirle.ibg3k0.sc
         public int END_BC2 { get; set; }
         public int START_BC3 { get; set; }
         public int END_BC3 { get; set; }
-        public com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.E_AreaSensorDir CHG_AREA_SECSOR_1 { get; set; }
-        public com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.E_AreaSensorDir CHG_AREA_SECSOR_2 { get; set; }
+        public int CHG_AREA_SECSOR_1 { get; set; }
+        public int CHG_AREA_SECSOR_2 { get; set; }
         public int OBS_SENSOR_F { get; set; }
         public int OBS_SENSOR_R { get; set; }
         public int OBS_SENSOR_L { get; set; }
@@ -58,7 +58,7 @@ namespace com.mirle.ibg3k0.sc
         public bool CAN_GUIDE_CHG { get; set; }
         public bool HID_CONTROL { get; set; }
         public bool BRANCH_FLAG { get; set; }
-        public Nullable<com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.E_AreaSensorDir> AREA_SECSOR { get; set; }
+        public Nullable<int> AREA_SECSOR { get; set; }
         public Nullable<System.DateTime> LAST_TECH_TIME { get; set; }
     }
 }

@@ -154,7 +154,9 @@ namespace com.mirle.ibg3k0.sc.Service
         public Logger TransferServiceLogger = NLog.LogManager.GetLogger("TransferServiceLogger");
         public Logger AGVCTriggerLogger = NLog.LogManager.GetLogger("TransferServiceLogger");
         public Logger TransferRunLogger = NLog.LogManager.GetLogger("TransferRunLogger");
+        public Logger GroupEQLogger = NLog.LogManager.GetLogger("GroupEQLogger");
         
+
         private SCApplication scApp = null;
         private ReportBLL reportBLL = null;
         private LineBLL lineBLL = null;
@@ -899,8 +901,14 @@ namespace com.mirle.ibg3k0.sc.Service
 
                                 if (result)
                                 {
+
                                     cmdFail = false;
                                     OHBC_OHT_QueueCmdTimeOutCmdIDCleared(v.CMD_ID);
+                                    if (v.isChangeOrderByGroupEQ)
+                                    {
+                                        GroupEQLogger.Info
+                                            ($"命令:{v.CMD_ID} 被選定執行。ReqEQ:{v.REQ_EQ} ReqPort:{v.REQ_PORT} OrderBeforeGroupEQSort:{v.OrderBeforeGroupEQSort} OrderAfterGroupEQSort:{v.OrderAfterGroupEQSort}");
+                                    }
                                     break;
                                 }
                                 else
@@ -1769,14 +1777,21 @@ namespace com.mirle.ibg3k0.sc.Service
                         {
                             if (!isShelfPort(mcsCmd.HOSTSOURCE))
                             {
-                                PortPLCInfo plcInfoSource = GetPLC_PortData(mcsCmd.HOSTSOURCE);
-                                if (plcInfoSource.OpAutoMode && plcInfoSource.IsReadyToUnload)
+                                if (isCVPort(mcsCmd.HOSTSOURCE))
+                                {
+                                    PortPLCInfo plcInfoSource = GetPLC_PortData(mcsCmd.HOSTSOURCE);
+                                    if (plcInfoSource.OpAutoMode && plcInfoSource.IsReadyToUnload)
+                                    {
+                                        checkToRelay = true;
+                                    }
+                                    else
+                                    {
+                                        checkToRelay = false;
+                                    }
+                                }
+                                else if (isUnitType(mcsCmd.HOSTSOURCE, UnitType.CRANE))//在車子上
                                 {
                                     checkToRelay = true;
-                                }
-                                else
-                                {
-                                    checkToRelay = false;
                                 }
                             }
                             else
@@ -2019,7 +2034,7 @@ namespace com.mirle.ibg3k0.sc.Service
                             mcsCmd.HOSTDESTINATION = agvName;
                         }
 
-                        PortPLCInfo plcInfoSource = !isShelfPort(mcsCmd.HOSTSOURCE)? GetPLC_PortData(mcsCmd.HOSTSOURCE):null;
+                        PortPLCInfo plcInfoSource = !isShelfPort(mcsCmd.HOSTSOURCE) && !isUnitType(mcsCmd.HOSTSOURCE, UnitType.CRANE) ? GetPLC_PortData(mcsCmd.HOSTSOURCE):null;
                         PortPLCInfo plcInfoDest = GetPLC_PortData(mcsCmd.HOSTDESTINATION);
 
                         if ((isShelfPort(mcsCmd.HOSTSOURCE) || (plcInfoSource.OpAutoMode && plcInfoSource.IsReadyToUnload))
@@ -2081,14 +2096,21 @@ namespace com.mirle.ibg3k0.sc.Service
                             {
                                 if (!isShelfPort(mcsCmd.HOSTSOURCE))
                                 {
-                                    plcInfoSource = GetPLC_PortData(mcsCmd.HOSTSOURCE);
-                                    if (plcInfoSource.OpAutoMode && plcInfoSource.IsReadyToUnload)
+                                    if (isCVPort(mcsCmd.HOSTSOURCE))
+                                    {
+                                        plcInfoSource = GetPLC_PortData(mcsCmd.HOSTSOURCE);
+                                        if (plcInfoSource.OpAutoMode && plcInfoSource.IsReadyToUnload)
+                                        {
+                                            checkToRelay = true;
+                                        }
+                                        else
+                                        {
+                                            checkToRelay = false;
+                                        }
+                                    }
+                                    else if (isUnitType(mcsCmd.HOSTSOURCE, UnitType.CRANE))//在車子上
                                     {
                                         checkToRelay = true;
-                                    }
-                                    else
-                                    {
-                                        checkToRelay = false;
                                     }
                                 }
                                 else

@@ -49,7 +49,8 @@ namespace com.mirle.ibg3k0.sc.BLL
         protected static Logger logger_VhRouteLog = LogManager.GetLogger("VhRoute");
         NLog.Logger TransferServiceLogger = NLog.LogManager.GetLogger("TransferServiceLogger");
         public Logger TransferRunLogger = NLog.LogManager.GetLogger("TransferRunLogger");
-
+        NLog.Logger GroupEQLogger = NLog.LogManager.GetLogger("GroupEQLogger");
+        
         private string[] ByPassSegment = null;
         ParkZoneTypeDao parkZoneTypeDao = null;
         private SCApplication scApp = null;
@@ -591,7 +592,26 @@ namespace com.mirle.ibg3k0.sc.BLL
             return cmdMCSSort;
         }
 
-        public bool doCreatMCSCommand(string command_id, string Priority, string replace, string carrier_id, string HostSource, string HostDestination, string Box_ID, string LOT_ID, string box_Loc, string checkcode, bool isFromVh)
+        public string CombineMCSLogDataNew (List<ACMD_MCS> cmdMCSData)
+        {
+            string cmdMCSSort = "";
+            foreach (var v in cmdMCSData.Take(5).ToList())
+            {
+                cmdMCSSort = cmdMCSSort + v.CMD_ID +
+                    " Source ：" + v.HOSTSOURCE +
+                    " Destination ：" + v.HOSTDESTINATION +
+                    " Priority_SUM ：" + v.PRIORITY_SUM +
+                    " ReqEQ：" + v.REQ_EQ +
+                    " ReqPort：" + v.REQ_PORT +
+                    " OrderChangeByGroupEQSort：" + v.isChangeOrderByGroupEQ.ToString() +
+                    " OrderBeforeGroupEQSort：" + v.OrderBeforeGroupEQSort +
+                    " OrderAfterGroupEQSort：" + v.OrderAfterGroupEQSort + "，";
+            }
+
+            return cmdMCSSort;
+        }
+
+        public bool doCreatMCSCommand(string command_id, string Priority, string replace, string carrier_id, string HostSource, string HostDestination, string Box_ID, string LOT_ID, string box_Loc, string checkcode, bool isFromVh,string Req_EQ,string Req_Port)
         {
             bool isSuccess = true;
             int ipriority = 0;
@@ -612,7 +632,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
             //ACMD_MCS mcs_com = creatCommand_MCS(command_id, ipriority, carrier_id, HostSource, HostDestination, checkcode);
 
-            creatCommand_MCS(command_id, ipriority, ireplace, carrier_id, HostSource, HostDestination, Box_ID, LOT_ID, box_Loc, checkcode, isFromVh);
+            creatCommand_MCS(command_id, ipriority, ireplace, carrier_id, HostSource, HostDestination, Box_ID, LOT_ID, box_Loc, checkcode, isFromVh, Req_EQ, Req_Port);
 
             CassetteData cstData = scApp.CassetteDataBLL.loadCassetteDataByBoxID(Box_ID);
 
@@ -634,7 +654,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
         }
 
-        public ACMD_MCS creatCommand_MCS(string command_id, int Priority, int replace, string carrier_id, string HostSource, string HostDestination, string Box_ID, string LOT_ID, string carrier_Loc, string checkcode, bool isFromVh)
+        public ACMD_MCS creatCommand_MCS(string command_id, int Priority, int replace, string carrier_id, string HostSource, string HostDestination, string Box_ID, string LOT_ID, string carrier_Loc, string checkcode, bool isFromVh, string Req_EQ, string Req_Port)
         {
             int port_priority = 0;
 
@@ -675,6 +695,8 @@ namespace com.mirle.ibg3k0.sc.BLL
                     CARRIER_LOC = carrier_Loc,
                     CMDTYPE = ACMD_MCS.CmdType.MCS.ToString(),
                     CRANE = "",
+                    REQ_EQ = Req_EQ,
+                    REQ_PORT = Req_Port
                 };
                 if (isFromVh)   //box一開始就在車上，不會掃barcode，直接假設barcode符合
                 {
@@ -1165,6 +1187,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 cmdMCSSort = scApp.CMDBLL.CombineMCSLogData(originMCSCmdData);
                 bool isCmdPriorityMoreThan99 = false;
                 TransferRunLogger.Info($"排序前MCS命令前五筆:[{cmdMCSSort}]");
+                GroupEQLogger.Info($"排序前MCS命令前五筆:[{cmdMCSSort}]");
                 if (cmdMCSSort != oldBeforeSortingLog)
                 {
                     TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> DB|MCS排序前 前 5 筆: " + cmdMCSSort);
@@ -1228,12 +1251,91 @@ namespace com.mirle.ibg3k0.sc.BLL
                     {
                         sortedMCSData.Sort(MCSCmdCompare_LessThan2ForLine3);
                     }
+
                 }
                 #endregion
 
-                cmdMCSSort = scApp.CMDBLL.CombineMCSLogData(sortedMCSData);
+                #region GroupEQ命令排序'
+                try
+                {
+                    GroupEQLogger.Info("進入Group EQ檢查區域");
+                    List<ACMD_MCS> recent_cmd = loadMcsCmd_RecentStart(DateTime.Now.AddSeconds(-SystemParameter.iEQCommandInterval));
+                    bool isNeedToSortForGroupEQ = false;
+                    if (recent_cmd != null && recent_cmd.Count > 0)
+                    {
+                        GroupEQLogger.Info($"查找到最近{SystemParameter.iEQCommandInterval}秒有EQ相關命令，開始檢查候選列表中有無Group對應命令");
+                        int index = 0;
+                        foreach (ACMD_MCS cmd in sortedMCSData)
+                        {
+                            index++;
+                            cmd.OrderBeforeGroupEQSort = index;
+                            if (cmd.REQ_EQ != null)
+                            {
+                                GroupEQLogger.Info($"檢查命令:{cmd.CMD_ID}目的地EQ Port最近是否有執行過 REQ_EQ:{cmd.REQ_EQ} REQ_PORT:{cmd.REQ_PORT}");
 
+                                List<ACMD_MCS> group_cmd = recent_cmd.Where(c => c.REQ_EQ == cmd.REQ_EQ && c.REQ_PORT == cmd.REQ_PORT).ToList();
+                                if (group_cmd != null && group_cmd.Count > 0)
+                                {
+                                    cmd.isRecentStart = true;
+                                    cmd.recentStartCount = group_cmd.Count;
+                                    isNeedToSortForGroupEQ = true;
+                                    GroupEQLogger.Info($"命令:{cmd.CMD_ID}目的地EQ Port最近有執行過 REQ_EQ:{cmd.REQ_EQ} REQ_PORT:{cmd.REQ_PORT} RecentCommandCount:{cmd.recentStartCount}");
+                                }
+                                else
+                                {
+                                    GroupEQLogger.Info($"命令:{cmd.CMD_ID}目的地EQ Port最近沒有有執行過 REQ_EQ:{cmd.REQ_EQ} REQ_PORT:{cmd.REQ_PORT}");
+                                }
+                            }
+                            else
+                            {
+                                GroupEQLogger.Info($"命令:{cmd.CMD_ID}Request EQ為空，不進行進一步檢查");
+                            }
+                        }
+                        if (isNeedToSortForGroupEQ)
+                        {
+                            GroupEQLogger.Info("有Group EQ Coommad Sort的需求");
+                            sortedMCSData.Sort(MCSCmdCompare_GroupEQ);
+                            for(int i = 0; i < sortedMCSData.Count; i++)
+                            {
+                                sortedMCSData[i].OrderAfterGroupEQSort = i + 1;
+
+                                if(sortedMCSData[i].OrderAfterGroupEQSort!= sortedMCSData[i].OrderBeforeGroupEQSort)
+                                {
+                                    sortedMCSData[i].isChangeOrderByGroupEQ = true;
+                                }
+                                else
+                                {
+                                    sortedMCSData[i].isChangeOrderByGroupEQ = false;
+                                }
+                            }
+                            GroupEQLogger.Info("Group EQ Coommad Sort結束");
+                        }
+                        else
+                        {
+                            GroupEQLogger.Info("沒有Group EQ Coommad Sort的需求");
+                        }
+                    }
+                    else
+                    {
+                        GroupEQLogger.Info($"最近{SystemParameter.iEQCommandInterval}秒沒有EQ相關命令，準備離開Group EQ檢查區域");
+                    }
+                    GroupEQLogger.Info("離開Group EQ檢查區域");
+                }
+                catch(Exception ex)
+                {
+                    GroupEQLogger.Error($"Group EQ檢查區域發生Exception: {ex}");
+                }
+
+
+
+
+                #endregion GroupEQ命令排序
+
+
+                cmdMCSSort = scApp.CMDBLL.CombineMCSLogData(sortedMCSData);
+                string temp = CombineMCSLogDataNew(sortedMCSData);
                 TransferRunLogger.Info($"排序後MCS命令前五筆:[{cmdMCSSort}]");
+                GroupEQLogger.Info($"排序後MCS命令前五筆:[{temp}]");
                 if (cmdMCSSort != oldAfterSortingLog)
                 {
                     TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> DB|MCS排序後 前 5 筆: " + cmdMCSSort);
@@ -1542,6 +1644,40 @@ namespace com.mirle.ibg3k0.sc.BLL
             {
                 return -1;
                 //代表前者較優先，不動
+            }
+            return 0;
+        }
+
+        public int MCSCmdCompare_GroupEQ(ACMD_MCS MCSCmd1, ACMD_MCS MCSCmd2)
+        {
+            if(MCSCmd1.REQ_EQ!=null&& MCSCmd2.REQ_EQ != null)
+            {
+                if (MCSCmd1.REQ_EQ == MCSCmd2.REQ_EQ&& MCSCmd1.REQ_PORT != MCSCmd2.REQ_PORT)
+                {
+                    if(MCSCmd1.isRecentStart && !MCSCmd2.isRecentStart)
+                    {
+                        return 1;
+                        //代表後者較優先，換位
+                    }
+                    else if (!MCSCmd1.isRecentStart && MCSCmd2.isRecentStart)
+                    {
+                        return -1;
+                        //代表前者較優先，不動
+                    }
+                    else if (MCSCmd1.isRecentStart && MCSCmd2.isRecentStart)
+                    {
+                        if(MCSCmd1.recentStartCount > MCSCmd2.recentStartCount)
+                        {
+                            return 1;
+                            //代表後者較優先，換位
+                        }
+                        else if(MCSCmd1.recentStartCount < MCSCmd2.recentStartCount)
+                        {
+                            return -1;
+                            //代表前者較優先，不動
+                        }
+                    }
+                }
             }
             return 0;
         }
@@ -2466,6 +2602,23 @@ namespace com.mirle.ibg3k0.sc.BLL
 
 
         }
+
+        public List<ACMD_MCS> loadMcsCmd_RecentStart(DateTime dateTime)
+        {
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    return cmd_mcsDao.loadCMD_ByRecentTime(con, dateTime);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return null;
+            }
+        }
+
         public List<ACMD_MCS> loadMcsCmd_ByTransferring()
         {
             try
