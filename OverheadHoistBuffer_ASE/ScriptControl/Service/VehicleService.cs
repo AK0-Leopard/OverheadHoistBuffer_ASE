@@ -997,11 +997,15 @@ namespace com.mirle.ibg3k0.sc.Service
                     assignVH.VehicleAssign();
                     scApp.SysExcuteQualityBLL.updateSysExecQity_PassSecInfo(cmd.CMD_ID_MCS, assignVH.VEHICLE_ID, assignVH.CUR_SEC_ID,
                                             minRouteSec_Vh2From, minRouteSec_From2To);
+                    //scApp.CMDBLL.setVhExcuteCmdToShow(cmd, assignVH, routeSections,
+                    //                                  minRouteSec_Vh2From.ToList(), minRouteSec_From2To.ToList(),
+                    //                                  cycleRunSections);
                     scApp.CMDBLL.setVhExcuteCmdToShow(cmd, assignVH, routeSections,
-                                                      minRouteSec_Vh2From.ToList(), minRouteSec_From2To.ToList(),
-                                                      cycleRunSections);
+                                   minRouteSec_Vh2From == null ? null : minRouteSec_Vh2From.ToList(),
+                                   minRouteSec_From2To == null ? null : minRouteSec_From2To.ToList(),
+                                   cycleRunSections);
                     assignVH.sw_speed.Restart();
-
+                    
                     //在設備確定接收該筆命令，把它從PreInitial改成Initial狀態並上報給MCS
                     if (!SCUtility.isEmpty(cmd.CMD_ID_MCS))
                     {

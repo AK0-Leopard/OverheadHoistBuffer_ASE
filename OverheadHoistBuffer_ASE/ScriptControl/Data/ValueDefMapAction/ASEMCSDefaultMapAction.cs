@@ -402,8 +402,9 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                         string Req_Loc = s2f49_transfer.REPITEMS.CSTINFO.CARRINFO.REQLOCINFO.Req_Loc;
 
                         string Req_EQ = null;
+                        string Req_EQ_Num = null;
                         string Req_Port = null;
-                        extractEQPortInfoFromLoc(Req_Loc,out Req_EQ,out Req_Port);
+                        extractEQPortInfoFromLoc(Req_Loc, out Req_EQ, out Req_EQ_Num, out Req_Port);
 
 
                         string rtnStr = "";
@@ -452,7 +453,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                                                                                                 //|| SCUtility.isMatche(SECSConst.HCACK_Confirm_Executed, s2f50.HCACK)
                                    )
                                 {
-                                    isCreatScuess &= scApp.CMDBLL.doCreatMCSCommand(cmdID, priority, "0", cstID, source, dest, boxID, lotID, boxLoc, s2f50.HCACK, isFromVh, Req_EQ, Req_Port);
+                                    isCreatScuess &= scApp.CMDBLL.doCreatMCSCommand(cmdID, priority, "0", cstID, source, dest, boxID, lotID, boxLoc, s2f50.HCACK, isFromVh, Req_EQ, Req_EQ_Num, Req_Port);
                                 }
 
                                 if (s2f50.HCACK == SECSConst.HCACK_Confirm)
@@ -542,21 +543,22 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             }
         }
 
-        private void extractEQPortInfoFromLoc(string loc,out string eq,out string port)
+        private void extractEQPortInfoFromLoc(string loc,out string eq, out string eq_num, out string port)
         {
             if (loc != null)
             {
-                 string[] temp_arr = loc.Trim().Split('_');
+                string[] temp_arr = loc.Trim().Split('_');
                 int total_length =0;
                 if(temp_arr!=null)
                 {
                     total_length = temp_arr.Length;
                 }
-                if (total_length >= 2)
+                if (total_length >= 3)
                 {
                     port = temp_arr[total_length - 1];
+                    eq_num = temp_arr[total_length - 2];
                     string tmp_str = string.Empty; 
-                    for(int i=0;i< total_length-1; i++)
+                    for(int i=0;i< total_length-2; i++)
                     {
                         if(i!= 0)
                         {
@@ -571,18 +573,21 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                     if (!scApp.getEQObjCacheManager().isEQInList(eq))
                     {
                         eq = null;
+                        eq_num = null;
                         port = null;
                     }
                 }
                 else
                 {
                     eq = null;
+                    eq_num = null;
                     port = null;
                 }
             }
             else
             {
                 eq = null;
+                eq_num = null;
                 port = null;
             }
 

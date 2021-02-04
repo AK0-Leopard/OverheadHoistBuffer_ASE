@@ -142,6 +142,7 @@
           <Property Name="CMDTYPE" Type="varchar" MaxLength="64" />
           <Property Name="CRANE" Type="varchar" MaxLength="64" Nullable="false" />
           <Property Name="REQ_EQ" Type="varchar" MaxLength="64" />
+          <Property Name="REQ_EQ_NUM" Type="varchar" MaxLength="64" />
           <Property Name="REQ_PORT" Type="varchar" MaxLength="64" />
         </EntityType>
         <EntityType Name="ACMD_OHTC">
@@ -2660,6 +2661,7 @@
           <Property Name="RelayStation" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
           <Property Name="REQ_EQ" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
           <Property Name="REQ_PORT" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="REQ_EQ_NUM" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="CassetteData">
           <Key>
@@ -3937,8 +3939,7 @@
     <EntitySetMapping Name="ACMD_MCS">
       <EntityTypeMapping TypeName="IsTypeOf(OHTC_DevModel.ACMD_MCS)">
         <MappingFragment StoreEntitySet="ACMD_MCS">
-          <ScalarProperty Name="REQ_PORT" ColumnName="REQ_PORT" />
-                <ScalarProperty Name="REQ_EQ" ColumnName="REQ_EQ" />
+          <ScalarProperty Name="REQ_EQ_NUM" ColumnName="REQ_EQ_NUM" />
                 <ScalarProperty Name="CMD_ID" ColumnName="CMD_ID" />
           <ScalarProperty Name="CARRIER_ID" ColumnName="CARRIER_ID" />
           <ScalarProperty Name="TRANSFERSTATE" ColumnName="TRANSFERSTATE" />
@@ -3962,6 +3963,8 @@
           <ScalarProperty Name="CMDTYPE" ColumnName="CMDTYPE" />
           <ScalarProperty Name="CRANE" ColumnName="CRANE" />
           <ScalarProperty Name="RelayStation" ColumnName="RelayStation" />
+          <ScalarProperty Name="REQ_EQ" ColumnName="REQ_EQ" />
+          <ScalarProperty Name="REQ_PORT" ColumnName="REQ_PORT" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

@@ -602,6 +602,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                     " Destination ：" + v.HOSTDESTINATION +
                     " Priority_SUM ：" + v.PRIORITY_SUM +
                     " ReqEQ：" + v.REQ_EQ +
+                    " ReqEQNum：" + v.REQ_EQ_NUM +
                     " ReqPort：" + v.REQ_PORT +
                     " OrderChangeByGroupEQSort：" + v.isChangeOrderByGroupEQ.ToString() +
                     " OrderBeforeGroupEQSort：" + v.OrderBeforeGroupEQSort +
@@ -611,7 +612,7 @@ namespace com.mirle.ibg3k0.sc.BLL
             return cmdMCSSort;
         }
 
-        public bool doCreatMCSCommand(string command_id, string Priority, string replace, string carrier_id, string HostSource, string HostDestination, string Box_ID, string LOT_ID, string box_Loc, string checkcode, bool isFromVh,string Req_EQ,string Req_Port)
+        public bool doCreatMCSCommand(string command_id, string Priority, string replace, string carrier_id, string HostSource, string HostDestination, string Box_ID, string LOT_ID, string box_Loc, string checkcode, bool isFromVh,string Req_EQ, string Req_EQ_Num, string Req_Port)
         {
             bool isSuccess = true;
             int ipriority = 0;
@@ -632,7 +633,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
             //ACMD_MCS mcs_com = creatCommand_MCS(command_id, ipriority, carrier_id, HostSource, HostDestination, checkcode);
 
-            creatCommand_MCS(command_id, ipriority, ireplace, carrier_id, HostSource, HostDestination, Box_ID, LOT_ID, box_Loc, checkcode, isFromVh, Req_EQ, Req_Port);
+            creatCommand_MCS(command_id, ipriority, ireplace, carrier_id, HostSource, HostDestination, Box_ID, LOT_ID, box_Loc, checkcode, isFromVh, Req_EQ, Req_EQ_Num, Req_Port);
 
             CassetteData cstData = scApp.CassetteDataBLL.loadCassetteDataByBoxID(Box_ID);
 
@@ -654,7 +655,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
         }
 
-        public ACMD_MCS creatCommand_MCS(string command_id, int Priority, int replace, string carrier_id, string HostSource, string HostDestination, string Box_ID, string LOT_ID, string carrier_Loc, string checkcode, bool isFromVh, string Req_EQ, string Req_Port)
+        public ACMD_MCS creatCommand_MCS(string command_id, int Priority, int replace, string carrier_id, string HostSource, string HostDestination, string Box_ID, string LOT_ID, string carrier_Loc, string checkcode, bool isFromVh, string Req_EQ, string Req_EQ_Num, string Req_Port)
         {
             int port_priority = 0;
 
@@ -696,6 +697,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                     CMDTYPE = ACMD_MCS.CmdType.MCS.ToString(),
                     CRANE = "",
                     REQ_EQ = Req_EQ,
+                    REQ_EQ_NUM = Req_EQ_Num,
                     REQ_PORT = Req_Port
                 };
                 if (isFromVh)   //box一開始就在車上，不會掃barcode，直接假設barcode符合
@@ -1180,6 +1182,7 @@ namespace com.mirle.ibg3k0.sc.BLL
         {
             try
             {
+                TransferRunLogger.Info("準備進行命令排序");
 
                 //************
                 //A20.05.27
@@ -1271,19 +1274,19 @@ namespace com.mirle.ibg3k0.sc.BLL
                             cmd.OrderBeforeGroupEQSort = index;
                             if (cmd.REQ_EQ != null)
                             {
-                                GroupEQLogger.Info($"檢查命令:{cmd.CMD_ID}目的地EQ Port最近是否有執行過 REQ_EQ:{cmd.REQ_EQ} REQ_PORT:{cmd.REQ_PORT}");
+                                GroupEQLogger.Info($"檢查命令:{cmd.CMD_ID}目的地EQ最近是否有執行過 REQ_EQ:{cmd.REQ_EQ} REQ_EQ_NUM:{cmd.REQ_EQ_NUM} REQ_PORT:{cmd.REQ_PORT}");
 
-                                List<ACMD_MCS> group_cmd = recent_cmd.Where(c => c.REQ_EQ == cmd.REQ_EQ && c.REQ_PORT == cmd.REQ_PORT).ToList();
+                                List<ACMD_MCS> group_cmd = recent_cmd.Where(c => c.REQ_EQ == cmd.REQ_EQ && c.REQ_EQ_NUM == cmd.REQ_EQ_NUM).ToList();
                                 if (group_cmd != null && group_cmd.Count > 0)
                                 {
                                     cmd.isRecentStart = true;
                                     cmd.recentStartCount = group_cmd.Count;
                                     isNeedToSortForGroupEQ = true;
-                                    GroupEQLogger.Info($"命令:{cmd.CMD_ID}目的地EQ Port最近有執行過 REQ_EQ:{cmd.REQ_EQ} REQ_PORT:{cmd.REQ_PORT} RecentCommandCount:{cmd.recentStartCount}");
+                                    GroupEQLogger.Info($"命令:{cmd.CMD_ID}目的地EQ最近有執行過 REQ_EQ:{cmd.REQ_EQ} REQ_EQ_NUM:{cmd.REQ_EQ_NUM} REQ_PORT:{cmd.REQ_PORT} RecentCommandCount:{cmd.recentStartCount}");
                                 }
                                 else
                                 {
-                                    GroupEQLogger.Info($"命令:{cmd.CMD_ID}目的地EQ Port最近沒有有執行過 REQ_EQ:{cmd.REQ_EQ} REQ_PORT:{cmd.REQ_PORT}");
+                                    GroupEQLogger.Info($"命令:{cmd.CMD_ID}目的地EQ最近沒有有執行過 REQ_EQ:{cmd.REQ_EQ} REQ_EQ_NUM:{cmd.REQ_EQ_NUM} REQ_PORT:{cmd.REQ_PORT}");
                                 }
                             }
                             else
@@ -1341,6 +1344,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                     TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> DB|MCS排序後 前 5 筆: " + cmdMCSSort);
                     oldAfterSortingLog = cmdMCSSort;
                 }
+                TransferRunLogger.Info("結束命令排序");
 
                 return sortedMCSData;
             }
@@ -1652,7 +1656,7 @@ namespace com.mirle.ibg3k0.sc.BLL
         {
             if(MCSCmd1.REQ_EQ!=null&& MCSCmd2.REQ_EQ != null)
             {
-                if (MCSCmd1.REQ_EQ == MCSCmd2.REQ_EQ&& MCSCmd1.REQ_PORT != MCSCmd2.REQ_PORT)
+                if (MCSCmd1.REQ_EQ == MCSCmd2.REQ_EQ&& MCSCmd1.REQ_EQ_NUM != MCSCmd2.REQ_EQ_NUM)
                 {
                     if(MCSCmd1.isRecentStart && !MCSCmd2.isRecentStart)
                     {
@@ -3145,11 +3149,16 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
         }
 
+        private long syncTranOHTCommandPointLine3 = 0;
 
         public bool generateOHTCommandForASELine3(ACMD_MCS mcs_cmd) // 因為ASE Line3 有特別邏輯故採用不同生成命令Method
         {
-            if (Interlocked.Exchange(ref syncTranOHTCommandPoint, 1) == 0)
+            TransferServiceLogger.Info($"進入generateOHTCommandForASELine3方法 CMD ID:{mcs_cmd.CMD_ID}");
+
+            if (Interlocked.Exchange(ref syncTranOHTCommandPointLine3, 1) == 0)
             {
+                TransferServiceLogger.Info($"取得generateOHTCommandForASELine3 Interlock CMD ID:{mcs_cmd.CMD_ID}");
+
                 try
                 {
                     string hostsource = mcs_cmd.HOSTSOURCE;
@@ -3166,6 +3175,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
                     if (mcs_cmd.CMD_ID.StartsWith("SCAN-"))
                     {
+
                         ShelfDef targetShelf = scApp.ShelfDefBLL.loadShelfDataByID(mcs_cmd.HOSTSOURCE);
 
                         scApp.MapBLL.getAddressID(hostsource, out from_adr, out vh_type);
@@ -3210,9 +3220,13 @@ namespace com.mirle.ibg3k0.sc.BLL
                         bool isSourceOnVehicle = scApp.VehicleBLL.getVehicleByRealID(hostsource) != null;
                         if (isSourceOnVehicle)
                         {
+                            TransferRunLogger.Info( $"命令起點在車上 ID:{mcs_cmd.CMD_ID} Source:{mcs_cmd.HOSTSOURCE}" );
+
                             bestSuitableVh = scApp.VehicleBLL.getVehicleByRealID(hostsource);
                             if (bestSuitableVh.IsError || bestSuitableVh.MODE_STATUS != VHModeStatus.AutoRemote)
                             {
+                                TransferRunLogger.Info($"車輛無法執行命令 VH ID:{bestSuitableVh.VEHICLE_ID} IsError:{bestSuitableVh.IsError} MODE_STATUS:{bestSuitableVh.MODE_STATUS}");
+
                                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleBLL), Device: "OHxC",
                                    Data: $"vh id:{bestSuitableVh.VEHICLE_ID} current mode status is {bestSuitableVh.MODE_STATUS},is error flag:{bestSuitableVh.IsError}." +
                                          $"can't excute mcs command:{SCUtility.Trim(mcs_cmd.CMD_ID)}",
@@ -3228,6 +3242,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                             scApp.MapBLL.getAddressID(hostsource, out from_adr, out vh_type);
                             scApp.MapBLL.getAddressID(hostdest, out to_adr, out vh_type);
                             bestSuitableVh = scApp.VehicleBLL.findBestSuitableVhStepByNearestForASE_Line3(from_adr, to_adr, vh_type);
+
                             cmd_type = E_CMD_TYPE.LoadUnload;
                         }
 
@@ -3249,11 +3264,13 @@ namespace com.mirle.ibg3k0.sc.BLL
                         //如果有找到的話，則就產生命令派給VH
                         if (bestSuitableVh != null)
                         {
+                            TransferRunLogger.Info($"找到最佳執行車輛 VH ID:{bestSuitableVh.VEHICLE_ID}");
                             best_suitable_vehicle_id = bestSuitableVh.VEHICLE_ID.Trim();
                         }
                         //沒有則代表找不到車，因此就更新該筆命令的Time Priority (此步驟上層處理)
                         else
                         {
+                            TransferRunLogger.Info($"找不到可執行命令車輛，無法執行命令{mcs_cmd.CMD_ID}");
                             return false;
                         }
 
@@ -3268,11 +3285,17 @@ namespace com.mirle.ibg3k0.sc.BLL
                         //在找到車子後先把它改成PreInitial，防止Timer再找到該筆命令
                         if (isSuccess)
                         {
+                            TransferRunLogger.Info($"命令產生成功 ID:{mcs_cmd.CMD_ID}");
+
                             //isSuccess &= scApp.CMDBLL.updateCMD_MCS_TranStatus2Paused(mcs_cmd.CMD_ID);  //20200220改成Paused WARNING
                             if (mcs_cmd.CRANE != best_suitable_vehicle_id)
                             {
                                 updateCMD_MCS_CRANE(mcs_cmd.CMD_ID, best_suitable_vehicle_id);
                             }
+                        }
+                        else
+                        {
+                            TransferRunLogger.Info($"命令產生失敗 ID:{mcs_cmd.CMD_ID}");
                         }
                         //如果產生完命令後，發現該Vh正在執行OHTC的移動命令時，則需要將該命令Cancel
                         //20200515 不要取消了，讓他做完
@@ -3293,16 +3316,22 @@ namespace com.mirle.ibg3k0.sc.BLL
                 }
                 catch (Exception ex)
                 {
-                    TransferServiceLogger.Error(ex, "generateOHTCommand");
+                    TransferServiceLogger.Error(ex, "generateOHTCommandForASELine3");
+                    TransferRunLogger.Error(ex,$"generateOHTCommandForASELine3發生Exception CMDID:{mcs_cmd.CMD_ID}");
+
                     return false;
                 }
                 finally
                 {
-                    Interlocked.Exchange(ref syncTranOHTCommandPoint, 0);
+                    TransferServiceLogger.Info($"準備釋放generateOHTCommandForASELine3 Interlock CMD ID:{mcs_cmd.CMD_ID}");
+                    Interlocked.Exchange(ref syncTranOHTCommandPointLine3, 0);
+                    TransferServiceLogger.Info($"釋放generateOHTCommandForASELine3 Interlock CMD ID:{mcs_cmd.CMD_ID}");
+
                 }
             }
             else
             {
+                TransferServiceLogger.Info($"無法取得generateOHTCommandForASELine3 Interlock，即將離開 CMD ID:{mcs_cmd.CMD_ID}");
                 return false;
             }
         }

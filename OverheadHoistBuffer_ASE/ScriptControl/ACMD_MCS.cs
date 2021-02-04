@@ -39,5 +39,6 @@ namespace com.mirle.ibg3k0.sc
         public string RelayStation { get; set; }
         public string REQ_EQ { get; set; }
         public string REQ_PORT { get; set; }
+        public string REQ_EQ_NUM { get; set; }
     }
 }

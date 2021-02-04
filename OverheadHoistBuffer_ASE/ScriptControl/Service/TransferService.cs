@@ -743,10 +743,10 @@ namespace com.mirle.ibg3k0.sc.Service
         private long syncTranCmdPoint = 0;
         public void TransferRun()
         {
-            TransferRunLogger.Info("Into TransferRun method.");
+            TransferRunLogger.Info("進入命令檢查區域.");
             if (Interlocked.Exchange(ref syncTranCmdPoint, 1) == 0)
             {
-                TransferRunLogger.Info("Enter Inferlock, TransferRun Start.");
+                TransferRunLogger.Info("進入Interlock區域, TransferRun Start.");
                 try
                 {
 
@@ -798,12 +798,12 @@ namespace com.mirle.ibg3k0.sc.Service
                     var vehicleData = scApp.VehicleBLL.cache.loadVhs();
 
                     int ohtIdle = vehicleData.Where(data => string.IsNullOrWhiteSpace(data.OHTC_CMD)).Count();
-                    TransferRunLogger.Info($"Idle Car Count:[{ohtIdle}]");
+                    TransferRunLogger.Info($"閒置車輛數量:[{ohtIdle}]");
 
                     if (ohtIdle != 0)    //有閒置的車輛在開始派命令
                     {
                         var cmdData = cmdBLL.LoadCmdData();
-                        TransferRunLogger.Info($"Not Complete Command Count:[{cmdData.Count}]");
+                        TransferRunLogger.Info($"未完成命令數量:[{cmdData.Count}]");
                         if (cmdData.Count != 0)
                         {
                             #region 說明
@@ -839,7 +839,7 @@ namespace com.mirle.ibg3k0.sc.Service
                             var transferCmdData = cmdData.Where(data => data.CMDTYPE != CmdType.PortTypeChange.ToString() && data.TRANSFERSTATE != E_TRAN_STATUS.Queue).ToList();
 
                             var portTypeChangeCmdData = cmdData.Where(data => data.CMDTYPE == CmdType.PortTypeChange.ToString()).ToList();
-                            TransferRunLogger.Info($"Queue Command Count:[{queueCmdData.Count}]");
+                            TransferRunLogger.Info($"Queue狀態命令數量:[{queueCmdData.Count}]");
 
                             #region 檢查救資料用AGV Port 狀態是否正確
                             if (autoRemarkBOXCSTData == true)
@@ -863,7 +863,7 @@ namespace com.mirle.ibg3k0.sc.Service
                             {
                                 cmdFail = true;
                             }
-
+                            int index = 0;
                             foreach (var v in queueCmdData)
                             {
                                 #region 每分鐘權限 + 1
@@ -889,6 +889,9 @@ namespace com.mirle.ibg3k0.sc.Service
                                 }
                                 #endregion                                
                                 #region 搬送命令
+                                index++;
+                                TransferRunLogger.Info($"檢查第{index}筆命令:[{v.CMD_ID}] source:[{v.HOSTSOURCE}] dest:[{v.HOSTDESTINATION}] relay:[{v.RelayStation}]");
+
                                 bool result = false;
                                 if((scApp.BC_ID != "ASE_LINE3"&& scApp.BC_ID != "ASE_TEST" )|| !scApp.VehicleService.multiplecar_active)
                                 {
@@ -907,7 +910,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                     if (v.isChangeOrderByGroupEQ)
                                     {
                                         GroupEQLogger.Info
-                                            ($"命令:{v.CMD_ID} 被選定執行。ReqEQ:{v.REQ_EQ} ReqPort:{v.REQ_PORT} OrderBeforeGroupEQSort:{v.OrderBeforeGroupEQSort} OrderAfterGroupEQSort:{v.OrderAfterGroupEQSort}");
+                                            ($"命令:{v.CMD_ID} 被選定執行。ReqEQ:{v.REQ_EQ} ReqEQNum:{v.REQ_EQ_NUM} ReqPort:{v.REQ_PORT} OrderBeforeGroupEQSort:{v.OrderBeforeGroupEQSort} OrderAfterGroupEQSort:{v.OrderAfterGroupEQSort}");
                                     }
                                     break;
                                 }
@@ -1122,16 +1125,19 @@ namespace com.mirle.ibg3k0.sc.Service
                 catch (Exception ex)
                 {
                     TransferServiceLogger.Error(ex, "TransferRun");
-                    TransferRunLogger.Error(ex, "TransferRun");
+                    TransferRunLogger.Error(ex, "TransferRun發生Exception");
                 }
                 finally
                 {
+                    TransferRunLogger.Info("準備釋放Interlock.");
                     Interlocked.Exchange(ref syncTranCmdPoint, 0);
+                    TransferRunLogger.Info("完成釋放Interlock.");
+
                 }
             }
             else
             {
-                TransferRunLogger.Info("Could not get Interlock,leave transferRun method.");
+                TransferRunLogger.Info("無法取得Interlock,leave transferRun method.");
             }
         }
 
@@ -1633,7 +1639,7 @@ namespace com.mirle.ibg3k0.sc.Service
             {
                 #region E_TRAN_STATUS.Queue
                 case E_TRAN_STATUS.Queue:
-                    TransferRunLogger.Info($"檢查命令能否執行 ID:[{mcsCmd.CMD_ID}] Source:[{mcsCmd.HOSTSOURCE}] Destnation:[{mcsCmd.HOSTDESTINATION}]  Destnation:[{mcsCmd.RelayStation}] Priority:[{mcsCmd.PRIORITY_SUM}]");
+                    TransferRunLogger.Info($"開始檢查命令能否執行 ID:[{mcsCmd.CMD_ID}] Source:[{mcsCmd.HOSTSOURCE}] Destnation:[{mcsCmd.HOSTDESTINATION}]  Relay:[{mcsCmd.RelayStation}] Priority:[{mcsCmd.PRIORITY_SUM}]");
 
                     bool sourcePortType = false;
                     bool destPortType = false;
@@ -1740,11 +1746,13 @@ namespace com.mirle.ibg3k0.sc.Service
                     }
                     #endregion
 
-                    TransferRunLogger.Info($"檢查命令起點與終點是否Ready ID:[{mcsCmd.CMD_ID}] Source:[{mcsCmd.HOSTSOURCE}] SourceReady:[{mcsCmd.PRIORITY_SUM}] Destnation:[{mcsCmd.RelayStation}] ");
+                    TransferRunLogger.Info($"命令起點與終點是否Ready ID:[{mcsCmd.CMD_ID}] Source:[{mcsCmd.HOSTSOURCE}] SourceReady:[{sourcePortType}] Destnation:[{mcsCmd.HOSTDESTINATION}] DestReady:[{destPortType}]");
 
 
                     if (sourcePortType)
                     {
+                        TransferRunLogger.Info($"命令起點Ready 進入檢查 ID:[{mcsCmd.CMD_ID}] Source:[{mcsCmd.HOSTSOURCE}] SourceReady:[{sourcePortType}] Destnation:[{mcsCmd.HOSTDESTINATION}] DestReady:[{destPortType}]");
+
                         string source_adr;
                         string destnation_adr;
                         int iSource = 0;
@@ -1775,23 +1783,18 @@ namespace com.mirle.ibg3k0.sc.Service
                         }
                         if (needHandoff)
                         {
+                            TransferRunLogger.Info($"命令檢查需要換手 ID:[{mcsCmd.CMD_ID}] Source:[{mcsCmd.HOSTSOURCE}] SourceReady:[{sourcePortType}] Destnation:[{mcsCmd.HOSTDESTINATION}] DestReady:[{destPortType}]");
+
                             if (!isShelfPort(mcsCmd.HOSTSOURCE))
                             {
-                                if (isCVPort(mcsCmd.HOSTSOURCE))
-                                {
-                                    PortPLCInfo plcInfoSource = GetPLC_PortData(mcsCmd.HOSTSOURCE);
-                                    if (plcInfoSource.OpAutoMode && plcInfoSource.IsReadyToUnload)
-                                    {
-                                        checkToRelay = true;
-                                    }
-                                    else
-                                    {
-                                        checkToRelay = false;
-                                    }
-                                }
-                                else if (isUnitType(mcsCmd.HOSTSOURCE, UnitType.CRANE))//在車子上
+                                PortPLCInfo plcInfoSource = GetPLC_PortData(mcsCmd.HOSTSOURCE);
+                                if (plcInfoSource.OpAutoMode && plcInfoSource.IsReadyToUnload)
                                 {
                                     checkToRelay = true;
+                                }
+                                else
+                                {
+                                    checkToRelay = false;
                                 }
                             }
                             else
@@ -1799,14 +1802,19 @@ namespace com.mirle.ibg3k0.sc.Service
                                 checkToRelay = true;
                             }
 
+                            TransferRunLogger.Info($"checkToRelay:[{checkToRelay}]");
+
                             if (checkToRelay)
                             {
+
                                 ACMD_MCS cmdRelay = mcsCmd.Clone();
                                 cmdRelay.HOSTDESTINATION = GetShelfRecentLocation(shelfData, mcsCmd.HOSTDESTINATION);
                                 if (string.IsNullOrWhiteSpace(cmdRelay.HOSTDESTINATION) == false)
                                 {
                                     if (OHT_TransportRequest(cmdRelay))
                                     {
+                                        TransferRunLogger.Info($"命令派送成功 ID:[{cmdRelay.CMD_ID}] Source:[{cmdRelay.HOSTSOURCE}] SourceReady:[{sourcePortType}] Destnation:[{cmdRelay.HOSTDESTINATION}] DestReady:[{destPortType}]");
+
                                         ShelfReserved(cmdRelay.HOSTSOURCE, cmdRelay.HOSTDESTINATION);
 
                                         //修正Shelf到Shelf的Handoff命令會不正確的佔用一個目的地Zone的儲位 20210101 markchou
@@ -1824,9 +1832,13 @@ namespace com.mirle.ibg3k0.sc.Service
                                         );
 
                                         TransferIng = true;
+                                        break; //20210129 markchou
+
                                     }
                                     else
                                     {
+                                        TransferRunLogger.Info($"命令無法派送 ID:[{cmdRelay.CMD_ID}] Source:[{cmdRelay.HOSTSOURCE}] SourceReady:[{sourcePortType}] Destnation:[{cmdRelay.HOSTDESTINATION}] DestReady:[{destPortType}]");
+
                                         //修正不能執行時不會把Handoff命令終點站解除Reserve的問題 20210107 v1.8.9 markchou
                                         if (destReservedInShelf != null)
                                         {
@@ -1842,9 +1854,12 @@ namespace com.mirle.ibg3k0.sc.Service
                                     (
                                         DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB|搬到中繼站，沒有儲位"
                                     );
+                                    TransferRunLogger.Info($"Relay命令派送失敗，沒有儲位 ID:[{cmdRelay.CMD_ID}] Source:[{cmdRelay.HOSTSOURCE}] SourceReady:[{sourcePortType}] Destnation:[{cmdRelay.HOSTDESTINATION}] DestReady:[{destPortType}]");
+
                                 }
                             }
-                            break;
+                            TransferRunLogger.Info($"Handoff失敗break啟動 ID:[{mcsCmd.CMD_ID}] Source:[{mcsCmd.HOSTSOURCE}] SourceReady:[{sourcePortType}] Destnation:[{mcsCmd.HOSTDESTINATION}] DestReady:[{destPortType}]");
+                            break; 
                         }
                         else
                         {
@@ -1854,17 +1869,27 @@ namespace com.mirle.ibg3k0.sc.Service
 
                     if (sourcePortType && destPortType)
                     {
+                        TransferRunLogger.Info($"命令起點終點皆Ready 進入檢查 ID:[{mcsCmd.CMD_ID}] Source:[{mcsCmd.HOSTSOURCE}] SourceReady:[{sourcePortType}] Destnation:[{mcsCmd.HOSTDESTINATION}] DestReady:[{destPortType}]");
+
                         if (OHT_TransportRequest(mcsCmd))
                         {
+                            TransferRunLogger.Info($"命令派送成功 ID:[{mcsCmd.CMD_ID}] Source:[{mcsCmd.HOSTSOURCE}] SourceReady:[{sourcePortType}] Destnation:[{mcsCmd.HOSTDESTINATION}] DestReady:[{destPortType}]");
+
                             TransferIng = true;
                             cmdBLL.updateCMD_MCS_Dest(mcsCmd.CMD_ID, mcsCmd.HOSTDESTINATION);
+                            break; //20210129 markchou
+
                         }
                         #region 對應七號車無法及時從CV搬出Box的邏輯
                         else //長時間沒有執行，可能是車輛太忙
                         {
+                            TransferRunLogger.Info($"命令派送失敗，進入第二階段檢查 ID:[{mcsCmd.CMD_ID}] Source:[{mcsCmd.HOSTSOURCE}] SourceReady:[{sourcePortType}] Destnation:[{mcsCmd.HOSTDESTINATION}] DestReady:[{destPortType}]");
+
                             TimeSpan timeSpan = DateTime.Now - mcsCmd.CMD_INSER_TIME;
                             if (timeSpan.TotalSeconds > SystemParameter.iCVPortWatingTime)//命令超時
                             {
+                                TransferRunLogger.Info($"命令超過CV Port等待時間:[{SystemParameter.iCVPortWatingTime}] ID:[{mcsCmd.CMD_ID}] Source:[{mcsCmd.HOSTSOURCE}] SourceReady:[{sourcePortType}] Destnation:[{mcsCmd.HOSTDESTINATION}] DestReady:[{destPortType}]");
+
                                 string destnation_adr;
                                 int iDest = 0;
                                 scApp.MapBLL.getAddressID(mcsCmd.HOSTDESTINATION, out destnation_adr);
@@ -1873,6 +1898,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                 if (isOHCVPort(mcsCmd.HOSTSOURCE) && iDest < SystemParameter.iHandoffBoundary)
                                 {
                                     TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "CV命令超時,目的地南側站點" + GetCmdLog(mcsCmd));
+                                    TransferRunLogger.Info($"CV命令超時,目的地南側站點:[{SystemParameter.iCVPortWatingTime}] ID:[{mcsCmd.CMD_ID}] Source:[{mcsCmd.HOSTSOURCE}] SourceReady:[{sourcePortType}] Destnation:[{mcsCmd.HOSTDESTINATION}] DestReady:[{destPortType}]");
 
                                     ACMD_MCS cmdRelay = mcsCmd.Clone();
                                     List<ShelfDef> shelfData;
@@ -1892,11 +1918,20 @@ namespace com.mirle.ibg3k0.sc.Service
                                             (
                                                 DateTime.Now.ToString("HH:mm:ss.fff ") + "產生CV Port至Alternate區中繼命令 中繼站: " + cmdRelay.HOSTDESTINATION
                                             );
-
+                                            TransferRunLogger.Info
+                                            (
+                                                DateTime.Now.ToString("HH:mm:ss.fff ") + "產生CV Port至Alternate區中繼命令成功 中繼站: " + cmdRelay.HOSTDESTINATION
+                                            );
                                             TransferIng = true;
+                                            break; //20210129 markchou
+
                                         }
                                         else
                                         {
+                                            TransferRunLogger.Info
+                                             (
+                                                 DateTime.Now.ToString("HH:mm:ss.fff ") + "產生CV Port至Alternate區中繼命令失敗 中繼站: " + cmdRelay.HOSTDESTINATION
+                                             );
                                             //釋放於GetShelfRecentLocation中 提前預約的shelf
                                             shelfDefBLL.updateStatus(cmdRelay.HOSTDESTINATION, ShelfDef.E_ShelfState.EmptyShelf);
                                         }
@@ -1904,6 +1939,10 @@ namespace com.mirle.ibg3k0.sc.Service
                                     else
                                     {
                                         TransferServiceLogger.Info
+                                        (
+                                            DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB|搬到中繼站，沒有儲位"
+                                        );
+                                        TransferRunLogger.Info
                                         (
                                             DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB|搬到中繼站，沒有儲位"
                                         );
@@ -1992,20 +2031,29 @@ namespace com.mirle.ibg3k0.sc.Service
                     else if (sourcePortType && isNonHandoffShelfPort(mcsCmd.HOSTSOURCE) == false
                           && destPortType == false && isCVPort(mcsCmd.HOSTDESTINATION))
                     {
+                        TransferRunLogger.Info($"命令進入第三階段檢查 ID:[{mcsCmd.CMD_ID}] Source:[{mcsCmd.HOSTSOURCE}] SourceReady:[{sourcePortType}] Destnation:[{mcsCmd.HOSTDESTINATION}] DestReady:[{destPortType}]");
+
                         //來源是CV Port或HandoffShelf目的是 CV Port 且 目的不能搬，觸發將卡匣送至中繼站
                         TimeSpan timeSpan = DateTime.Now - mcsCmd.CMD_INSER_TIME;
 
                         if(isUnitType(mcsCmd.HOSTSOURCE, UnitType.OHCV))
                         {
+                            TransferRunLogger.Info("命令起點是OHCV");
+
                             if (timeSpan.TotalSeconds < SystemParameter.iCVPortWatingTime) 
                             {
+                                TransferRunLogger.Info($"命令起點是OHCV，未超時，結束檢查 interval:{SystemParameter.iCVPortWatingTime}");
+
                                 break;
                             }
                         }
                         else
                         {
+                            TransferRunLogger.Info("命令起點不是OHCV");
+
                             if (timeSpan.TotalSeconds < SystemParameter.cmdTimeOutToAlternate)  //200806 SCC+ 目的Port不能搬，超過30秒才產生搬往中繼站，防止 AGV Port正準備做退補 BOX 跟 車子剛好放在 CV 上，造成 CV 短暫不能放貨之情況
                             {
+                                TransferRunLogger.Info($"命令起點不是OHCV，未超時，結束檢查 interval:{SystemParameter.cmdTimeOutToAlternate}");
                                 break;
                             }
                         }
@@ -2034,7 +2082,7 @@ namespace com.mirle.ibg3k0.sc.Service
                             mcsCmd.HOSTDESTINATION = agvName;
                         }
 
-                        PortPLCInfo plcInfoSource = !isShelfPort(mcsCmd.HOSTSOURCE) && !isUnitType(mcsCmd.HOSTSOURCE, UnitType.CRANE) ? GetPLC_PortData(mcsCmd.HOSTSOURCE):null;
+                        PortPLCInfo plcInfoSource = !isShelfPort(mcsCmd.HOSTSOURCE)? GetPLC_PortData(mcsCmd.HOSTSOURCE):null;
                         PortPLCInfo plcInfoDest = GetPLC_PortData(mcsCmd.HOSTDESTINATION);
 
                         if ((isShelfPort(mcsCmd.HOSTSOURCE) || (plcInfoSource.OpAutoMode && plcInfoSource.IsReadyToUnload))
@@ -2096,21 +2144,14 @@ namespace com.mirle.ibg3k0.sc.Service
                             {
                                 if (!isShelfPort(mcsCmd.HOSTSOURCE))
                                 {
-                                    if (isCVPort(mcsCmd.HOSTSOURCE))
-                                    {
-                                        plcInfoSource = GetPLC_PortData(mcsCmd.HOSTSOURCE);
-                                        if (plcInfoSource.OpAutoMode && plcInfoSource.IsReadyToUnload)
-                                        {
-                                            checkToRelay = true;
-                                        }
-                                        else
-                                        {
-                                            checkToRelay = false;
-                                        }
-                                    }
-                                    else if (isUnitType(mcsCmd.HOSTSOURCE, UnitType.CRANE))//在車子上
+                                    plcInfoSource = GetPLC_PortData(mcsCmd.HOSTSOURCE);
+                                    if (plcInfoSource.OpAutoMode && plcInfoSource.IsReadyToUnload)
                                     {
                                         checkToRelay = true;
+                                    }
+                                    else
+                                    {
+                                        checkToRelay = false;
                                     }
                                 }
                                 else
@@ -2136,6 +2177,8 @@ namespace com.mirle.ibg3k0.sc.Service
                                             );
 
                                             TransferIng = true;
+                                            break; //20210129 markchou
+
                                         }
                                         else
                                         {
@@ -2169,6 +2212,8 @@ namespace com.mirle.ibg3k0.sc.Service
                                         );
 
                                         TransferIng = true;
+                                        break; //20210129 markchou
+
                                     }
                                     else
                                     {
@@ -2214,6 +2259,7 @@ namespace com.mirle.ibg3k0.sc.Service
 
                         }
                     }
+                    TransferRunLogger.Info($"命令此輪已無派送可能 ID:[{mcsCmd.CMD_ID}] Source:[{mcsCmd.HOSTSOURCE}] SourceReady:[{sourcePortType}] Destnation:[{mcsCmd.HOSTDESTINATION}] DestReady:[{destPortType}]");
 
                     break;
                 #endregion
@@ -2424,6 +2470,11 @@ namespace com.mirle.ibg3k0.sc.Service
                     DateTime.Now.ToString("HH:mm:ss.fff ")
                     + "OHB >> OHT|命令執行成功，" + GetCmdLog(cmd)
                 );
+                TransferRunLogger.Info
+                (
+                    DateTime.Now.ToString("HH:mm:ss.fff ")
+                    + "命令執行成功，" + GetCmdLog(cmd)
+                );
 
                 if (isCVPort(cmd.HOSTDESTINATION))
                 {
@@ -2443,6 +2494,7 @@ namespace com.mirle.ibg3k0.sc.Service
             else
             {
                 TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHT|OHT回應不能搬送 " + GetCmdLog(cmd));
+                TransferRunLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "OHT無法搬送 " + GetCmdLog(cmd));
 
                 cmdBLL.CheckCmdShelfStatus(cmd);
             }
