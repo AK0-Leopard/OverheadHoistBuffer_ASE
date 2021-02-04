@@ -1787,14 +1787,21 @@ namespace com.mirle.ibg3k0.sc.Service
 
                             if (!isShelfPort(mcsCmd.HOSTSOURCE))
                             {
-                                PortPLCInfo plcInfoSource = GetPLC_PortData(mcsCmd.HOSTSOURCE);
-                                if (plcInfoSource.OpAutoMode && plcInfoSource.IsReadyToUnload)
+                                if (isCVPort(mcsCmd.HOSTSOURCE))
+                                {
+                                    PortPLCInfo plcInfoSource = GetPLC_PortData(mcsCmd.HOSTSOURCE);
+                                    if (plcInfoSource.OpAutoMode && plcInfoSource.IsReadyToUnload)
+                                    {
+                                        checkToRelay = true;
+                                    }
+                                    else
+                                    {
+                                        checkToRelay = false;
+                                    }
+                                }
+                                else if (isUnitType(mcsCmd.HOSTSOURCE, UnitType.CRANE))//在車子上
                                 {
                                     checkToRelay = true;
-                                }
-                                else
-                                {
-                                    checkToRelay = false;
                                 }
                             }
                             else
@@ -2082,7 +2089,7 @@ namespace com.mirle.ibg3k0.sc.Service
                             mcsCmd.HOSTDESTINATION = agvName;
                         }
 
-                        PortPLCInfo plcInfoSource = !isShelfPort(mcsCmd.HOSTSOURCE)? GetPLC_PortData(mcsCmd.HOSTSOURCE):null;
+                        PortPLCInfo plcInfoSource = !isShelfPort(mcsCmd.HOSTSOURCE) && !isUnitType(mcsCmd.HOSTSOURCE, UnitType.CRANE) ? GetPLC_PortData(mcsCmd.HOSTSOURCE) : null;
                         PortPLCInfo plcInfoDest = GetPLC_PortData(mcsCmd.HOSTDESTINATION);
 
                         if ((isShelfPort(mcsCmd.HOSTSOURCE) || (plcInfoSource.OpAutoMode && plcInfoSource.IsReadyToUnload))
@@ -2144,14 +2151,21 @@ namespace com.mirle.ibg3k0.sc.Service
                             {
                                 if (!isShelfPort(mcsCmd.HOSTSOURCE))
                                 {
-                                    plcInfoSource = GetPLC_PortData(mcsCmd.HOSTSOURCE);
-                                    if (plcInfoSource.OpAutoMode && plcInfoSource.IsReadyToUnload)
+                                    if (isCVPort(mcsCmd.HOSTSOURCE))
+                                    {
+                                        plcInfoSource = GetPLC_PortData(mcsCmd.HOSTSOURCE);
+                                        if (plcInfoSource.OpAutoMode && plcInfoSource.IsReadyToUnload)
+                                        {
+                                            checkToRelay = true;
+                                        }
+                                        else
+                                        {
+                                            checkToRelay = false;
+                                        }
+                                    }
+                                    else if (isUnitType(mcsCmd.HOSTSOURCE, UnitType.CRANE))//在車子上
                                     {
                                         checkToRelay = true;
-                                    }
-                                    else
-                                    {
-                                        checkToRelay = false;
                                     }
                                 }
                                 else
