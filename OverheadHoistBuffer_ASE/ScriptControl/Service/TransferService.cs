@@ -1356,25 +1356,23 @@ namespace com.mirle.ibg3k0.sc.Service
 
                         if (isAGVZone(mcsCmd.HOSTDESTINATION))
                         {
-                            string agvName = "";
+                            bool isAGV_InMode = true;
 
                             foreach (var v in GetAGVPort(mcsCmd.HOSTDESTINATION))
                             {
-                                agvName = v.PortName.Trim();
-
                                 if (GetPLC_PortData(v.PortName).IsOutputMode)
                                 {
+                                    mcsCmd.HOSTDESTINATION = v.PortName.Trim();
+                                    isAGV_InMode = false;
                                     break;
                                 }
                             }
 
-                            if (string.IsNullOrWhiteSpace(agvName))
+                            if (isAGV_InMode)
                             {
-                                TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|觸發搬往中繼站 AGV Zone: " + mcsCmd.HOSTDESTINATION + " 找不到 Port" + agvName + "跳出");
-                                return false;
+                                TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|" + mcsCmd.HOSTDESTINATION + " 找不到 OutMode AGV Port 搬往中繼站");
+                                return CmdToRelayStation(mcsCmd);
                             }
-
-                            mcsCmd.HOSTDESTINATION = agvName;
                         }
 
                         PortPLCInfo plcInfoSource = GetPLC_PortData(mcsCmd.HOSTSOURCE);
@@ -1384,40 +1382,7 @@ namespace com.mirle.ibg3k0.sc.Service
                          && plcInfoDest.OpAutoMode && plcInfoDest.IsReadyToLoad == false
                            )
                         {
-                            ACMD_MCS cmdRelay = mcsCmd.Clone();
-
-                            List<ShelfDef> shelfData = shelfDefBLL.GetEmptyAndEnableShelf();
-
-                            cmdRelay.HOSTDESTINATION = GetShelfRecentLocation(shelfData, mcsCmd.HOSTDESTINATION);
-
-                            if (string.IsNullOrWhiteSpace(cmdRelay.HOSTDESTINATION) == false)
-                            {
-                                if (OHT_TransportRequest(cmdRelay))
-                                {
-                                    ShelfReserved(cmdRelay.HOSTSOURCE, cmdRelay.HOSTDESTINATION);
-
-                                    cmdBLL.updateCMD_MCS_RelayStation(mcsCmd.CMD_ID, cmdRelay.HOSTDESTINATION);
-
-                                    TransferServiceLogger.Info
-                                    (
-                                        DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB|搬到中繼站: " + cmdRelay.HOSTDESTINATION
-                                    );
-
-                                    TransferIng = true;
-                                }
-                                else
-                                {
-                                    //釋放於GetShelfRecentLocation中 提前預約的shelf
-                                    shelfDefBLL.updateStatus(cmdRelay.HOSTDESTINATION, ShelfDef.E_ShelfState.EmptyShelf);
-                                }
-                            }
-                            else
-                            {
-                                TransferServiceLogger.Info
-                                (
-                                    DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB|搬到中繼站，沒有儲位"
-                                );
-                            }
+                            TransferIng = CmdToRelayStation(mcsCmd);
                         }
                         else
                         {
@@ -1486,7 +1451,47 @@ namespace com.mirle.ibg3k0.sc.Service
 
             return TransferIng;
         }
+        private bool CmdToRelayStation(ACMD_MCS mcsCmd)
+        {
+            bool TransferIng = false;
 
+            ACMD_MCS cmdRelay = mcsCmd.Clone();
+
+            List<ShelfDef> shelfData = shelfDefBLL.GetEmptyAndEnableShelf();
+
+            cmdRelay.HOSTDESTINATION = GetShelfRecentLocation(shelfData, mcsCmd.HOSTDESTINATION);
+
+            if (string.IsNullOrWhiteSpace(cmdRelay.HOSTDESTINATION) == false)
+            {
+                if (OHT_TransportRequest(cmdRelay))
+                {
+                    ShelfReserved(cmdRelay.HOSTSOURCE, cmdRelay.HOSTDESTINATION);
+
+                    cmdBLL.updateCMD_MCS_RelayStation(mcsCmd.CMD_ID, cmdRelay.HOSTDESTINATION);
+
+                    TransferServiceLogger.Info
+                    (
+                        DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB|搬到中繼站: " + cmdRelay.HOSTDESTINATION
+                    );
+
+                    TransferIng = true;
+                }
+                else
+                {
+                    //釋放於GetShelfRecentLocation中 提前預約的shelf
+                    shelfDefBLL.updateStatus(cmdRelay.HOSTDESTINATION, ShelfDef.E_ShelfState.EmptyShelf);
+                }
+            }
+            else
+            {
+                TransferServiceLogger.Info
+                (
+                    DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB|搬到中繼站，沒有儲位"
+                );
+            }
+
+            return TransferIng;
+        }
         private void BoxDataHandler(List<CassetteData> cstDataList)
         {
             try
