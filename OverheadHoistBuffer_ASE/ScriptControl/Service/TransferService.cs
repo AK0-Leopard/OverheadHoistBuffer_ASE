@@ -1381,7 +1381,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         PortPLCInfo plcInfoDest = GetPLC_PortData(mcsCmd.HOSTDESTINATION);
 
                         if (plcInfoSource.OpAutoMode && plcInfoSource.IsReadyToUnload
-                         && plcInfoDest.OpAutoMode && (plcInfoDest.IsReadyToLoad == false || plcInfoDest.IsOutputMode == false)
+                         && plcInfoDest.OpAutoMode && plcInfoDest.IsReadyToLoad == false
                            )
                         {
                             ACMD_MCS cmdRelay = mcsCmd.Clone();

@@ -32,8 +32,8 @@ using System.Runtime.InteropServices;
 // 您可以指定所有的值，也可以依照以下的方式，使用 '*' 將組建和修訂編號
 // 指定為預設值:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.6.12")]
-[assembly: AssemblyFileVersion("1.6.12")]
+[assembly: AssemblyVersion("1.6.13")]
+[assembly: AssemblyFileVersion("1.6.13")]
 
 //版號 + Tab + 日期 + Tab + 修改人 + Tab + 敘述
 //1.6.12 2021/01/14 JasonWu+ 1. 修正OHT 回報 resume 時間點，由alternate 命令重新啟動改至LoadComplete 後上報
