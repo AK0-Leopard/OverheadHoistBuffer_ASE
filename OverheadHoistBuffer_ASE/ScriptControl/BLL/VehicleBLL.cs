@@ -2156,7 +2156,12 @@ namespace com.mirle.ibg3k0.sc.BLL
                            ToList();
             }
 
-
+            public (bool isExist, AVEHICLE vh) IsVehicleExist(string vhID)
+            {
+                var vhs = eqObjCacheManager.getAllVehicle();
+                var vh = vhs.Where(v => SCUtility.isMatche(v.VEHICLE_ID, vhID)).FirstOrDefault();
+                return (vh != null, vh);
+            }
         }
         public class Web
         {
