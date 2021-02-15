@@ -3195,6 +3195,32 @@ namespace com.mirle.ibg3k0.sc.Service
                             //    }
                             //}
 
+                            //2021/02/15 MarkChou Line3南側車輛向南預約或北側車輛向北預約，要無條件給予路權
+                            if(scApp.BC_ID == "ASE_LINE3")
+                            {
+                                if (!result.OK)
+                                {
+                                    if (reserveInfos.Count >= 2)
+                                    {
+                                        if (directionOHT == HltDirection.Reverse && vh.ServiceSide == ServiceSide.South)
+                                        {
+                                            result.OK = true;
+                                            LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                                               Data: $"Froce pass reserve section:{reserve_section_id},becuse {vh.VEHICLE_ID} is at Line3 heading south.",
+                                               VehicleID: vhID);
+                                        }
+                                        else if (directionOHT == HltDirection.Forward && vh.ServiceSide == ServiceSide.North)
+                                        {
+                                            result.OK = true;
+                                            LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                                                 Data: $"Froce pass reserve section:{reserve_section_id},becuse {vh.VEHICLE_ID} is at Line3 heading north.",
+                                               VehicleID: vhID);
+                                        }
+                                    }
+                                }
+                            }
+
+
                             //2021/01/07 MarkChou 
                             //如果預約不到的時候，確認目前要的Section是否為所有Section的第一段
                             //且車輛所在Address是否在有被該Section與下一段Section連接
