@@ -1719,6 +1719,16 @@ namespace com.mirle.ibg3k0.sc.Service
                                 TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|TransferCommandHandler: 目的 Zone: " + mcsCmd.HOSTDESTINATION + " 找到 " + shelfID);
                                 mcsCmd.HOSTDESTINATION = shelfID;
                             }
+                            else//2021/02/17 markchou
+                            {
+                                TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|TransferCommandHandler 目的 Zone: " + mcsCmd.HOSTDESTINATION + " 沒有位置");
+
+                                cmdBLL.updateCMD_MCS_TranStatus(mcsCmd.CMD_ID, E_TRAN_STATUS.TransferCompleted);
+
+                                reportBLL.ReportTransferInitiated(mcsCmd.CMD_ID.Trim());
+                                reportBLL.ReportTransferCompleted(mcsCmd, null, ResultCode.ZoneIsfull);
+                                break;
+                            }
                         }
 
                         //cmdBLL.updateCMD_MCS_TranStatus(mcsCmd.CMD_ID, E_TRAN_STATUS.TransferCompleted);
@@ -1825,7 +1835,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                         ShelfReserved(cmdRelay.HOSTSOURCE, cmdRelay.HOSTDESTINATION);
 
                                         //修正Shelf到Shelf的Handoff命令會不正確的佔用一個目的地Zone的儲位 20210101 markchou
-                                        if (destReservedInShelf!=null)
+                                        if (!string.IsNullOrWhiteSpace(destReservedInShelf))
                                         {
                                             shelfDefBLL.updateStatus(destReservedInShelf, ShelfDef.E_ShelfState.EmptyShelf);
                                         }
@@ -1847,7 +1857,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                         TransferRunLogger.Info($"命令無法派送 ID:[{cmdRelay.CMD_ID}] Source:[{cmdRelay.HOSTSOURCE}] SourceReady:[{sourcePortType}] Destnation:[{cmdRelay.HOSTDESTINATION}] DestReady:[{destPortType}]");
 
                                         //修正不能執行時不會把Handoff命令終點站解除Reserve的問題 20210107 v1.8.9 markchou
-                                        if (destReservedInShelf != null)
+                                        if (!string.IsNullOrWhiteSpace(destReservedInShelf))
                                         {
                                             shelfDefBLL.updateStatus(destReservedInShelf, ShelfDef.E_ShelfState.EmptyShelf);
                                         }
@@ -1909,7 +1919,7 @@ namespace com.mirle.ibg3k0.sc.Service
 
                                     ACMD_MCS cmdRelay = mcsCmd.Clone();
                                     List<ShelfDef> shelfData;
-                                    shelfData = shelfDefBLL.GetEmptyHandOffShelf();
+                                    shelfData = shelfDefBLL.GetEmptyHandoffShelf();
 
                                     cmdRelay.HOSTDESTINATION = GetShelfRecentLocation(shelfData, mcsCmd.HOSTDESTINATION);
 
@@ -1950,9 +1960,9 @@ namespace com.mirle.ibg3k0.sc.Service
                                             DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB|搬到中繼站，沒有儲位"
                                         );
                                         TransferRunLogger.Info
-                                        (
-                                            DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB|搬到中繼站，沒有儲位"
-                                        );
+                                                             (
+                                                                 DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB|搬到中繼站，沒有儲位"
+                                                             );
                                     }
                                 }
                                 ////起點是CVPort，目的地是南側儲位
@@ -2106,77 +2116,113 @@ namespace com.mirle.ibg3k0.sc.Service
                             List<ShelfDef> shelfData;
                             if (isUnitType(mcsCmd.HOSTDESTINATION, UnitType.OHCV))
                             {
-                                shelfData = shelfDefBLL.GetEmptyHandOffShelf();
+                                shelfData = shelfDefBLL.GetEmptyAlternateShelf();
                             }
                             else if(isUnitType(mcsCmd.HOSTSOURCE, UnitType.OHCV) &&(isUnitType(mcsCmd.HOSTDESTINATION, UnitType.AGV)|| isUnitType(mcsCmd.HOSTDESTINATION, UnitType.NTB))
                                 && _mcsDest < SystemParameter.iHandoffBoundary)//如果目的是南側Station就先放到Alternate區，避免CV塞車過久。
                             {
-                                shelfData = shelfDefBLL.GetEmptyHandOffShelf();
+                                shelfData = shelfDefBLL.GetEmptyHandoffShelf();
                             }
                             else
                             {
                                 shelfData = shelfDefBLL.GetEmptyNonHandOffShelf();
                             }
                             cmdRelay.HOSTDESTINATION = GetShelfRecentLocation(shelfData, mcsCmd.HOSTDESTINATION);
+                            if (string.IsNullOrWhiteSpace(cmdRelay.HOSTDESTINATION) == false)
+                            {
+                                string source_adr;
+                                string destnation_adr;
+                                int iSource = 0;
+                                int iDest = 0;
+                                scApp.MapBLL.getAddressID(cmdRelay.HOSTSOURCE, out source_adr);
+                                scApp.MapBLL.getAddressID(cmdRelay.HOSTDESTINATION, out destnation_adr);
+                                iSource = int.Parse(source_adr);
+                                iDest = int.Parse(destnation_adr);
 
-                            string source_adr;
-                            string destnation_adr;
-                            int iSource = 0;
-                            int iDest = 0;
-                            scApp.MapBLL.getAddressID(cmdRelay.HOSTSOURCE, out source_adr);
-                            scApp.MapBLL.getAddressID(cmdRelay.HOSTDESTINATION, out destnation_adr);
-                            iSource = int.Parse(source_adr);
-                            iDest = int.Parse(destnation_adr);
 
-
-                            bool needHandoff = false;
-                            bool checkToRelay = true;
-                            if (iSource > SystemParameter.iOHCVPortNorthAdr && iDest < SystemParameter.iHandoffBoundary)
-                            {
-                                shelfData = null;
-                                shelfData = shelfDefBLL.GetEmptyHandOffShelfSouth();
-                                needHandoff = true;
-                            }
-                            else if (iSource < SystemParameter.iHandoffBoundary && iDest > SystemParameter.iOHCVPortNorthAdr)
-                            {
-                                shelfData = null;
-                                shelfData = shelfDefBLL.GetEmptyHandOffShelfSouth();
-                                needHandoff = true;
-                            }
-                            else
-                            {
-                                needHandoff = false;
-                            }
-                            if (needHandoff)
-                            {
-                                if (!isShelfPort(mcsCmd.HOSTSOURCE))
+                                bool needHandoff = false;
+                                bool checkToRelay = true;
+                                if (iSource > SystemParameter.iOHCVPortNorthAdr && iDest < SystemParameter.iHandoffBoundary)
                                 {
-                                    if (isCVPort(mcsCmd.HOSTSOURCE))
-                                    {
-                                        plcInfoSource = GetPLC_PortData(mcsCmd.HOSTSOURCE);
-                                        if (plcInfoSource.OpAutoMode && plcInfoSource.IsReadyToUnload)
-                                        {
-                                            checkToRelay = true;
-                                        }
-                                        else
-                                        {
-                                            checkToRelay = false;
-                                        }
-                                    }
-                                    else if (isUnitType(mcsCmd.HOSTSOURCE, UnitType.CRANE))//在車子上
-                                    {
-                                        checkToRelay = true;
-                                    }
+                                    shelfData = null;
+                                    shelfData = shelfDefBLL.GetEmptyHandOffShelfSouth();
+                                    needHandoff = true;
+                                }
+                                else if (iSource < SystemParameter.iHandoffBoundary && iDest > SystemParameter.iOHCVPortNorthAdr)
+                                {
+                                    shelfData = null;
+                                    shelfData = shelfDefBLL.GetEmptyHandOffShelfSouth();
+                                    needHandoff = true;
                                 }
                                 else
                                 {
-                                    checkToRelay = true;
+                                    needHandoff = false;
                                 }
-
-                                if (checkToRelay)
+                                if (needHandoff)
                                 {
-                                    cmdRelay = mcsCmd.Clone();
-                                    cmdRelay.HOSTDESTINATION = GetShelfRecentLocation(shelfData, mcsCmd.HOSTDESTINATION);
+                                    if (!isShelfPort(mcsCmd.HOSTSOURCE))
+                                    {
+                                        if (isCVPort(mcsCmd.HOSTSOURCE))
+                                        {
+                                            plcInfoSource = GetPLC_PortData(mcsCmd.HOSTSOURCE);
+                                            if (plcInfoSource.OpAutoMode && plcInfoSource.IsReadyToUnload)
+                                            {
+                                                checkToRelay = true;
+                                            }
+                                            else
+                                            {
+                                                checkToRelay = false;
+                                            }
+                                        }
+                                        else if (isUnitType(mcsCmd.HOSTSOURCE, UnitType.CRANE))//在車子上
+                                        {
+                                            checkToRelay = true;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        checkToRelay = true;
+                                    }
+
+                                    if (checkToRelay)
+                                    {
+                                        cmdRelay = mcsCmd.Clone();
+                                        cmdRelay.HOSTDESTINATION = GetShelfRecentLocation(shelfData, mcsCmd.HOSTDESTINATION);
+                                        if (string.IsNullOrWhiteSpace(cmdRelay.HOSTDESTINATION) == false)
+                                        {
+                                            if (OHT_TransportRequest(cmdRelay))
+                                            {
+                                                ShelfReserved(cmdRelay.HOSTSOURCE, cmdRelay.HOSTDESTINATION);
+
+                                                cmdBLL.updateCMD_MCS_RelayStation(mcsCmd.CMD_ID, cmdRelay.HOSTDESTINATION);
+
+                                                TransferServiceLogger.Info
+                                                (
+                                                    DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB|搬到中繼站: " + cmdRelay.HOSTDESTINATION
+                                                );
+
+                                                TransferIng = true;
+                                                break; //20210129 markchou
+
+                                            }
+                                            else
+                                            {
+                                                //釋放於GetShelfRecentLocation中 提前預約的shelf
+                                                shelfDefBLL.updateStatus(cmdRelay.HOSTDESTINATION, ShelfDef.E_ShelfState.EmptyShelf);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            TransferServiceLogger.Info
+                                            (
+                                                DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB|搬到中繼站，沒有儲位"
+                                            );
+                                        }
+                                    }
+                                    break;
+                                }
+                                else
+                                {
                                     if (string.IsNullOrWhiteSpace(cmdRelay.HOSTDESTINATION) == false)
                                     {
                                         if (OHT_TransportRequest(cmdRelay))
@@ -2208,41 +2254,16 @@ namespace com.mirle.ibg3k0.sc.Service
                                         );
                                     }
                                 }
-                                break;
                             }
                             else
                             {
-                                if (string.IsNullOrWhiteSpace(cmdRelay.HOSTDESTINATION) == false)
-                                {
-                                    if (OHT_TransportRequest(cmdRelay))
-                                    {
-                                        ShelfReserved(cmdRelay.HOSTSOURCE, cmdRelay.HOSTDESTINATION);
-
-                                        cmdBLL.updateCMD_MCS_RelayStation(mcsCmd.CMD_ID, cmdRelay.HOSTDESTINATION);
-
-                                        TransferServiceLogger.Info
-                                        (
-                                            DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB|搬到中繼站: " + cmdRelay.HOSTDESTINATION
-                                        );
-
-                                        TransferIng = true;
-                                        break; //20210129 markchou
-
-                                    }
-                                    else
-                                    {
-                                        //釋放於GetShelfRecentLocation中 提前預約的shelf
-                                        shelfDefBLL.updateStatus(cmdRelay.HOSTDESTINATION, ShelfDef.E_ShelfState.EmptyShelf);
-                                    }
-                                }
-                                else
-                                {
-                                    TransferServiceLogger.Info
-                                    (
-                                        DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB|搬到中繼站，沒有儲位"
-                                    );
-                                }
+                                TransferServiceLogger.Info
+                                (
+                                    DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB|搬到中繼站，沒有儲位"
+                                );
+                                TransferRunLogger.Info($"Relay命令派送失敗，沒有儲位 ID:[{cmdRelay.CMD_ID}] Source:[{cmdRelay.HOSTSOURCE}] SourceReady:[{sourcePortType}] Destnation:[{cmdRelay.HOSTDESTINATION}] DestReady:[{destPortType}]");
                             }
+
 
                         }
                         else

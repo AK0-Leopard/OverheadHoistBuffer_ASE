@@ -233,7 +233,7 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
             }
         }
 
-        public List<ShelfDef> GetEmptyHandOffShelf(DBConnection_EF conn)
+        public List<ShelfDef> GetEmptyAlternateShelf(DBConnection_EF conn)
         {
             try
             {
@@ -241,6 +241,25 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                     .Where(x => x.ShelfState == ShelfDef.E_ShelfState.EmptyShelf &&
                                 x.Enable == "Y"
                               && (x.ZoneID == SystemParameter.AlternateZoneID))
+                    .OrderByDescending(x => x.ShelfID).ToList();
+                //.FirstOrDefault();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex);
+                throw;
+            }
+        }
+
+        public List<ShelfDef> GetEmptyHandoffShelf(DBConnection_EF conn)
+        {
+            try
+            {
+                var result = conn.ShelfDef
+                    .Where(x => x.ShelfState == ShelfDef.E_ShelfState.EmptyShelf &&
+                                x.Enable == "Y"
+                              && (x.ZoneID == SystemParameter.HandoffZoneID))
                     .OrderByDescending(x => x.ShelfID).ToList();
                 //.FirstOrDefault();
                 return result;

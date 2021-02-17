@@ -59,10 +59,17 @@ namespace com.mirle.ibg3k0.sc.Service
             shelfDefBLL = _app.ShelfDefBLL;
             zoneBLL = _app.ZoneDefBLL;
             var zoneInfo = zoneBLL.loadZoneData();
+
+            if(scApp.BC_ID == "ASE_LINE3")//202102175 markchou
+            {
+                emergencyWaterLevel = 0.9;
+            }
+
             if (zoneInfo.FirstOrDefault().ZoneName.Contains("LOOP"))
             {
                 emergencyWaterLevel = 0.6;
             }
+
         }
 
         #region Use for check the empty box number and transport for empty box

@@ -338,13 +338,30 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
         }
 
-        public List<ShelfDef> GetEmptyHandOffShelf()
+        public List<ShelfDef> GetEmptyAlternateShelf()
         {
             try
             {
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
-                    return shelfdefDao.GetEmptyHandOffShelf(con);
+                    return shelfdefDao.GetEmptyAlternateShelf(con);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return null;
+            }
+        }
+
+
+        public List<ShelfDef> GetEmptyHandoffShelf()
+        {
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    return shelfdefDao.GetEmptyHandoffShelf(con);
                 }
             }
             catch (Exception ex)

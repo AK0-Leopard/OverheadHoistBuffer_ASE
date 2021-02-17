@@ -1215,15 +1215,32 @@ namespace com.mirle.ibg3k0.sc.BLL
                 foreach (var cmdMCS in sortedMCSData)
                 {
                     string sourceAddr;
-                    if (!scApp.MapBLL.getAddressID(cmdMCS.HOSTSOURCE, out sourceAddr))
+                    if(string.IsNullOrWhiteSpace(cmdMCS.RelayStation))// 20210217 Sort時，以當前Box的位置來做判斷，而非原命令的起點
                     {
-                        cmdMCS.DistanceFromVehicleToHostSource = int.MaxValue;
+                        if (!scApp.MapBLL.getAddressID(cmdMCS.HOSTSOURCE, out sourceAddr))
+                        {
+                            cmdMCS.DistanceFromVehicleToHostSource = int.MaxValue;
+                        }
+                        else
+                        {
+                            (_, double distance) = scApp.VehicleBLL.findBestSuitableVhStepByNearest(sourceAddr);
+                            cmdMCS.DistanceFromVehicleToHostSource = (int)distance;
+                        }
                     }
                     else
                     {
-                        (_, double distance) = scApp.VehicleBLL.findBestSuitableVhStepByNearest(sourceAddr);
-                        cmdMCS.DistanceFromVehicleToHostSource = (int)distance;
+                        if (!scApp.MapBLL.getAddressID(cmdMCS.RelayStation, out sourceAddr))
+                        {
+                            cmdMCS.DistanceFromVehicleToHostSource = int.MaxValue;
+                        }
+                        else
+                        {
+                            (_, double distance) = scApp.VehicleBLL.findBestSuitableVhStepByNearest(sourceAddr);
+                            cmdMCS.DistanceFromVehicleToHostSource = (int)distance;
+                        }
                     }
+
+
                     if (cmdMCS.PRIORITY_SUM >= 99)
                     {
                         isCmdPriorityMoreThan99 = true;
@@ -1363,6 +1380,9 @@ namespace com.mirle.ibg3k0.sc.BLL
             bool isMCSCmd1_isPriority99 = MCSCmd1.PRIORITY_SUM >= 99;
             bool isMCSCmd2_isPriority99 = MCSCmd2.PRIORITY_SUM >= 99;
 
+            string box1CurrPos = string.IsNullOrWhiteSpace(MCSCmd1.RelayStation) ? MCSCmd1.HOSTSOURCE : MCSCmd1.RelayStation;
+            string box2CurrPos = string.IsNullOrWhiteSpace(MCSCmd2.RelayStation) ? MCSCmd2.HOSTSOURCE : MCSCmd2.RelayStation;
+
             if ((isMCSCmd1_isPriority99 == true) && (isMCSCmd2_isPriority99 == true) ||
             (isMCSCmd1_isPriority99 == false) && (isMCSCmd2_isPriority99 == false))
             {
@@ -1379,8 +1399,8 @@ namespace com.mirle.ibg3k0.sc.BLL
                 //代表後者較優先，換位
             }
 
-            bool isMCSCmd1_isCVPortIN = scApp.TransferService.isUnitType(MCSCmd1.HOSTSOURCE, UnitType.OHCV);
-            bool isMCSCmd2_isCVPortIN = scApp.TransferService.isUnitType(MCSCmd2.HOSTSOURCE, UnitType.OHCV);
+            bool isMCSCmd1_isCVPortIN = scApp.TransferService.isUnitType(box1CurrPos, UnitType.OHCV);
+            bool isMCSCmd2_isCVPortIN = scApp.TransferService.isUnitType(box2CurrPos, UnitType.OHCV);
             if ((isMCSCmd1_isCVPortIN == true) && (isMCSCmd2_isCVPortIN == true) ||
                 (isMCSCmd1_isCVPortIN == false) && (isMCSCmd2_isCVPortIN == false))
             {
@@ -1440,8 +1460,8 @@ namespace com.mirle.ibg3k0.sc.BLL
 
             //A20.06.09.0
             // 0.判斷命令來源是否為shelf，非shelf者優先進行。
-            bool isCmd1_SourceTypeShelf = MCSCmd1.IsCmdSourceTypeShelf(MCSCmd1.HOSTSOURCE);
-            bool isCmd2_SourceTypeShelf = MCSCmd1.IsCmdSourceTypeShelf(MCSCmd2.HOSTSOURCE);
+            bool isCmd1_SourceTypeShelf = MCSCmd1.IsCmdSourceTypeShelf(box1CurrPos);
+            bool isCmd2_SourceTypeShelf = MCSCmd1.IsCmdSourceTypeShelf(box2CurrPos);
 
             if ((isCmd1_SourceTypeShelf == true) && (isCmd2_SourceTypeShelf == true) ||
                 (isCmd1_SourceTypeShelf == false) && (isCmd2_SourceTypeShelf == false))
@@ -1499,7 +1519,8 @@ namespace com.mirle.ibg3k0.sc.BLL
         {
             bool isMCSCmd1_isPriority99 = MCSCmd1.PRIORITY_SUM >= 99;
             bool isMCSCmd2_isPriority99 = MCSCmd2.PRIORITY_SUM >= 99;
-
+            string box1CurrPos = string.IsNullOrWhiteSpace(MCSCmd1.RelayStation) ? MCSCmd1.HOSTSOURCE : MCSCmd1.RelayStation;
+            string box2CurrPos = string.IsNullOrWhiteSpace(MCSCmd2.RelayStation) ? MCSCmd2.HOSTSOURCE : MCSCmd2.RelayStation;
             if ((isMCSCmd1_isPriority99 == true) && (isMCSCmd2_isPriority99 == true) ||
             (isMCSCmd1_isPriority99 == false) && (isMCSCmd2_isPriority99 == false))
             {
@@ -1516,8 +1537,8 @@ namespace com.mirle.ibg3k0.sc.BLL
                 //代表後者較優先，換位
             }
 
-            bool isMCSCmd1_isCVPortIN = scApp.TransferService.isUnitType(MCSCmd1.HOSTSOURCE, UnitType.OHCV);
-            bool isMCSCmd2_isCVPortIN = scApp.TransferService.isUnitType(MCSCmd2.HOSTSOURCE, UnitType.OHCV);
+            bool isMCSCmd1_isCVPortIN = scApp.TransferService.isUnitType(box1CurrPos, UnitType.OHCV);
+            bool isMCSCmd2_isCVPortIN = scApp.TransferService.isUnitType(box2CurrPos, UnitType.OHCV);
             if ((isMCSCmd1_isCVPortIN == true) && (isMCSCmd2_isCVPortIN == true) ||
                 (isMCSCmd1_isCVPortIN == false) && (isMCSCmd2_isCVPortIN == false))
             {
@@ -1596,8 +1617,8 @@ namespace com.mirle.ibg3k0.sc.BLL
 
             //A20.06.09.0
             // 0.判斷命令來源是否為shelf，非shelf者優先進行。
-            bool isCmd1_SourceTypeShelf = MCSCmd1.IsCmdSourceTypeShelf(MCSCmd1.HOSTSOURCE);
-            bool isCmd2_SourceTypeShelf = MCSCmd1.IsCmdSourceTypeShelf(MCSCmd2.HOSTSOURCE);
+            bool isCmd1_SourceTypeShelf = MCSCmd1.IsCmdSourceTypeShelf(box1CurrPos);
+            bool isCmd2_SourceTypeShelf = MCSCmd1.IsCmdSourceTypeShelf(box2CurrPos);
 
             if ((isCmd1_SourceTypeShelf == true) && (isCmd2_SourceTypeShelf == true) ||
                 (isCmd1_SourceTypeShelf == false) && (isCmd2_SourceTypeShelf == false))
