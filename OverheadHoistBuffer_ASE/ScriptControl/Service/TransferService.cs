@@ -174,7 +174,7 @@ namespace com.mirle.ibg3k0.sc.Service
         #region 時間儲存
         DateTime updateTime;    //定時更新狀態
         DateTime ohtTimeout;    //AVEHICLE 裡面沒有閒置的車輛，無法執行1分鐘紀錄Log
-        DateTime cmdTimeOut;
+        DateTime? cmdTimeOut;
         DateTime deleteDBLogTime;   //記錄什麼時候刪除放在資料庫的 LOG
         TimeSpan deleteDBTimeSpan;  //計算 deleteDBLogTime 使用，每日做刪除
         #endregion
@@ -763,7 +763,7 @@ namespace com.mirle.ibg3k0.sc.Service
                             //iniOHTData();
 
                             updateTime = DateTime.Now;
-                            cmdTimeOut = DateTime.Now;
+                            cmdTimeOut = null;
                             DeleteLog();
                             TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "TransferService >> Port資料初始化結束------------------------------------");
 
@@ -981,26 +981,33 @@ namespace com.mirle.ibg3k0.sc.Service
                             if (cmdFail)
                             {
                                 cmdFail = false;
-
-                                TimeSpan timeSpan = DateTime.Now - cmdTimeOut;
-
-                                if (timeSpan.TotalSeconds >= cmdIdleTimeOut)
+                                if (cmdTimeOut.HasValue)
                                 {
-                                    cmdTimeOut = DateTime.Now;
+                                    TimeSpan timeSpan = DateTime.Now - cmdTimeOut.Value;
 
-                                    TransferServiceLogger.Info
-                                    (
-                                        DateTime.Now.ToString("HH:mm:ss.fff ")
-                                        + "OHB >> OHB| 車子閒置、有命令，超時 " + cmdIdleTimeOut + " 秒鐘，報異常"
-                                    );
+                                    if (timeSpan.TotalSeconds >= cmdIdleTimeOut)
+                                    {
+                                        cmdTimeOut = DateTime.Now;//重新計時
 
-                                    OHBC_AlarmSet(line.LINE_ID, ((int)AlarmLst.OHT_IDLE_HasCMD_TimeOut).ToString());
-                                    cmdFailAlarmSet = true;
+                                        TransferServiceLogger.Info
+                                        (
+                                            DateTime.Now.ToString("HH:mm:ss.fff ")
+                                            + "OHB >> OHB| 車子閒置、有命令，超時 " + cmdIdleTimeOut + " 秒鐘，報異常"
+                                        );
+
+                                        OHBC_AlarmSet(line.LINE_ID, ((int)AlarmLst.OHT_IDLE_HasCMD_TimeOut).ToString());
+                                        cmdFailAlarmSet = true;
+                                    }
                                 }
+                                else
+                                {
+                                    cmdTimeOut = DateTime.Now;//開始計時
+                                }
+
                             }
                             else
                             {
-                                cmdTimeOut = DateTime.Now;
+                                cmdTimeOut = null;
 
                                 OHBC_OHT_IDLE_HasCMD_TimeOutCleared();
                             }
