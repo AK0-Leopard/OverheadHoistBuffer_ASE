@@ -33,7 +33,10 @@ namespace com.mirle.ibg3k0.sc.Service
         //2020.6.22 每檢查N次高水位，檢查1次低水位
         private const int lowLevelCheckTime = 4;
         //2020.06.16 緊急水位設定(以比例計算，占用儲格超過這個比例就是達緊急水位)
-        private double emergencyWaterLevel = 0.95;
+        //private double emergencyWaterLevel = 0.95;
+
+        private const int emergencyWaterLevel = 3;
+
 
         private SCApplication scApp = null;
         private CassetteDataBLL cassette_dataBLL = null;
@@ -60,15 +63,15 @@ namespace com.mirle.ibg3k0.sc.Service
             zoneBLL = _app.ZoneDefBLL;
             var zoneInfo = zoneBLL.loadZoneData();
 
-            if(scApp.BC_ID == "ASE_LINE3")//202102175 markchou
-            {
-                emergencyWaterLevel = 0.9;
-            }
+            //if(scApp.BC_ID == "ASE_LINE3")//202102175 markchou
+            //{
+            //    emergencyWaterLevel = 0.9;
+            //}
 
-            if (zoneInfo.FirstOrDefault().ZoneName.Contains("LOOP"))
-            {
-                emergencyWaterLevel = 0.6;
-            }
+            //if (zoneInfo.FirstOrDefault().ZoneName.Contains("LOOP"))
+            //{
+            //    emergencyWaterLevel = 0.6;
+            //}
 
         }
 
@@ -114,13 +117,18 @@ namespace com.mirle.ibg3k0.sc.Service
                 //高水位檢查
                 foreach (ZoneDef zoneData in zoneCacheDatas)
                 {
+                    if (zoneData.ZoneID == SystemParameter.HandoffZoneID ||
+                        zoneData.ZoneID == SystemParameter.AlternateZoneID)
+                    {
+                        continue;
+                    }
                     //A1: zone內有沒有已經標記成待退的空box，有則跳過這次檢查
                     if (zoneData.WaitForRecycleBoxList.Count() != 0)
                     {
                         continue;
                     }
                     //A2: 檢查是否達緊急水位，有則強制送往STK，沒有STK就送往OHCV
-                    if (zoneData.BoxCount > zoneData.ZoneSize * emergencyWaterLevel)
+                    if (zoneData.BoxCount >= zoneData.ZoneSize - emergencyWaterLevel)
                     {
                         //已達緊急水位，產生往Loop or STK的manual command退box
                         emptyBoxLogger.Info($"{zoneData.ZoneID} reaches emergency water level: {zoneData.ZoneSize * emergencyWaterLevel}, force to send empty box to STK or OHCV...");
@@ -173,6 +181,12 @@ namespace com.mirle.ibg3k0.sc.Service
                             //B2: 檢查各個zone是否需要補空box
                             foreach (ZoneDef zoneData in zoneCacheDatas)
                             {
+                                if (zoneData.ZoneID == SystemParameter.HandoffZoneID ||
+                                    zoneData.ZoneID == SystemParameter.AlternateZoneID)
+                                {
+                                    continue;
+                                }
+
                                 if (zoneData.EmptyBoxList.Count() < zoneData.LowWaterMark)
                                 {
                                     emptyBoxLogger.Info($"{zoneData.ZoneID} has {zoneData.EmptyBoxList.Count()} empty box(es), reaches low water level: {zoneData.LowWaterMark}, request for empty box...");
@@ -463,24 +477,37 @@ namespace com.mirle.ibg3k0.sc.Service
             int requriedBoxAGV = 0;
             int emptyBoxNum = zoneData.EmptyBoxList.Count();
             var isEnoughEmptyBox = CheckIsEnoughEmptyBox(_emptyBoxList.Count - 1, out requriedBoxAGV);
-            if (emptyBoxNum != 0 && isEnoughEmptyBox.isEnough == true )
+            if (emptyBoxNum != 0 && isEnoughEmptyBox.isEnough == true && emptyBoxNum > zoneData.LowWaterMark)
             {
                 recycleBlockID = zoneData.EmptyBoxList.FirstOrDefault();
             }
             else
             {
-                zoneData.SolidBoxList.Sort();
-                recycleBlockID = zoneData.SolidBoxList.FirstOrDefault();
+
+                //zoneData.SolidBoxList.Sort();
+                //recycleBlockID = zoneData.SolidBoxList.FirstOrDefault();
+                var zoneSolidBox = GetTotalSoildBoxNumberByZoneID(zoneData.ZoneID);
+                recycleBlockID = FindBestSolidBoxID(zoneSolidBox.solidBox);
             }
             return recycleBlockID;
         }
 
         private string FindBestSolidBoxID(List<CassetteData> solidBoxList)
         {
-            string solidBoxID = null;
+            string solidBoxID = "";
             if (solidBoxList != null && solidBoxList.Count > 0)
             {
-                solidBoxID = solidBoxList.OrderByDescending(o => o.CSTInDT).FirstOrDefault().BOXID;
+                solidBoxList = solidBoxList.OrderByDescending(o => o.CSTInDT).ToList();
+                for(int i=0;i< solidBoxList.Count; i++)
+                {
+                    var solidBox = shelfDatas.Where(s => s.ShelfID == solidBoxList[i].Carrier_LOC.Trim() && s.ShelfState == ShelfDef.E_ShelfState.Stored).FirstOrDefault();
+                    if (solidBox!=null)
+                    {
+                        solidBoxID = solidBoxList[i].BOXID.Trim();
+                        break;
+                    }
+                }
+                //solidBoxID = solidBoxList.OrderByDescending(o => o.CSTInDT).FirstOrDefault().BOXID;
             }
             else
             {
@@ -509,8 +536,10 @@ namespace com.mirle.ibg3k0.sc.Service
             //多幾個，就退幾次
             for (int i = boxCount; i > zoneData.HighWaterMark; i--)
             {
+                
                 string recycledBox = emptyBoxList.FirstOrDefault();
-                if (string.IsNullOrEmpty(recycledBox) == false)
+                if (string.IsNullOrEmpty(recycledBox) == false&&
+                    emptyBoxList.Count> zoneData.LowWaterMark)
                 {
                     DoSendPopEmptyBoxToMCS(recycledBox);
                     zoneData.WaitForRecycleBoxList.Add(recycledBox);    //加入待回收box清單
@@ -518,7 +547,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 }
                 else
                 {
-                    //已退光所有空box
+                    //已退光所有空box或已達彽水位
                     break;
                 }
             }
@@ -764,7 +793,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 z.SolidBoxList = solidBoxes.ToList();
                 emptyBoxLogger.Info($"{z.ZoneID} Size = {z.ZoneSize}, empty box count = {z.EmptyBoxList.Count()}, solid box count = {z.SolidBoxList.Count()}");
                 emptyBoxLogger.Info($"{z.ZoneID} Low waterlevel = {z.LowWaterMark}, high waterlevel = {z.HighWaterMark}," +
-                    $" emergency waterlevel = {z.ZoneSize * emergencyWaterLevel}");
+                    $" emergency waterlevel = {z.ZoneSize - emergencyWaterLevel}");
 
                 //找出已經回收成功的box
                 var recycledBoxes = from x in z.WaitForRecycleBoxList
