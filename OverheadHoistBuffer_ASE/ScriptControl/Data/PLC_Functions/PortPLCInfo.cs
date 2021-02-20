@@ -9,6 +9,20 @@ namespace com.mirle.ibg3k0.sc.Data.PLC_Functions
     public class PortPLCInfo : PLC_FunBase
     {
         public DateTime Timestamp;
+        public int BoxCount //20210219 markchou 根據在席訊號推斷有多少Box
+        {  
+            get {
+                int count = 0;
+                if (LoadPosition1) count++;
+                if (LoadPosition2) count++;
+                if (LoadPosition3) count++;
+                if (LoadPosition4) count++;
+                if (LoadPosition5) count++;
+                if (LoadPosition6) count++;
+                if (LoadPosition7) count++;
+                return count; 
+            } 
+        }
 
         [PLCElement(ValueName = "OP_RUN")]
         public bool OpAutoMode;         //D6401.0
