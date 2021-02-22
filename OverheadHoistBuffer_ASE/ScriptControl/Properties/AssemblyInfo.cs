@@ -32,11 +32,13 @@ using System.Runtime.InteropServices;
 // 您可以指定所有的值，也可以依照以下的方式，使用 '*' 將組建和修訂編號
 // 指定為預設值:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.6.13")]
-[assembly: AssemblyFileVersion("1.6.13")]
+[assembly: AssemblyVersion("1.6.14")]
+[assembly: AssemblyFileVersion("1.6.14")]
 
 //版號 + Tab + 日期 + Tab + 修改人 + Tab + 敘述
-//1.6.13 2021/02/05  SCC*    修正AGV 全是InMode 沒有搬到中繼站之問題
+//1.6.14 2021/02/05  SCC*    1.修正AGV 全是InMode 沒有搬到中繼站之問題
+//                   Kevin   2.修正在Source Port狀態不正確時，會導致儲位被預約沒釋放的問題。
+//                   Mark    3.修正如果有Port有足夠的容量接收Box，就當作可以派命令過去放貨
 //1.6.12 2021/01/14 JasonWu+ 1. 修正OHT 回報 resume 時間點，由alternate 命令重新啟動改至LoadComplete 後上報
 //1.6.10 2020/12/10  SCC+    1.修正OHT回應不能搬送，沒有將儲位狀態恢復之問題。(會變成一直保持在I:已預約)
 //1.6.9 2020/12/10  SCC+     1.再次修改 AGV PortPositionOFF 原本報CEID:153 改報 CEID:152。(上一個版本改失敗)
