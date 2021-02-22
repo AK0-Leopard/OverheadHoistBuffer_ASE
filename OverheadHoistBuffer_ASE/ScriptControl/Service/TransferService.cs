@@ -22,6 +22,7 @@
 // 2020/07/07    Hsinyu Chang   N/A            2020.07.07   Master PLC斷線時發alarm
 // 2020/11/11    Jason Wu       N/A            A20.11.11.0  新增在進入Load_Complete的時候，若為非shelf的port 就不要進行過帳
 // 2021/02/01    Kevin Wei      N/A            A21.02.01.0  修改當alternat後要上報resume的時機，由原本的命令一下達改成Load Complete
+// 2021/02/22    Kevin Wei      N/A            A21.02.22.0  修正在尋找搬送命令時，若Source Port狀態不正確時，就不再往下尋找儲位，避免錯誤預約儲位的問題。
 //**********************************************************************************
 
 using com.mirle.ibg3k0.bcf.Common;
@@ -1280,6 +1281,17 @@ namespace com.mirle.ibg3k0.sc.Service
                         sourcePortType = AreSourceEnable(mcsCmd.RelayStation);
                         mcsCmd.HOSTSOURCE = mcsCmd.RelayStation;
                     }
+                    //A21.02.22.0 Start
+                    if (!sourcePortType)
+                    {
+                        TransferServiceLogger.Info
+                        (
+                            DateTime.Now.ToString("HH:mm:ss.fff ")
+                            + "OHB >> OHB| 命令來源: " + mcsCmd.HOSTSOURCE + " Port狀態不正確，不繼續往下執行。"
+                        );
+                        return false;
+                    }
+                    //A21.02.22.0 End
                     #endregion
                     #region 檢查目的狀態
                     if (isUnitType(mcsCmd.HOSTDESTINATION, UnitType.ZONE))  //若 Zone 上沒有儲位，目的 Port 會為 ZoneName，並上報 MCS
