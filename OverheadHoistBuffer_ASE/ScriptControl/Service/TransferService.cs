@@ -23,6 +23,7 @@
 // 2020/11/11    Jason Wu       N/A            A20.11.11.0  新增在進入Load_Complete的時候，若為非shelf的port 就不要進行過帳
 // 2021/02/01    Kevin Wei      N/A            A21.02.01.0  修改當alternat後要上報resume的時機，由原本的命令一下達改成Load Complete
 // 2021/02/22    Kevin Wei      N/A            A21.02.22.0  修正在尋找搬送命令時，若Source Port狀態不正確時，就不再往下尋找儲位，避免錯誤預約儲位的問題。
+// 2021/02/22    Jason Wu       N/A            A21.02.22.1  修改swap 功能對於emergency 所做動作，在沒有OHB->AGV命令的情況下將不會轉1 in 1 out 而是2 in.
 //**********************************************************************************
 
 using com.mirle.ibg3k0.bcf.Common;
@@ -9287,7 +9288,14 @@ namespace com.mirle.ibg3k0.sc.Service
                         else
                         {
                             AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Enter the One in One Out swap Emergency = " + isEmergency.ToString());
-                            InOutModeChange(accessAGVPortDatas, AGVStationID);
+                            if (OHBCCmdNumber > 0) //A21.02.22.1
+                            {
+                                InOutModeChange(accessAGVPortDatas, AGVStationID);
+                            }
+                            else if (AGVCFromEQToStationCmdNum > 0) //A21.02.22.1
+                            {
+                                InputModeChange(accessAGVPortDatas, isEmergency); //A21.02.22.1
+                            }
                             isMoreOutMode = true;
                             isOK = true;
                         }
