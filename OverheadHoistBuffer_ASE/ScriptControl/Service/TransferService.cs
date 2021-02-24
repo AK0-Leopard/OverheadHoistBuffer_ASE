@@ -1387,10 +1387,10 @@ namespace com.mirle.ibg3k0.sc.Service
                             }
                         }
 
-                        PortPLCInfo plcInfoSource = GetPLC_PortData(mcsCmd.HOSTSOURCE);
+                        PortPLCInfo plcInfoSource = !isUnitType(mcsCmd.HOSTSOURCE, UnitType.CRANE) ? GetPLC_PortData(mcsCmd.HOSTSOURCE) : null;//20210224 如果Source是在車上，那就不要去取PLC資料，避免異常發生
                         PortPLCInfo plcInfoDest = GetPLC_PortData(mcsCmd.HOSTDESTINATION);
 
-                        if (plcInfoSource.OpAutoMode && plcInfoSource.IsReadyToUnload
+                        if ((plcInfoSource ==null|| (plcInfoSource.OpAutoMode && plcInfoSource.IsReadyToUnload))
                          && plcInfoDest.OpAutoMode && plcInfoDest.IsReadyToLoad == false
                            )
                         {
@@ -1398,16 +1398,31 @@ namespace com.mirle.ibg3k0.sc.Service
                         }
                         else
                         {
-                            TransferServiceLogger.Info
-                            (
+                            if(plcInfoSource != null)
+                            {
+                                TransferServiceLogger.Info
+                                (
+                                    DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB| 觸發將卡匣送至中繼站失敗: "
+                                    + " plcInfo_Source.EQ_ID: " + plcInfoSource.EQ_ID
+                                    + " plcInfo_Source.OpAutoMode 要 True 實際是 " + plcInfoSource.OpAutoMode
+                                    + " plcInfo_Source.IsReadyToUnload 要 True 實際是 " + plcInfoSource.IsReadyToUnload
+                                    + " plcInfo_Dest.EQ_ID: " + plcInfoDest.EQ_ID
+                                    + " plcInfo_Dest.OpAutoMode 要 True 實際是 " + plcInfoDest.OpAutoMode
+                                    + " plcInfo_Dest.IsReadyToLoad 要 false 實際是 " + plcInfoDest.IsReadyToLoad
+                                );
+                            }
+                            else
+                            {
+                                TransferServiceLogger.Info
+                                (
                                 DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB| 觸發將卡匣送至中繼站失敗: "
-                                + " plcInfo_Source.EQ_ID: " + plcInfoSource.EQ_ID
-                                + " plcInfo_Source.OpAutoMode 要 True 實際是 " + plcInfoSource.OpAutoMode
-                                + " plcInfo_Source.IsReadyToUnload 要 True 實際是 " + plcInfoSource.IsReadyToUnload
+                                + " plcInfo_Source.EQ_ID: " + mcsCmd.HOSTSOURCE
                                 + " plcInfo_Dest.EQ_ID: " + plcInfoDest.EQ_ID
                                 + " plcInfo_Dest.OpAutoMode 要 True 實際是 " + plcInfoDest.OpAutoMode
                                 + " plcInfo_Dest.IsReadyToLoad 要 false 實際是 " + plcInfoDest.IsReadyToLoad
-                            );
+                                );
+                            }
+
                         }
                     }
 
