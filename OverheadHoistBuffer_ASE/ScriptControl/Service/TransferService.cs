@@ -1841,17 +1841,41 @@ namespace com.mirle.ibg3k0.sc.Service
                     {
                         if (destPort.OpAutoMode)
                         {
-                            if (isCVPort(destName)&&
+                            //if (isCVPort(destName)&&
+                            //    destPort.IsOutputMode &&
+                            //    portINIData[destName].Stage > 1 &&
+                            //    (portINIData[destName].Stage > (command_count + destPort.BoxCount)))//20210219目的Port不只一節，且在庫量與在途量相加小於總容量，就允許下達命令進行般送。
+                            //{
+                            //    TransferServiceLogger.Info
+                            //    (
+                            //        DateTime.Now.ToString("HH:mm:ss.fff ") +
+                            //        "Port " + destName + "have enough capacity, is ok to send box to port." 
+                            //    );
+                            //    return true;
+                            //}
+
+                            if (isCVPort(destName) &&
                                 destPort.IsOutputMode &&
-                                portINIData[destName].Stage > 1 &&
-                                (portINIData[destName].Stage > (command_count + destPort.BoxCount)))//20210219目的Port不只一節，且在庫量與在途量相加小於總容量，就允許下達命令進行般送。
+                                portINIData[destName].Stage > 1)//20210219目的Port不只一節，且在庫量與在途量相加小於總容量，就允許下達命令進行般送。
                             {
-                                TransferServiceLogger.Info
-                                (
-                                    DateTime.Now.ToString("HH:mm:ss.fff ") +
-                                    "Port " + destName + "have enough capacity, is ok to send box to port." 
-                                );
-                                return true;
+                                if (portINIData[destName].Stage > (command_count + destPort.BoxCount))
+                                {
+                                    TransferServiceLogger.Info
+                                    (
+                                        DateTime.Now.ToString("HH:mm:ss.fff ") +
+                                        "Port " + destName + "have enough capacity, is ok to send box to port."
+                                    );
+                                    return true;
+                                }
+                                else
+                                {
+                                    TransferServiceLogger.Info
+                                    (
+                                        DateTime.Now.ToString("HH:mm:ss.fff ") +
+                                        "Port " + destName + "not have enough capacity, is can't to send box to port."
+                                    );
+                                    return false;
+                                }
                             }
 
 

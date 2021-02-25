@@ -33,6 +33,8 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.pnl_Map = new System.Windows.Forms.Panel();
+            this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
+            this.uctlMapWPF1 = new com.mirle.ibg3k0.bc.winform.UI.Components.WPFComponents.uctlMapWPF();
             this.panel1 = new System.Windows.Forms.Panel();
             this.lbl_HoseMode = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
@@ -122,13 +124,11 @@
             this.report_time = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.alarm_desc = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabPLC = new System.Windows.Forms.TabPage();
+            this.utilityLog1 = new com.mirle.ibg3k0.bc.winform.UI.Components.UtilityLog();
             this.tab_SECS = new System.Windows.Forms.TabPage();
+            this.utilityLog_SECS = new com.mirle.ibg3k0.bc.winform.UI.Components.UtilityLog();
             this.timer_TimedUpdates = new System.Windows.Forms.Timer(this.components);
             this.vehicleObjToShowBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
-            this.uctlMapWPF1 = new com.mirle.ibg3k0.bc.winform.UI.Components.WPFComponents.uctlMapWPF();
-            this.utilityLog1 = new com.mirle.ibg3k0.bc.winform.UI.Components.UtilityLog();
-            this.utilityLog_SECS = new com.mirle.ibg3k0.bc.winform.UI.Components.UtilityLog();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -202,6 +202,17 @@
             this.pnl_Map.Name = "pnl_Map";
             this.pnl_Map.Size = new System.Drawing.Size(1559, 912);
             this.pnl_Map.TabIndex = 0;
+            // 
+            // elementHost1
+            // 
+            this.elementHost1.BackColor = System.Drawing.Color.LightGray;
+            this.elementHost1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.elementHost1.Location = new System.Drawing.Point(0, 0);
+            this.elementHost1.Name = "elementHost1";
+            this.elementHost1.Size = new System.Drawing.Size(1559, 912);
+            this.elementHost1.TabIndex = 0;
+            this.elementHost1.Text = "elementHost1";
+            this.elementHost1.Child = this.uctlMapWPF1;
             // 
             // panel1
             // 
@@ -1149,37 +1160,6 @@
             this.tabPLC.Text = "PLC Communication      ";
             this.tabPLC.UseVisualStyleBackColor = true;
             // 
-            // tab_SECS
-            // 
-            this.tab_SECS.Controls.Add(this.utilityLog_SECS);
-            this.tab_SECS.Location = new System.Drawing.Point(4, 27);
-            this.tab_SECS.Name = "tab_SECS";
-            this.tab_SECS.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_SECS.Size = new System.Drawing.Size(1916, 99);
-            this.tab_SECS.TabIndex = 6;
-            this.tab_SECS.Text = "SECS Communcation    ";
-            this.tab_SECS.UseVisualStyleBackColor = true;
-            // 
-            // timer_TimedUpdates
-            // 
-            this.timer_TimedUpdates.Interval = 1000;
-            this.timer_TimedUpdates.Tick += new System.EventHandler(this.timer_TimedUpdates_Tick);
-            // 
-            // vehicleObjToShowBindingSource
-            // 
-            this.vehicleObjToShowBindingSource.DataSource = typeof(com.mirle.ibg3k0.sc.ObjectRelay.VehicleObjToShow);
-            // 
-            // elementHost1
-            // 
-            this.elementHost1.BackColor = System.Drawing.Color.LightGray;
-            this.elementHost1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.elementHost1.Location = new System.Drawing.Point(0, 0);
-            this.elementHost1.Name = "elementHost1";
-            this.elementHost1.Size = new System.Drawing.Size(1559, 912);
-            this.elementHost1.TabIndex = 0;
-            this.elementHost1.Text = "elementHost1";
-            this.elementHost1.Child = this.uctlMapWPF1;
-            // 
             // utilityLog1
             // 
             this.utilityLog1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1191,6 +1171,17 @@
             this.utilityLog1.Size = new System.Drawing.Size(1916, 99);
             this.utilityLog1.TabIndex = 0;
             // 
+            // tab_SECS
+            // 
+            this.tab_SECS.Controls.Add(this.utilityLog_SECS);
+            this.tab_SECS.Location = new System.Drawing.Point(4, 27);
+            this.tab_SECS.Name = "tab_SECS";
+            this.tab_SECS.Padding = new System.Windows.Forms.Padding(3);
+            this.tab_SECS.Size = new System.Drawing.Size(1916, 99);
+            this.tab_SECS.TabIndex = 6;
+            this.tab_SECS.Text = "SECS Communcation    ";
+            this.tab_SECS.UseVisualStyleBackColor = true;
+            // 
             // utilityLog_SECS
             // 
             this.utilityLog_SECS.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1200,6 +1191,15 @@
             this.utilityLog_SECS.Name = "utilityLog_SECS";
             this.utilityLog_SECS.Size = new System.Drawing.Size(1910, 93);
             this.utilityLog_SECS.TabIndex = 0;
+            // 
+            // timer_TimedUpdates
+            // 
+            this.timer_TimedUpdates.Interval = 1000;
+            this.timer_TimedUpdates.Tick += new System.EventHandler(this.timer_TimedUpdates_Tick);
+            // 
+            // vehicleObjToShowBindingSource
+            // 
+            this.vehicleObjToShowBindingSource.DataSource = typeof(com.mirle.ibg3k0.sc.ObjectRelay.VehicleObjToShow);
             // 
             // OHT_FormNew
             // 
