@@ -30,8 +30,10 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Components.WPFComponents
         Brush Brush_LawnGreen;
         Brush Brush_Orange;
         Brush Brush_Cyan;
+        List<VhObj> vhObjs = new List<VhObj>();
 
         PathEnhance pathEnhance = new PathEnhance();
+        PathEnhance guidePath = null;
 
         List<Address> addresses;
         List<Section> sections;
@@ -52,50 +54,77 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Components.WPFComponents
         {
             initialObj(_bcApp);
             initialPath();
+            initialVhObject(_bcApp);
             initialVhEvent(_bcApp);
 
         }
+
+        private void initialVhObject(App.BCApplication _bcApp)
+        {
+            List<sc.AVEHICLE> vhs = _bcApp.SCApplication.VehicleBLL.cache.loadVhs();
+            foreach (var vh in vhs)
+            {
+                var vh_obj = new VhObj(vh);
+                vhObjs.Add(vh_obj);
+                VehicleTrack.Children.Add(vh_obj.ellipse);
+                VehicleTrack.Children.Add(vh_obj.nodeText);
+                vh_obj.EntryMonitorMode += Vh_obj_EntryMonitorMode;
+            }
+        }
+
+        private void Vh_obj_EntryMonitorMode(object sender, EventArgs e)
+        {
+            guidePath.RemoveAllGeometry();
+            var vh = sender as VhObj;
+            if (vh == null) return;
+            var sec_objs = sections.Where(sec => vh.GetGuideSections().Contains(sec.ID));
+            foreach (var sec in sec_objs)
+            {
+                guidePath.AddLineSegment(sec.StartAddress.Point, sec.EndAddress.Point);
+            }
+        }
+
         string event_id = string.Empty;
         private void initialVhEvent(BCApplication _bcApp)
         {
-            sc.AVEHICLE vh_1 = _bcApp.SCApplication.VehicleBLL.cache.getVhByID("B7_OHBLOOP_CR1");
-            event_id = this.Name;
-            vh_1.addEventHandler(event_id
-                                , nameof(vh_1.VhPositionChangeEvent)
-                                , (s1, e1) =>
-                                {
-                                    updateVehiclePosition_vh1(vh1_position, s1 as sc.AVEHICLE);
-                                });
+            //_bcApp.TestGuideSectionSearch += _bcApp_TestGuideSectionSearch;
+            //sc.AVEHICLE vh_1 = _bcApp.SCApplication.VehicleBLL.cache.getVhByID("B7_OHBLOOP_CR1");
+            //event_id = this.Name;
             //vh_1.addEventHandler(event_id
-            //        , nameof(vh_1.VhStatusChangeEvent)
-            //        , (s1, e1) =>
-            //        {
+            //                    , nameof(vh_1.VhPositionChangeEvent)
+            //                    , (s1, e1) =>
+            //                    {
+            //                        updateVehiclePosition_vh1(vh1_position, s1 as sc.AVEHICLE);
+            //                    });
+            ////vh_1.addEventHandler(event_id
+            ////        , nameof(vh_1.VhStatusChangeEvent)
+            ////        , (s1, e1) =>
+            ////        {
 
-            //        });
-            //updateVehicleStatus_vh1(vh1, vh_1);
+            ////        });
+            ////updateVehicleStatus_vh1(vh1, vh_1);
 
-            sc.AVEHICLE vh_2 = _bcApp.SCApplication.VehicleBLL.cache.getVhByID("B7_OHBLOOP_CR2");
-            event_id = this.Name;
-            vh_2.addEventHandler(event_id
-                                , nameof(vh_2.VhPositionChangeEvent)
-                                , (s1, e1) =>
-                                {
-                                    updateVehiclePosition_vh1(vh2_position, s1 as sc.AVEHICLE);
-                                });
-            //updateVehicleStatus_vh1(vh2, vh_2);
-
-
+            //sc.AVEHICLE vh_2 = _bcApp.SCApplication.VehicleBLL.cache.getVhByID("B7_OHBLOOP_CR2");
+            //event_id = this.Name;
+            //vh_2.addEventHandler(event_id
+            //                    , nameof(vh_2.VhPositionChangeEvent)
+            //                    , (s1, e1) =>
+            //                    {
+            //                        updateVehiclePosition_vh1(vh2_position, s1 as sc.AVEHICLE);
+            //                    });
+            ////updateVehicleStatus_vh1(vh2, vh_2);
         }
 
-        private void updateVehiclePosition_vh1(TranslateTransform transfer, sc.AVEHICLE vh)
+        private void _bcApp_TestGuideSectionSearch(object sender, string[] e)
         {
-            Adapter.Invoke((obj) =>
+            guidePath.RemoveAllGeometry();
+            var sec_objs = sections.Where(sec => e.Contains(sec.ID));
+            foreach (var sec in sec_objs)
             {
-                transfer.X = ((vh.X_Axis - min_x + pathEnhance.StrokeThickness) * PathEnhance.Scale) - Vh1_Circle.RadiusX;
-                transfer.Y = ((vh.Y_Axis - min_y + pathEnhance.StrokeThickness) * PathEnhance.Scale) - Vh1_Circle.RadiusY;
-            }, null);
-
+                guidePath.AddLineSegment(sec.StartAddress.Point, sec.EndAddress.Point);
+            }
         }
+
         private void updateVehicleStatus_vh1(Path path_vh, sc.AVEHICLE vh)
         {
             if (!vh.isTcpIpConnect)
@@ -126,8 +155,8 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Components.WPFComponents
         }
 
 
-        double min_x = 0;
-        double min_y = 0;
+        static double min_x = 0;
+        static double min_y = 0;
 
         private void initialObj(App.BCApplication _bcApp)
         {
@@ -139,7 +168,9 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Components.WPFComponents
         }
         private void initialPath()
         {
-
+            VehicleTrack.Children.Clear();
+            guidePath = new PathEnhance(Brushes.Yellow);
+            VehicleTrack.Children.Add(guidePath.Path);
             foreach (var adr in addresses)
             {
                 pathEnhance.AddEllipse(adr.Point);
@@ -188,6 +219,159 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Components.WPFComponents
             double.TryParse(value, out double result);
             return result;
         }
+
+        class VhObj
+        {
+            public event EventHandler EntryMonitorMode;
+
+            public Ellipse ellipse { private set; get; } = null;
+            public TextBlock nodeText { private set; get; } = null;
+            private sc.AVEHICLE vh = null;
+            public VhObj(sc.AVEHICLE _vh)
+            {
+                vh = _vh;
+                ellipse = GetEllipse(vh.Num);
+                nodeText = GetTextBlock(vh.Num);
+                ellipse.MouseDown += Ellipse_MouseDown;
+                updateVehicleStatus(vh);
+                initialVhEvent();
+
+            }
+
+            private void initialVhEvent()
+            {
+                string event_id = $"WPF_UI_{this.vh.VEHICLE_ID}";
+                vh.addEventHandler(event_id
+                                    , nameof(vh.VhPositionChangeEvent)
+                                    , (s1, e1) =>
+                                    {
+                                        updateVehiclePosition(s1 as sc.AVEHICLE);
+                                    });
+                vh.addEventHandler(event_id
+                                    , nameof(vh.VhStatusChangeEvent)
+                                    , (s1, e1) =>
+                                    {
+                                        updateVehicleStatus(s1 as sc.AVEHICLE);
+                                    });
+                vh.addEventHandler(event_id
+                    , nameof(vh.isTcpIpConnect)
+                    , (s1, e1) =>
+                    {
+                        updateVehicleStatus(s1 as sc.AVEHICLE);
+                    });
+            }
+            private void updateVehiclePosition(sc.AVEHICLE vh)
+            {
+                double X = (((vh.X_Axis)) * PathEnhance.Scale) - (ellipse.ActualWidth / 2) + 5;
+                double Y = (((vh.Y_Axis)) * PathEnhance.Scale) - (ellipse.ActualHeight / 2) + 5;
+
+                //double X = ((vh.X_Axis) * PathEnhance.Scale);
+                //double Y = ((vh.Y_Axis) * PathEnhance.Scale);
+                if (X == 0 && Y == 0)
+                {
+                    X = vh.Num * 30;
+                }
+
+                Adapter.Invoke((obj) =>
+                {
+                    setPosition(X, Y);
+                }, null);
+
+            }
+            private void updateVehicleStatus(sc.AVEHICLE vh)
+            {
+                if (!vh.isTcpIpConnect)
+                {
+                    setColor(Brushes.Black);
+                }
+                else
+                {
+                    switch (vh.MODE_STATUS)
+                    {
+                        case VHModeStatus.InitialPowerOff:
+                        case VHModeStatus.Manual:
+                            setColor(Brushes.Orange);
+                            break;
+                        case VHModeStatus.InitialPowerOn:
+                            break;
+                        case VHModeStatus.AutoLocal:
+                            setColor(Brushes.Blue);
+                            break;
+                        case VHModeStatus.AutoMts:
+                            setColor(Brushes.Gold);
+                            break;
+                        case VHModeStatus.AutoMtl:
+                            setColor(Brushes.Gold);
+                            break;
+                        case VHModeStatus.AutoRemote:
+                            setColor(Brushes.Green);
+                            break;
+                        default:
+                            setColor(Brushes.Orange);
+                            break;
+                    }
+                }
+            }
+
+
+            private void Ellipse_MouseDown(object sender, MouseButtonEventArgs e)
+            {
+                EntryMonitorMode?.Invoke(this, EventArgs.Empty);
+            }
+
+
+            private Ellipse GetEllipse(int vhNum)
+            {
+                // Create a red Ellipse.
+                Ellipse myEllipse = new Ellipse();
+
+                myEllipse.Fill = Brushes.Yellow;
+
+                // Set the width and height of the Ellipse.
+                myEllipse.Width = 30;
+                myEllipse.Height = 30;
+                myEllipse.RenderTransform = new TranslateTransform(vhNum * 30, 0);
+                return myEllipse;
+            }
+            private TextBlock GetTextBlock(int vhNum)
+            {
+                TextBlock nodeText = new TextBlock(new Run(vhNum.ToString()) { Foreground = Brushes.White });
+                //nodeText.Text = vhNum.ToString();
+                nodeText.HorizontalAlignment = HorizontalAlignment.Center;
+                nodeText.VerticalAlignment = VerticalAlignment.Center;
+                nodeText.TextAlignment = TextAlignment.Center;
+                nodeText.RenderTransform = new TranslateTransform(vhNum * 30, 0);
+                return nodeText;
+            }
+
+            public void setPosition(double x, double y)
+            {
+                var ellipse_translate = ellipse.RenderTransform as TranslateTransform;
+                if (ellipse_translate == null) return;
+                var textblock_translate = nodeText.RenderTransform as TranslateTransform;
+                if (textblock_translate == null) return;
+
+                ellipse_translate.X = x;
+                ellipse_translate.Y = y;
+                textblock_translate.X = x;
+                textblock_translate.Y = y;
+            }
+            public void setColor(Brush brush)
+            {
+                Adapter.Invoke((obj) =>
+                {
+                    ellipse.Fill = brush;
+                }, null);
+
+            }
+            public string[] GetGuideSections()
+            {
+                if (vh.WillPassSectionID == null)
+                    return new string[0];
+                return vh.WillPassSectionID?.ToArray();
+            }
+        }
+
         class PathEnhance
         {
             public event MouseButtonEventHandler MouseDown;
@@ -212,6 +396,19 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Components.WPFComponents
                 Path.Stretch = Stretch.Uniform;
                 Path.RenderTransform = new ScaleTransform(Scale, Scale);
             }
+            public PathEnhance(SolidColorBrush solidColor)
+            {
+                Path.Cursor = Cursors.Hand;
+                Path.AllowDrop = true;
+                Path.Stroke = solidColor;
+                Path.StrokeThickness = 300;
+                //Path.MouseDown += Path_MouseDown;
+                //Path.MouseMove += Path_MouseMove;
+                Path.Data = geometryGroup;
+                Path.Stretch = Stretch.None;
+                Path.RenderTransform = new ScaleTransform(Scale, Scale);
+            }
+
             public void AddEllipse(Point point)
             {
                 EllipseGeometry ellipseGeometry = new EllipseGeometry(point, 100, 100);
@@ -224,7 +421,10 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Components.WPFComponents
                 PathGeometry pathGeometry = new PathGeometry(new PathFigure[] { pathFigure });
                 geometryGroup.Children.Add(pathGeometry);
             }
-
+            public void RemoveAllGeometry()
+            {
+                geometryGroup.Children.Clear();
+            }
             private void Path_MouseMove(object sender, MouseEventArgs e)
             {
                 if (e.LeftButton == MouseButtonState.Pressed)
@@ -249,6 +449,9 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Components.WPFComponents
 
         }
 
+        private void VehicleTrack_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+        }
     }
 
     public class Address
