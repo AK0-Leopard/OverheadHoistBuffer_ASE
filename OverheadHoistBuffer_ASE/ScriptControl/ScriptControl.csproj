@@ -525,6 +525,8 @@
     <Compile Include="Data\DAO\191204Test\ZoneDefDao.cs" />
     <Compile Include="Data\DAO\ADDRESSDao.cs" />
     <Compile Include="Data\DAO\AddressDataDao.cs" />
+    <Compile Include="Data\DAO\EntityFramework\HCMD_MCSDao.cs" />
+    <Compile Include="Data\DAO\EntityFramework\HCMD_OHTCDao.cs" />
     <Compile Include="Data\DAO\EqptLocationInfoDao.cs" />
     <Compile Include="Data\DAO\191204Test\PortDefDao.cs" />
     <Compile Include="Data\DAO\ReserveEnhanceInfoDao.cs" />
@@ -817,6 +819,7 @@
     <Compile Include="Data\VO\MaintainSpace.cs" />
     <Compile Include="Data\VO\MaintainLift.cs" />
     <Compile Include="Data\VO\PartialVo\AADDRESS.cs" />
+    <Compile Include="Data\VO\PartialVo\ACMD_OHTC.cs" />
     <Compile Include="Data\VO\PartialVo\ASECTION.cs" />
     <Compile Include="Data\VO\PartialVo\ASEGMENT.cs" />
     <Compile Include="Data\VO\PartialVo\APORTSTATION.cs" />
@@ -930,6 +933,12 @@
     <Compile Include="HASHEET.cs">
       <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
+    <Compile Include="HCMD_MCS.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="HCMD_OHTC.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
     <Compile Include="HOPERATION.cs">
       <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
@@ -966,6 +975,7 @@
     <Compile Include="SCALE_BASE_DATA.cs">
       <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
+    <Compile Include="Scheduler\DBManatainScheduler.cs" />
     <Compile Include="Scheduler\MTTFAndMTBFScheduler.cs" />
     <Compile Include="Scheduler\ZabbixDataCollectionScheduler.cs" />
     <Compile Include="Service\BlockControlService.cs" />

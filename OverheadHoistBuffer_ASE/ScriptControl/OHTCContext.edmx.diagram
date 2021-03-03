@@ -75,8 +75,10 @@
         <EntityTypeShape EntityType="OHTC_DevModel.CassetteData" Width="1.5" PointX="5.375" PointY="27.75" />
         <EntityTypeShape EntityType="OHTC_DevModel.ShelfDef" Width="1.5" PointX="25.375" PointY="23.75" />
         <EntityTypeShape EntityType="OHTC_DevModel.PortDef" Width="1.5" PointX="11.375" PointY="25.75" />
-        <EntityTypeShape EntityType="OHTC_DevModel.VACMD_MCS" Width="1.5" PointX="26.375" PointY="14.75" />
-        <EntityTypeShape EntityType="OHTC_DevModel.VSECTION_100" Width="1.5" PointX="27.375" PointY="20.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.HCMD_MCS" Width="1.5" PointX="28.75" PointY="14.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.HCMD_OHTC" Width="1.5" PointX="0.75" PointY="29.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.VACMD_MCS" Width="1.5" PointX="27.375" PointY="20.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.VSECTION_100" Width="1.5" PointX="27.375" PointY="26.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -2,13 +2,13 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 03/17/2020 21:45:11
--- Generated from EDMX file: D:\Working_Projects\OHTC&MCS\TFS_SourceCode\OverheadHoistBuffer_ASE\OverheadHoistBuffer_ASE\ScriptControl\OHTCContext.edmx
+-- Date Created: 02/26/2021 15:12:18
+-- Generated from EDMX file: C:\Git\AK0-Leopard\OverheadHoistBuffer_ASE\OverheadHoistBuffer_ASE\ScriptControl\OHTCContext.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
 GO
-USE [OHBC_ASE_K21_LOOP];
+USE [OHBC_ASE_K21_LINE1];
 GO
 IF SCHEMA_ID(N'dbo') IS NULL EXECUTE(N'CREATE SCHEMA [dbo]');
 GO
@@ -450,7 +450,8 @@ CREATE TABLE [dbo].[ACMD_OHTC] (
     [SOURCE_ADR] char(64)  NULL,
     [DESTINATION_ADR] char(64)  NULL,
     [BOX_ID] char(64)  NULL,
-    [LOT_ID] char(64)  NULL
+    [LOT_ID] char(64)  NULL,
+    [CMD_INSER_TIME] datetime  NULL
 );
 GO
 
@@ -1141,7 +1142,8 @@ CREATE TABLE [dbo].[AVEHICLE] (
     [CYCLERUN_ID] char(10)  NULL,
     [IS_INSTALLED] bit  NOT NULL,
     [INSTALLED_TIME] datetime  NULL,
-    [REMOVED_TIME] datetime  NULL
+    [REMOVED_TIME] datetime  NULL,
+    [HAS_BOX] int  NOT NULL
 );
 GO
 
@@ -1184,16 +1186,19 @@ GO
 
 -- Creating table 'ALARM'
 CREATE TABLE [dbo].[ALARM] (
-    [EQPT_ID] char(15)  NOT NULL,
+    [EQPT_ID] varchar(20)  NOT NULL,
     [UNIT_NUM] int  NOT NULL,
-    [RPT_DATE_TIME] nvarchar(max)  NOT NULL,
-    [ALAM_CODE] char(10)  NULL,
+    [RPT_DATE_TIME] char(19)  NOT NULL,
+    [ALAM_CODE] char(10)  NOT NULL,
     [ALAM_LVL] int  NOT NULL,
     [ALAM_STAT] int  NOT NULL,
-    [ALAM_DESC] char(80)  NULL,
+    [ALAM_DESC] char(128)  NULL,
     [ERROR_ID] char(64)  NULL,
-    [UnitID] varchar(2)  NULL,
-    [UnitState] varchar(2)  NULL
+    [UnitID] varchar(20)  NULL,
+    [UnitState] varchar(2)  NULL,
+    [RecoveryOption] varchar(20)  NULL,
+    [CMD_ID] varchar(64)  NULL,
+    [END_TIME] char(19)  NULL
 );
 GO
 
@@ -1246,7 +1251,8 @@ CREATE TABLE [dbo].[ACMD_MCS] (
     [LOT_ID] varchar(64)  NOT NULL,
     [CARRIER_ID_ON_CRANE] varchar(64)  NULL,
     [CMDTYPE] varchar(64)  NULL,
-    [CRANE] varchar(64)  NOT NULL
+    [CRANE] varchar(64)  NOT NULL,
+    [RelayStation] varchar(64)  NULL
 );
 GO
 
@@ -1297,10 +1303,50 @@ CREATE TABLE [dbo].[ShelfDef] (
 );
 GO
 
+-- Creating table 'PortDef'
+CREATE TABLE [dbo].[PortDef] (
+    [StockerID] varchar(64)  NULL,
+    [PLCPortID] varchar(64)  NOT NULL,
+    [OHBName] varchar(20)  NULL,
+    [State] int  NOT NULL,
+    [Stage] decimal(2,0)  NULL,
+    [AGVState] int  NULL,
+    [UnitType] varchar(20)  NULL,
+    [HostEQPortID] varchar(64)  NULL,
+    [ShelfID] varchar(7)  NULL,
+    [PortType] int  NOT NULL,
+    [PortLocationType] decimal(2,0)  NULL,
+    [PortTypeIndex] decimal(2,0)  NULL,
+    [SourceWeighted] decimal(2,0)  NULL,
+    [DestWeighted] decimal(2,0)  NULL,
+    [Direction] decimal(1,0)  NULL,
+    [Color] decimal(6,0)  NULL,
+    [TimeOutForAutoUD] decimal(6,0)  NULL,
+    [TimeOutForAutoInZone] varchar(64)  NULL,
+    [AlternateToZone] varchar(64)  NULL,
+    [Vehicles] decimal(1,0)  NULL,
+    [Floor] decimal(1,0)  NULL,
+    [IgnoreModeChange] varchar(1)  NULL,
+    [ReportMCSFlag] varchar(1)  NULL,
+    [ReportStage] decimal(2,0)  NULL,
+    [NetHStnNo] decimal(2,0)  NULL,
+    [AreaSensorStnNo] decimal(2,0)  NULL,
+    [Presenton_InsCST] varchar(1)  NULL,
+    [Presentoff_DelCST] varchar(1)  NULL,
+    [ToEQ] varchar(64)  NULL,
+    [TrnDT] varchar(20)  NULL,
+    [AlarmType] decimal(2,0)  NULL,
+    [ADR_ID] char(5)  NOT NULL,
+    [PortTypeDef] int  NULL,
+    [PRIORITY] int  NOT NULL,
+    [ZoneName] varchar(64)  NULL
+);
+GO
+
 -- Creating table 'VACMD_MCS'
 CREATE TABLE [dbo].[VACMD_MCS] (
     [CMD_ID] varchar(64)  NOT NULL,
-    [CARRIER_ID] varchar(64)  NOT NULL,
+    [CARRIER_ID] varchar(64)  NULL,
     [TRANSFERSTATE] int  NOT NULL,
     [COMMANDSTATE] int  NOT NULL,
     [HOSTSOURCE] varchar(64)  NULL,
@@ -1368,46 +1414,6 @@ CREATE TABLE [dbo].[VSECTION_100] (
     [BRANCH_FLAG] bit  NOT NULL,
     [AREA_SECSOR] int  NULL,
     [LAST_TECH_TIME] datetime  NULL
-);
-GO
-
--- Creating table 'PortDef'
-CREATE TABLE [dbo].[PortDef] (
-    [StockerID] varchar(64)  NULL,
-    [PLCPortID] varchar(64)  NOT NULL,
-    [OHBName] varchar(20)  NULL,
-    [State] int  NOT NULL,
-    [Stage] decimal(2,0)  NULL,
-    [AGVState] int  NULL,
-    [UnitType] varchar(20)  NULL,
-    [HostEQPortID] varchar(64)  NULL,
-    [ShelfID] varchar(7)  NULL,
-    [PortType] int  NOT NULL,
-    [PortLocationType] decimal(2,0)  NULL,
-    [PortTypeIndex] decimal(2,0)  NULL,
-    [SourceWeighted] decimal(2,0)  NULL,
-    [DestWeighted] decimal(2,0)  NULL,
-    [Direction] decimal(1,0)  NULL,
-    [Color] decimal(6,0)  NULL,
-    [TimeOutForAutoUD] decimal(6,0)  NULL,
-    [TimeOutForAutoInZone] varchar(64)  NULL,
-    [AlternateToZone] varchar(64)  NULL,
-    [Vehicles] decimal(1,0)  NULL,
-    [Floor] decimal(1,0)  NULL,
-    [IgnoreModeChange] varchar(1)  NULL,
-    [ReportMCSFlag] varchar(1)  NULL,
-    [ReportStage] decimal(2,0)  NULL,
-    [NetHStnNo] decimal(2,0)  NULL,
-    [AreaSensorStnNo] decimal(2,0)  NULL,
-    [Presenton_InsCST] varchar(1)  NULL,
-    [Presentoff_DelCST] varchar(1)  NULL,
-    [ToEQ] varchar(64)  NULL,
-    [TrnDT] varchar(20)  NULL,
-    [AlarmType] decimal(2,0)  NULL,
-    [ADR_ID] char(5)  NOT NULL,
-    [PortGroup] int  NULL,
-    [PortTypeDef] int  NULL,
-    [PRIORITY] int  NOT NULL
 );
 GO
 
@@ -1829,22 +1835,22 @@ ADD CONSTRAINT [PK_ShelfDef]
     PRIMARY KEY CLUSTERED ([ShelfID] ASC);
 GO
 
--- Creating primary key on [CMD_ID], [CARRIER_ID], [TRANSFERSTATE], [COMMANDSTATE], [HOSTDESTINATION], [PRIORITY_SUM], [PRIORITY], [CHECKCODE], [PAUSEFLAG], [CMD_INSER_TIME], [TIME_PRIORITY], [PORT_PRIORITY], [REPLACE] in table 'VACMD_MCS'
+-- Creating primary key on [PLCPortID] in table 'PortDef'
+ALTER TABLE [dbo].[PortDef]
+ADD CONSTRAINT [PK_PortDef]
+    PRIMARY KEY CLUSTERED ([PLCPortID] ASC);
+GO
+
+-- Creating primary key on [CMD_ID], [TRANSFERSTATE], [COMMANDSTATE], [HOSTDESTINATION], [PRIORITY_SUM], [PRIORITY], [CHECKCODE], [PAUSEFLAG], [CMD_INSER_TIME], [TIME_PRIORITY], [PORT_PRIORITY], [REPLACE] in table 'VACMD_MCS'
 ALTER TABLE [dbo].[VACMD_MCS]
 ADD CONSTRAINT [PK_VACMD_MCS]
-    PRIMARY KEY CLUSTERED ([CMD_ID], [CARRIER_ID], [TRANSFERSTATE], [COMMANDSTATE], [HOSTDESTINATION], [PRIORITY_SUM], [PRIORITY], [CHECKCODE], [PAUSEFLAG], [CMD_INSER_TIME], [TIME_PRIORITY], [PORT_PRIORITY], [REPLACE] ASC);
+    PRIMARY KEY CLUSTERED ([CMD_ID], [TRANSFERSTATE], [COMMANDSTATE], [HOSTDESTINATION], [PRIORITY_SUM], [PRIORITY], [CHECKCODE], [PAUSEFLAG], [CMD_INSER_TIME], [TIME_PRIORITY], [PORT_PRIORITY], [REPLACE] ASC);
 GO
 
 -- Creating primary key on [SEC_ID], [SEG_ORDER_NUM], [DIRC_DRIV], [DIRC_GUID], [SEC_DIS], [DIS_FROM_ORIGIN], [CDOG_1], [CDOG_2], [PRE_BLO_REQ], [SEC_TYPE], [SEC_DIR], [PADDING], [ENB_CHG_G_AREA], [PRE_DIV], [PRE_ADD_REPR], [OBS_SENSOR], [SUB_VER], [START_BC1], [END_BC1], [START_BC2], [END_BC2], [START_BC3], [END_BC3], [CHG_AREA_SECSOR_1], [CHG_AREA_SECSOR_2], [OBS_SENSOR_F], [OBS_SENSOR_R], [OBS_SENSOR_L], [RANGE_SENSOR_F], [IS_ADR_RPT], [CAN_GUIDE_CHG], [HID_CONTROL], [BRANCH_FLAG] in table 'VSECTION_100'
 ALTER TABLE [dbo].[VSECTION_100]
 ADD CONSTRAINT [PK_VSECTION_100]
     PRIMARY KEY CLUSTERED ([SEC_ID], [SEG_ORDER_NUM], [DIRC_DRIV], [DIRC_GUID], [SEC_DIS], [DIS_FROM_ORIGIN], [CDOG_1], [CDOG_2], [PRE_BLO_REQ], [SEC_TYPE], [SEC_DIR], [PADDING], [ENB_CHG_G_AREA], [PRE_DIV], [PRE_ADD_REPR], [OBS_SENSOR], [SUB_VER], [START_BC1], [END_BC1], [START_BC2], [END_BC2], [START_BC3], [END_BC3], [CHG_AREA_SECSOR_1], [CHG_AREA_SECSOR_2], [OBS_SENSOR_F], [OBS_SENSOR_R], [OBS_SENSOR_L], [RANGE_SENSOR_F], [IS_ADR_RPT], [CAN_GUIDE_CHG], [HID_CONTROL], [BRANCH_FLAG] ASC);
-GO
-
--- Creating primary key on [PLCPortID] in table 'PortDef'
-ALTER TABLE [dbo].[PortDef]
-ADD CONSTRAINT [PK_PortDef]
-    PRIMARY KEY CLUSTERED ([PLCPortID] ASC);
 GO
 
 -- --------------------------------------------------

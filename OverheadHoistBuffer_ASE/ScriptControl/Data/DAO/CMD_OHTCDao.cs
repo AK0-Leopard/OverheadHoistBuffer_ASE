@@ -14,6 +14,13 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
             con.ACMD_OHTC.Add(blockObj);
             con.SaveChanges();
         }
+        public void RemoteByBatch(DBConnection_EF con, List<ACMD_OHTC> cmd_mcss)
+        {
+            cmd_mcss.ForEach(entity => con.Entry(entity).State = EntityState.Deleted);
+            con.ACMD_OHTC.RemoveRange(cmd_mcss);
+            con.SaveChanges();
+        }
+
 
         public void Update(DBConnection_EF con, ACMD_OHTC cmd)
         {
@@ -71,6 +78,13 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                         where cmd.CMD_STAUS < E_CMD_STATUS.NormalEnd &&
                               cmd.VH_ID.Trim() == vh_id
                         orderby cmd.CMD_START_TIME
+                        select cmd;
+            return query.ToList();
+        }
+        public List<ACMD_OHTC> loadFinishCMD_OHT(DBConnection_EF con)
+        {
+            var query = from cmd in con.ACMD_OHTC
+                        where cmd.CMD_STAUS >= E_CMD_STATUS.NormalEnd
                         select cmd;
             return query.ToList();
         }
