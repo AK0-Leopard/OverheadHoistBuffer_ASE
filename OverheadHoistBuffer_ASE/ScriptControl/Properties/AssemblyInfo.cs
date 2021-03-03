@@ -38,6 +38,7 @@ using System.Runtime.InteropServices;
 //版號 + Tab + 日期 + Tab + 修改人 + Tab + 敘述
 //1.6.16 2021/03/04  Kevin   1.加入會將結束的命令定時搬移至History的Table
 //1.6.15 2021/02/XX  SCC*    1.
+//1.6.15 2021/02/22 JasonWu+ 1.修改swap 功能對於emergency 所做動作，在沒有OHB->AGV命令的情況下將不會轉1 in 1 out 而是2 in.
 //1.6.14 2021/02/05  SCC*    1.修正AGV 全是InMode 沒有搬到中繼站之問題
 //                   Kevin   2.修正在Source Port狀態不正確時，會導致儲位被預約沒釋放的問題。
 //                   Mark    3.修正如果有Port有足夠的容量接收Box，就當作可以派命令過去放貨
