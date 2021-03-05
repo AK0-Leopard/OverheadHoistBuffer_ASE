@@ -5066,6 +5066,15 @@ namespace com.mirle.ibg3k0.sc.BLL
         #endregion Return Code Map
 
         #region HCMD_MCS
+        public List<HCMD_MCS> LoadHMCSCmdDataByStartEnd(DateTime startTime, DateTime endTime)  //歷史紀錄
+        {
+            //using (DBConnection_EF con = new DBConnection_EF())
+            using (DBConnection_EF con = DBConnection_EF.GetUContext())
+            {
+                return hcmd_mcsDao.LoadCmdDataByStartEnd(con, startTime, endTime);
+            }
+        }
+
         public void CreatHCMD_MCSs(List<HCMD_MCS> HCMD_MCS)
         {
             using (DBConnection_EF con = DBConnection_EF.GetUContext())

@@ -18,48 +18,58 @@ namespace com.mirle.ibg3k0.sc.Scheduler
         NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         SCApplication scApp = SCApplication.getInstance();
         const int BLOCK_QUEUE_KEEP_TIME_N_Day = 7;
+        private long syncPoint = 0;
         public void Execute(IJobExecutionContext context)
         {
-            try
+            if (Interlocked.Exchange(ref syncPoint, 1) == 0)
             {
-                //using (TransactionScope tx = SCUtility.getTransactionScope())
-                //{
-                //    using (DBConnection_EF con = DBConnection_EF.GetUContext())
-                //    {
-                //        MoveACMD_MCSToHCMD_MCS();
 
-                //        MoveACMD_OHTCToHCMD_OHTC();
+                try
+                {
+                    //using (TransactionScope tx = SCUtility.getTransactionScope())
+                    //{
+                    //    using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                    //    {
+                    //        MoveACMD_MCSToHCMD_MCS();
 
-                //        RemoveNDayAgoBlockQueue(BLOCK_QUEUE_KEEP_TIME_N_Day);
+                    //        MoveACMD_OHTCToHCMD_OHTC();
 
-                //        RemoveOHTCCMDDetail();
-                //        tx.Complete();
-                //    }
-                //}
-                using (DBConnection_EF con = DBConnection_EF.GetUContext())
-                {
-                    MoveACMD_MCSToHCMD_MCS();
+                    //        RemoveNDayAgoBlockQueue(BLOCK_QUEUE_KEEP_TIME_N_Day);
+
+                    //        RemoveOHTCCMDDetail();
+                    //        tx.Complete();
+                    //    }
+                    //}
+                    using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                    {
+                        MoveACMD_MCSToHCMD_MCS();
+                    }
+                    SpinWait.SpinUntil(() => false, 5000);
+                    using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                    {
+                        MoveACMD_OHTCToHCMD_OHTC();
+                    }
+                    SpinWait.SpinUntil(() => false, 5000);
+                    using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                    {
+                        DeleteHCMD_MCS();
+                    }
+                    SpinWait.SpinUntil(() => false, 5000);
+                    using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                    {
+                        DeleteHCMD_OHTC();
+                    }
                 }
-                SpinWait.SpinUntil(() => false, 5000);
-                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                catch (Exception ex)
                 {
-                    MoveACMD_OHTCToHCMD_OHTC();
+                    logger.Error(ex, "Exception");
                 }
-                SpinWait.SpinUntil(() => false, 5000);
-                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                finally
                 {
-                    DeleteHCMD_MCS();
-                }
-                SpinWait.SpinUntil(() => false, 5000);
-                using (DBConnection_EF con = DBConnection_EF.GetUContext())
-                {
-                    DeleteHCMD_OHTC();
+                    System.Threading.Interlocked.Exchange(ref syncPoint, 0);
                 }
             }
-            catch (Exception ex)
-            {
-                logger.Error(ex, "Exception");
-            }
+
         }
 
         private void MoveACMD_MCSToHCMD_MCS()
@@ -82,7 +92,7 @@ namespace com.mirle.ibg3k0.sc.Scheduler
                 scApp.CMDBLL.CreatHCMD_OHTCs(hcmd_ohtc_list);
             }
         }
-       
+
         private void DeleteHCMD_MCS()
         {
             var hcmd_mcs_list = scApp.CMDBLL.loadHCMD_MCSBefore6Months();
