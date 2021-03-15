@@ -2,8 +2,8 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 03/08/2020 17:33:16
--- Generated from EDMX file: C:\Users\scsa\Desktop\OHBC_LINE3\OverheadHoistBuffer_ASE\ScriptControl\OHTCContext.edmx
+-- Date Created: 03/15/2021 11:59:02
+-- Generated from EDMX file: C:\Git\AK0-Leopard\OverheadHoistBuffer_ASE\OverheadHoistBuffer_ASE\ScriptControl\OHTCContext.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
@@ -1254,7 +1254,8 @@ CREATE TABLE [dbo].[ACMD_MCS] (
     [CRANE] varchar(64)  NOT NULL,
     [RelayStation] varchar(64)  NULL,
     [REQ_EQ] varchar(64)  NULL,
-    [REQ_PORT] varchar(64)  NULL
+    [REQ_PORT] varchar(64)  NULL,
+    [REQ_EQ_NUM] varchar(64)  NULL
 );
 GO
 

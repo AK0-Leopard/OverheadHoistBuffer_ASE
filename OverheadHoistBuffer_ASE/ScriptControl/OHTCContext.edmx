@@ -142,8 +142,8 @@
           <Property Name="CMDTYPE" Type="varchar" MaxLength="64" />
           <Property Name="CRANE" Type="varchar" MaxLength="64" Nullable="false" />
           <Property Name="REQ_EQ" Type="varchar" MaxLength="64" />
-          <Property Name="REQ_EQ_NUM" Type="varchar" MaxLength="64" />
           <Property Name="REQ_PORT" Type="varchar" MaxLength="64" />
+          <Property Name="REQ_EQ_NUM" Type="varchar" MaxLength="64" />
         </EntityType>
         <EntityType Name="ACMD_OHTC">
           <Key>
@@ -997,6 +997,62 @@
           <Property Name="SCRAP_CODE" Type="char" MaxLength="5" />
           <Property Name="REASON_CODE" Type="char" MaxLength="5" />
         </EntityType>
+        <EntityType Name="HCMD_MCS">
+          <Key>
+            <PropertyRef Name="CMD_ID" />
+            <PropertyRef Name="CMD_INSER_TIME" />
+          </Key>
+          <Property Name="CMD_ID" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="CARRIER_ID" Type="varchar" MaxLength="64" />
+          <Property Name="TRANSFERSTATE" Type="int" Nullable="false" />
+          <Property Name="COMMANDSTATE" Type="int" Nullable="false" />
+          <Property Name="HOSTSOURCE" Type="varchar" MaxLength="64" />
+          <Property Name="RelayStation" Type="varchar" MaxLength="64" />
+          <Property Name="HOSTDESTINATION" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="PRIORITY" Type="int" Nullable="false" />
+          <Property Name="CHECKCODE" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="PAUSEFLAG" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="CMD_INSER_TIME" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="CMD_START_TIME" Type="datetime2" Precision="7" />
+          <Property Name="CMD_FINISH_TIME" Type="datetime2" Precision="7" />
+          <Property Name="TIME_PRIORITY" Type="int" Nullable="false" />
+          <Property Name="PORT_PRIORITY" Type="int" Nullable="false" />
+          <Property Name="REPLACE" Type="int" Nullable="false" />
+          <Property Name="PRIORITY_SUM" Type="int" Nullable="false" />
+          <Property Name="BOX_ID" Type="varchar" MaxLength="64" />
+          <Property Name="CARRIER_LOC" Type="varchar" MaxLength="64" />
+          <Property Name="LOT_ID" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="CARRIER_ID_ON_CRANE" Type="varchar" MaxLength="64" />
+          <Property Name="CMDTYPE" Type="varchar" MaxLength="64" />
+          <Property Name="CRANE" Type="varchar" MaxLength="64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="HCMD_OHTC">
+          <Key>
+            <PropertyRef Name="CMD_ID" />
+            <PropertyRef Name="CMD_INSER_TIME" />
+          </Key>
+          <Property Name="CMD_ID" Type="char" MaxLength="64" Nullable="false" />
+          <Property Name="VH_ID" Type="char" MaxLength="32" Nullable="false" />
+          <Property Name="CARRIER_ID" Type="char" MaxLength="64" />
+          <Property Name="CMD_ID_MCS" Type="char" MaxLength="64" />
+          <Property Name="CMD_TPYE" Type="int" Nullable="false" />
+          <Property Name="SOURCE" Type="char" MaxLength="64" />
+          <Property Name="DESTINATION" Type="char" MaxLength="64" />
+          <Property Name="PRIORITY" Type="int" Nullable="false" />
+          <Property Name="CMD_INSER_TIME" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="CMD_START_TIME" Type="datetime2" Precision="7" />
+          <Property Name="CMD_END_TIME" Type="datetime2" Precision="7" />
+          <Property Name="CMD_STAUS" Type="int" Nullable="false" />
+          <Property Name="CMD_PROGRESS" Type="int" Nullable="false" />
+          <Property Name="INTERRUPTED_REASON" Type="int" />
+          <Property Name="ESTIMATED_TIME" Type="int" Nullable="false" />
+          <Property Name="ESTIMATED_EXCESS_TIME" Type="int" Nullable="false" />
+          <Property Name="REAL_CMP_TIME" Type="int" />
+          <Property Name="SOURCE_ADR" Type="char" MaxLength="64" />
+          <Property Name="DESTINATION_ADR" Type="char" MaxLength="64" />
+          <Property Name="BOX_ID" Type="char" MaxLength="64" />
+          <Property Name="LOT_ID" Type="char" MaxLength="64" />
+        </EntityType>
         <EntityType Name="HOPERATION">
           <Key>
             <PropertyRef Name="SEQ_NO" />
@@ -1325,6 +1381,8 @@
           <EntitySet Name="CassetteData" EntityType="Self.CassetteData" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CONTROL_DATA" EntityType="Self.CONTROL_DATA" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="HASHEET" EntityType="Self.HASHEET" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="HCMD_MCS" EntityType="Self.HCMD_MCS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="HCMD_OHTC" EntityType="Self.HCMD_OHTC" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="HOPERATION" EntityType="Self.HOPERATION" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PortDef" EntityType="Self.PortDef" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SCALE_BASE_DATA" EntityType="Self.SCALE_BASE_DATA" Schema="dbo" store:Type="Tables" />
@@ -1490,6 +1548,8 @@
           <EntitySet Name="CassetteData" EntityType="OHTC_DevModel.CassetteData" />
           <EntitySet Name="ShelfDef" EntityType="OHTC_DevModel.ShelfDef" />
           <EntitySet Name="PortDef" EntityType="OHTC_DevModel.PortDef" />
+          <EntitySet Name="HCMD_MCS" EntityType="OHTC_DevModel.HCMD_MCS" />
+          <EntitySet Name="HCMD_OHTC" EntityType="OHTC_DevModel.HCMD_OHTC" />
           <EntitySet Name="VACMD_MCS" EntityType="OHTC_DevModel.VACMD_MCS" />
           <EntitySet Name="VSECTION_100" EntityType="OHTC_DevModel.VSECTION_100" />
         </EntityContainer>
@@ -2762,6 +2822,62 @@
           <Member Name="In" Value="0" />
           <Member Name="Out" Value="1" />
         </EnumType>
+        <EntityType Name="HCMD_MCS">
+          <Key>
+            <PropertyRef Name="CMD_ID" />
+            <PropertyRef Name="CMD_INSER_TIME" />
+          </Key>
+          <Property Name="CMD_ID" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="CARRIER_ID" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="TRANSFERSTATE" Type="OHTC_DevModel.E_TRAN_STATUS" Nullable="false" />
+          <Property Name="COMMANDSTATE" Type="Int32" Nullable="false" />
+          <Property Name="HOSTSOURCE" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="RelayStation" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="HOSTDESTINATION" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="PRIORITY" Type="Int32" Nullable="false" />
+          <Property Name="CHECKCODE" Type="String" Nullable="false" MaxLength="2" FixedLength="true" Unicode="false" />
+          <Property Name="PAUSEFLAG" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="CMD_INSER_TIME" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="CMD_START_TIME" Type="DateTime" Precision="7" />
+          <Property Name="CMD_FINISH_TIME" Type="DateTime" Precision="7" />
+          <Property Name="TIME_PRIORITY" Type="Int32" Nullable="false" />
+          <Property Name="PORT_PRIORITY" Type="Int32" Nullable="false" />
+          <Property Name="REPLACE" Type="Int32" Nullable="false" />
+          <Property Name="PRIORITY_SUM" Type="Int32" Nullable="false" />
+          <Property Name="BOX_ID" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="CARRIER_LOC" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="LOT_ID" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="CARRIER_ID_ON_CRANE" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="CMDTYPE" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="CRANE" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="HCMD_OHTC">
+          <Key>
+            <PropertyRef Name="CMD_ID" />
+            <PropertyRef Name="CMD_INSER_TIME" />
+          </Key>
+          <Property Name="CMD_ID" Type="String" Nullable="false" MaxLength="64" FixedLength="true" Unicode="false" />
+          <Property Name="VH_ID" Type="String" Nullable="false" MaxLength="32" FixedLength="true" Unicode="false" />
+          <Property Name="CARRIER_ID" Type="String" MaxLength="64" FixedLength="true" Unicode="false" />
+          <Property Name="CMD_ID_MCS" Type="String" MaxLength="64" FixedLength="true" Unicode="false" />
+          <Property Name="CMD_TPYE" Type="Int32" Nullable="false" />
+          <Property Name="SOURCE" Type="String" MaxLength="64" FixedLength="true" Unicode="false" />
+          <Property Name="DESTINATION" Type="String" MaxLength="64" FixedLength="true" Unicode="false" />
+          <Property Name="PRIORITY" Type="Int32" Nullable="false" />
+          <Property Name="CMD_INSER_TIME" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="CMD_START_TIME" Type="DateTime" Precision="7" />
+          <Property Name="CMD_END_TIME" Type="DateTime" Precision="7" />
+          <Property Name="CMD_STAUS" Type="Int32" Nullable="false" />
+          <Property Name="CMD_PROGRESS" Type="Int32" Nullable="false" />
+          <Property Name="INTERRUPTED_REASON" Type="Int32" />
+          <Property Name="ESTIMATED_TIME" Type="Int32" Nullable="false" />
+          <Property Name="ESTIMATED_EXCESS_TIME" Type="Int32" Nullable="false" />
+          <Property Name="REAL_CMP_TIME" Type="Int32" />
+          <Property Name="SOURCE_ADR" Type="String" MaxLength="64" FixedLength="true" Unicode="false" />
+          <Property Name="DESTINATION_ADR" Type="String" MaxLength="64" FixedLength="true" Unicode="false" />
+          <Property Name="BOX_ID" Type="String" MaxLength="64" FixedLength="true" Unicode="false" />
+          <Property Name="LOT_ID" Type="String" MaxLength="64" FixedLength="true" Unicode="false" />
+        </EntityType>
         <EntityType Name="VACMD_MCS">
           <Key>
             <PropertyRef Name="CMD_ID" />
@@ -3939,8 +4055,7 @@
     <EntitySetMapping Name="ACMD_MCS">
       <EntityTypeMapping TypeName="IsTypeOf(OHTC_DevModel.ACMD_MCS)">
         <MappingFragment StoreEntitySet="ACMD_MCS">
-          <ScalarProperty Name="REQ_EQ_NUM" ColumnName="REQ_EQ_NUM" />
-                <ScalarProperty Name="CMD_ID" ColumnName="CMD_ID" />
+          <ScalarProperty Name="CMD_ID" ColumnName="CMD_ID" />
           <ScalarProperty Name="CARRIER_ID" ColumnName="CARRIER_ID" />
           <ScalarProperty Name="TRANSFERSTATE" ColumnName="TRANSFERSTATE" />
           <ScalarProperty Name="COMMANDSTATE" ColumnName="COMMANDSTATE" />
@@ -3965,6 +4080,7 @@
           <ScalarProperty Name="RelayStation" ColumnName="RelayStation" />
           <ScalarProperty Name="REQ_EQ" ColumnName="REQ_EQ" />
           <ScalarProperty Name="REQ_PORT" ColumnName="REQ_PORT" />
+          <ScalarProperty Name="REQ_EQ_NUM" ColumnName="REQ_EQ_NUM" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -4058,6 +4174,62 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+          <EntitySetMapping Name="HCMD_MCS">
+            <EntityTypeMapping TypeName="OHTC_DevModel.HCMD_MCS">
+              <MappingFragment StoreEntitySet="HCMD_MCS">
+                <ScalarProperty Name="CRANE" ColumnName="CRANE" />
+                <ScalarProperty Name="CMDTYPE" ColumnName="CMDTYPE" />
+                <ScalarProperty Name="CARRIER_ID_ON_CRANE" ColumnName="CARRIER_ID_ON_CRANE" />
+                <ScalarProperty Name="LOT_ID" ColumnName="LOT_ID" />
+                <ScalarProperty Name="CARRIER_LOC" ColumnName="CARRIER_LOC" />
+                <ScalarProperty Name="BOX_ID" ColumnName="BOX_ID" />
+                <ScalarProperty Name="PRIORITY_SUM" ColumnName="PRIORITY_SUM" />
+                <ScalarProperty Name="REPLACE" ColumnName="REPLACE" />
+                <ScalarProperty Name="PORT_PRIORITY" ColumnName="PORT_PRIORITY" />
+                <ScalarProperty Name="TIME_PRIORITY" ColumnName="TIME_PRIORITY" />
+                <ScalarProperty Name="CMD_FINISH_TIME" ColumnName="CMD_FINISH_TIME" />
+                <ScalarProperty Name="CMD_START_TIME" ColumnName="CMD_START_TIME" />
+                <ScalarProperty Name="CMD_INSER_TIME" ColumnName="CMD_INSER_TIME" />
+                <ScalarProperty Name="PAUSEFLAG" ColumnName="PAUSEFLAG" />
+                <ScalarProperty Name="CHECKCODE" ColumnName="CHECKCODE" />
+                <ScalarProperty Name="PRIORITY" ColumnName="PRIORITY" />
+                <ScalarProperty Name="HOSTDESTINATION" ColumnName="HOSTDESTINATION" />
+                <ScalarProperty Name="RelayStation" ColumnName="RelayStation" />
+                <ScalarProperty Name="HOSTSOURCE" ColumnName="HOSTSOURCE" />
+                <ScalarProperty Name="COMMANDSTATE" ColumnName="COMMANDSTATE" />
+                <ScalarProperty Name="TRANSFERSTATE" ColumnName="TRANSFERSTATE" />
+                <ScalarProperty Name="CARRIER_ID" ColumnName="CARRIER_ID" />
+                <ScalarProperty Name="CMD_ID" ColumnName="CMD_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="HCMD_OHTC">
+            <EntityTypeMapping TypeName="OHTC_DevModel.HCMD_OHTC">
+              <MappingFragment StoreEntitySet="HCMD_OHTC">
+                <ScalarProperty Name="LOT_ID" ColumnName="LOT_ID" />
+                <ScalarProperty Name="BOX_ID" ColumnName="BOX_ID" />
+                <ScalarProperty Name="DESTINATION_ADR" ColumnName="DESTINATION_ADR" />
+                <ScalarProperty Name="SOURCE_ADR" ColumnName="SOURCE_ADR" />
+                <ScalarProperty Name="REAL_CMP_TIME" ColumnName="REAL_CMP_TIME" />
+                <ScalarProperty Name="ESTIMATED_EXCESS_TIME" ColumnName="ESTIMATED_EXCESS_TIME" />
+                <ScalarProperty Name="ESTIMATED_TIME" ColumnName="ESTIMATED_TIME" />
+                <ScalarProperty Name="INTERRUPTED_REASON" ColumnName="INTERRUPTED_REASON" />
+                <ScalarProperty Name="CMD_PROGRESS" ColumnName="CMD_PROGRESS" />
+                <ScalarProperty Name="CMD_STAUS" ColumnName="CMD_STAUS" />
+                <ScalarProperty Name="CMD_END_TIME" ColumnName="CMD_END_TIME" />
+                <ScalarProperty Name="CMD_START_TIME" ColumnName="CMD_START_TIME" />
+                <ScalarProperty Name="CMD_INSER_TIME" ColumnName="CMD_INSER_TIME" />
+                <ScalarProperty Name="PRIORITY" ColumnName="PRIORITY" />
+                <ScalarProperty Name="DESTINATION" ColumnName="DESTINATION" />
+                <ScalarProperty Name="SOURCE" ColumnName="SOURCE" />
+                <ScalarProperty Name="CMD_TPYE" ColumnName="CMD_TPYE" />
+                <ScalarProperty Name="CMD_ID_MCS" ColumnName="CMD_ID_MCS" />
+                <ScalarProperty Name="CARRIER_ID" ColumnName="CARRIER_ID" />
+                <ScalarProperty Name="VH_ID" ColumnName="VH_ID" />
+                <ScalarProperty Name="CMD_ID" ColumnName="CMD_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="VACMD_MCS">
             <EntityTypeMapping TypeName="OHTC_DevModel.VACMD_MCS">
               <MappingFragment StoreEntitySet="VACMD_MCS">

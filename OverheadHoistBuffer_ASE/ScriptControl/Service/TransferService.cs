@@ -21,6 +21,8 @@
 // 2020/06/16    Jason Wu       N/A            A20.06.16.0  新增確認該AGVport是否可用的優先流程FilterOfAGVPort()。
 // 2020/07/07    Hsinyu Chang   N/A            2020.07.07   Master PLC斷線時發alarm
 // 2020/11/11    Jason Wu       N/A            A20.11.11.0  新增在進入Load_Complete的時候，若為非shelf的port 就不要進行過帳
+// 2021/03/15    Kevin Wei      N/A            A21.02.22.0  修正在尋找搬送命令時，若Source Port狀態不正確時，就不再往下尋找儲位，避免錯誤預約儲位的問題。
+// 2021/03/15    Jason Wu       N/A            A21.02.22.1  修改swap 功能對於emergency 所做動作，在沒有OHB->AGV命令的情況下將不會轉1 in 1 out 而是2 in. (由Normal版本移植過來)
 //**********************************************************************************
 
 using com.mirle.ibg3k0.bcf.Common;
@@ -1427,6 +1429,17 @@ namespace com.mirle.ibg3k0.sc.Service
                         sourcePortType = AreSourceEnable(mcsCmd.RelayStation);
                         mcsCmd.HOSTSOURCE = mcsCmd.RelayStation;
                     }
+                    //A21.02.22.0 Start
+                    if (!sourcePortType)
+                    {
+                        TransferServiceLogger.Info
+                        (
+                            DateTime.Now.ToString("HH:mm:ss.fff ")
+                            + "OHB >> OHB| 命令來源: " + mcsCmd.HOSTSOURCE + " Port狀態不正確，不繼續往下執行。"
+                        );
+                        return false;
+                    }
+                    //A21.02.22.0 End
                     #endregion
                     #region 檢查目的狀態
                     if (isUnitType(mcsCmd.HOSTDESTINATION, UnitType.ZONE))  //若 Zone 上沒有儲位，目的 Port 會為 ZoneName，並上報 MCS
@@ -10277,10 +10290,24 @@ namespace com.mirle.ibg3k0.sc.Service
                         //若為緊急流程 走1 in 1 out 回多入流程
                         else
                         {
+                            //A21.02.22.1 AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Enter the One in One Out swap Emergency = " + isEmergency.ToString());
+                            //A21.02.22.1 InOutModeChange(accessAGVPortDatas, AGVStationID);
+                            //A21.02.22.1 isMoreOutMode = true;
+                            //A21.02.22.1 isOK = true;
+
+                            //Start A21.02.22.1
                             AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Enter the One in One Out swap Emergency = " + isEmergency.ToString());
-                            InOutModeChange(accessAGVPortDatas, AGVStationID);
+                            if (OHBCCmdNumber > 0) 
+                            {
+                                InOutModeChange(accessAGVPortDatas, AGVStationID);
+                            }
+                            else if (AGVCFromEQToStationCmdNum > 0) //A21.02.22.1
+                            {
+                                InputModeChange(accessAGVPortDatas, isEmergency); //A21.02.22.1
+                            }
                             isMoreOutMode = true;
                             isOK = true;
+                            //End A21.02.22.1
                         }
                     }
                     // 若有 3 Port 且為自動模式，走 3 Port 確認流程。只有在第3個port 上為 input mode 且空箱時，下 2 out ，其餘為1 in 1 out (但須注意是否有足夠的out 命令，沒有還是得轉in 補空)

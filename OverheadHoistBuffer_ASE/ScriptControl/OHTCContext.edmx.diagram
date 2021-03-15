@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="84fed8068adf4a8d89944fabd2b5fc15" Name="圖表1" ZoomLevel="62">
+      <Diagram DiagramId="84fed8068adf4a8d89944fabd2b5fc15" Name="圖表1" ZoomLevel="81">
         <EntityTypeShape EntityType="OHTC_DevModel.ABASEDATA_VER" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="OHTC_DevModel.ABLOCKZONEDETAIL" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="OHTC_DevModel.AGROUPRAILS" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
@@ -75,8 +75,10 @@
         <EntityTypeShape EntityType="OHTC_DevModel.CassetteData" Width="1.5" PointX="5.375" PointY="27.75" />
         <EntityTypeShape EntityType="OHTC_DevModel.ShelfDef" Width="1.5" PointX="25.375" PointY="23.75" />
         <EntityTypeShape EntityType="OHTC_DevModel.PortDef" Width="1.5" PointX="11.375" PointY="25.75" />
-        <EntityTypeShape EntityType="OHTC_DevModel.VACMD_MCS" Width="1.5" PointX="26.375" PointY="15.75" />
-        <EntityTypeShape EntityType="OHTC_DevModel.VSECTION_100" Width="1.5" PointX="27.375" PointY="21.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.HCMD_MCS" Width="1.5" PointX="28.75" PointY="15.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.HCMD_OHTC" Width="1.5" PointX="0.75" PointY="29.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.VACMD_MCS" Width="1.5" PointX="27.375" PointY="21.75" />
+        <EntityTypeShape EntityType="OHTC_DevModel.VSECTION_100" Width="1.5" PointX="27.375" PointY="27.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
