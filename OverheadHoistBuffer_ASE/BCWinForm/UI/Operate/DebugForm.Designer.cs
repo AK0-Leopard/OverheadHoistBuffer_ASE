@@ -51,6 +51,10 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label76 = new System.Windows.Forms.Label();
+            this.num_vh_y = new System.Windows.Forms.NumericUpDown();
+            this.label75 = new System.Windows.Forms.Label();
+            this.num_vh_x = new System.Windows.Forms.NumericUpDown();
             this.Ignore136UnloadComplete = new System.Windows.Forms.CheckBox();
             this.txt_current_sec_id = new System.Windows.Forms.TextBox();
             this.num_section_dis = new System.Windows.Forms.NumericUpDown();
@@ -344,14 +348,12 @@
             this.ck_SaftyCheckComplete = new System.Windows.Forms.CheckBox();
             this.ck_SaftyCheckRequest = new System.Windows.Forms.CheckBox();
             this.ck_Alive = new System.Windows.Forms.CheckBox();
-            this.num_vh_x = new System.Windows.Forms.NumericUpDown();
-            this.label75 = new System.Windows.Forms.Label();
-            this.label76 = new System.Windows.Forms.Label();
-            this.num_vh_y = new System.Windows.Forms.NumericUpDown();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.num_vh_y)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.num_vh_x)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.num_section_dis)).BeginInit();
             this.groupBox9.SuspendLayout();
             this.groupBox8.SuspendLayout();
@@ -383,8 +385,6 @@
             this.tableLayoutPanel5.SuspendLayout();
             this.groupBox13.SuspendLayout();
             this.groupBox10.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.num_vh_x)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.num_vh_y)).BeginInit();
             this.SuspendLayout();
             // 
             // cb_FroceReservePass
@@ -683,6 +683,62 @@
             this.groupBox4.Text = "Specify Vehicle Action";
             this.groupBox4.Enter += new System.EventHandler(this.groupBox4_Enter);
             // 
+            // label76
+            // 
+            this.label76.AutoSize = true;
+            this.label76.Location = new System.Drawing.Point(810, 705);
+            this.label76.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.label76.Name = "label76";
+            this.label76.Size = new System.Drawing.Size(20, 22);
+            this.label76.TabIndex = 58;
+            this.label76.Text = "Y";
+            // 
+            // num_vh_y
+            // 
+            this.num_vh_y.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.num_vh_y.Location = new System.Drawing.Point(834, 703);
+            this.num_vh_y.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.num_vh_y.Name = "num_vh_y";
+            this.num_vh_y.Size = new System.Drawing.Size(172, 30);
+            this.num_vh_y.TabIndex = 59;
+            this.num_vh_y.ValueChanged += new System.EventHandler(this.num_vh_y_ValueChanged);
+            // 
+            // label75
+            // 
+            this.label75.AutoSize = true;
+            this.label75.Location = new System.Drawing.Point(810, 666);
+            this.label75.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.label75.Name = "label75";
+            this.label75.Size = new System.Drawing.Size(20, 22);
+            this.label75.TabIndex = 17;
+            this.label75.Text = "X";
+            // 
+            // num_vh_x
+            // 
+            this.num_vh_x.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.num_vh_x.Location = new System.Drawing.Point(834, 664);
+            this.num_vh_x.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.num_vh_x.Name = "num_vh_x";
+            this.num_vh_x.Size = new System.Drawing.Size(172, 30);
+            this.num_vh_x.TabIndex = 57;
+            this.num_vh_x.ValueChanged += new System.EventHandler(this.num_vh_x_ValueChanged);
+            // 
             // Ignore136UnloadComplete
             // 
             this.Ignore136UnloadComplete.AutoSize = true;
@@ -729,6 +785,7 @@
             this.ck_retry.TabIndex = 7;
             this.ck_retry.Text = "136_Retry";
             this.ck_retry.UseVisualStyleBackColor = true;
+            this.ck_retry.Visible = false;
             this.ck_retry.CheckedChanged += new System.EventHandler(this.ck_retry_CheckedChanged);
             // 
             // lbl_listening_status
@@ -2557,7 +2614,7 @@
             // 
             this.cb_Cache_data_Name.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.cb_Cache_data_Name.FormattingEnabled = true;
-            this.cb_Cache_data_Name.Location = new System.Drawing.Point(178, 3);
+            this.cb_Cache_data_Name.Location = new System.Drawing.Point(178, 8);
             this.cb_Cache_data_Name.Name = "cb_Cache_data_Name";
             this.cb_Cache_data_Name.Size = new System.Drawing.Size(193, 30);
             this.cb_Cache_data_Name.TabIndex = 1;
@@ -4180,62 +4237,6 @@
             this.ck_Alive.UseVisualStyleBackColor = true;
             this.ck_Alive.CheckedChanged += new System.EventHandler(this.ck_Alive_CheckedChanged);
             // 
-            // num_vh_x
-            // 
-            this.num_vh_x.Increment = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.num_vh_x.Location = new System.Drawing.Point(834, 664);
-            this.num_vh_x.Maximum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            0});
-            this.num_vh_x.Name = "num_vh_x";
-            this.num_vh_x.Size = new System.Drawing.Size(172, 30);
-            this.num_vh_x.TabIndex = 57;
-            this.num_vh_x.ValueChanged += new System.EventHandler(this.num_vh_x_ValueChanged);
-            // 
-            // label75
-            // 
-            this.label75.AutoSize = true;
-            this.label75.Location = new System.Drawing.Point(810, 666);
-            this.label75.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            this.label75.Name = "label75";
-            this.label75.Size = new System.Drawing.Size(20, 22);
-            this.label75.TabIndex = 17;
-            this.label75.Text = "X";
-            // 
-            // label76
-            // 
-            this.label76.AutoSize = true;
-            this.label76.Location = new System.Drawing.Point(810, 705);
-            this.label76.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            this.label76.Name = "label76";
-            this.label76.Size = new System.Drawing.Size(20, 22);
-            this.label76.TabIndex = 58;
-            this.label76.Text = "Y";
-            // 
-            // num_vh_y
-            // 
-            this.num_vh_y.Increment = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.num_vh_y.Location = new System.Drawing.Point(834, 703);
-            this.num_vh_y.Maximum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            0});
-            this.num_vh_y.Name = "num_vh_y";
-            this.num_vh_y.Size = new System.Drawing.Size(172, 30);
-            this.num_vh_y.TabIndex = 59;
-            this.num_vh_y.ValueChanged += new System.EventHandler(this.num_vh_y_ValueChanged);
-            // 
             // DebugForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 22F);
@@ -4256,6 +4257,8 @@
             this.groupBox3.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.num_vh_y)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.num_vh_x)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.num_section_dis)).EndInit();
             this.groupBox9.ResumeLayout(false);
             this.groupBox9.PerformLayout();
@@ -4312,8 +4315,6 @@
             this.groupBox13.PerformLayout();
             this.groupBox10.ResumeLayout(false);
             this.groupBox10.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.num_vh_x)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.num_vh_y)).EndInit();
             this.ResumeLayout(false);
 
         }

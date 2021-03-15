@@ -40,6 +40,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             cb_StartGenAntoCmd.Checked = DebugParameter.CanAutoRandomGeneratesCommand;
             cb_FroceReservePass.Checked = DebugParameter.isForcedPassBlockControl;
             cb_FroceReservePass.Checked = DebugParameter.isForcedRejectBlockControl;
+            ck_retry.Checked = DebugParameter.Is_136_retry_test;
             List<string> lstVh = new List<string>();
             lstVh.Add(string.Empty);
             lstVh.AddRange(bcApp.SCApplication.getEQObjCacheManager().getAllVehicle().Select(vh => vh.VEHICLE_ID).ToList());
@@ -1259,7 +1260,8 @@ namespace com.mirle.ibg3k0.bc.winform.UI
 
         private void ck_retry_CheckedChanged(object sender, EventArgs e)
         {
-            DebugParameter.Is_136_empty_double_retry = ((CheckBox)sender).Checked;
+            //DebugParameter.Is_136_empty_double_retry = ((CheckBox)sender).Checked;
+            DebugParameter.Is_136_retry_test = ((CheckBox)sender).Checked;
         }
 
         private void cb_FroceReservePass_ChangeUICues(object sender, UICuesEventArgs e)
