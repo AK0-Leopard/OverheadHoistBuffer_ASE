@@ -822,6 +822,7 @@
     <Compile Include="Data\VO\MaintainSpace.cs" />
     <Compile Include="Data\VO\MaintainLift.cs" />
     <Compile Include="Data\VO\PartialVo\AADDRESS.cs" />
+    <Compile Include="Data\VO\PartialVo\ACMD_OHTC.cs" />
     <Compile Include="Data\VO\PartialVo\ASECTION.cs" />
     <Compile Include="Data\VO\PartialVo\ASEGMENT.cs" />
     <Compile Include="Data\VO\PartialVo\APORTSTATION.cs" />
@@ -977,6 +978,7 @@
     <Compile Include="SCALE_BASE_DATA.cs">
       <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
+    <Compile Include="Scheduler\DBManatainScheduler.cs" />
     <Compile Include="Scheduler\MTTFAndMTBFScheduler.cs" />
     <Compile Include="Scheduler\ZabbixDataCollectionScheduler.cs" />
     <Compile Include="Service\BlockControlService.cs" />

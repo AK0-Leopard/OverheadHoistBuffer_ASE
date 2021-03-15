@@ -289,5 +289,34 @@ namespace com.mirle.ibg3k0.sc
             }
             return isCmdSourceTypeAGV;
         }
+        public HCMD_MCS ToHCMD_MCS()
+        {
+            return new HCMD_MCS()
+            {
+                CMD_ID = this.CMD_ID,
+                CARRIER_ID = this.CARRIER_ID,
+                TRANSFERSTATE = this.TRANSFERSTATE,
+                COMMANDSTATE = this.COMMANDSTATE,
+                HOSTSOURCE = this.HOSTSOURCE,
+                HOSTDESTINATION = this.HOSTDESTINATION,
+                PRIORITY = this.PRIORITY,
+                CHECKCODE = this.CHECKCODE,
+                PAUSEFLAG = this.PAUSEFLAG,
+                CMD_INSER_TIME = this.CMD_INSER_TIME,
+                CMD_START_TIME = this.CMD_START_TIME,
+                CMD_FINISH_TIME = this.CMD_FINISH_TIME,
+                TIME_PRIORITY = this.TIME_PRIORITY,
+                PORT_PRIORITY = this.PORT_PRIORITY,
+                PRIORITY_SUM = this.PRIORITY_SUM,
+                REPLACE = this.REPLACE,
+                BOX_ID = this.BOX_ID,
+                CARRIER_LOC = this.CARRIER_LOC,
+                LOT_ID = this.LOT_ID,
+                CARRIER_ID_ON_CRANE = this.CARRIER_ID_ON_CRANE,
+                CMDTYPE = this.CMDTYPE,
+                CRANE = this.CRANE,
+                RelayStation = this.RelayStation,
+            };
+        }
     }
 }

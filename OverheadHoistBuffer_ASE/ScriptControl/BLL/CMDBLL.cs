@@ -45,6 +45,9 @@ namespace com.mirle.ibg3k0.sc.BLL
         ReturnCodeMapDao return_code_mapDao = null;
         ShelfDefDao shelfdefDao = null;
         CassetteDataDao cassettedataDao = null;
+        HCMD_MCSDao hcmd_mcsDao = null;
+        HCMD_OHTCDao hcmd_ohtcDao = null;
+
 
         protected static Logger logger_VhRouteLog = LogManager.GetLogger("VhRoute");
         NLog.Logger TransferServiceLogger = NLog.LogManager.GetLogger("TransferServiceLogger");
@@ -77,6 +80,10 @@ namespace com.mirle.ibg3k0.sc.BLL
             return_code_mapDao = scApp.ReturnCodeMapDao;
             shelfdefDao = scApp.ShelfDefDao;
             cassettedataDao = scApp.CassetteDataDao;
+
+            hcmd_mcsDao = scApp.HCMD_MCSDao;
+            hcmd_ohtcDao = scApp.HCMD_OHTCDao;
+
             initialByPassSegment();
         }
 
@@ -2185,6 +2192,13 @@ namespace com.mirle.ibg3k0.sc.BLL
 
         //    return isSuccess;
         //}
+        public void remoteCMD_MCSByBatch(List<ACMD_MCS> mcs_cmds)
+        {
+            using (DBConnection_EF con = DBConnection_EF.GetUContext())
+            {
+                cmd_mcsDao.RemoteByBatch(con, mcs_cmds);
+            }
+        }
 
         public bool updateCMD_MCS_PrioritySUM(ACMD_MCS mcs_cmd, int priority_sum)
         {
@@ -2627,6 +2641,14 @@ namespace com.mirle.ibg3k0.sc.BLL
 
 
         }
+        public List<ACMD_MCS> loadFinishCMD_MCS()
+        {
+            using (DBConnection_EF con = DBConnection_EF.GetUContext())
+            {
+                return cmd_mcsDao.loadFinishCMD_MCS(con);
+            }
+        }
+
 
         public List<ACMD_MCS> loadMcsCmd_RecentStart(DateTime dateTime)
         {
@@ -4317,7 +4339,20 @@ namespace com.mirle.ibg3k0.sc.BLL
 
 
         }
-
+        public List<ACMD_OHTC> loadFinishCMD_OHTC()
+        {
+            using (DBConnection_EF con = DBConnection_EF.GetUContext())
+            {
+                return cmd_ohtcDAO.loadFinishCMD_OHT(con);
+            }
+        }
+        public void remoteCMD_OHTCByBatch(List<ACMD_OHTC> cmds)
+        {
+            using (DBConnection_EF con = DBConnection_EF.GetUContext())
+            {
+                cmd_ohtcDAO.RemoteByBatch(con, cmds);
+            }
+        }
         public ACMD_OHTC getCMD_OHTCByStatusSending()
         {
             ACMD_OHTC cmd_ohtc = null;
@@ -6047,6 +6082,70 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
         }
         #endregion Return Code Map
+
+
+        #region HCMD_MCS
+        public List<HCMD_MCS> LoadHMCSCmdDataByStartEnd(DateTime startTime, DateTime endTime)  //歷史紀錄
+        {
+            //using (DBConnection_EF con = new DBConnection_EF())
+            using (DBConnection_EF con = DBConnection_EF.GetUContext())
+            {
+                return hcmd_mcsDao.LoadCmdDataByStartEnd(con, startTime, endTime);
+            }
+        }
+
+        public void CreatHCMD_MCSs(List<HCMD_MCS> HCMD_MCS)
+        {
+            using (DBConnection_EF con = DBConnection_EF.GetUContext())
+            {
+                hcmd_mcsDao.AddByBatch(con, HCMD_MCS);
+            }
+        }
+        public List<HCMD_MCS> loadHCMD_MCSBefore6Months()
+        {
+            List<HCMD_MCS> AMCSREPORTQUEUEs;
+            using (DBConnection_EF con = DBConnection_EF.GetUContext())
+            {
+                AMCSREPORTQUEUEs = hcmd_mcsDao.loadBefore6Months(con);
+            }
+            return AMCSREPORTQUEUEs;
+        }
+
+        public void RemoteHCMD_MCSByBatch(List<HCMD_MCS> hCmdMcs)
+        {
+            using (DBConnection_EF con = DBConnection_EF.GetUContext())
+            {
+                hcmd_mcsDao.RemoteByBatch(con, hCmdMcs);
+            }
+        }
+        #endregion HCMD_MCS
+        #region HCMD_OHTC
+        public void CreatHCMD_OHTCs(List<HCMD_OHTC> HCMD_OHTC)
+        {
+            using (DBConnection_EF con = DBConnection_EF.GetUContext())
+            {
+                hcmd_ohtcDao.AddByBatch(con, HCMD_OHTC);
+            }
+        }
+        public List<HCMD_OHTC> loadHCMD_OHTCBefore6Months()
+        {
+            List<HCMD_OHTC> hcmd_ohtc;
+            using (DBConnection_EF con = DBConnection_EF.GetUContext())
+            {
+                hcmd_ohtc = hcmd_ohtcDao.loadBefore6Months(con);
+            }
+            return hcmd_ohtc;
+        }
+
+        public void RemoteHCMD_OHTCByBatch(List<HCMD_OHTC> hcmdOHTC)
+        {
+            using (DBConnection_EF con = DBConnection_EF.GetUContext())
+            {
+                hcmd_ohtcDao.RemoteByBatch(con, hcmdOHTC);
+            }
+        }
+
+        #endregion HCMD_OHTC
 
     }
 }

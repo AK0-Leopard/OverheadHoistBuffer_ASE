@@ -2860,14 +2860,14 @@
           <Property Name="VH_ID" Type="String" Nullable="false" MaxLength="32" FixedLength="true" Unicode="false" />
           <Property Name="CARRIER_ID" Type="String" MaxLength="64" FixedLength="true" Unicode="false" />
           <Property Name="CMD_ID_MCS" Type="String" MaxLength="64" FixedLength="true" Unicode="false" />
-          <Property Name="CMD_TPYE" Type="Int32" Nullable="false" />
+          <Property Name="CMD_TPYE" Type="OHTC_DevModel.E_CMD_TYPE" Nullable="false" />
           <Property Name="SOURCE" Type="String" MaxLength="64" FixedLength="true" Unicode="false" />
           <Property Name="DESTINATION" Type="String" MaxLength="64" FixedLength="true" Unicode="false" />
           <Property Name="PRIORITY" Type="Int32" Nullable="false" />
           <Property Name="CMD_INSER_TIME" Type="DateTime" Nullable="false" Precision="7" />
           <Property Name="CMD_START_TIME" Type="DateTime" Precision="7" />
           <Property Name="CMD_END_TIME" Type="DateTime" Precision="7" />
-          <Property Name="CMD_STAUS" Type="Int32" Nullable="false" />
+          <Property Name="CMD_STAUS" Type="OHTC_DevModel.E_CMD_STATUS" Nullable="false" />
           <Property Name="CMD_PROGRESS" Type="Int32" Nullable="false" />
           <Property Name="INTERRUPTED_REASON" Type="Int32" />
           <Property Name="ESTIMATED_TIME" Type="Int32" Nullable="false" />

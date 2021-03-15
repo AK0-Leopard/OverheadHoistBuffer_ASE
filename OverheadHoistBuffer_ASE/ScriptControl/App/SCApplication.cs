@@ -453,6 +453,11 @@ namespace com.mirle.ibg3k0.sc.App
         private ReserveEnhanceInfoDao rserveEnhanceInfoDao = null;
         public ReserveEnhanceInfoDao ReserveEnhanceInfoDao { get { return rserveEnhanceInfoDao; } }
 
+        private HCMD_MCSDao hcmd_mcsDao = null;
+        public HCMD_MCSDao HCMD_MCSDao { get { return hcmd_mcsDao; } }
+        private HCMD_OHTCDao hcmd_ohtcDao = null;
+        public HCMD_OHTCDao HCMD_OHTCDao { get { return hcmd_ohtcDao; } }
+
         //BLL
         /// <summary>
         /// The user BLL
@@ -1107,6 +1112,7 @@ namespace com.mirle.ibg3k0.sc.App
 
             //IJobDetail zabbix_data_collection = JobBuilder.Create<ZabbixDataCollectionScheduler>().Build();
             IJobDetail mttf_mtbf_scheduler = JobBuilder.Create<MTTFAndMTBFScheduler>().Build();
+            IJobDetail db_manatain_scheduler = JobBuilder.Create<DBManatainScheduler>().Build();
 
             //ITrigger zabbix_trigger = TriggerBuilder.Create()
             //       .WithIdentity("news", "TelegramGroup")
@@ -1121,9 +1127,16 @@ namespace com.mirle.ibg3k0.sc.App
                    .StartAt(DateTime.UtcNow)
                    .WithPriority(1)
                    .Build();
+            ITrigger one_min_trigger = TriggerBuilder.Create()
+                   .WithIdentity("news2", "TelegramGroup")
+                   .WithCronSchedule("0 0/1 * * * ? ")//even 1 min
+                   .StartAt(DateTime.UtcNow)
+                   .WithPriority(1)
+                   .Build();
 
             //Scheduler.ScheduleJob(zabbix_data_collection, zabbix_trigger);
             //Scheduler.ScheduleJob(mttf_mtbf_scheduler, three_min_trigger);
+            Scheduler.ScheduleJob(db_manatain_scheduler, one_min_trigger);
 
         }
 
@@ -1206,6 +1219,10 @@ namespace com.mirle.ibg3k0.sc.App
 
             testtrantaskDao = new TestTranTaskDao();
             rserveEnhanceInfoDao = new ReserveEnhanceInfoDao();
+
+            hcmd_mcsDao = new HCMD_MCSDao();
+            hcmd_ohtcDao = new HCMD_OHTCDao();
+
             flexsimcommandDao = new FlexsimCommandDao();
 
             portdefDao = new PortDefDao();
@@ -1948,7 +1965,7 @@ namespace com.mirle.ibg3k0.sc.App
             initScriptForEquipment();
             startService();
 
-            //Scheduler.Start();
+            Scheduler.Start();
         }
 
         /// <summary>
@@ -2142,7 +2159,7 @@ namespace com.mirle.ibg3k0.sc.App
         private void stopProcess()
         {
             //not implement
-            //Scheduler.Shutdown(false);
+            Scheduler.Shutdown(false);
         }
 
         /// <summary>

@@ -18,14 +18,14 @@ namespace com.mirle.ibg3k0.sc
         public string VH_ID { get; set; }
         public string CARRIER_ID { get; set; }
         public string CMD_ID_MCS { get; set; }
-        public int CMD_TPYE { get; set; }
+        public E_CMD_TYPE CMD_TPYE { get; set; }
         public string SOURCE { get; set; }
         public string DESTINATION { get; set; }
         public int PRIORITY { get; set; }
         public System.DateTime CMD_INSER_TIME { get; set; }
         public Nullable<System.DateTime> CMD_START_TIME { get; set; }
         public Nullable<System.DateTime> CMD_END_TIME { get; set; }
-        public int CMD_STAUS { get; set; }
+        public E_CMD_STATUS CMD_STAUS { get; set; }
         public int CMD_PROGRESS { get; set; }
         public Nullable<int> INTERRUPTED_REASON { get; set; }
         public int ESTIMATED_TIME { get; set; }
