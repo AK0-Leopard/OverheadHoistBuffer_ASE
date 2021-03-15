@@ -51,7 +51,7 @@ namespace com.mirle.ibg3k0.sc
             set { _distanceFromVehicleToHostSource = value; }
         }
         public bool isRecentStart;
-        public int  recentStartCount;
+        public int recentStartCount;
         public bool isChangeOrderByGroupEQ;
         public int OrderBeforeGroupEQSort;
         public int OrderAfterGroupEQSort;
@@ -316,6 +316,9 @@ namespace com.mirle.ibg3k0.sc
                 CMDTYPE = this.CMDTYPE,
                 CRANE = this.CRANE,
                 RelayStation = this.RelayStation,
+                REQ_EQ = this.REQ_EQ,
+                REQ_EQ_NUM = this.REQ_EQ_NUM,
+                REQ_PORT = this.REQ_PORT
             };
         }
     }

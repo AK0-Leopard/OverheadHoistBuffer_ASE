@@ -1025,6 +1025,9 @@
           <Property Name="CARRIER_ID_ON_CRANE" Type="varchar" MaxLength="64" />
           <Property Name="CMDTYPE" Type="varchar" MaxLength="64" />
           <Property Name="CRANE" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="REQ_EQ" Type="varchar" MaxLength="64" />
+          <Property Name="REQ_PORT" Type="varchar" MaxLength="64" />
+          <Property Name="REQ_EQ_NUM" Type="varchar" MaxLength="64" />
         </EntityType>
         <EntityType Name="HCMD_OHTC">
           <Key>
@@ -2850,6 +2853,9 @@
           <Property Name="CARRIER_ID_ON_CRANE" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
           <Property Name="CMDTYPE" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
           <Property Name="CRANE" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="REQ_EQ" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="REQ_PORT" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="REQ_EQ_NUM" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="HCMD_OHTC">
           <Key>
@@ -4177,6 +4183,9 @@
           <EntitySetMapping Name="HCMD_MCS">
             <EntityTypeMapping TypeName="OHTC_DevModel.HCMD_MCS">
               <MappingFragment StoreEntitySet="HCMD_MCS">
+                <ScalarProperty Name="REQ_EQ_NUM" ColumnName="REQ_EQ_NUM" />
+                <ScalarProperty Name="REQ_PORT" ColumnName="REQ_PORT" />
+                <ScalarProperty Name="REQ_EQ" ColumnName="REQ_EQ" />
                 <ScalarProperty Name="CRANE" ColumnName="CRANE" />
                 <ScalarProperty Name="CMDTYPE" ColumnName="CMDTYPE" />
                 <ScalarProperty Name="CARRIER_ID_ON_CRANE" ColumnName="CARRIER_ID_ON_CRANE" />

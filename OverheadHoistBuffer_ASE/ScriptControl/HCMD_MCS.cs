@@ -37,5 +37,8 @@ namespace com.mirle.ibg3k0.sc
         public string CARRIER_ID_ON_CRANE { get; set; }
         public string CMDTYPE { get; set; }
         public string CRANE { get; set; }
+        public string REQ_EQ { get; set; }
+        public string REQ_PORT { get; set; }
+        public string REQ_EQ_NUM { get; set; }
     }
 }
