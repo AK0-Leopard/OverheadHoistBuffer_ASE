@@ -2712,9 +2712,10 @@ namespace com.mirle.ibg3k0.sc.Service
                 }
                 else if (isCVPort(destName))
                 {
+                    int command_count = cmdBLL.GetCmdDataByDest(destName).Where(data => data.TRANSFERSTATE == E_TRAN_STATUS.Transferring).Count();
                     if (portINIData[destName].Stage == 1)    //200701 SCC+ MCS 士偉、冠皚提出，目的 Port 只有 1 節時，出現目前命令到相同的 Port 不要執行
                     {
-                        if (cmdBLL.GetCmdDataByDest(destName).Where(data => data.TRANSFERSTATE == E_TRAN_STATUS.Transferring).Count() != 0)
+                        if (command_count != 0)
                         {
                             return false;
                         }
@@ -2726,6 +2727,33 @@ namespace com.mirle.ibg3k0.sc.Service
                     {
                         if (destPort.OpAutoMode)
                         {
+
+                            if (isCVPort(destName) &&
+                            destPort.IsOutputMode &&
+                            portINIData[destName].Stage > 1)//20210219目的Port不只一節，且在庫量與在途量相加小於總容量，就允許下達命令進行般送。
+                            {
+                                if (portINIData[destName].Stage > (command_count + destPort.BoxCount))
+                                {
+                                    TransferServiceLogger.Info
+                                    (
+                                        DateTime.Now.ToString("HH:mm:ss.fff ") +
+                                        "Port " + destName + "have enough capacity, is ok to send box to port."
+                                    );
+                                    return true;
+                                }
+                                else
+                                {
+                                    TransferServiceLogger.Info
+                                    (
+                                        DateTime.Now.ToString("HH:mm:ss.fff ") +
+                                        "Port " + destName + "not have enough capacity, is can't to send box to port."
+                                    );
+                                    return false;
+                                }
+                            }
+
+
+
                             if (destPort.IsReadyToLoad || (isUnitType(destName, UnitType.STK) && destPort.preLoadOK))
                             {
                                 if (isUnitType(destName, UnitType.AGV))
