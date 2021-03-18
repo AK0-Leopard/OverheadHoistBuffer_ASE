@@ -4706,9 +4706,14 @@ namespace com.mirle.ibg3k0.sc.Service
                 }
                 else
                 {
-                    reportBLL.ReportCarrierRemovedFromPort(dbData, HandoffType);
+                    Task.Run(() =>
+                    {
+                        SpinWait.SpinUntil(() => false, 30000);//延時30秒再上報CarrierRemove給MCS
+                        reportBLL.ReportCarrierRemovedFromPort(dbData, HandoffType);
+                    });
 
                     cassette_dataBLL.DeleteCSTbyCstBoxID(dbData.CSTID, dbData.BOXID);
+
                 }
 
                 if (isUnitType(dbData.Carrier_LOC, UnitType.AGV))
