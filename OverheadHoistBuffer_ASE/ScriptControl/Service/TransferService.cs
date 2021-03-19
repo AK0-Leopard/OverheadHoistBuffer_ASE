@@ -1789,6 +1789,9 @@ namespace com.mirle.ibg3k0.sc.Service
                         int iDest= 0 ;
                         scApp.MapBLL.getAddressID(mcsCmd.HOSTSOURCE, out source_adr);
                         scApp.MapBLL.getAddressID(mcsCmd.HOSTDESTINATION, out destnation_adr);
+
+
+
                         iSource = int.Parse(source_adr);
                         iDest = int.Parse(destnation_adr);
                         //PortPLCInfo plcInfoSource = GetPLC_PortData(mcsCmd.HOSTSOURCE);
@@ -1797,20 +1800,63 @@ namespace com.mirle.ibg3k0.sc.Service
                         bool needHandoff = false;
                         bool checkToRelay = true;
                         List<ShelfDef> shelfData = null;
-                        if (iSource > SystemParameter.iOHCVPortNorthAdr && iDest < SystemParameter.iHandoffBoundary)
+
+                        if (!scApp.TransferService.isUnitType(mcsCmd.HOSTSOURCE, Service.UnitType.CRANE))//起點不在車上的情況
                         {
-                            shelfData = shelfDefBLL.GetEmptyHandOffShelfSouth();
-                            needHandoff = true;
+                            if (iSource > SystemParameter.iOHCVPortNorthAdr && iDest < SystemParameter.iHandoffBoundary)
+                            {
+                                shelfData = shelfDefBLL.GetEmptyHandOffShelfSouth();
+                                needHandoff = true;
+                            }
+                            else if (iSource < SystemParameter.iHandoffBoundary && iDest > SystemParameter.iOHCVPortNorthAdr)
+                            {
+                                shelfData = shelfDefBLL.GetEmptyHandOffShelfSouth();
+                                needHandoff = true;
+                            }
+                            else
+                            {
+                                needHandoff = false;
+                            }
                         }
-                        else if (iSource < SystemParameter.iHandoffBoundary && iDest > SystemParameter.iOHCVPortNorthAdr)
+                        else//起點在車上需要看車輛的服務區域決定是否需要換手
                         {
-                            shelfData = shelfDefBLL.GetEmptyHandOffShelfSouth();
-                            needHandoff = true;
+                            AVEHICLE vh = scApp.VehicleService.GetVehicleDataByVehicleID(mcsCmd.HOSTSOURCE);
+                            if (vh.ServiceSide == ServiceSide.North)
+                            {
+                                if(iDest < SystemParameter.iHandoffBoundary)
+                                {
+                                    shelfData = shelfDefBLL.GetEmptyHandOffShelfSouth();
+                                    needHandoff = true;
+                                }
+                                else
+                                {
+                                    needHandoff = false;
+                                }
+                            }
+                            else if(vh.ServiceSide == ServiceSide.South)
+                            {
+                                if(iDest > SystemParameter.iOHCVPortNorthAdr)
+                                {
+                                    shelfData = shelfDefBLL.GetEmptyHandOffShelfSouth();
+                                    needHandoff = true;
+                                }
+                                else
+                                {
+                                    needHandoff = false;
+                                }
+                            }
+                            else //車輛沒設定服務範圍，一律換手
+                            {
+                                shelfData = shelfDefBLL.GetEmptyHandOffShelfSouth();
+                                needHandoff = true;
+                            }
                         }
-                        else
-                        {
-                            needHandoff = false;
-                        }
+
+
+
+
+
+
                         if (needHandoff)
                         {
                             TransferRunLogger.Info($"命令檢查需要換手 ID:[{mcsCmd.CMD_ID}] Source:[{mcsCmd.HOSTSOURCE}] SourceReady:[{sourcePortType}] Destnation:[{mcsCmd.HOSTDESTINATION}] DestReady:[{destPortType}]");
@@ -2122,7 +2168,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         PortPLCInfo plcInfoSource = !isShelfPort(mcsCmd.HOSTSOURCE) && !isUnitType(mcsCmd.HOSTSOURCE, UnitType.CRANE) ? GetPLC_PortData(mcsCmd.HOSTSOURCE) : null;
                         PortPLCInfo plcInfoDest = GetPLC_PortData(mcsCmd.HOSTDESTINATION);
 
-                        if ((isShelfPort(mcsCmd.HOSTSOURCE) || (plcInfoSource.OpAutoMode && plcInfoSource.IsReadyToUnload))
+                        if ((isShelfPort(mcsCmd.HOSTSOURCE)|| isUnitType(mcsCmd.HOSTSOURCE, UnitType.CRANE) || (plcInfoSource.OpAutoMode && plcInfoSource.IsReadyToUnload))
                          && plcInfoDest.OpAutoMode && plcInfoDest.IsReadyToLoad == false
                            )
                         {
@@ -2162,22 +2208,65 @@ namespace com.mirle.ibg3k0.sc.Service
 
                                 bool needHandoff = false;
                                 bool checkToRelay = true;
-                                if (iSource > SystemParameter.iOHCVPortNorthAdr && iDest < SystemParameter.iHandoffBoundary)
+
+                                if (!scApp.TransferService.isUnitType(mcsCmd.HOSTSOURCE, Service.UnitType.CRANE))//起點不在車上的情況
                                 {
-                                    shelfData = null;
-                                    shelfData = shelfDefBLL.GetEmptyHandOffShelfSouth();
-                                    needHandoff = true;
+                                    if (iSource > SystemParameter.iOHCVPortNorthAdr && iDest < SystemParameter.iHandoffBoundary)
+                                    {
+                                        shelfData = null;
+                                        shelfData = shelfDefBLL.GetEmptyHandOffShelfSouth();
+                                        needHandoff = true;
+                                    }
+                                    else if (iSource < SystemParameter.iHandoffBoundary && iDest > SystemParameter.iOHCVPortNorthAdr)
+                                    {
+                                        shelfData = null;
+                                        shelfData = shelfDefBLL.GetEmptyHandOffShelfSouth();
+                                        needHandoff = true;
+                                    }
+                                    else
+                                    {
+                                        needHandoff = false;
+                                    }
                                 }
-                                else if (iSource < SystemParameter.iHandoffBoundary && iDest > SystemParameter.iOHCVPortNorthAdr)
+                                else//起點在車上需要看車輛的服務區域決定是否需要換手
                                 {
-                                    shelfData = null;
-                                    shelfData = shelfDefBLL.GetEmptyHandOffShelfSouth();
-                                    needHandoff = true;
+                                    AVEHICLE vh = scApp.VehicleService.GetVehicleDataByVehicleID(mcsCmd.HOSTSOURCE);
+                                    if (vh.ServiceSide == ServiceSide.North)
+                                    {
+                                        if (iDest < SystemParameter.iHandoffBoundary)
+                                        {
+                                            shelfData = null;
+                                            shelfData = shelfDefBLL.GetEmptyHandOffShelfSouth();
+                                            needHandoff = true;
+                                        }
+                                        else
+                                        {
+                                            needHandoff = false;
+                                        }
+                                    }
+                                    else if (vh.ServiceSide == ServiceSide.South)
+                                    {
+                                        if (iDest > SystemParameter.iOHCVPortNorthAdr)
+                                        {
+                                            shelfData = null;
+                                            shelfData = shelfDefBLL.GetEmptyHandOffShelfSouth();
+                                            needHandoff = true;
+                                        }
+                                        else
+                                        {
+                                            needHandoff = false;
+                                        }
+                                    }
+                                    else //車輛沒設定服務範圍，一律換手
+                                    {
+                                        shelfData = null;
+                                        shelfData = shelfDefBLL.GetEmptyHandOffShelfSouth();
+                                        needHandoff = true;
+                                    }
                                 }
-                                else
-                                {
-                                    needHandoff = false;
-                                }
+
+
+
                                 if (needHandoff)
                                 {
                                     if (!isShelfPort(mcsCmd.HOSTSOURCE))
