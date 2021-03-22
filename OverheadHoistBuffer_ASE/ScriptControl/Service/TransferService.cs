@@ -895,7 +895,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                 TransferRunLogger.Info($"檢查第{index}筆命令:[{v.CMD_ID}] source:[{v.HOSTSOURCE}] dest:[{v.HOSTDESTINATION}] relay:[{v.RelayStation}]");
 
                                 bool result = false;
-                                if((scApp.BC_ID != "ASE_LINE3"&& scApp.BC_ID != "ASE_TEST" )|| !scApp.VehicleService.multiplecar_active)
+                                if ((scApp.BC_ID != "ASE_LINE3" && scApp.BC_ID != "ASE_TEST") || !scApp.VehicleService.multiplecar_active)
                                 {
                                     result = TransferCommandHandler(v);
                                 }
@@ -1571,7 +1571,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                 else
                                 {
                                     //釋放於GetShelfRecentLocation中 提前預約的shelf
-                                    shelfDefBLL.updateStatus(cmdRelay.HOSTDESTINATION , ShelfDef.E_ShelfState.EmptyShelf);
+                                    shelfDefBLL.updateStatus(cmdRelay.HOSTDESTINATION, ShelfDef.E_ShelfState.EmptyShelf);
                                 }
                             }
                             else
@@ -1797,7 +1797,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         string source_adr;
                         string destnation_adr;
                         int iSource = 0;
-                        int iDest= 0 ;
+                        int iDest = 0;
                         scApp.MapBLL.getAddressID(mcsCmd.HOSTSOURCE, out source_adr);
                         scApp.MapBLL.getAddressID(mcsCmd.HOSTDESTINATION, out destnation_adr);
 
@@ -1834,7 +1834,7 @@ namespace com.mirle.ibg3k0.sc.Service
                             AVEHICLE vh = scApp.VehicleService.GetVehicleDataByVehicleID(mcsCmd.HOSTSOURCE);
                             if (vh.ServiceSide == ServiceSide.North)
                             {
-                                if(iDest < SystemParameter.iHandoffBoundary)
+                                if (iDest < SystemParameter.iHandoffBoundary)
                                 {
                                     shelfData = shelfDefBLL.GetEmptyHandOffShelfSouth();
                                     needHandoff = true;
@@ -1844,9 +1844,9 @@ namespace com.mirle.ibg3k0.sc.Service
                                     needHandoff = false;
                                 }
                             }
-                            else if(vh.ServiceSide == ServiceSide.South)
+                            else if (vh.ServiceSide == ServiceSide.South)
                             {
-                                if(iDest > SystemParameter.iOHCVPortNorthAdr)
+                                if (iDest > SystemParameter.iOHCVPortNorthAdr)
                                 {
                                     shelfData = shelfDefBLL.GetEmptyHandOffShelfSouth();
                                     needHandoff = true;
@@ -2130,7 +2130,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         //來源是CV Port或HandoffShelf目的是 CV Port 且 目的不能搬，觸發將卡匣送至中繼站
                         TimeSpan timeSpan = DateTime.Now - mcsCmd.CMD_INSER_TIME;
 
-                        if(isUnitType(mcsCmd.HOSTSOURCE, UnitType.OHCV))
+                        if (isUnitType(mcsCmd.HOSTSOURCE, UnitType.OHCV))
                         {
                             TransferRunLogger.Info("命令起點是OHCV");
 
@@ -2179,7 +2179,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         PortPLCInfo plcInfoSource = !isShelfPort(mcsCmd.HOSTSOURCE) && !isUnitType(mcsCmd.HOSTSOURCE, UnitType.CRANE) ? GetPLC_PortData(mcsCmd.HOSTSOURCE) : null;
                         PortPLCInfo plcInfoDest = GetPLC_PortData(mcsCmd.HOSTDESTINATION);
 
-                        if ((isShelfPort(mcsCmd.HOSTSOURCE)|| isUnitType(mcsCmd.HOSTSOURCE, UnitType.CRANE) || (plcInfoSource.OpAutoMode && plcInfoSource.IsReadyToUnload))
+                        if ((isShelfPort(mcsCmd.HOSTSOURCE) || isUnitType(mcsCmd.HOSTSOURCE, UnitType.CRANE) || (plcInfoSource.OpAutoMode && plcInfoSource.IsReadyToUnload))
                          && plcInfoDest.OpAutoMode && plcInfoDest.IsReadyToLoad == false
                            )
                         {
@@ -2195,7 +2195,7 @@ namespace com.mirle.ibg3k0.sc.Service
                             {
                                 shelfData = shelfDefBLL.GetEmptyAlternateShelf();
                             }
-                            else if(isUnitType(mcsCmd.HOSTSOURCE, UnitType.OHCV) &&(isUnitType(mcsCmd.HOSTDESTINATION, UnitType.AGV)|| isUnitType(mcsCmd.HOSTDESTINATION, UnitType.NTB))
+                            else if (isUnitType(mcsCmd.HOSTSOURCE, UnitType.OHCV) && (isUnitType(mcsCmd.HOSTDESTINATION, UnitType.AGV) || isUnitType(mcsCmd.HOSTDESTINATION, UnitType.NTB))
                                 && _mcsDest < SystemParameter.iHandoffBoundary)//如果目的是南側Station就先放到Alternate區，避免CV塞車過久。
                             {
                                 shelfData = shelfDefBLL.GetEmptyHandoffShelf();
@@ -2490,7 +2490,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                 success = true;
                             }
 
-                            if ((cst.CSTState == E_CSTState.Installed|| cst.CSTState == E_CSTState.WaitIn) && plcInfo.IsInputMode && plcInfo.PortWaitIn)
+                            if ((cst.CSTState == E_CSTState.Installed || cst.CSTState == E_CSTState.WaitIn) && plcInfo.IsInputMode && plcInfo.PortWaitIn)
                             //if (cst.CSTState == E_CSTState.Installed && plcInfo.IsInputMode && plcInfo.PortWaitIn) 20210120 markchou
                             {
                                 TimeSpan timeSpan = DateTime.Now - DateTime.Parse(cst.TrnDT);
@@ -2607,7 +2607,7 @@ namespace com.mirle.ibg3k0.sc.Service
             }
 
             bool ohtReport = false;
-            if((scApp.BC_ID!= "ASE_LINE3"&&scApp.BC_ID!= "ASE_TEST") || !scApp.VehicleService.multiplecar_active)
+            if ((scApp.BC_ID != "ASE_LINE3" && scApp.BC_ID != "ASE_TEST") || !scApp.VehicleService.multiplecar_active)
             {
                 ohtReport = cmdBLL.generateOHTCommand(cmd); //OHT回傳是否可執行搬送命令
 
@@ -3175,7 +3175,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         break;
                     case COMMAND_STATUS_BIT_INDEX_LOAD_COMPLETE: //入料完成
 
-                        if (cmd.COMMANDSTATE == status )  //模擬器會重複發，第二次就跳過 
+                        if (cmd.COMMANDSTATE == status)  //模擬器會重複發，第二次就跳過 
                         {
                             break;
                         }
@@ -7445,7 +7445,7 @@ namespace com.mirle.ibg3k0.sc.Service
             }
         }
 
-        public bool isUnitTypeAndZone(string portName, UnitType unitType,string zone_id)  //Port種類與Zone判斷
+        public bool isUnitTypeAndZone(string portName, UnitType unitType, string zone_id)  //Port種類與Zone判斷
         {
             try
             {
