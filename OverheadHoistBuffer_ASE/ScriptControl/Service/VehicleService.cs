@@ -1005,7 +1005,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                    minRouteSec_From2To == null ? null : minRouteSec_From2To.ToList(),
                                    cycleRunSections);
                     assignVH.sw_speed.Restart();
-                    
+
                     //在設備確定接收該筆命令，把它從PreInitial改成Initial狀態並上報給MCS
                     if (!SCUtility.isEmpty(cmd.CMD_ID_MCS))
                     {
@@ -1719,7 +1719,8 @@ namespace com.mirle.ibg3k0.sc.Service
                         //(is_success, guide_segment_ids, guide_section_ids, guide_address_ids, total_cost) =
                         //    scApp.GuideBLL.getGuideInfo_New2(vh_current_section, vh_current_address, avoidAddress);
                         (is_success, guide_segment_ids, guide_section_ids, guide_address_ids, total_cost) =
-                                                    scApp.GuideBLL.getGuideInfo(vh_current_address, avoidAddress, need_by_pass_sec_ids);
+                                                    //scApp.GuideBLL.getGuideInfo(vh_current_address, avoidAddress, need_by_pass_sec_ids);
+                                                    scApp.GuideBLL.getGuideInfo(vh_current_address, avoidAddress);
                         next_walk_section = guide_section_ids[0];
                         next_walk_address = guide_address_ids[0];
 
@@ -2544,11 +2545,11 @@ namespace com.mirle.ibg3k0.sc.Service
 
                     //在預約失敗以後，會嘗試看能不能將車子趕走
                     ALINE line = scApp.getEQObjCacheManager().getLine();
-                    if (!IsCMD_MCSCanProcess() ||
-                        line.SCStats == ALINE.TSCState.PAUSED)
-                    {
-                        Task.Run(() => tryDriveOutTheVh(eqpt.VEHICLE_ID, ReserveResult.reservedVhID));
-                    }
+                    //if (!IsCMD_MCSCanProcess() ||
+                    //    line.SCStats == ALINE.TSCState.PAUSED)
+                    //{
+                    Task.Run(() => tryDriveOutTheVh(eqpt.VEHICLE_ID, ReserveResult.reservedVhID));
+                    //}
                 }
                 //B0.02 replyTranEventReport(bcfApp, EventType.ReserveReq, eqpt, seqNum, canReservePass: ReserveResult.isSuccess, reserveInfos: reserveInfos);
                 replyTranEventReport(bcfApp, EventType.ReserveReq, eqpt, seqNum, canReservePass: ReserveResult.isSuccess, reserveInfos: ReserveResult.reserveSuccessInfos);//B0.02
@@ -3196,7 +3197,7 @@ namespace com.mirle.ibg3k0.sc.Service
                             //}
 
                             //2021/02/15 MarkChou Line3南側車輛向南預約或北側車輛向北預約，要無條件給予路權
-                            if(scApp.BC_ID == "ASE_LINE3")
+                            if (scApp.BC_ID == "ASE_LINE3")
                             {
                                 if (!result.OK)
                                 {

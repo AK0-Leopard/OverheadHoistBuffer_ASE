@@ -157,7 +157,7 @@ namespace com.mirle.ibg3k0.sc.Service
         public Logger AGVCTriggerLogger = NLog.LogManager.GetLogger("TransferServiceLogger");
         public Logger TransferRunLogger = NLog.LogManager.GetLogger("TransferRunLogger");
         public Logger GroupEQLogger = NLog.LogManager.GetLogger("GroupEQLogger");
-        
+
 
         private SCApplication scApp = null;
         private ReportBLL reportBLL = null;
@@ -1070,7 +1070,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                 scApp.EmptyBoxHandlerService.CheckTheEmptyBoxStockLevelZoneBalanceForASE_Line3();
                                 scApp.EmptyBoxHandlerService.resetCheckLine3Count();
                             }
-        
+
                         }
 
                         //對處於Alternate區或handoff區的閒置車輛，直接下達命令趕走
@@ -1085,7 +1085,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                 {
                                     //檢查該車輛有無命令
                                     if (vh.isTcpIpConnect &&
-                                        (vh.MODE_STATUS == ProtocolFormat.OHTMessage.VHModeStatus.AutoRemote 
+                                        (vh.MODE_STATUS == ProtocolFormat.OHTMessage.VHModeStatus.AutoRemote
                                         || vh.MODE_STATUS == ProtocolFormat.OHTMessage.VHModeStatus.AutoLocal) &&
                                         vh.ACT_STATUS == ProtocolFormat.OHTMessage.VHActionStatus.NoCommand &&
                                         !SCUtility.isEmpty(vh.CUR_ADR_ID) &&
@@ -1710,6 +1710,17 @@ namespace com.mirle.ibg3k0.sc.Service
                         sourcePortType = AreSourceEnable(mcsCmd.RelayStation);
                         mcsCmd.HOSTSOURCE = mcsCmd.RelayStation;
                     }
+                    //A21.02.22.0 Start
+                    if (!sourcePortType)
+                    {
+                        TransferServiceLogger.Info
+                        (
+                            DateTime.Now.ToString("HH:mm:ss.fff ")
+                            + "OHB >> OHB| 命令來源: " + mcsCmd.HOSTSOURCE + " Port狀態不正確，不繼續往下執行。"
+                        );
+                        return false;
+                    }
+                    //A21.02.22.0 End
                     #endregion
                     #region 檢查目的狀態
                     string destReservedInShelf = null;
@@ -1942,7 +1953,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                 }
                             }
                             TransferRunLogger.Info($"Handoff失敗break啟動 ID:[{mcsCmd.CMD_ID}] Source:[{mcsCmd.HOSTSOURCE}] SourceReady:[{sourcePortType}] Destnation:[{mcsCmd.HOSTDESTINATION}] DestReady:[{destPortType}]");
-                            break; 
+                            break;
                         }
                         else
                         {
@@ -2123,7 +2134,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         {
                             TransferRunLogger.Info("命令起點是OHCV");
 
-                            if (timeSpan.TotalSeconds < SystemParameter.iCVPortWatingTime) 
+                            if (timeSpan.TotalSeconds < SystemParameter.iCVPortWatingTime)
                             {
                                 TransferRunLogger.Info($"命令起點是OHCV，未超時，結束檢查 interval:{SystemParameter.iCVPortWatingTime}");
 
@@ -2858,7 +2869,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                     else
                                     {
                                         destState = destState + " IsOutputMode:" + destPort.IsOutputMode;
-                                    } 
+                                    }
 
                                 }
                             }
@@ -3172,7 +3183,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         cmd.HOSTSOURCE = ohtCmd.SOURCE;
                         CassetteData LoadCSTData = cassette_dataBLL.loadCassetteDataByLoc(cmd.HOSTSOURCE);
 
-                        if (LoadCSTData != null) 
+                        if (LoadCSTData != null)
                         {
                             OHT_LoadCompleted(ohtCmd, LoadCSTData, ohtName, "OHT_TransferProcess");
                         }
@@ -4731,7 +4742,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         );
 
                         ACMD_OHTC ohtData = cmdBLL.getCMD_OHTCByMCScmdID_And_NotFinishBySource(cmd.CMD_ID, cmd.HOSTSOURCE);
-                        
+
                         if (cmd.COMMANDSTATE < COMMAND_STATUS_BIT_INDEX_LOAD_COMPLETE)
                         {
                             cmdBLL.updateCMD_MCS_CmdStatus(cmd.CMD_ID, COMMAND_STATUS_BIT_INDEX_LOAD_COMPLETE);
@@ -10419,7 +10430,7 @@ namespace com.mirle.ibg3k0.sc.Service
 
                             //Start A21.02.22.1
                             AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Enter the One in One Out swap Emergency = " + isEmergency.ToString());
-                            if (OHBCCmdNumber > 0) 
+                            if (OHBCCmdNumber > 0)
                             {
                                 InOutModeChange(accessAGVPortDatas, AGVStationID);
                             }
