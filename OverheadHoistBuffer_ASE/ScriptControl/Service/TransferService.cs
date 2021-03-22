@@ -1944,12 +1944,15 @@ namespace com.mirle.ibg3k0.sc.Service
                                 }
                                 else
                                 {
+                                    if (!string.IsNullOrWhiteSpace(destReservedInShelf))
+                                    {
+                                        shelfDefBLL.updateStatus(destReservedInShelf, ShelfDef.E_ShelfState.EmptyShelf);
+                                    }
                                     TransferServiceLogger.Info
                                     (
                                         DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB|搬到中繼站，沒有儲位"
                                     );
                                     TransferRunLogger.Info($"Relay命令派送失敗，沒有儲位 ID:[{cmdRelay.CMD_ID}] Source:[{cmdRelay.HOSTSOURCE}] SourceReady:[{sourcePortType}] Destnation:[{cmdRelay.HOSTDESTINATION}] DestReady:[{destPortType}]");
-
                                 }
                             }
                             TransferRunLogger.Info($"Handoff失敗break啟動 ID:[{mcsCmd.CMD_ID}] Source:[{mcsCmd.HOSTSOURCE}] SourceReady:[{sourcePortType}] Destnation:[{mcsCmd.HOSTDESTINATION}] DestReady:[{destPortType}]");
@@ -2005,7 +2008,10 @@ namespace com.mirle.ibg3k0.sc.Service
                                         if (OHT_TransportRequest(cmdRelay))
                                         {
                                             ShelfReserved(cmdRelay.HOSTSOURCE, cmdRelay.HOSTDESTINATION);
-
+                                            if (!string.IsNullOrWhiteSpace(destReservedInShelf))
+                                            {
+                                                shelfDefBLL.updateStatus(destReservedInShelf, ShelfDef.E_ShelfState.EmptyShelf);
+                                            }
                                             cmdBLL.updateCMD_MCS_RelayStation(mcsCmd.CMD_ID, cmdRelay.HOSTDESTINATION);
 
                                             TransferServiceLogger.Info
@@ -2026,12 +2032,22 @@ namespace com.mirle.ibg3k0.sc.Service
                                              (
                                                  DateTime.Now.ToString("HH:mm:ss.fff ") + "產生CV Port至Alternate區中繼命令失敗 中繼站: " + cmdRelay.HOSTDESTINATION
                                              );
+
+                                            if (!string.IsNullOrWhiteSpace(destReservedInShelf))
+                                            {
+                                                shelfDefBLL.updateStatus(destReservedInShelf, ShelfDef.E_ShelfState.EmptyShelf);
+                                            }
                                             //釋放於GetShelfRecentLocation中 提前預約的shelf
                                             shelfDefBLL.updateStatus(cmdRelay.HOSTDESTINATION, ShelfDef.E_ShelfState.EmptyShelf);
                                         }
                                     }
                                     else
                                     {
+                                        if (!string.IsNullOrWhiteSpace(destReservedInShelf))
+                                        {
+                                            shelfDefBLL.updateStatus(destReservedInShelf, ShelfDef.E_ShelfState.EmptyShelf);
+                                        }
+
                                         TransferServiceLogger.Info
                                         (
                                             DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB|搬到中繼站，沒有儲位"
@@ -2195,8 +2211,8 @@ namespace com.mirle.ibg3k0.sc.Service
                             {
                                 shelfData = shelfDefBLL.GetEmptyAlternateShelf();
                             }
-                            else if (isUnitType(mcsCmd.HOSTSOURCE, UnitType.OHCV) && (isUnitType(mcsCmd.HOSTDESTINATION, UnitType.AGV) || isUnitType(mcsCmd.HOSTDESTINATION, UnitType.NTB))
-                                && _mcsDest < SystemParameter.iHandoffBoundary)//如果目的是南側Station就先放到Alternate區，避免CV塞車過久。
+                            else if(isUnitType(mcsCmd.HOSTSOURCE, UnitType.OHCV) &&(isUnitType(mcsCmd.HOSTDESTINATION, UnitType.AGV)|| isUnitType(mcsCmd.HOSTDESTINATION, UnitType.NTB))
+                                && _mcsDest < SystemParameter.iHandoffBoundary)//如果目的是南側Station就先放到Handoff區，避免CV塞車過久。
                             {
                                 shelfData = shelfDefBLL.GetEmptyHandoffShelf();
                             }
@@ -2204,7 +2220,7 @@ namespace com.mirle.ibg3k0.sc.Service
                             {
                                 shelfData = shelfDefBLL.GetEmptyNonHandOffShelf();
                             }
-                            cmdRelay.HOSTDESTINATION = GetShelfRecentLocation(shelfData, mcsCmd.HOSTDESTINATION);
+                            cmdRelay.HOSTDESTINATION = GetShelfRecentLocationNoReserve(shelfData, mcsCmd.HOSTDESTINATION);
                             if (string.IsNullOrWhiteSpace(cmdRelay.HOSTDESTINATION) == false)
                             {
                                 string source_adr;
@@ -2314,6 +2330,12 @@ namespace com.mirle.ibg3k0.sc.Service
                                             {
                                                 ShelfReserved(cmdRelay.HOSTSOURCE, cmdRelay.HOSTDESTINATION);
 
+                                                if (!string.IsNullOrWhiteSpace(destReservedInShelf))
+                                                {
+                                                    shelfDefBLL.updateStatus(destReservedInShelf, ShelfDef.E_ShelfState.EmptyShelf);
+                                                }
+
+
                                                 cmdBLL.updateCMD_MCS_RelayStation(mcsCmd.CMD_ID, cmdRelay.HOSTDESTINATION);
 
                                                 TransferServiceLogger.Info
@@ -2327,12 +2349,21 @@ namespace com.mirle.ibg3k0.sc.Service
                                             }
                                             else
                                             {
+
+                                                if (!string.IsNullOrWhiteSpace(destReservedInShelf))
+                                                {
+                                                    shelfDefBLL.updateStatus(destReservedInShelf, ShelfDef.E_ShelfState.EmptyShelf);
+                                                }
                                                 //釋放於GetShelfRecentLocation中 提前預約的shelf
                                                 shelfDefBLL.updateStatus(cmdRelay.HOSTDESTINATION, ShelfDef.E_ShelfState.EmptyShelf);
                                             }
                                         }
                                         else
                                         {
+                                            if (!string.IsNullOrWhiteSpace(destReservedInShelf))
+                                            {
+                                                shelfDefBLL.updateStatus(destReservedInShelf, ShelfDef.E_ShelfState.EmptyShelf);
+                                            }
                                             TransferServiceLogger.Info
                                             (
                                                 DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB|搬到中繼站，沒有儲位"
@@ -2362,9 +2393,21 @@ namespace com.mirle.ibg3k0.sc.Service
                                         }
                                         else
                                         {
+                                            TransferRunLogger.Info($"命令無法派送 ID:[{cmdRelay.CMD_ID}] Source:[{cmdRelay.HOSTSOURCE}] SourceReady:[{sourcePortType}] Destnation:[{cmdRelay.HOSTDESTINATION}] DestReady:[{destPortType}]");
+
+                                            //修正不能執行時不會把Handoff命令終點站解除Reserve的問題 20210107 v1.8.9 markchou
+                                            if (!string.IsNullOrWhiteSpace(destReservedInShelf))
+                                            {
+                                                shelfDefBLL.updateStatus(destReservedInShelf, ShelfDef.E_ShelfState.EmptyShelf);
+                                            }
                                             //釋放於GetShelfRecentLocation中 提前預約的shelf
                                             shelfDefBLL.updateStatus(cmdRelay.HOSTDESTINATION, ShelfDef.E_ShelfState.EmptyShelf);
                                         }
+                                        //else
+                                        //{
+                                        //    //釋放於GetShelfRecentLocation中 提前預約的shelf
+                                        //    shelfDefBLL.updateStatus(cmdRelay.HOSTDESTINATION, ShelfDef.E_ShelfState.EmptyShelf);
+                                        //}
                                     }
                                     else
                                     {
@@ -2377,6 +2420,10 @@ namespace com.mirle.ibg3k0.sc.Service
                             }
                             else
                             {
+                                if (!string.IsNullOrWhiteSpace(destReservedInShelf))
+                                {
+                                    shelfDefBLL.updateStatus(destReservedInShelf, ShelfDef.E_ShelfState.EmptyShelf);
+                                }
                                 TransferServiceLogger.Info
                                 (
                                     DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB|搬到中繼站，沒有儲位"
@@ -6178,7 +6225,12 @@ namespace com.mirle.ibg3k0.sc.Service
             try
             {
                 portID = portID.Trim();
-                PortValueDefMapAction portValueDefMapAction = scApp.getEQObjCacheManager().getPortByPortID(portID).getMapActionByIdentityKey(typeof(PortValueDefMapAction).Name) as PortValueDefMapAction;
+                APORT port = scApp.getEQObjCacheManager().getPortByPortID(portID);
+                if(port == null)
+                {
+                    return null;
+                }
+                PortValueDefMapAction portValueDefMapAction = port.getMapActionByIdentityKey(typeof(PortValueDefMapAction).Name) as PortValueDefMapAction;
 
                 return portValueDefMapAction.GetPortValue();
             }
@@ -7272,6 +7324,74 @@ namespace com.mirle.ibg3k0.sc.Service
                 (
                     DateTime.Now.ToString("HH:mm:ss.fff ")
                     + "OHB >> OHB|GetShelfRecentLocation interlock 中 回傳空值"
+                );
+
+                return "";
+            }
+        }
+
+        public string GetShelfRecentLocationNoReserve(List<ShelfDef> shelfData, string portLoc)  //取得最近儲位但不預約
+        {
+            if (Interlocked.Exchange(ref GetShelfRecentLocationIng, 1) == 0)
+            {
+                try
+                {
+                    string shelfName = "";
+                    //A20.06.09.0
+                    shelfData = cmdBLL.doSortShelfDataByDistanceFromHostSource(shelfData, portLoc.Trim())
+                                                                    .Where(data => data.ShelfState == ShelfDef.E_ShelfState.EmptyShelf).ToList();
+
+                    foreach (var v in shelfData)
+                    {
+                        ACMD_MCS cmdData = cmdBLL.GetCmdDataByDest(v.ShelfID).FirstOrDefault();
+                        if (cmdData == null) //cmdList.Count == 0
+                        {
+                            shelfName = v.ShelfID;
+                            break;
+                        }
+                        else
+                        {
+                            TransferServiceLogger.Info
+                            (
+                                DateTime.Now.ToString("HH:mm:ss.fff ")
+                                + "OHB >> OHB|GetShelfRecentLocationNoReserve 已有命令搬到此 " + v.ShelfID + " 儲位 " + GetCmdLog(cmdData)
+                            );
+                        }
+                    }
+
+                    if (string.IsNullOrWhiteSpace(shelfName))
+                    {
+                        TransferServiceLogger.Info
+                        (
+                            DateTime.Now.ToString("HH:mm:ss.fff ")
+                            + "OHB >> OHB|GetShelfRecentLocationNoReserve 沒有儲位可以用"
+                        );
+
+                        OHBC_AlarmSet(line.LINE_ID, ((int)AlarmLst.LINE_NotEmptyShelf).ToString());
+                    }
+                    else
+                    {
+                        //shelfDefBLL.updateStatus(shelfName, ShelfDef.E_ShelfState.StorageInReserved);
+                    }
+
+                    return shelfName;
+                }
+                catch (Exception ex)
+                {
+                    TransferServiceLogger.Error(ex, "GetShelfRecentLocationNoReserve 找離 " + portLoc + "最近儲位");
+                    return "";
+                }
+                finally
+                {
+                    Interlocked.Exchange(ref GetShelfRecentLocationIng, 0);
+                }
+            }
+            else
+            {
+                TransferServiceLogger.Info
+                (
+                    DateTime.Now.ToString("HH:mm:ss.fff ")
+                    + "OHB >> OHB|GetShelfRecentLocationNoReserve interlock 中 回傳空值"
                 );
 
                 return "";
@@ -8671,6 +8791,23 @@ namespace com.mirle.ibg3k0.sc.Service
             }
         }
 
+        public void ShelfReservedOut(string source)   //預約儲位
+        {
+            if (isUnitType(source, UnitType.SHELF))
+            {
+                shelfDefBLL.updateStatus(source, ShelfDef.E_ShelfState.RetrievalReserved);
+            }
+        }
+
+
+        public void ShelfReservedIn(string dest)   //預約儲位
+        {
+            if (isUnitType(dest, UnitType.SHELF))
+            {
+                shelfDefBLL.updateStatus(dest, ShelfDef.E_ShelfState.StorageInReserved);
+            }
+        }
+
         #endregion
 
         #endregion
@@ -8928,6 +9065,10 @@ namespace com.mirle.ibg3k0.sc.Service
                 foreach (PortINIData ohcvData in ohcvPortINIDataList)
                 {
                     PortPLCInfo portPLCInfo = GetPLC_PortData(ohcvData.PortName);
+                    if(portPLCInfo == null)
+                    {
+                        continue;
+                    }
                     if (portPLCInfo.OpAutoMode && portPLCInfo.IsOutputMode)
                     {
                         portName = ohcvData.PortName;
