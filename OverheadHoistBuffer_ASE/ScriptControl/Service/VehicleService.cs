@@ -1699,60 +1699,64 @@ namespace com.mirle.ibg3k0.sc.Service
                     is_success = false;
                     result = $"vh:{vh_id} current not in reserve pause.";
                 }
-                List<string> need_by_pass_sec_ids = new List<string>();
-                if (!SCUtility.isEmpty(needbyPassSectionID))
-                {
-                    need_by_pass_sec_ids.Add(needbyPassSectionID);
-                }
+                //List<string> need_by_pass_sec_ids = new List<string>();
+                //if (!SCUtility.isEmpty(needbyPassSectionID))
+                //{
+                //    need_by_pass_sec_ids.Add(needbyPassSectionID);
+                //}
 
                 if (is_success)
                 {
-                    int current_find_count = 0;
-                    int max_find_count = 10;
-                    do
-                    {
-                        //確認下一段Section，是否可以預約成功
-                        string next_walk_section = "";
-                        string next_walk_address = "";
+                    (is_success, guide_segment_ids, guide_section_ids, guide_address_ids, total_cost) =
+                            //scApp.GuideBLL.getGuideInfo(vh_current_address, avoidAddress, need_by_pass_sec_ids);
+                            scApp.GuideBLL.getGuideInfo(vh_current_address, avoidAddress);
+
+                    //int current_find_count = 0;
+                    //int max_find_count = 10;
+                    //do
+                    //{
+                    //    //確認下一段Section，是否可以預約成功
+                    //    string next_walk_section = "";
+                    //    string next_walk_address = "";
 
 
-                        //(is_success, guide_segment_ids, guide_section_ids, guide_address_ids, total_cost) =
-                        //    scApp.GuideBLL.getGuideInfo_New2(vh_current_section, vh_current_address, avoidAddress);
-                        (is_success, guide_segment_ids, guide_section_ids, guide_address_ids, total_cost) =
-                                                    //scApp.GuideBLL.getGuideInfo(vh_current_address, avoidAddress, need_by_pass_sec_ids);
-                                                    scApp.GuideBLL.getGuideInfo(vh_current_address, avoidAddress);
-                        next_walk_section = guide_section_ids[0];
-                        next_walk_address = guide_address_ids[0];
+                    //    //(is_success, guide_segment_ids, guide_section_ids, guide_address_ids, total_cost) =
+                    //    //    scApp.GuideBLL.getGuideInfo_New2(vh_current_section, vh_current_address, avoidAddress);
+                    //    (is_success, guide_segment_ids, guide_section_ids, guide_address_ids, total_cost) =
+                    //                                //scApp.GuideBLL.getGuideInfo(vh_current_address, avoidAddress, need_by_pass_sec_ids);
+                    //                                scApp.GuideBLL.getGuideInfo(vh_current_address, avoidAddress);
+                    //    next_walk_section = guide_section_ids[0];
+                    //    next_walk_address = guide_address_ids[0];
 
-                        if (is_success)
-                        {
+                    //    if (is_success)
+                    //    {
 
-                            var reserve_result = askReserveSuccess(vh_id, next_walk_section, next_walk_address);
-                            if (reserve_result.isSuccess)
-                            {
-                                is_success = true;
-                            }
-                            else
-                            {
-                                is_success = false;
-                                need_by_pass_sec_ids.Add(next_walk_section);
-                                LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
-                                   Data: $"find the avoid path ,but section:{next_walk_section} is reserved for vh:{reserve_result.reservedVhID}" +
-                                         $"add to need by pass sec ids,current by pass section:{string.Join(",", need_by_pass_sec_ids)}",
-                                   VehicleID: vh.VEHICLE_ID,
-                                   CarrierID: vh.CST_ID);
-                            }
-                        }
-                        if (current_find_count++ > max_find_count)
-                        {
-                            is_success = false;
-                            LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
-                               Data: $"find the avoid path ,but over times:{max_find_count}",
-                               VehicleID: vh.VEHICLE_ID,
-                               CarrierID: vh.CST_ID);
-                            break;
-                        }
-                    } while (!is_success);
+                    //        var reserve_result = askReserveSuccess(vh_id, next_walk_section, next_walk_address);
+                    //        if (reserve_result.isSuccess)
+                    //        {
+                    //            is_success = true;
+                    //        }
+                    //        else
+                    //        {
+                    //            is_success = false;
+                    //            need_by_pass_sec_ids.Add(next_walk_section);
+                    //            LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                    //               Data: $"find the avoid path ,but section:{next_walk_section} is reserved for vh:{reserve_result.reservedVhID}" +
+                    //                     $"add to need by pass sec ids,current by pass section:{string.Join(",", need_by_pass_sec_ids)}",
+                    //               VehicleID: vh.VEHICLE_ID,
+                    //               CarrierID: vh.CST_ID);
+                    //        }
+                    //    }
+                    //    if (current_find_count++ > max_find_count)
+                    //    {
+                    //        is_success = false;
+                    //        LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                    //           Data: $"find the avoid path ,but over times:{max_find_count}",
+                    //           VehicleID: vh.VEHICLE_ID,
+                    //           CarrierID: vh.CST_ID);
+                    //        break;
+                    //    }
+                    //} while (!is_success);
 
                     string vh_current_section = SCUtility.Trim(vh.CUR_SEC_ID, true);
                     if (is_success)
