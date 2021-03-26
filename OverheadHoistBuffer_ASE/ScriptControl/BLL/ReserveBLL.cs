@@ -74,10 +74,12 @@ namespace com.mirle.ibg3k0.sc.BLL
             return mapAPI.MapBitmapSource;
         }
 
-        public (double x, double y, bool isTR50) GetHltMapAddress(string adrID)
+        public (bool isExist, double x, double y, bool isTR50) GetHltMapAddress(string adrID)
         {
             var adr_obj = mapAPI.GetAddressObjectByID(adrID);
-            return (adr_obj.X, adr_obj.Y, adr_obj.IsTR50);
+            if (adr_obj == null)
+                return (false, 0, 0, false);
+            return (true, adr_obj.X, adr_obj.Y, adr_obj.IsTR50);
         }
         public HltResult TryAddVehicleOrUpdateResetSensorForkDir(string vhID)
         {

@@ -1643,16 +1643,21 @@ namespace com.mirle.ibg3k0.sc.Service
             ASECTION lase_sec = scApp.SectionBLL.cache.GetSection(last_sec_id);
             string last_seg_id = lase_sec == null ? string.Empty : lase_sec.SEG_NUM;
             uint sec_dis = recive_str.SecDistance;
-            double x_axis = recive_str.XAxis;
-            double y_axis = recive_str.YAxis;
+            double real_x_axis = recive_str.XAxis;
+            double real_y_axis = recive_str.YAxis;
+            (double after_check_x_axis, double after_check_y_axis) = checkVehicleAxis(eqpt.VEHICLE_ID, current_adr_id, real_x_axis, real_y_axis);
             //double vh_angle = recive_str.Angle;
             double vh_angle = current_sec.PADDING;
             double speed = recive_str.Speed;
 
+            //doUpdateVheiclePositionAndCmdSchedule
+            //    (eqpt, current_adr_id, current_sec_id, current_seg_id,
+            //           last_adr_id, last_sec_id, last_seg_id,
+            //           sec_dis, real_x_axis, real_y_axis, vh_angle, speed);
             doUpdateVheiclePositionAndCmdSchedule
                 (eqpt, current_adr_id, current_sec_id, current_seg_id,
                        last_adr_id, last_sec_id, last_seg_id,
-                       sec_dis, x_axis, y_axis, vh_angle, speed);
+                       sec_dis, after_check_x_axis, after_check_y_axis, vh_angle, speed);
 
             //switch (eventType)
             //{
@@ -1662,6 +1667,40 @@ namespace com.mirle.ibg3k0.sc.Service
             //        break;
             //}
         }
+        const double PASS_AXIS_DISTANCE = 50;
+        /// <summary>
+        /// 當X、
+        /// </summary>
+        /// <param name="vhID"></param>
+        /// <param name="curAdrID"></param>
+        /// <param name="real_x_axis"></param>
+        /// <param name="real_y_axis"></param>
+        /// <returns></returns>
+        private (double after_check_x_axis, double after_check_y_axis) checkVehicleAxis(string vhID, string curAdrID, double real_x_axis, double real_y_axis)
+        {
+            var adrObject = scApp.ReserveBLL.GetHltMapAddress(curAdrID);
+            if (!adrObject.isExist)
+                return (real_x_axis, real_y_axis);
+            double distance = getDistance(adrObject.x, adrObject.y, real_x_axis, real_y_axis);
+            if (distance > PASS_AXIS_DISTANCE)
+                return (real_x_axis, real_y_axis);
+            else
+            {
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                   Data: $"vh:{vhID} of report x:{real_x_axis} y:{real_y_axis} and cur adr:{curAdrID} distance:{PASS_AXIS_DISTANCE} " +
+                         $"less than distance:{PASS_AXIS_DISTANCE} fource chenge to x:{adrObject.x} y:{adrObject.y}",
+                   VehicleID: vhID);
+                return (adrObject.x, adrObject.y);
+            }
+        }
+        private double getDistance(double x1, double y1, double x2, double y2)
+        {
+            double dx, dy;
+            dx = x2 - x1;
+            dy = y2 - y1;
+            return Math.Sqrt(dx * dx + dy * dy);
+        }
+
         [ClassAOPAspect]
         public void PositionReport_100(BCFApplication bcfApp, AVEHICLE eqpt, ID_134_TRANS_EVENT_REP recive_str, int seq_num)
         {
