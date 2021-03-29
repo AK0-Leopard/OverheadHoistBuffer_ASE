@@ -37,6 +37,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             mainForm = _mainForm;
             bcApp = mainForm.BCApp;
 
+            num_pass_distance.Value = (int)sc.App.SystemParameter.PassAxisDistance;
             cb_StartGenAntoCmd.Checked = DebugParameter.CanAutoRandomGeneratesCommand;
             cb_FroceReservePass.Checked = DebugParameter.isForcedPassBlockControl;
             cb_FroceReservePass.Checked = DebugParameter.isForcedRejectBlockControl;
@@ -1295,7 +1296,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             uint distance = (uint)num_section_dis.Value;
             double x_axis = (int)num_vh_x.Value;
             double y_axis = (int)num_vh_y.Value;
-            bcApp.SCApplication.VehicleBLL.setAndPublishPositionReportInfo2Redis(vh_id, current_sec_id, "", distance, x_axis,y_axis);
+            bcApp.SCApplication.VehicleBLL.setAndPublishPositionReportInfo2Redis(vh_id, current_sec_id, "", distance, x_axis, y_axis);
         }
 
         private void num_vh_x_ValueChanged(object sender, EventArgs e)
@@ -1305,6 +1306,12 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             double x_axis = (int)num_vh_x.Value;
             double y_axis = (int)num_vh_y.Value;
             bcApp.SCApplication.VehicleBLL.setAndPublishPositionReportInfo2Redis(vh_id, current_sec_id, "", distance, x_axis, y_axis);
+        }
+
+        private void num_pass_distance_ValueChanged(object sender, EventArgs e)
+        {
+            double pass_distanve = (int)num_pass_distance.Value;
+            sc.App.SystemParameter.setPassAxisDistance(pass_distanve);
         }
     }
 }

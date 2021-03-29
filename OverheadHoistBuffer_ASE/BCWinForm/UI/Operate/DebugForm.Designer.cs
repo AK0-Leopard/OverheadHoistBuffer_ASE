@@ -348,6 +348,8 @@
             this.ck_SaftyCheckComplete = new System.Windows.Forms.CheckBox();
             this.ck_SaftyCheckRequest = new System.Windows.Forms.CheckBox();
             this.ck_Alive = new System.Windows.Forms.CheckBox();
+            this.num_pass_distance = new System.Windows.Forms.NumericUpDown();
+            this.label77 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -385,12 +387,13 @@
             this.tableLayoutPanel5.SuspendLayout();
             this.groupBox13.SuspendLayout();
             this.groupBox10.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.num_pass_distance)).BeginInit();
             this.SuspendLayout();
             // 
             // cb_FroceReservePass
             // 
             this.cb_FroceReservePass.AutoSize = true;
-            this.cb_FroceReservePass.Location = new System.Drawing.Point(29, 34);
+            this.cb_FroceReservePass.Location = new System.Drawing.Point(28, 22);
             this.cb_FroceReservePass.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cb_FroceReservePass.Name = "cb_FroceReservePass";
             this.cb_FroceReservePass.Size = new System.Drawing.Size(209, 26);
@@ -1249,7 +1252,7 @@
             // 
             // btn_forceReleaseAllBlock
             // 
-            this.btn_forceReleaseAllBlock.Location = new System.Drawing.Point(1100, 179);
+            this.btn_forceReleaseAllBlock.Location = new System.Drawing.Point(1100, 155);
             this.btn_forceReleaseAllBlock.Name = "btn_forceReleaseAllBlock";
             this.btn_forceReleaseAllBlock.Size = new System.Drawing.Size(284, 41);
             this.btn_forceReleaseAllBlock.TabIndex = 22;
@@ -1277,6 +1280,8 @@
             // tabPage1
             // 
             this.tabPage1.AutoScroll = true;
+            this.tabPage1.Controls.Add(this.label77);
+            this.tabPage1.Controls.Add(this.num_pass_distance);
             this.tabPage1.Controls.Add(this.combox_cycle_type);
             this.tabPage1.Controls.Add(this.groupBox12);
             this.tabPage1.Controls.Add(this.groupBox7);
@@ -1419,9 +1424,9 @@
             this.groupBox6.Controls.Add(this.label16);
             this.groupBox6.Controls.Add(this.label12);
             this.groupBox6.Controls.Add(this.cb_block_section);
-            this.groupBox6.Location = new System.Drawing.Point(1100, 220);
+            this.groupBox6.Location = new System.Drawing.Point(1100, 196);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(284, 277);
+            this.groupBox6.Size = new System.Drawing.Size(284, 230);
             this.groupBox6.TabIndex = 24;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Block Manager";
@@ -1439,7 +1444,7 @@
             // 
             // btn_release_block
             // 
-            this.btn_release_block.Location = new System.Drawing.Point(6, 220);
+            this.btn_release_block.Location = new System.Drawing.Point(6, 180);
             this.btn_release_block.Name = "btn_release_block";
             this.btn_release_block.Size = new System.Drawing.Size(156, 39);
             this.btn_release_block.TabIndex = 4;
@@ -1451,7 +1456,7 @@
             // 
             this.lbl_BlockedVh.AutoSize = true;
             this.lbl_BlockedVh.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lbl_BlockedVh.Location = new System.Drawing.Point(6, 174);
+            this.lbl_BlockedVh.Location = new System.Drawing.Point(6, 147);
             this.lbl_BlockedVh.Name = "lbl_BlockedVh";
             this.lbl_BlockedVh.Size = new System.Drawing.Size(122, 24);
             this.lbl_BlockedVh.TabIndex = 3;
@@ -1460,7 +1465,7 @@
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(2, 152);
+            this.label16.Location = new System.Drawing.Point(2, 125);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(160, 22);
             this.label16.TabIndex = 2;
@@ -1469,7 +1474,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(2, 89);
+            this.label12.Location = new System.Drawing.Point(2, 67);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(160, 22);
             this.label12.TabIndex = 1;
@@ -1478,7 +1483,7 @@
             // cb_block_section
             // 
             this.cb_block_section.FormattingEnabled = true;
-            this.cb_block_section.Location = new System.Drawing.Point(6, 115);
+            this.cb_block_section.Location = new System.Drawing.Point(6, 93);
             this.cb_block_section.Name = "cb_block_section";
             this.cb_block_section.Size = new System.Drawing.Size(251, 30);
             this.cb_block_section.TabIndex = 0;
@@ -1490,7 +1495,7 @@
             this.gb_blockControl.Controls.Add(this.cb_FroceReservePass);
             this.gb_blockControl.Location = new System.Drawing.Point(1100, 71);
             this.gb_blockControl.Name = "gb_blockControl";
-            this.gb_blockControl.Size = new System.Drawing.Size(257, 104);
+            this.gb_blockControl.Size = new System.Drawing.Size(257, 73);
             this.gb_blockControl.TabIndex = 23;
             this.gb_blockControl.TabStop = false;
             this.gb_blockControl.Text = "Block Control";
@@ -1498,7 +1503,7 @@
             // cb_FroceReserveReject
             // 
             this.cb_FroceReserveReject.AutoSize = true;
-            this.cb_FroceReserveReject.Location = new System.Drawing.Point(29, 68);
+            this.cb_FroceReserveReject.Location = new System.Drawing.Point(28, 47);
             this.cb_FroceReserveReject.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cb_FroceReserveReject.Name = "cb_FroceReserveReject";
             this.cb_FroceReserveReject.Size = new System.Drawing.Size(229, 26);
@@ -2614,7 +2619,7 @@
             // 
             this.cb_Cache_data_Name.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.cb_Cache_data_Name.FormattingEnabled = true;
-            this.cb_Cache_data_Name.Location = new System.Drawing.Point(178, 8);
+            this.cb_Cache_data_Name.Location = new System.Drawing.Point(178, 3);
             this.cb_Cache_data_Name.Name = "cb_Cache_data_Name";
             this.cb_Cache_data_Name.Size = new System.Drawing.Size(193, 30);
             this.cb_Cache_data_Name.TabIndex = 1;
@@ -4237,6 +4242,28 @@
             this.ck_Alive.UseVisualStyleBackColor = true;
             this.ck_Alive.CheckedChanged += new System.EventHandler(this.ck_Alive_CheckedChanged);
             // 
+            // num_pass_distance
+            // 
+            this.num_pass_distance.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.num_pass_distance.Location = new System.Drawing.Point(1100, 469);
+            this.num_pass_distance.Name = "num_pass_distance";
+            this.num_pass_distance.Size = new System.Drawing.Size(172, 30);
+            this.num_pass_distance.TabIndex = 55;
+            this.num_pass_distance.ValueChanged += new System.EventHandler(this.num_pass_distance_ValueChanged);
+            // 
+            // label77
+            // 
+            this.label77.AutoSize = true;
+            this.label77.Location = new System.Drawing.Point(1102, 444);
+            this.label77.Name = "label77";
+            this.label77.Size = new System.Drawing.Size(140, 22);
+            this.label77.TabIndex = 5;
+            this.label77.Text = "Pass Distance";
+            // 
             // DebugForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 22F);
@@ -4315,6 +4342,7 @@
             this.groupBox13.PerformLayout();
             this.groupBox10.ResumeLayout(false);
             this.groupBox10.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.num_pass_distance)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -4641,5 +4669,7 @@
         private System.Windows.Forms.NumericUpDown num_vh_y;
         private System.Windows.Forms.Label label75;
         private System.Windows.Forms.NumericUpDown num_vh_x;
+        private System.Windows.Forms.NumericUpDown num_pass_distance;
+        private System.Windows.Forms.Label label77;
     }
 }

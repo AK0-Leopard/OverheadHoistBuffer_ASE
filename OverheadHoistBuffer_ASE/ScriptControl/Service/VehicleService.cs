@@ -1660,7 +1660,7 @@ namespace com.mirle.ibg3k0.sc.Service
                        sec_dis, after_check_x_axis, after_check_y_axis, vh_angle, speed);
 
             //switch (eventType)
-            //{
+            //{d
             //    case EventType.AdrPass:
             //    case EventType.AdrOrMoveArrivals:
             //        PositionReport_AdrPassArrivals(bcfApp, eqpt, recive_str, last_adr_id, last_sec_id);
@@ -1678,17 +1678,19 @@ namespace com.mirle.ibg3k0.sc.Service
         /// <returns></returns>
         private (double after_check_x_axis, double after_check_y_axis) checkVehicleAxis(string vhID, string curAdrID, double real_x_axis, double real_y_axis)
         {
+            if (SystemParameter.PassAxisDistance <= 0)
+                return (real_x_axis, real_y_axis);
             var adrObject = scApp.ReserveBLL.GetHltMapAddress(curAdrID);
             if (!adrObject.isExist)
                 return (real_x_axis, real_y_axis);
             double distance = getDistance(adrObject.x, adrObject.y, real_x_axis, real_y_axis);
-            if (distance > PASS_AXIS_DISTANCE)
+            if (distance > SystemParameter.PassAxisDistance)
                 return (real_x_axis, real_y_axis);
             else
             {
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
                    Data: $"vh:{vhID} of report x:{real_x_axis} y:{real_y_axis} and cur adr:{curAdrID} distance:{PASS_AXIS_DISTANCE} " +
-                         $"less than distance:{PASS_AXIS_DISTANCE} fource chenge to x:{adrObject.x} y:{adrObject.y}",
+                         $"less than distance:{PASS_AXIS_DISTANCE} fource change to x:{adrObject.x} y:{adrObject.y}",
                    VehicleID: vhID);
                 return (adrObject.x, adrObject.y);
             }

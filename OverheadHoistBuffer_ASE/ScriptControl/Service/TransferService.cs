@@ -1369,19 +1369,24 @@ namespace com.mirle.ibg3k0.sc.Service
 
                         if (isAGVZone(mcsCmd.HOSTDESTINATION))
                         {
-                            bool isAGV_InMode = true;
+                            bool is_all_agv_port_not_ready_to_output = true;
 
                             foreach (var v in GetAGVPort(mcsCmd.HOSTDESTINATION))
                             {
                                 if (GetPLC_PortData(v.PortName).IsOutputMode)
                                 {
+                                    //當該Port雖然是OutPut Port但有被其他車子預約時。也要當作無法進行下貨 //20210328 Kevin Wei
+                                    int command_count = cmdBLL.GetCmdDataByDest(v.PortName).
+                                        Where(data => data.TRANSFERSTATE == E_TRAN_STATUS.Transferring).Count();
+                                    if (command_count != 0) continue;
+
                                     mcsCmd.HOSTDESTINATION = v.PortName.Trim();
-                                    isAGV_InMode = false;
+                                    is_all_agv_port_not_ready_to_output = false;
                                     break;
                                 }
                             }
 
-                            if (isAGV_InMode)
+                            if (is_all_agv_port_not_ready_to_output)
                             {
                                 TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|" + mcsCmd.HOSTDESTINATION + " 找不到 OutMode AGV Port 搬往中繼站");
                                 return CmdToRelayStation(mcsCmd);
@@ -1391,7 +1396,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         PortPLCInfo plcInfoSource = !isUnitType(mcsCmd.HOSTSOURCE, UnitType.CRANE) ? GetPLC_PortData(mcsCmd.HOSTSOURCE) : null;//20210224 如果Source是在車上，那就不要去取PLC資料，避免異常發生
                         PortPLCInfo plcInfoDest = GetPLC_PortData(mcsCmd.HOSTDESTINATION);
 
-                        if ((plcInfoSource ==null|| (plcInfoSource.OpAutoMode && plcInfoSource.IsReadyToUnload))
+                        if ((plcInfoSource == null || (plcInfoSource.OpAutoMode && plcInfoSource.IsReadyToUnload))
                          && plcInfoDest.OpAutoMode && plcInfoDest.IsReadyToLoad == false
                            )
                         {
@@ -1399,7 +1404,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         }
                         else
                         {
-                            if(plcInfoSource != null)
+                            if (plcInfoSource != null)
                             {
                                 TransferServiceLogger.Info
                                 (
