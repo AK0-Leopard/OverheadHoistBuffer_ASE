@@ -5915,24 +5915,24 @@ namespace com.mirle.ibg3k0.sc.Service
 
                     //當發生Vehicle Abort的時候要確認是否有預下給該Vh的命令，
                     //有的話要將他取消，並把原本的MCS命令切回Queue
-                    if (completeStatus == CompleteStatus.CmpStatusVehicleAbort)
-                    {
-                        var check_result = scApp.CMDBLL.hasCMD_OHTCInQueue(eqpt.VEHICLE_ID);
-                        if (check_result.has)
-                        {
-                            ACMD_OHTC queue_cmd = check_result.cmd_ohtc;
-                            scApp.CMDBLL.updateCommand_OHTC_StatusByCmdID(queue_cmd.CMD_ID, E_CMD_STATUS.AbnormalEndByOHTC);
-                            if (!SCUtility.isEmpty(queue_cmd.CMD_ID_MCS))
-                            {
-                                ACMD_MCS pre_initial_cmd_mcs = scApp.CMDBLL.getCMD_MCSByID(queue_cmd.CMD_ID_MCS);
-                                if (pre_initial_cmd_mcs != null /*&&
-                                    pre_initial_cmd_mcs.TRANSFERSTATE == E_TRAN_STATUS.PreInitial*/)
-                                {
-                                    scApp.CMDBLL.updateCMD_MCS_TranStatus2Queue(pre_initial_cmd_mcs.CMD_ID);
-                                }
-                            }
-                        }
-                    }
+                    //if (completeStatus == CompleteStatus.CmpStatusVehicleAbort)
+                    //{
+                    //    var check_result = scApp.CMDBLL.hasCMD_OHTCInQueue(eqpt.VEHICLE_ID);
+                    //    if (check_result.has)
+                    //    {
+                    //        ACMD_OHTC queue_cmd = check_result.cmd_ohtc;
+                    //        scApp.CMDBLL.updateCommand_OHTC_StatusByCmdID(queue_cmd.CMD_ID, E_CMD_STATUS.AbnormalEndByOHTC);
+                    //        if (!SCUtility.isEmpty(queue_cmd.CMD_ID_MCS))
+                    //        {
+                    //            ACMD_MCS pre_initial_cmd_mcs = scApp.CMDBLL.getCMD_MCSByID(queue_cmd.CMD_ID_MCS);
+                    //            if (pre_initial_cmd_mcs != null /*&&
+                    //                pre_initial_cmd_mcs.TRANSFERSTATE == E_TRAN_STATUS.PreInitial*/)
+                    //            {
+                    //                scApp.CMDBLL.updateCMD_MCS_TranStatus2Queue(pre_initial_cmd_mcs.CMD_ID);
+                    //            }
+                    //        }
+                    //    }
+                    //}
 
                     if (isSuccess)
                     {
