@@ -24,6 +24,8 @@
 // 2021/02/01    Kevin Wei      N/A            A21.02.01.0  修改當alternat後要上報resume的時機，由原本的命令一下達改成Load Complete
 // 2021/02/22    Kevin Wei      N/A            A21.02.22.0  修正在尋找搬送命令時，若Source Port狀態不正確時，就不再往下尋找儲位，避免錯誤預約儲位的問題。
 // 2021/02/22    Jason Wu       N/A            A21.02.22.1  修改swap 功能對於emergency 所做動作，在沒有OHB->AGV命令的情況下將不會轉1 in 1 out 而是2 in.
+// 2021/02/22    Kevin Wei      N/A            A21.03.31.1  修改上報Empty retrieval的順序，先上報Remove在上報 cancel initial+ cancel conplete，
+//                                                          避免MCS在命令結束後又馬上補了一筆相同的命令。
 //**********************************************************************************
 
 using com.mirle.ibg3k0.bcf.Common;
@@ -2395,13 +2397,18 @@ namespace com.mirle.ibg3k0.sc.Service
                         OHBC_AlarmSet(ohtName, SCAppConstants.SystemAlarmCode.OHT_Issue.EmptyRetrieval);
                         OHBC_AlarmCleared(ohtName, SCAppConstants.SystemAlarmCode.OHT_Issue.EmptyRetrieval);
 
+                        //A21.03.31.1 add start
+                        CassetteData emptyData = cassette_dataBLL.loadCassetteDataByLoc(ohtCmd.SOURCE.Trim()); //A21.03.31.1
+                        reportBLL.ReportCarrierRemovedCompleted(emptyData.CSTID, emptyData.BOXID);             //A21.03.31.1
+                        //A21.03.31.1 add end
+
+
                         reportBLL.ReportTransferAbortInitiated(cmd.CMD_ID); //  20/07/15 美微 說不要報 InterlockError 要報AbortInitiated、AbortCompleted
                         reportBLL.ReportTransferAbortCompleted(cmd.CMD_ID);
                         //reportBLL.ReportTransferCompleted(cmd, null, ResultCode.InterlockError);
 
-                        CassetteData emptyData = cassette_dataBLL.loadCassetteDataByLoc(ohtCmd.SOURCE.Trim());
-
-                        reportBLL.ReportCarrierRemovedCompleted(emptyData.CSTID, emptyData.BOXID);
+                        //A21.03.31.1 CassetteData emptyData = cassette_dataBLL.loadCassetteDataByLoc(ohtCmd.SOURCE.Trim());
+                        //A21.03.31.1 reportBLL.ReportCarrierRemovedCompleted(emptyData.CSTID, emptyData.BOXID);
 
                         cmdBLL.updateCMD_MCS_TranStatus(cmd.CMD_ID, E_TRAN_STATUS.TransferCompleted);
                         break;
