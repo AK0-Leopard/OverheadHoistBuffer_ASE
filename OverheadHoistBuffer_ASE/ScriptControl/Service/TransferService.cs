@@ -24,8 +24,9 @@
 // 2021/02/01    Kevin Wei      N/A            A21.02.01.0  修改當alternat後要上報resume的時機，由原本的命令一下達改成Load Complete
 // 2021/02/22    Kevin Wei      N/A            A21.02.22.0  修正在尋找搬送命令時，若Source Port狀態不正確時，就不再往下尋找儲位，避免錯誤預約儲位的問題。
 // 2021/02/22    Jason Wu       N/A            A21.02.22.1  修改swap 功能對於emergency 所做動作，在沒有OHB->AGV命令的情況下將不會轉1 in 1 out 而是2 in.
-// 2021/02/22    Kevin Wei      N/A            A21.03.31.1  修改上報Empty retrieval的順序，先上報Remove在上報 cancel initial+ cancel conplete，
+// 2021/03/31    Kevin Wei      N/A            A21.03.31.1  修改上報Empty retrieval的順序，先上報Remove在上報 cancel initial+ cancel conplete，
 //                                                          避免MCS在命令結束後又馬上補了一筆相同的命令。
+// 2021/04/02    Kevin Wei      N/A            A21.04.02.1  發送CarrierRemoveFromePort全部延時30秒再發，避免因為PLC在席訊號閃爍，造成事件太早發的問題。(由Line3移植)
 //**********************************************************************************
 
 using com.mirle.ibg3k0.bcf.Common;
@@ -1237,7 +1238,9 @@ namespace com.mirle.ibg3k0.sc.Service
 
                     bool sourcePortType = false;
                     bool destPortType = false;
+                    //加入流程當MCS下達了 A02搬送至ST01的搬送命令時，就直接針對該命令的Source Port轉向，直接出去
 
+                    //bool is_agv_port_to_station_cmd = checkAndProcessIsAgvPortToStation(mcsCmd);
                     #region 檢查來源狀態
                     if (string.IsNullOrWhiteSpace(mcsCmd.RelayStation))  //檢查命令是否先搬到中繼站
                     {
@@ -1486,6 +1489,22 @@ namespace com.mirle.ibg3k0.sc.Service
 
             return TransferIng;
         }
+
+        private bool checkAndProcessIsAgvPortToStation(ACMD_MCS mcsCmd)
+        {
+            string host_source = mcsCmd.HOSTSOURCE;
+            string host_dest = mcsCmd.HOSTDESTINATION;
+            string mcs_cmd_id = mcsCmd.CMD_ID;
+
+            if (!isUnitType(host_source, UnitType.AGV)) return false;
+            if (!isUnitType(host_dest, UnitType.AGVZONE)) return false;
+            bool isSuccess = true;
+            isSuccess &= scApp.CMDBLL.updateCMD_MCS_TranStatus2Initial(mcs_cmd_id);
+            isSuccess &= scApp.ReportBLL.newReportTransferInitial(mcs_cmd_id, null);
+            //todo...
+            return false;
+        }
+
         private bool CmdToRelayStation(ACMD_MCS mcsCmd)
         {
             bool TransferIng = false;
@@ -3863,7 +3882,14 @@ namespace com.mirle.ibg3k0.sc.Service
                 }
                 else
                 {
-                    reportBLL.ReportCarrierRemovedFromPort(dbData, HandoffType);
+                    //A21.04.02.1 reportBLL.ReportCarrierRemovedFromPort(dbData, HandoffType);
+                    //A21.04.02.1 Start
+                    Task.Run(() =>
+                    {
+                        SpinWait.SpinUntil(() => false, 30000);//延時30秒再上報CarrierRemove給MCS
+                        reportBLL.ReportCarrierRemovedFromPort(dbData, HandoffType);
+                    });
+                    //A21.04.02.1 End
 
                     cassette_dataBLL.DeleteCSTbyCstBoxID(dbData.CSTID, dbData.BOXID);
                 }
