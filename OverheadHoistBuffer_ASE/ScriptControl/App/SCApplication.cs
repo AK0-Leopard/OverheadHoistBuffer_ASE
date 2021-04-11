@@ -2192,7 +2192,7 @@ namespace com.mirle.ibg3k0.sc.App
         public static int HeartBeatSec = 0;
 
         public static bool AutoTeching = false;
-        public static double PassAxisDistance = 50;
+        public static double PassAxisDistance = 250;
 
         public static bool IsEnableIDReadFailScenario { private set; get; } = false;
 

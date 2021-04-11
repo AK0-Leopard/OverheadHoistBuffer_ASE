@@ -74,6 +74,7 @@ namespace com.mirle.ibg3k0.sc.Service
         PORT_BP4_WaitOutTimeOut = 100028,
         PORT_BP5_WaitOutTimeOut = 100029,
         PORT_LP_WaitOutTimeOut = 100030,
+        OHT_CommandNotFinishedInTime = 100031,
     }
     public class VehicleService : IDynamicMetaObjectProvider
     {
@@ -105,6 +106,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 vh.AssignCommandFailOverTimes += Vh_AssignCommandFailOverTimes;
                 vh.StatusRequestFailOverTimes += Vh_StatusRequestFailOverTimes;
                 vh.LongTimeNoCommuncation += Vh_LongTimeNoCommuncation;
+                vh.LongTimeInaction += Vh_LongTimeInaction;
                 vh.TimerActionStart();
             }
 
@@ -146,7 +148,34 @@ namespace com.mirle.ibg3k0.sc.Service
                 vh.StatusRequestFailTimes = 0;
             }
         }
+        private void Vh_LongTimeInaction(object sender, string cmdID)
+        {
+            AVEHICLE vh = sender as AVEHICLE;
+            if (vh == null) return;
+            try
+            {
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                   Data: $"Process vehicle long time inaction, cmd id:{cmdID}",
+                   VehicleID: vh.VEHICLE_ID,
+                   CarrierID: vh.CST_ID);
+                //vh.Stop();
+                //上報Alamr Rerport給MCS
+                scApp.TransferService.OHBC_AlarmSet(scApp.getEQObjCacheManager().getLine().LINE_ID, ((int)AlarmLst.OHT_CommandNotFinishedInTime).ToString());
+                Task.Run(() => scApp.VehicleBLL.web.vehicleLongTimeNoAction(scApp));
 
+                //scApp.LineService.ProcessAlarmReport(
+                //    vh.NODE_ID, vh.VEHICLE_ID, vh.Real_ID, "",
+                //    SCAppConstants.SystemAlarmCode.OHT_Issue.OHTLongInaction,
+                //    ProtocolFormat.OHTMessage.ErrorStatus.ErrSet);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                   Data: ex,
+                   VehicleID: vh.VEHICLE_ID,
+                   CarrierID: vh.CST_ID);
+            }
+        }
         private void Vh_StatusRequestFailOverTimes(object sender, int e)
         {
             try
@@ -1667,7 +1696,8 @@ namespace com.mirle.ibg3k0.sc.Service
             //        break;
             //}
         }
-        const double PASS_AXIS_DISTANCE = 50;
+        //const double PASS_AXIS_DISTANCE = 50;
+
         /// <summary>
         /// 當X、
         /// </summary>
@@ -1689,8 +1719,8 @@ namespace com.mirle.ibg3k0.sc.Service
             else
             {
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
-                   Data: $"vh:{vhID} of report x:{real_x_axis} y:{real_y_axis} and cur adr:{curAdrID} distance:{PASS_AXIS_DISTANCE} " +
-                         $"less than distance:{PASS_AXIS_DISTANCE} fource change to x:{adrObject.x} y:{adrObject.y}",
+                   Data: $"vh:{vhID} of report x:{real_x_axis} y:{real_y_axis} and cur adr:{curAdrID} distance:{SystemParameter.PassAxisDistance} " +
+                         $"less than distance:{SystemParameter.PassAxisDistance} fource change to x:{adrObject.x} y:{adrObject.y}",
                    VehicleID: vhID);
                 return (adrObject.x, adrObject.y);
             }

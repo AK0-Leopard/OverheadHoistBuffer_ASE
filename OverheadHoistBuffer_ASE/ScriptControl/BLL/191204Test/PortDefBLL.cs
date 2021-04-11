@@ -41,7 +41,7 @@ namespace com.mirle.ibg3k0.sc.BLL
         {
             this.scApp = scApp;
             portdefDao = scApp.PortDefDao;
-            cache = new Cache(scApp.getCommObjCacheManager());
+            cache = new Cache(scApp, scApp.getCommObjCacheManager());
             //line = scApp.getEQObjCacheManager().getLine();
         }
         public void setPortDef(PortDef port)
@@ -338,8 +338,14 @@ namespace com.mirle.ibg3k0.sc.BLL
         public class Cache
         {
             CommObjCacheManager objCacheManager;
-            public Cache(CommObjCacheManager _objCacheManager)
+            ALINE line
             {
+                get => scApp.getEQObjCacheManager().getLine();
+            }
+            App.SCApplication scApp;
+            public Cache(App.SCApplication _scApp, CommObjCacheManager _objCacheManager)
+            {
+                scApp = _scApp;
                 objCacheManager = _objCacheManager;
             }
             public List<PortDef> loadCanAvoidCVPortDefs()
@@ -367,6 +373,16 @@ namespace com.mirle.ibg3k0.sc.BLL
                 var port_defs = objCacheManager.getPortDefs();
                 return port_defs.Where(port => SCUtility.isMatche(port.PLCPortID, portID)).
                                  FirstOrDefault();
+            }
+            public (bool isInThisStation, PortDef portDef) isInAGVStByPortID(string agvStationID, string checkPortID)
+            {
+                var port_defs = objCacheManager.getPortDefs();
+                var port_def = port_defs.Where(port => SCUtility.isMatche(port.OHBName, line.LINE_ID) &&
+                                               SCUtility.isMatche(port.UnitType, "AGV") &&
+                                               SCUtility.isMatche(port.ZoneName, agvStationID) &&
+                                               SCUtility.isMatche(port.PLCPortID, checkPortID)).
+                                 FirstOrDefault();
+                return (port_def != null, port_def);
             }
 
         }

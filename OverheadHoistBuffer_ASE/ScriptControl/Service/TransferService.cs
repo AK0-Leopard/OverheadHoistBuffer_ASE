@@ -1239,8 +1239,11 @@ namespace com.mirle.ibg3k0.sc.Service
                     bool sourcePortType = false;
                     bool destPortType = false;
                     //加入流程當MCS下達了 A02搬送至ST01的搬送命令時，就直接針對該命令的Source Port轉向，直接出去
-
-                    //bool is_agv_port_to_station_cmd = checkAndProcessIsAgvPortToStation(mcsCmd);
+                    bool is_agv_port_to_station_cmd = checkAndProcessIsAgvPortToStation(mcsCmd);
+                    if (is_agv_port_to_station_cmd)
+                    {
+                        return true;
+                    }
                     #region 檢查來源狀態
                     if (string.IsNullOrWhiteSpace(mcsCmd.RelayStation))  //檢查命令是否先搬到中繼站
                     {
@@ -1492,17 +1495,39 @@ namespace com.mirle.ibg3k0.sc.Service
 
         private bool checkAndProcessIsAgvPortToStation(ACMD_MCS mcsCmd)
         {
-            string host_source = mcsCmd.HOSTSOURCE;
-            string host_dest = mcsCmd.HOSTDESTINATION;
-            string mcs_cmd_id = mcsCmd.CMD_ID;
+            try
+            {
+                string host_source = mcsCmd.HOSTSOURCE;
+                string host_dest = mcsCmd.HOSTDESTINATION;
+                string mcs_cmd_id = mcsCmd.CMD_ID;
 
-            if (!isUnitType(host_source, UnitType.AGV)) return false;
-            if (!isUnitType(host_dest, UnitType.AGVZONE)) return false;
-            bool isSuccess = true;
-            isSuccess &= scApp.CMDBLL.updateCMD_MCS_TranStatus2Initial(mcs_cmd_id);
-            isSuccess &= scApp.ReportBLL.newReportTransferInitial(mcs_cmd_id, null);
-            //todo...
-            return false;
+                if (!isUnitType(host_source, UnitType.AGV)) return false;
+                if (!isUnitType(host_dest, UnitType.AGVZONE)) return false;
+                //確認Source Port是否為該Station的一站
+                var check_result = scApp.PortDefBLL.cache.isInAGVStByPortID(host_dest, host_source);
+                if (!check_result.isInThisStation) return false;
+
+                TransferServiceLogger.Info
+                (
+                    DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB|AGV Port > AGV St.命令發生，開始進行Port轉向流程: " +
+                    $"mcs cmd id:{mcs_cmd_id} Source:{host_source} dest:{host_dest}"
+                );
+                bool isSuccess = true;
+                isSuccess = isSuccess && cmdBLL.updateCMD_MCS_TranStatus(mcs_cmd_id, E_TRAN_STATUS.Transferring);
+                isSuccess = isSuccess && reportBLL.ReportTransferInitiated(mcs_cmd_id);
+                isSuccess = isSuccess && PortTypeChange(host_source, E_PortType.Out, "checkAndProcessIsAgvPortToStation");
+                TransferServiceLogger.Info
+                (
+                    DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB|AGV Port > AGV St.命令發生，開始進行Port轉向流程， " +
+                    $"處理結果:{isSuccess}"
+                );
+                return isSuccess;
+            }
+            catch (Exception ex)
+            {
+                TransferServiceLogger.Error(ex, "Exception");
+                return false;
+            }
         }
 
         private bool CmdToRelayStation(ACMD_MCS mcsCmd)
@@ -3886,7 +3911,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     //A21.04.02.1 Start
                     Task.Run(() =>
                     {
-                        SpinWait.SpinUntil(() => false, 30000);//延時30秒再上報CarrierRemove給MCS
+                        SpinWait.SpinUntil(() => false, 10000);//延時10秒再上報CarrierRemove給MCS
                         reportBLL.ReportCarrierRemovedFromPort(dbData, HandoffType);
                     });
                     //A21.04.02.1 End
@@ -4516,6 +4541,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 {
                     if (dbCstData != null)
                     {
+                        checkIsNeedReportTransferCompleteByAGVPortToAGVST(dbCstID, dbCstData);
                         reportBLL.ReportCarrierWaitOut(dbCstData, "1");
                     }
                 }
@@ -4558,6 +4584,34 @@ namespace com.mirle.ibg3k0.sc.Service
             catch (Exception ex)
             {
                 TransferServiceLogger.Error(ex, "PLC_AGV_Station_OutMode");
+            }
+        }
+        private void checkIsNeedReportTransferCompleteByAGVPortToAGVST(string dbCstID, CassetteData dbCstData)
+        {
+            try
+            {
+
+                //判斷該CST是否尚有命令存在
+                var mcs_cmd = scApp.CMDBLL.GetCarrierFromCmd(dbCstID);
+                //為AGV Port > AGV St的命令，是的話則要補報TransferComplete
+                if (mcs_cmd != null)
+                {
+                    var check_result = scApp.PortDefBLL.cache.isInAGVStByPortID(mcs_cmd.HOSTDESTINATION, mcs_cmd.HOSTSOURCE);
+                    if (check_result.isInThisStation)
+                    {
+                        TransferServiceLogger.Info
+                        (
+                            DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB|AGV Port > AGV St.命令發生，開始進行wait out 流程上報: " +
+                            $"mcs cmd id:{mcs_cmd.CMD_ID} Source:{mcs_cmd.HOSTSOURCE} dest:{mcs_cmd.HOSTDESTINATION}"
+                        );
+                        reportBLL.ReportTransferCompleted(mcs_cmd, dbCstData, ResultCode.Successful);
+                        cmdBLL.updateCMD_MCS_TranStatus(mcs_cmd.CMD_ID, E_TRAN_STATUS.TransferCompleted);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                TransferServiceLogger.Error(ex, "checkIsNeedReportTransferCompleteByAGVPortToAGVST");
             }
         }
         public void PLC_AGVZone_InOutService(string agvZoneName)

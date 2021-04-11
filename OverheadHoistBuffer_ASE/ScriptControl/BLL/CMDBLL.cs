@@ -180,7 +180,22 @@ namespace com.mirle.ibg3k0.sc.BLL
                 logger.Error(ex, "Exception");
                 return null;
             }
-
+        }
+        public ACMD_MCS GetCarrierFromCmd(string carrierID) //CarrierID的命令
+        {
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    return cmd_mcsDao.LoadCmdData(con).Where(cmdData => cmdData.CARRIER_ID.Trim() == carrierID
+                                                                     && cmdData.TRANSFERSTATE < E_TRAN_STATUS.TransferCompleted).First();
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return null;
+            }
         }
 
         public ACMD_MCS GetCmdDataBySource(string portName) //取得來源為Port的命令
@@ -4228,6 +4243,8 @@ namespace com.mirle.ibg3k0.sc.BLL
                 _vhCatchObject.CyclingPath = cycle_run_sections;
                 _vhCatchObject.vh_CMD_Status = E_CMD_STATUS.Execution;
                 _vhCatchObject.NotifyVhExcuteCMDStatusChange();
+                _vhCatchObject.Action();
+
                 //_vhCatchObject.VID_Collection.VID_58_CommandID.COMMAND_ID = acmd_ohtc.CMD_ID_MCS;
             }
             catch (Exception ex)
