@@ -1423,6 +1423,14 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                         scApp.TransferService.PortPositionOFF(function, 5);
                     }
                 }
+                else if (function.IsInputMode == true)
+                {
+                    if (scApp.TransferService.isFirstStageForInput(port.EQPT_ID, 5))
+                    {
+                        //只要有變化，就是重新等待(不管是Trun on、Trun Off)
+                        scApp.TransferService.StartTimingInPutFromCVTime(port.PORT_ID, 5 * SystemParameter.PreStageWatingTime_ms);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -1486,6 +1494,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 scApp.putFunBaseObj<PortPLCInfo>(function);
             }
         }
+        const int PRE_STAGE_WATING_TIME_MS = 3000;
         private void Port_onLoadPosition7(object sender, ValueChangedEventArgs e)
         {
             var function = scApp.getFunBaseObj<PortPLCInfo>(port.PORT_ID) as PortPLCInfo;
@@ -1527,6 +1536,14 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                     else
                     {
                         scApp.TransferService.PortPositionOFF(function, 7);
+                    }
+                }
+                else if (function.IsInputMode == true)
+                {
+                    if (scApp.TransferService.isFirstStageForInput(port.EQPT_ID, 7))
+                    {
+                        //只要有變化，就是重新等待(不管是Trun on、Trun Off)
+                        scApp.TransferService.StartTimingInPutFromCVTime(port.PORT_ID, 7 * SystemParameter.PreStageWatingTime_ms);
                     }
                 }
             }

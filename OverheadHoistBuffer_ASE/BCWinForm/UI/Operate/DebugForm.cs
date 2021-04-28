@@ -38,6 +38,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             bcApp = mainForm.BCApp;
 
             num_pass_distance.Value = (int)sc.App.SystemParameter.PassAxisDistance;
+            num_preStageWatingTime.Value = (int)sc.App.SystemParameter.PreStageWatingTime_ms;
             cb_StartGenAntoCmd.Checked = DebugParameter.CanAutoRandomGeneratesCommand;
             cb_FroceReservePass.Checked = DebugParameter.isForcedPassBlockControl;
             cb_FroceReservePass.Checked = DebugParameter.isForcedRejectBlockControl;
@@ -1312,6 +1313,12 @@ namespace com.mirle.ibg3k0.bc.winform.UI
         {
             double pass_distanve = (int)num_pass_distance.Value;
             sc.App.SystemParameter.setPassAxisDistance(pass_distanve);
+        }
+
+        private void num_preStageWatingTime_ValueChanged(object sender, EventArgs e)
+        {
+            int pre_stage_wating_time = (int)num_preStageWatingTime.Value;
+            sc.App.SystemParameter.setPreStageWatingTime_ms(pre_stage_wating_time);
         }
     }
 }

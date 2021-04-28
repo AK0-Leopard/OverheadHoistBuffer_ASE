@@ -107,13 +107,32 @@ namespace com.mirle.ibg3k0.sc.Service
                 vh.StatusRequestFailOverTimes += Vh_StatusRequestFailOverTimes;
                 vh.LongTimeNoCommuncation += Vh_LongTimeNoCommuncation;
                 vh.LongTimeInaction += Vh_LongTimeInaction;
+                vh.ErrorStatusChange += (s1, e1) => Vh_ErrorStatusChange(s1, e1);
                 vh.TimerActionStart();
             }
 
             transferService = app.TransferService;
         }
 
-
+        private void Vh_ErrorStatusChange(object sender, VhStopSingle vhStopSingle)
+        {
+            AVEHICLE vh = sender as AVEHICLE;
+            if (vh == null) return;
+            try
+            {
+                if (vhStopSingle == VhStopSingle.StopSingleOn)
+                {
+                    Task.Run(() => scApp.VehicleBLL.web.errorHappendNotify());
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                   Data: ex,
+                   VehicleID: vh.VEHICLE_ID,
+                   CarrierID: vh.CST_ID);
+            }
+        }
         private void Vh_AssignCommandFailOverTimes(object sender, int failTimes)
         {
             AVEHICLE vh = (sender as AVEHICLE);
@@ -747,6 +766,10 @@ namespace com.mirle.ibg3k0.sc.Service
                     //VhGuideStatus leftGuideStat = recive_str.LeftGuideLockStatus;
                     //VhGuideStatus rightGuideStat = recive_str.RightGuideLockStatus;
 
+                    if (errorStat != vh.ERROR)
+                    {
+                        vh.onErrorStatusChange(errorStat);
+                    }
 
                     int obstacleDIST = receive_gpp.ObstDistance;
                     string obstacleVhID = receive_gpp.ObstVehicleID;
@@ -2451,6 +2474,11 @@ namespace com.mirle.ibg3k0.sc.Service
                            reservedVh.MODE_STATUS == VHModeStatus.AutoLocal) &&
                            reservedVh.ACT_STATUS == VHActionStatus.NoCommand &&
                            !scApp.CMDBLL.isCMD_OHTCExcuteByVh(reservedVh.VEHICLE_ID);
+            //如果可以進行趕車，最後需再確認該車子是否停在CV上，且是不是需要等待BOX出來
+            if (is_can && scApp.TransferService.isNeedWatingBoxComeIn(reservedVh.CUR_ADR_ID))
+            {
+                is_can = false;
+            }
             return (is_can, CAN_NOT_AVOID_RESULT.Normal);
         }
 
@@ -4306,6 +4334,8 @@ namespace com.mirle.ibg3k0.sc.Service
                 //ErrorStatus error_status =
                 //    errorStat == VhStopSingle.StopSingleOn ? ErrorStatus.ErrSet : ErrorStatus.ErrReset;
                 //scApp.ReportBLL.ReportAlarmHappend(error_status, alarm_code, alarm_desc);
+                eqpt.onErrorStatusChange(errorStat);
+
                 if (!SCUtility.isEmpty(eqpt.MCS_CMD))
                 {
                     scApp.ReportBLL.newReportTransferCommandPaused(eqpt.MCS_CMD, null);

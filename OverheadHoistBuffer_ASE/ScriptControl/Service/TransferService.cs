@@ -44,6 +44,7 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -90,6 +91,7 @@ namespace com.mirle.ibg3k0.sc.Service
         public int nowStage { get; set; }
         public string IgnoreModeChange { get; set; }    // Y = 忽略 PLC 訊號，一律 Port 當，N = 讀取 PLC 正常上報
 
+        public CountDownTimerByStopwatch InPutCVStartComeInTimer = new CountDownTimerByStopwatch();
         #endregion
         #region CV_Port、CRANE 才有用到的屬性
 
@@ -6435,6 +6437,11 @@ namespace com.mirle.ibg3k0.sc.Service
                 return false;
             }
         }
+        public void StartTimingInPutFromCVTime(string portName, int countDownTime_ms)
+        {
+            if (!portINIData.ContainsKey(portName)) return;
+            portINIData[portName].InPutCVStartComeInTimer.StartCountDown(countDownTime_ms);
+        }
 
         public string OpenAGV_Station(string portName, bool open, string sourceCmd)
         {
@@ -6598,6 +6605,48 @@ namespace com.mirle.ibg3k0.sc.Service
         {
             return isUnitType(portName, UnitType.AGVZONE);
         }
+        public bool isFirstStageForInput(string portName, int stateNum)
+        {
+            if (!portINIData.ContainsKey(portName)) return false;
+            return portINIData[portName].Stage == stateNum;
+        }
+
+        public bool isNeedWatingBoxComeIn(string adrID, string passPortID = null)
+        {
+            //1.確認該Adr是否為CV Port
+            var find_result = scApp.PortDefBLL.cache.tryGetCVPortByAdrID(adrID);
+            if (!find_result.isFind) return false;
+            if (SCUtility.isMatche(passPortID, passPortID))
+            {
+                return false;
+            }
+            //2.確認是否為Input port
+            PortPLCInfo destPort = GetPLC_PortData(find_result.portDef.PLCPortID);
+            if (destPort == null)
+            {
+                return false;
+            }
+            if (!destPort.IsInputMode)
+            {
+                return false;
+            }
+
+            if (!portINIData.ContainsKey(find_result.portDef.PLCPortID))
+            {
+                return false;
+            }
+            var port_ini_data = portINIData[find_result.portDef.PLCPortID];
+            if (!port_ini_data.InPutCVStartComeInTimer.IsRunning)
+            {
+                return false;
+            }
+            if (port_ini_data.InPutCVStartComeInTimer.isTimeout)
+            {
+                return false;
+            }
+            return true;
+        }
+
         #endregion
         #region Log
         public string GetCmdLog(ACMD_MCS cmdData)

@@ -2193,6 +2193,7 @@ namespace com.mirle.ibg3k0.sc.App
 
         public static bool AutoTeching = false;
         public static double PassAxisDistance = 250;
+        public static int PreStageWatingTime_ms = 3000;
 
         public static bool IsEnableIDReadFailScenario { private set; get; } = false;
 
@@ -2245,6 +2246,10 @@ namespace com.mirle.ibg3k0.sc.App
         public static void setPassAxisDistance(double passDistance)
         {
             PassAxisDistance = passDistance;
+        }
+        public static void setPreStageWatingTime_ms(int _preStageWatingTime_ms)
+        {
+            PreStageWatingTime_ms = _preStageWatingTime_ms;
         }
 
     }

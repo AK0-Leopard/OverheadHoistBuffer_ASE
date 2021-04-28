@@ -501,6 +501,7 @@
     <Compile Include="Common\CheckSystemEventHandler.cs" />
     <Compile Include="Common\ClassAOPAspect.cs" />
     <Compile Include="Common\CommObjCacheManager.cs" />
+    <Compile Include="Common\CountDownTimerByStopwatch.cs" />
     <Compile Include="Common\ElasticSearchManager.cs" />
     <Compile Include="Common\EQObjCacheManager.cs" />
     <Compile Include="Common\JsHelper.cs" />

@@ -941,7 +941,14 @@ namespace com.mirle.ibg3k0.sc.BLL
             //2.過濾掉狀態不符的
             if (!is_check_has_vh_carry)
                 filterVh(ref vhs, vh_type);
-
+            //3.確認車子是否是在CV Port上且是Input port，如果是則要確認該CV是不是有已經準備流過來的BOX
+            foreach (var vh in vhs.ToList())
+            {
+                if (scApp.TransferService.isNeedWatingBoxComeIn(vh.CUR_ADR_ID, passPortID: source))
+                {
+                    vhs.Remove(vh);
+                }
+            }
             (firstVh, dietance) = FindNearestVh(source, vhs);
 
             return firstVh;
@@ -2173,7 +2180,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 //"http://stk01.asek21.mirle.com.tw:15000",
                  "http://agvc.asek21.mirle.com.tw:15000"
             };
-            const string ERROR_HAPPEND_CONST = "99";
+            const string ERROR_HAPPEND_CONST = "98";
 
             public Web(WebClientManager _webClient)
             {
@@ -2288,6 +2295,28 @@ namespace com.mirle.ibg3k0.sc.BLL
                     string[] param = new string[]
                     {
                         notify_name,
+                    };
+                    foreach (string notify_url in notify_urls)
+                    {
+                        string result = webClientManager.GetInfoFromServer(notify_url, action_targets, param);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex, "Exception");
+                }
+            }
+            public void errorHappendNotify()
+            {
+                try
+                {
+                    string[] action_targets = new string[]
+                    {
+                    "weatherforecast"
+                    };
+                    string[] param = new string[]
+                    {
+                    ERROR_HAPPEND_CONST,
                     };
                     foreach (string notify_url in notify_urls)
                     {

@@ -368,6 +368,14 @@ namespace com.mirle.ibg3k0.sc.BLL
                 return port_defs.Where(port => SCUtility.isMatche(port.UnitType, "OHCV")).
                                  ToList();
             }
+            public (bool isFind, PortDef portDef) tryGetCVPortByAdrID(string adrID)
+            {
+                var port_defs = objCacheManager.getPortDefs();
+                var port_def = port_defs.Where(port => SCUtility.isMatche(port.UnitType, "OHCV") &&
+                                                SCUtility.isMatche(port.ADR_ID, adrID)).
+                                 FirstOrDefault();
+                return (port_def != null, port_def);
+            }
             public PortDef getCVPortDef(string portID)
             {
                 var port_defs = objCacheManager.getPortDefs();
