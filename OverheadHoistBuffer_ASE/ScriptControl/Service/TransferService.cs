@@ -1872,6 +1872,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 return false;
             }
         }
+        const int IGNORE_STAGE_NUM = 1;
         public bool AreDestEnable(string destName)    //檢查目的狀態是否正確
         {
             try
@@ -1927,7 +1928,8 @@ namespace com.mirle.ibg3k0.sc.Service
                                 destPort.IsOutputMode &&
                                 portINIData[destName].Stage > 1)//20210219目的Port不只一節，且在庫量與在途量相加小於總容量，就允許下達命令進行般送。
                             {
-                                if (portINIData[destName].Stage > (command_count + destPort.BoxCount))
+                                //if (portINIData[destName].Stage > (command_count + destPort.BoxCount))
+                                if ((portINIData[destName].Stage - IGNORE_STAGE_NUM) > (command_count + destPort.BoxCount))
                                 {
                                     TransferServiceLogger.Info
                                     (
@@ -6440,6 +6442,11 @@ namespace com.mirle.ibg3k0.sc.Service
         public void StartTimingInPutFromCVTime(string portName, int countDownTime_ms)
         {
             if (!portINIData.ContainsKey(portName)) return;
+            TransferServiceLogger.Info
+            (
+                DateTime.Now.ToString("HH:mm:ss.fff ") +
+                $"OHB >> OHB| CV Wating Script: 開始倒數計算 port:{portName}，time(ms):{countDownTime_ms}"
+            );
             portINIData[portName].InPutCVStartComeInTimer.StartCountDown(countDownTime_ms);
         }
 
@@ -6611,39 +6618,93 @@ namespace com.mirle.ibg3k0.sc.Service
             return portINIData[portName].Stage == stateNum;
         }
 
-        public bool isNeedWatingBoxComeIn(string adrID, string passPortID = null)
+        public bool isNeedWatingBoxComeIn(string vhCurrentAdrID, string passAdrID = null)
         {
-            //1.確認該Adr是否為CV Port
-            var find_result = scApp.PortDefBLL.cache.tryGetCVPortByAdrID(adrID);
-            if (!find_result.isFind) return false;
-            if (SCUtility.isMatche(passPortID, passPortID))
+            if (App.SystemParameter.PreStageWatingTime_ms == 0)
             {
+                TransferServiceLogger.Info
+                (
+                    DateTime.Now.ToString("HH:mm:ss.fff ") +
+                    $"OHB >> OHB| CV Wating Script: Pre stage wating :{App.SystemParameter.PreStageWatingTime_ms} 為0，不需要再等待"
+                );
+                return false;
+            }
+            //1.確認該Adr是否為CV Port
+            var find_result = scApp.PortDefBLL.cache.tryGetCVPortByAdrID(vhCurrentAdrID);
+            if (!find_result.isFind)
+            {
+                TransferServiceLogger.Info
+                (
+                    DateTime.Now.ToString("HH:mm:ss.fff ") +
+                    $"OHB >> OHB| CV Wating Script: Adr:{vhCurrentAdrID} 不是CV Port不需要等待"
+                );
+                return false;
+            }
+            if (!SCUtility.isEmpty(passAdrID) &&
+                SCUtility.isMatche(vhCurrentAdrID, passAdrID))
+            {
+                TransferServiceLogger.Info
+                (
+                    DateTime.Now.ToString("HH:mm:ss.fff ") +
+                    $"OHB >> OHB| CV Wating Script: vh Adr:{vhCurrentAdrID} 與Source的Address:{passAdrID}相同，不需要再等待"
+                );
                 return false;
             }
             //2.確認是否為Input port
             PortPLCInfo destPort = GetPLC_PortData(find_result.portDef.PLCPortID);
             if (destPort == null)
             {
+                TransferServiceLogger.Info
+                (
+                    DateTime.Now.ToString("HH:mm:ss.fff ") +
+                    $"OHB >> OHB| CV Wating Script: Port ID:{find_result.portDef.PLCPortID} 的PLC Info不存在，不需要再等待"
+                );
                 return false;
             }
             if (!destPort.IsInputMode)
             {
+                TransferServiceLogger.Info
+                (
+                    DateTime.Now.ToString("HH:mm:ss.fff ") +
+                    $"OHB >> OHB| CV Wating Script: Port ID:{find_result.portDef.PLCPortID} 並非Input Mode，不需要再等待"
+                );
+
                 return false;
             }
 
             if (!portINIData.ContainsKey(find_result.portDef.PLCPortID))
             {
+                TransferServiceLogger.Info
+                (
+                    DateTime.Now.ToString("HH:mm:ss.fff ") +
+                    $"OHB >> OHB| CV Wating Script: Port ID:{find_result.portDef.PLCPortID} 的PLC INI Data不存在，不需要再等待"
+                );
                 return false;
             }
             var port_ini_data = portINIData[find_result.portDef.PLCPortID];
             if (!port_ini_data.InPutCVStartComeInTimer.IsRunning)
             {
+                TransferServiceLogger.Info
+                (
+                    DateTime.Now.ToString("HH:mm:ss.fff ") +
+                    $"OHB >> OHB| CV Wating Script: Port ID:{find_result.portDef.PLCPortID} 的倒數計時尚未啟動，不需要再等待"
+                );
                 return false;
             }
             if (port_ini_data.InPutCVStartComeInTimer.isTimeout)
             {
+                TransferServiceLogger.Info
+                (
+                    DateTime.Now.ToString("HH:mm:ss.fff ") +
+                    $"OHB >> OHB| CV Wating Script: Port ID:{find_result.portDef.PLCPortID} 等待已經超時，不需要再等待"
+                );
                 return false;
             }
+            TransferServiceLogger.Info
+            (
+                DateTime.Now.ToString("HH:mm:ss.fff ") +
+                $"OHB >> OHB| CV Wating Script: Port ID:{find_result.portDef.PLCPortID} 等在CV進入中"
+            );
             return true;
         }
 

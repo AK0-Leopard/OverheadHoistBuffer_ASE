@@ -944,7 +944,7 @@ namespace com.mirle.ibg3k0.sc.BLL
             //3.確認車子是否是在CV Port上且是Input port，如果是則要確認該CV是不是有已經準備流過來的BOX
             foreach (var vh in vhs.ToList())
             {
-                if (scApp.TransferService.isNeedWatingBoxComeIn(vh.CUR_ADR_ID, passPortID: source))
+                if (scApp.TransferService.isNeedWatingBoxComeIn(vh.CUR_ADR_ID, passAdrID: source))
                 {
                     vhs.Remove(vh);
                 }

@@ -1425,7 +1425,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 }
                 else if (function.IsInputMode == true)
                 {
-                    if (scApp.TransferService.isFirstStageForInput(port.EQPT_ID, 5))
+                    if (scApp.TransferService.isFirstStageForInput(port.PORT_ID, 5))
                     {
                         //只要有變化，就是重新等待(不管是Trun on、Trun Off)
                         scApp.TransferService.StartTimingInPutFromCVTime(port.PORT_ID, 5 * SystemParameter.PreStageWatingTime_ms);
@@ -1540,7 +1540,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 }
                 else if (function.IsInputMode == true)
                 {
-                    if (scApp.TransferService.isFirstStageForInput(port.EQPT_ID, 7))
+                    if (scApp.TransferService.isFirstStageForInput(port.PORT_ID, 7))
                     {
                         //只要有變化，就是重新等待(不管是Trun on、Trun Off)
                         scApp.TransferService.StartTimingInPutFromCVTime(port.PORT_ID, 7 * SystemParameter.PreStageWatingTime_ms);
