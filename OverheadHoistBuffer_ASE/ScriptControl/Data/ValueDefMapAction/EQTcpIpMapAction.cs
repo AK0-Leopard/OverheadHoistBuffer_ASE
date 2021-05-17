@@ -310,6 +310,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             if (!vh.isTcpIpConnect)
             {
                 vh.isTcpIpConnect = true;
+                vh.StatusRequestFailTimes = 0;
                 BCFApplication.onWarningMsg($"vh:{vh.VEHICLE_ID} Force change connection status to connection !");
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(EQTcpIpMapAction), Device: "AGVC",
                    Data: "Force change connection status to connection !",

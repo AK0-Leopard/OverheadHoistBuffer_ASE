@@ -214,7 +214,22 @@ namespace com.mirle.ibg3k0.sc.BLL
                 logger.Error(ex, "Exception");
                 return null;
             }
+        }
 
+        public int GetPortTypeChangeCmdCount(string portID)
+        {
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    return cmd_mcsDao.getPortTypeChangeCmdCount(con, portID);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return 0;
+            }
         }
 
         public List<ACMD_MCS> GetCmdDataByDest(string portName) //取得目的為AGV Port的命令

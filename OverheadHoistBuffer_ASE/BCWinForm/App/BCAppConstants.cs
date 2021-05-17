@@ -33,7 +33,7 @@ namespace com.mirle.ibg3k0.bc.winform.App
         //A0.01 public const string FUNC_GLASS_SORT_FORM = "FUNC_GLASS_SORT_FORM";    //Glass Sort Form
         public const string FUNC_EXCUTE_SEMI_AUTO_PROC = "FUNC_EXCUTE_SEMI_AUTO_PROC";    //Excute Semi-Auto Process Button
         public const string FUNC_CONNECTION_MANAGEMENT = "FUNC_CONNECTION_MANAGEMENT";    //Start / Stop Connection
-        public const string FUNC_CLOSE_MASTER_PC = "FUNC_CLOSE_MASTER_PC";    //Close Master PC
+        public const string FUNC_CLOSE_SYSTEM = "FUNC_CLOSE_SYSTEM";    //Close Master PC
         //A0.01 public const string FUNC_EAP_CONTROL_MODE = "FUNC_EAP_CONTROL_MODE";  //EAP CONTROL MODE 
         public const string FUNC_HOST_MODE_CHG = "FUNC_HOST_MODE_CHG";    //Host Mode Change  //A0.01
         public const string FUNC_COMMAND_MAIN = "FUNC_COMMAND_MAIN";    //Command Maintenance  //A0.01

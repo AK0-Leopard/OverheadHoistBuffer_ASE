@@ -115,7 +115,7 @@ namespace com.mirle.ibg3k0.sc.Data.DAO.EntityFramework
         {
             var query = from cmd in con.ACMD_MCS
                         where cmd.CARRIER_ID.Trim() == cst_id.Trim()
-                           && cmd.BOX_ID.Trim() == box_id.Trim() 
+                           && cmd.BOX_ID.Trim() == box_id.Trim()
                            && cmd.TRANSFERSTATE != E_TRAN_STATUS.TransferCompleted
                         select cmd;
             return query.SingleOrDefault();
@@ -170,7 +170,7 @@ namespace com.mirle.ibg3k0.sc.Data.DAO.EntityFramework
                         where cmd.TRANSFERSTATE >= E_TRAN_STATUS.Queue && cmd.TRANSFERSTATE < E_TRAN_STATUS.Canceling
                         //&& cmd.CHECKCODE.Trim() == SECSConst.HCACK_Confirm
                         select cmd;
-          
+
             return query.ToList();
         }
         public List<ACMD_MCS> loadFinishCMD_MCS(DBConnection_EF con)
@@ -361,10 +361,10 @@ namespace com.mirle.ibg3k0.sc.Data.DAO.EntityFramework
             try
             {
                 var port = from a in conn.ACMD_MCS
-                           //orderby a.CMD_INSER_TIME descending
+                               //orderby a.CMD_INSER_TIME descending
                            where a.CMD_INSER_TIME > startTime && a.CMD_INSER_TIME < endTime
                            && a.TRANSFERSTATE == E_TRAN_STATUS.TransferCompleted
-                           orderby a.CMD_INSER_TIME 
+                           orderby a.CMD_INSER_TIME
                            select a;
                 return port.ToList();
             }
@@ -390,6 +390,23 @@ namespace com.mirle.ibg3k0.sc.Data.DAO.EntityFramework
                 query = query.Where(x => x.CMD_ID == CmdID);
             }
             return query.ToList();
+        }
+        public int getPortTypeChangeCmdCount(DBConnection_EF conn, string portID)
+        {
+            try
+            {
+                var port = from a in conn.ACMD_MCS
+                           where a.TRANSFERSTATE != E_TRAN_STATUS.TransferCompleted &&
+                                 a.HOSTSOURCE == portID &&
+                                 a.CMDTYPE == ACMD_MCS.CmdType.PortTypeChange.ToString()
+                           select a;
+                return port.Count();
+            }
+            catch (Exception ex)
+            {
+                //logger.Warn(ex);
+                throw;
+            }
         }
     }
 

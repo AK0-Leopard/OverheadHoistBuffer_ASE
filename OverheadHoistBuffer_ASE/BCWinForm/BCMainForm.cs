@@ -728,15 +728,26 @@ namespace com.mirle.ibg3k0.bc.winform
             //    //e.Cancel = true;
             //    //return;
             //}
+
+            //1.初步詢問是否要關閉OHBC
             DialogResult confirmResult = MessageBox.Show(this, "Do you want to close OHTC?",
                 BCApplication.getMessageString("CONFIRM"), MessageBoxButtons.YesNo);
+            recordAction("Do you want to close OHTC?", confirmResult.ToString());
             if (confirmResult != System.Windows.Forms.DialogResult.Yes)
             {
                 e.Cancel = true;
+                return;
             }
+            if (!BCUtility.doLogin(this, bcApp, BCAppConstants.FUNC_CLOSE_SYSTEM, true))
+            {
+                e.Cancel = true;
+                recordAction("Close Master PC, Authority Check...", "Failed !!");
+                return;
+            }
+            recordAction("Close Master PC, Authority Check...", "Success !!");
+
             if (e.Cancel == false)
             {
-
                 try
                 {
                     ProgressBarDialog progress = new ProgressBarDialog(bcApp);
@@ -752,6 +763,13 @@ namespace com.mirle.ibg3k0.bc.winform
                     logger.Error(ex, "Exception");
                 }
             }
+        }
+        private void recordAction(string tipMessage, string confirmResult)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(tipMessage);
+            sb.AppendLine(string.Format("{0}         ConfirmResult:{1}", new string(' ', 5), confirmResult));
+            bcApp.SCApplication.BCSystemBLL.addOperationHis(bcApp.LoginUserID, this.Name, sb.ToString());
         }
 
 

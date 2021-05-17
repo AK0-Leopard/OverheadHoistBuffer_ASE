@@ -160,7 +160,8 @@ namespace com.mirle.ibg3k0.sc.Service
             //如果連續三次 都沒有得到回覆時，就將Port關閉在重新打開
             if (!is_success)
             {
-                vh.StatusRequestFailTimes++;
+                //vh.StatusRequestFailTimes++;
+                vh.StatusRequestFailTimes = vh.StatusRequestFailTimes + 1;
             }
             else
             {
@@ -200,7 +201,8 @@ namespace com.mirle.ibg3k0.sc.Service
             try
             {
                 AVEHICLE vh = sender as AVEHICLE;
-                vh.StatusRequestFailTimes = 0;
+                //vh.StatusRequestFailTimes = 0;
+
                 //1.當Status要求失敗超過3次時，要將對應的Port關閉再開啟。
                 //var endPoint = vh.getIPEndPoint(scApp.getBCFApplication());
                 int port_num = vh.getPortNum(scApp.getBCFApplication());
@@ -5217,6 +5219,8 @@ namespace com.mirle.ibg3k0.sc.Service
                     vh.VhRecentTranEvent = EventType.AdrPass;
 
                     vh.isTcpIpConnect = true;
+                    vh.StatusRequestFailTimes = 0;
+
 
                     LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
                        Data: "Connection ! Begin synchronize with vehicle...",

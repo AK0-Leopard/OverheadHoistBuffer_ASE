@@ -4521,9 +4521,21 @@ namespace com.mirle.ibg3k0.sc.Service
                     }
                     else
                     {
-                        movebackBOXLog = "OHB >> AGV|PLC_AGV_Station_OutMode " + plcInfo.EQ_ID + "退空BOX";
-
-                        movebackBOX = true;
+                        int port_type_change_type_count = cmdBLL.GetPortTypeChangeCmdCount(plcInfo.EQ_ID);
+                        if (port_type_change_type_count > 0)
+                        {
+                            //not thing...
+                            TransferServiceLogger.Info
+                            (
+                                DateTime.Now.ToString("HH:mm:ss.fff ") +
+                                "OHB >> AGV|PLC_AGV_Station_OutMode " + plcInfo.EQ_ID + " ,有port type change command,不進行退空Box流程"
+                            );
+                        }
+                        else
+                        {
+                            movebackBOXLog = "OHB >> AGV|PLC_AGV_Station_OutMode " + plcInfo.EQ_ID + "退空BOX";
+                            movebackBOX = true;
+                        }
                     }
                 }
                 else

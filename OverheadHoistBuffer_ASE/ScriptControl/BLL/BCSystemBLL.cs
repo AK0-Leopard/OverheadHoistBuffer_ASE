@@ -255,6 +255,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 string timeStamp = BCFUtility.formatDateTime(DateTime.Now, SCAppConstants.TimestampFormat_19);
                 HOPERATION his = new HOPERATION()
                 {
+                    SEQ_NO = GetGuid(),
                     T_STAMP = timeStamp,
                     USER_ID = user_id,
                     FORM_NAME = formName,
@@ -274,7 +275,12 @@ namespace com.mirle.ibg3k0.sc.BLL
                 if (conn != null) { try { conn.Close(); } catch (Exception ex_close) { logger.Error(ex_close, "Exception:"); } }
             }
         }
-
+        private string GetGuid()
+        {
+            System.Guid guid = new Guid();
+            guid = Guid.NewGuid();
+            return guid.ToString();
+        }
         #endregion Operation History
     }
 }

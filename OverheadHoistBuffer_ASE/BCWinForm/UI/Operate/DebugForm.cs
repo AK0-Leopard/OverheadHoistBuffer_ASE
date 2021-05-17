@@ -40,8 +40,8 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             num_pass_distance.Value = (int)sc.App.SystemParameter.PassAxisDistance;
             num_preStageWatingTime.Value = (int)sc.App.SystemParameter.PreStageWatingTime_ms;
             cb_StartGenAntoCmd.Checked = DebugParameter.CanAutoRandomGeneratesCommand;
-            cb_FroceReservePass.Checked = DebugParameter.isForcedPassBlockControl;
-            cb_FroceReservePass.Checked = DebugParameter.isForcedRejectBlockControl;
+            cb_FroceReservePass.Checked = DebugParameter.isForcedPassReserve;
+            cb_FroceReserveReject.Checked = DebugParameter.isForcedRejectBlockControl;
             ck_retry.Checked = DebugParameter.Is_136_retry_test;
             List<string> lstVh = new List<string>();
             lstVh.Add(string.Empty);
