@@ -72,6 +72,10 @@ namespace com.mirle.ibg3k0.sc.Service
     }
     public class PortINIData
     {
+        public PortINIData()
+        {
+            openAGV_Station_StopWatch.Restart();
+        }
         #region 共有屬性
         public string PortName { get; set; }
         public string UnitType { get; set; }
@@ -103,6 +107,7 @@ namespace com.mirle.ibg3k0.sc.Service
         #region AGV Port 才有用到的屬性
 
         public bool openAGV_Station { get; set; }
+        public Stopwatch openAGV_Station_StopWatch { get; set; } = new Stopwatch();
         public bool openAGV_AutoPortType { get; set; }
         public bool movebackBOXsleep { get; set; }      //0601 士偉提出 AGV 在 OutMode 的時候判斷退BOX時，先延遲300毫秒再檢查一次，若還是退BOX結果再退
 
@@ -1338,7 +1343,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         //reportBLL.ReportTransferCompleted(mcsCmd, null, ResultCode.ZoneIsfull);
                         //break;
                     }
-
+                    bool dest_cv_port_is_full = false;
                     if (isAGVZone(mcsCmd.HOSTDESTINATION))
                     {
                         string agvPortName = GetAGV_OutModeInServicePortName(mcsCmd.HOSTDESTINATION);
@@ -1354,7 +1359,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     }
                     else
                     {
-                        destPortType = AreDestEnable(mcsCmd.HOSTDESTINATION);
+                        destPortType = AreDestEnable(mcsCmd.HOSTDESTINATION, out dest_cv_port_is_full);
                     }
                     #endregion
 
@@ -1407,8 +1412,8 @@ namespace com.mirle.ibg3k0.sc.Service
                         PortPLCInfo plcInfoDest = GetPLC_PortData(mcsCmd.HOSTDESTINATION);
 
                         if ((plcInfoSource == null || (plcInfoSource.OpAutoMode && plcInfoSource.IsReadyToUnload))
-                         && plcInfoDest.OpAutoMode && plcInfoDest.IsReadyToLoad == false
-                           )
+                         && plcInfoDest.OpAutoMode && (plcInfoDest.IsReadyToLoad == false || dest_cv_port_is_full))
+                        //&& plcInfoDest.OpAutoMode && plcInfoDest.IsReadyToLoad == false
                         {
                             TransferIng = CmdToRelayStation(mcsCmd);
                         }
@@ -1425,6 +1430,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                     + " plcInfo_Dest.EQ_ID: " + plcInfoDest.EQ_ID
                                     + " plcInfo_Dest.OpAutoMode 要 True 實際是 " + plcInfoDest.OpAutoMode
                                     + " plcInfo_Dest.IsReadyToLoad 要 false 實際是 " + plcInfoDest.IsReadyToLoad
+                                    + " 或dest_cv_port_is_full 要 true 實際是 " + dest_cv_port_is_full
                                 );
                             }
                             else
@@ -1436,6 +1442,8 @@ namespace com.mirle.ibg3k0.sc.Service
                                 + " plcInfo_Dest.EQ_ID: " + plcInfoDest.EQ_ID
                                 + " plcInfo_Dest.OpAutoMode 要 True 實際是 " + plcInfoDest.OpAutoMode
                                 + " plcInfo_Dest.IsReadyToLoad 要 false 實際是 " + plcInfoDest.IsReadyToLoad
+                                + " 或dest_cv_port_is_full 要 true 實際是 " + dest_cv_port_is_full
+
                                 );
                             }
 
@@ -1875,6 +1883,12 @@ namespace com.mirle.ibg3k0.sc.Service
         const int IGNORE_STAGE_NUM = 1;
         public bool AreDestEnable(string destName)    //檢查目的狀態是否正確
         {
+            return AreDestEnable(destName, out bool isDestCvPortFull);
+        }
+
+        public bool AreDestEnable(string destName, out bool isDestCvPortFull)    //檢查目的狀態是否正確
+        {
+            isDestCvPortFull = false;
             try
             {
                 destName = destName.Trim();
@@ -1945,6 +1959,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                         DateTime.Now.ToString("HH:mm:ss.fff ") +
                                         "Port " + destName + "not have enough capacity, is can't to send box to port."
                                     );
+                                    isDestCvPortFull = true;
                                     return false;
                                 }
                             }
@@ -4585,6 +4600,8 @@ namespace com.mirle.ibg3k0.sc.Service
                         return;
                     }
 
+
+
                     MovebackBOX(plcInfo.CassetteID, plcInfo.BoxID, plcInfo.EQ_ID, plcInfo.IsCSTPresence, "PLC_AGV_Station_OutMode");
 
                     string agvZoneName = portINIData[plcInfo.EQ_ID].Group;  //0729 SCC+ 冠皚提出退BOX，檢查是否有命令到此 agvZone ，有就把優先權調最高
@@ -6462,6 +6479,7 @@ namespace com.mirle.ibg3k0.sc.Service
             portINIData[portName].InPutCVStartComeInTimer.StartCountDown(countDownTime_ms);
         }
 
+        const int PASS_OPEN_AGV_STATION_CLOSE_ACTION_mm = 3000;
         public string OpenAGV_Station(string portName, bool open, string sourceCmd)
         {
             if (portINIData[portName].openAGV_Station != open)
@@ -6471,6 +6489,19 @@ namespace com.mirle.ibg3k0.sc.Service
                     DateTime.Now.ToString("HH:mm:ss.fff ") +
                     "OHB >> OHB|開關自動退補BOX功能 portID:" + portName + " 動作:" + open + " 誰呼叫: " + sourceCmd
                 );
+            }
+
+            if (open)
+            {
+                portINIData[portName].openAGV_Station_StopWatch.Restart();
+            }
+            else
+            {
+                if (portINIData[portName].openAGV_Station_StopWatch.ElapsedMilliseconds < PASS_OPEN_AGV_STATION_CLOSE_ACTION_mm)
+                {
+                    TransferServiceLogger.Info($"{DateTime.Now.ToString("HH:mm:ss.fff")} OHB >> OHB|關閉自動退補BOX功能 Pass，因在3秒鐘前剛被開啟");
+                    return GetAGV_StationStatus(portName);
+                }
             }
 
             portName = portName.Trim();
@@ -8815,6 +8846,7 @@ namespace com.mirle.ibg3k0.sc.Service
             SpinWait.SpinUntil(() => false, 200);
             Task.Run(() =>
             {
+
                 CyclingCheckReplenishment(AGVPortDatas);
             });
             return isSuccess;
@@ -8949,6 +8981,7 @@ namespace com.mirle.ibg3k0.sc.Service
             Task.Run(() =>
             {
                 CyclingCheckWithdraw(AGVPortDatas);
+
             });
             return isSuccess;
         }
@@ -9057,7 +9090,8 @@ namespace com.mirle.ibg3k0.sc.Service
                             //portINIData[portPLCStatus.EQ_ID].openAGV_Station = false;
                         }
                     }
-                    Thread.Sleep(1000);
+                    //Thread.Sleep(1000);
+                    SpinWait.SpinUntil(() => false, 1000);
                 }
             }
             catch (Exception ex)
