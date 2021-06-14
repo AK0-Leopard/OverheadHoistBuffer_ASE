@@ -3066,6 +3066,7 @@ namespace com.mirle.ibg3k0.sc.Service
         {
             try
             {
+
                 if (cassette_dataBLL == null)
                 {
                     TransferServiceLogger.Info
@@ -4600,7 +4601,15 @@ namespace com.mirle.ibg3k0.sc.Service
                         return;
                     }
 
-
+                    if (plcInfo.IsModeChangable == false)
+                    {
+                        TransferServiceLogger.Info
+                        (
+                            DateTime.Now.ToString("HH:mm:ss.fff ") +
+                            $"OHB >> AGV| OHBC欲退空盒，但由於Mode changeable尚未亮起，等待看是否有要進行轉向"
+                        );
+                        return;
+                    }
 
                     MovebackBOX(plcInfo.CassetteID, plcInfo.BoxID, plcInfo.EQ_ID, plcInfo.IsCSTPresence, "PLC_AGV_Station_OutMode");
 

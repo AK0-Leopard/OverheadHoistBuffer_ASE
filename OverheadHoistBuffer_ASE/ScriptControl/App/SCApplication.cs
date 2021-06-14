@@ -1081,7 +1081,7 @@ namespace com.mirle.ibg3k0.sc.App
             BackgroundWorkSample = new BackgroundWorkDriver(new BackgroundWorkSample());            //A0.03
         }
         private void initScheduler()
-          {
+        {
             Scheduler = StdSchedulerFactory.GetDefaultScheduler();
 
             //IJobDetail zabbix_data_collection = JobBuilder.Create<ZabbixDataCollectionScheduler>().Build();

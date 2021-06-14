@@ -37,7 +37,7 @@ namespace com.mirle.ibg3k0.sc.Data.PLC_Functions
         public bool IsOutputMode;       //D6401.4
         [PLCElement(ValueName = "MODE_CHANGEABLE")]
         public bool IsModeChangable;    //D6401.5
-
+        
         [PLCElement(ValueName = "IS_AGV_MODE")]
         public bool IsAGVMode;
         [PLCElement(ValueName = "IS_MGV_MODE")]
