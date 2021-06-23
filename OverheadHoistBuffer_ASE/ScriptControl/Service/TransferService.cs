@@ -1911,11 +1911,14 @@ namespace com.mirle.ibg3k0.sc.Service
                 else if (isCVPort(destName))
                 {
                     int command_count = cmdBLL.GetCmdDataByDest(destName).Where(data => data.TRANSFERSTATE == E_TRAN_STATUS.Transferring).Count();
-                    if (portINIData[destName].Stage == 1)    //200701 SCC+ MCS 士偉、冠皚提出，目的 Port 只有 1 節時，出現目前命令到相同的 Port 不要執行
+                    if (!IsLoopT0B_T0C(destName))
                     {
-                        if (command_count != 0)
+                        if (portINIData[destName].Stage == 1)    //200701 SCC+ MCS 士偉、冠皚提出，目的 Port 只有 1 節時，出現目前命令到相同的 Port 不要執行
                         {
-                            return false;
+                            if (command_count != 0)
+                            {
+                                return false;
+                            }
                         }
                     }
 
@@ -1939,28 +1942,43 @@ namespace com.mirle.ibg3k0.sc.Service
                             //}
 
                             if (isCVPort(destName) &&
-                                destPort.IsOutputMode &&
-                                portINIData[destName].Stage > 1)//20210219目的Port不只一節，且在庫量與在途量相加小於總容量，就允許下達命令進行般送。
+                                destPort.IsOutputMode)
+                            //&& portINIData[destName].Stage > 1)//20210219目的Port不只一節，且在庫量與在途量相加小於總容量，就允許下達命令進行般送。
                             {
-                                //if (portINIData[destName].Stage > (command_count + destPort.BoxCount))
-                                if ((portINIData[destName].Stage - IGNORE_STAGE_NUM) > (command_count + destPort.BoxCount))
+                                if (portINIData[destName].Stage > 1)//20210219目的Port不只一節，且在庫量與在途量相加小於總容量，就允許下達命令進行般送。
                                 {
-                                    TransferServiceLogger.Info
-                                    (
-                                        DateTime.Now.ToString("HH:mm:ss.fff ") +
-                                        "Port " + destName + "have enough capacity, is ok to send box to port."
-                                    );
-                                    return true;
+                                    //if (portINIData[destName].Stage > (command_count + destPort.BoxCount))
+                                    if ((portINIData[destName].Stage - IGNORE_STAGE_NUM) > (command_count + destPort.BoxCount))
+                                    {
+                                        TransferServiceLogger.Info
+                                        (
+                                            DateTime.Now.ToString("HH:mm:ss.fff ") +
+                                            "Port " + destName + "have enough capacity, is ok to send box to port."
+                                        );
+                                        return true;
+                                    }
+                                    else
+                                    {
+                                        TransferServiceLogger.Info
+                                        (
+                                            DateTime.Now.ToString("HH:mm:ss.fff ") +
+                                            "Port " + destName + "not have enough capacity, is can't to send box to port."
+                                        );
+                                        isDestCvPortFull = true;
+                                        return false;
+                                    }
                                 }
                                 else
                                 {
-                                    TransferServiceLogger.Info
-                                    (
-                                        DateTime.Now.ToString("HH:mm:ss.fff ") +
-                                        "Port " + destName + "not have enough capacity, is can't to send box to port."
-                                    );
-                                    isDestCvPortFull = true;
-                                    return false;
+                                    if (IsLoopT0B_T0C(destName))
+                                    {
+                                        TransferServiceLogger.Info
+                                        (
+                                            $"{DateTime.Now.ToString("HH: mm:ss.fff ")} target prot is :{destName} , port is auto and out put,so pass ok"
+                                        );
+
+                                        return true;
+                                    }
                                 }
                             }
 
@@ -2055,6 +2073,14 @@ namespace com.mirle.ibg3k0.sc.Service
                 TransferServiceLogger.Error(ex, "AreDestEnable");
                 return false;
             }
+        }
+        private bool IsLoopT0B_T0C(string portID)
+        {
+            if (SCUtility.isMatche(portID, "B7_OHBLOOP_T0B") || SCUtility.isMatche(portID, "B7_OHBLOOP_T0C"))
+            {
+                return true;
+            }
+            return false;
         }
 
         #endregion

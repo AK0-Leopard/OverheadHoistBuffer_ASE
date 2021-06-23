@@ -738,11 +738,15 @@ namespace com.mirle.ibg3k0.bc.winform
                 e.Cancel = true;
                 return;
             }
-            if (!BCUtility.doLogin(this, bcApp, BCAppConstants.FUNC_CLOSE_SYSTEM, true))
+
+            if (!SCUtility.isMatche(bcApp.SCApplication.BC_ID, "ASE_LOOP"))
             {
-                e.Cancel = true;
-                recordAction("Close Master PC, Authority Check...", "Failed !!");
-                return;
+                if (!BCUtility.doLogin(this, bcApp, BCAppConstants.FUNC_CLOSE_SYSTEM, true))
+                {
+                    e.Cancel = true;
+                    recordAction("Close Master PC, Authority Check...", "Failed !!");
+                    return;
+                }
             }
             recordAction("Close Master PC, Authority Check...", "Success !!");
 
