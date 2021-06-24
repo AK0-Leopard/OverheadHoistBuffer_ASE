@@ -1733,6 +1733,8 @@ namespace com.mirle.ibg3k0.sc.Service
         /// <returns></returns>
         private (double after_check_x_axis, double after_check_y_axis) checkVehicleAxis(string vhID, string curAdrID, double real_x_axis, double real_y_axis)
         {
+            if (IsOneVehicleSystem())
+                return (real_x_axis, real_y_axis);
             if (SystemParameter.PassAxisDistance <= 0)
                 return (real_x_axis, real_y_axis);
             var adrObject = scApp.ReserveBLL.GetHltMapAddress(curAdrID);
@@ -2558,11 +2560,38 @@ namespace com.mirle.ibg3k0.sc.Service
             };
             IsMultiReserveSuccess(vhID, reserveInfos);
         }
+
+        private bool IsOneVehicleSystem()
+        {
+            try
+            {
+                var vhs = scApp.VehicleBLL.cache.loadVhs();
+                if (vhs == null || vhs.Count == 0)
+                    return false;
+                if (vhs.Count == 1)
+                    return true;
+                return false;
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return false;
+            }
+        }
+
         private (bool isSuccess, string reservedVhID, RepeatedField<ReserveInfo> reserveSuccessInfos) IsMultiReserveSuccess
             (string vhID, RepeatedField<ReserveInfo> reserveInfos, bool isAsk = false)
         {
             try
             {
+                if (IsOneVehicleSystem())
+                {
+                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                       Data: "Is one vh system, will driect reply to vh pass",
+                       VehicleID: vhID);
+                    return (true, string.Empty, reserveInfos);
+                }
+
                 if (DebugParameter.isForcedPassReserve)
                 {
                     LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
