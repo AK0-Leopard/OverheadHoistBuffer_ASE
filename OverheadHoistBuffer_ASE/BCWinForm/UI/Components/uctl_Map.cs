@@ -103,7 +103,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Components
             tmrRefresh.Start();
             BCUtility.setScale(defaultMaxScale, zoon_Factor);
             ratioChanges();
-
+            txt_lineName.Text = mainForm.BCApp.SCApplication.getEQObjCacheManager().getLine().LINE_ID;
         }
 
         private void initialMapSpace()

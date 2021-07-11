@@ -82,6 +82,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.pnl_Map = new System.Windows.Forms.Panel();
             this.tmrRefresh = new System.Windows.Forms.Timer(this.components);
+            this.txt_lineName = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.pnl_color_desc.SuspendLayout();
             this.tlp_Through_Times.SuspendLayout();
@@ -112,6 +113,7 @@
             // pnl_color_desc
             // 
             this.pnl_color_desc.AutoScroll = true;
+            this.pnl_color_desc.Controls.Add(this.txt_lineName);
             this.pnl_color_desc.Controls.Add(this.btn_EMORecover);
             this.pnl_color_desc.Controls.Add(this.btn_AllVhPause);
             this.pnl_color_desc.Controls.Add(this.tlp_Through_Times);
@@ -133,9 +135,9 @@
             // btn_EMORecover
             // 
             this.btn_EMORecover.Font = new System.Drawing.Font("Consolas", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_EMORecover.Location = new System.Drawing.Point(1338, 20);
+            this.btn_EMORecover.Location = new System.Drawing.Point(1469, 8);
             this.btn_EMORecover.Name = "btn_EMORecover";
-            this.btn_EMORecover.Size = new System.Drawing.Size(176, 56);
+            this.btn_EMORecover.Size = new System.Drawing.Size(176, 36);
             this.btn_EMORecover.TabIndex = 2;
             this.btn_EMORecover.Text = "EMS Recover";
             this.btn_EMORecover.UseVisualStyleBackColor = true;
@@ -146,9 +148,9 @@
             // 
             this.btn_AllVhPause.Font = new System.Drawing.Font("Consolas", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_AllVhPause.ForeColor = System.Drawing.Color.Red;
-            this.btn_AllVhPause.Location = new System.Drawing.Point(1156, 20);
+            this.btn_AllVhPause.Location = new System.Drawing.Point(1469, 47);
             this.btn_AllVhPause.Name = "btn_AllVhPause";
-            this.btn_AllVhPause.Size = new System.Drawing.Size(176, 55);
+            this.btn_AllVhPause.Size = new System.Drawing.Size(176, 35);
             this.btn_AllVhPause.TabIndex = 1;
             this.btn_AllVhPause.Text = "EMS Pause";
             this.btn_AllVhPause.UseVisualStyleBackColor = true;
@@ -734,6 +736,17 @@
             this.tmrRefresh.Interval = 300;
             this.tmrRefresh.Tick += new System.EventHandler(this.tmrRefresh_Tick);
             // 
+            // txt_lineName
+            // 
+            this.txt_lineName.AutoSize = true;
+            this.txt_lineName.Font = new System.Drawing.Font("Consolas", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txt_lineName.ForeColor = System.Drawing.Color.White;
+            this.txt_lineName.Location = new System.Drawing.Point(1169, 8);
+            this.txt_lineName.Name = "txt_lineName";
+            this.txt_lineName.Size = new System.Drawing.Size(310, 56);
+            this.txt_lineName.TabIndex = 97;
+            this.txt_lineName.Text = "B7_OHBLINE1";
+            // 
             // uctl_Map
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
@@ -817,5 +830,6 @@
         private System.Windows.Forms.Label lbl_Through_Times_Lv10;
         private System.Windows.Forms.Button btn_AllVhPause;
         private System.Windows.Forms.Button btn_EMORecover;
+        private System.Windows.Forms.Label txt_lineName;
     }
 }

@@ -27,6 +27,9 @@
 // 2021/03/31    Kevin Wei      N/A            A21.03.31.1  修改上報Empty retrieval的順序，先上報Remove在上報 cancel initial+ cancel conplete，
 //                                                          避免MCS在命令結束後又馬上補了一筆相同的命令。
 // 2021/04/02    Kevin Wei      N/A            A21.04.02.1  發送CarrierRemoveFromePort全部延時30秒再發，避免因為PLC在席訊號閃爍，造成事件太早發的問題。(由Line3移植)
+// 2021/06/27    Kevin Wei      N/A            A21.06.27.1  取消延遲上報機制，避免Know帳料殘留在Port上。與MCS討論後發現若是Unknow帳料在cv上，
+//                                                          先報了Waitout在報告Remove就會有殘留帳料的問題
+// 2021/06/28    Kevin Wei      N/A            A21.06.28.1  取消Waitout就開蓋的功能，統一由AGVC觸發預開蓋流程
 //**********************************************************************************
 
 using com.mirle.ibg3k0.bcf.Common;
@@ -213,7 +216,8 @@ namespace com.mirle.ibg3k0.sc.Service
         public bool redisEnable = false;
         public bool agvZone_ConnectedRealAGVPortRunDown = true;
         public bool portTypeChangeOK_CVPort_CstRemove = true;      //Port 轉向成功時，刪除此 Port 的所有卡匣
-        public bool agvWaitOutOpenBox = true;                      //AGVPort WaitOut 時，是否做開蓋動作
+        //A21.06.28.1 public bool agvWaitOutOpenBox = true;                      //AGVPort WaitOut 時，是否做開蓋動作
+        public bool agvWaitOutOpenBox = false;                      //A21.06.28.1
         public bool autoRemarkBOXCSTData = false;                   //是否開啟自動救帳流程。
         public bool setForMoreOut = true;                           //是否為多出模式。
         public bool agvHasCmdsAccess = false;           //Agv 有命令要搬入與否。
@@ -1412,7 +1416,8 @@ namespace com.mirle.ibg3k0.sc.Service
                         PortPLCInfo plcInfoDest = GetPLC_PortData(mcsCmd.HOSTDESTINATION);
 
                         if ((plcInfoSource == null || (plcInfoSource.OpAutoMode && plcInfoSource.IsReadyToUnload))
-                         && plcInfoDest.OpAutoMode && (plcInfoDest.IsReadyToLoad == false || dest_cv_port_is_full))
+                         && (plcInfoDest.OpAutoMode == false || plcInfoDest.IsReadyToLoad == false || dest_cv_port_is_full))
+                        //&& plcInfoDest.OpAutoMode && (plcInfoDest.IsReadyToLoad == false || dest_cv_port_is_full))
                         //&& plcInfoDest.OpAutoMode && plcInfoDest.IsReadyToLoad == false
                         {
                             TransferIng = CmdToRelayStation(mcsCmd);
@@ -1428,8 +1433,9 @@ namespace com.mirle.ibg3k0.sc.Service
                                     + " plcInfo_Source.OpAutoMode 要 True 實際是 " + plcInfoSource.OpAutoMode
                                     + " plcInfo_Source.IsReadyToUnload 要 True 實際是 " + plcInfoSource.IsReadyToUnload
                                     + " plcInfo_Dest.EQ_ID: " + plcInfoDest.EQ_ID
-                                    + " plcInfo_Dest.OpAutoMode 要 True 實際是 " + plcInfoDest.OpAutoMode
-                                    + " plcInfo_Dest.IsReadyToLoad 要 false 實際是 " + plcInfoDest.IsReadyToLoad
+                                    //+ " plcInfo_Dest.OpAutoMode 要 True 實際是 " + plcInfoDest.OpAutoMode
+                                    + " plcInfo_Dest.OpAutoMode 要 False 實際是 " + plcInfoDest.OpAutoMode
+                                    + " 或plcInfo_Dest.IsReadyToLoad 要 false 實際是 " + plcInfoDest.IsReadyToLoad
                                     + " 或dest_cv_port_is_full 要 true 實際是 " + dest_cv_port_is_full
                                 );
                             }
@@ -1440,8 +1446,8 @@ namespace com.mirle.ibg3k0.sc.Service
                                 DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> OHB| 觸發將卡匣送至中繼站失敗: "
                                 + " plcInfo_Source.EQ_ID: " + mcsCmd.HOSTSOURCE
                                 + " plcInfo_Dest.EQ_ID: " + plcInfoDest.EQ_ID
-                                + " plcInfo_Dest.OpAutoMode 要 True 實際是 " + plcInfoDest.OpAutoMode
-                                + " plcInfo_Dest.IsReadyToLoad 要 false 實際是 " + plcInfoDest.IsReadyToLoad
+                                + " plcInfo_Dest.OpAutoMode 要 False 實際是 " + plcInfoDest.OpAutoMode
+                                + " 或plcInfo_Dest.IsReadyToLoad 要 false 實際是 " + plcInfoDest.IsReadyToLoad
                                 + " 或dest_cv_port_is_full 要 true 實際是 " + dest_cv_port_is_full
 
                                 );
@@ -3955,11 +3961,11 @@ namespace com.mirle.ibg3k0.sc.Service
                 {
                     //A21.04.02.1 reportBLL.ReportCarrierRemovedFromPort(dbData, HandoffType);
                     //A21.04.02.1 Start
-                    Task.Run(() =>
-                    {
-                        SpinWait.SpinUntil(() => false, 10000);//延時10秒再上報CarrierRemove給MCS
-                        reportBLL.ReportCarrierRemovedFromPort(dbData, HandoffType);
-                    });
+                    //A21.06.27.1 Task.Run(() =>
+                    //A21.06.27.1 {
+                    //A21.06.27.1 SpinWait.SpinUntil(() => false, 10000);//延時10秒再上報CarrierRemove給MCS 
+                    reportBLL.ReportCarrierRemovedFromPort(dbData, HandoffType);
+                    //A21.06.27.1 });
                     //A21.04.02.1 End
 
                     cassette_dataBLL.DeleteCSTbyCstBoxID(dbData.CSTID, dbData.BOXID);
@@ -4497,6 +4503,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                     {
                                         status = E_PORT_STATUS.InService;
                                         //cassette_dataBLL.UpdateCSTState(dbCstData.BOXID, (int)E_CSTState.WaitOut);
+
 
                                         if (agvWaitOutOpenBox && line.LINE_ID.Contains("LINE"))
                                         {
@@ -8858,6 +8865,12 @@ namespace com.mirle.ibg3k0.sc.Service
         {
             //Todo
             // 需要實作更改該AGVPort為Input 及執行一次退補空box動作
+
+            if (HasPortModeChangeAbleNotReady(AGVPortDatas))
+            {
+                return false;
+            }
+
             bool isSuccess = false;
             foreach (PortDef AGVPortData in AGVPortDatas)
             {
@@ -8896,6 +8909,13 @@ namespace com.mirle.ibg3k0.sc.Service
         {
             //Todo
             // 需要實作更改該AGVPort為Output 及執行一次退補空box動作
+
+            if (HasPortModeChangeAbleNotReady(AGVPortDatas))
+            {
+                AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " AGV " + AGVStationID + " has port mode change able not ready, return false");
+                return false;
+            }
+
             bool isSuccess = false;
             OHBC_AGV_HasCmdsAccessCleared(AGVStationID);
             foreach (PortDef AGVPortData in AGVPortDatas)
@@ -8923,6 +8943,22 @@ namespace com.mirle.ibg3k0.sc.Service
                 CyclingCheckWithdraw(AGVPortDatas);
             });
             return isSuccess;
+        }
+
+        private bool HasPortModeChangeAbleNotReady(List<PortDef> AGVPortDatas)
+        {
+            if (AGVPortDatas == null || AGVPortDatas.Count == 0)
+                return false;
+            foreach (var port in AGVPortDatas)
+            {
+                PortPLCInfo portData = GetPLC_PortData(port.PLCPortID);
+                if (portData.IsModeChangable == false)
+                {
+                    AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " AGV " + port.PLCPortID + " IsModeChangable 是 false 回復 AGVC NG (HasPortModeChangeAbleNotReady)");
+                    return true;
+                }
+            }
+            return false;
         }
         /// <summary>
         /// 切換該目的地Port為1 OutputMode 1 InputMode且執行退補空box
@@ -9553,13 +9589,13 @@ namespace com.mirle.ibg3k0.sc.Service
                             {
                                 if (AGVCFromEQToStationCmdNum > 0)
                                 {
-                                    InputModeChange(accessAGVPortDatas, isEmergency);
+                                    isOK = InputModeChange(accessAGVPortDatas, isEmergency);
                                 }
                                 else if (OHBCCmdNumber > 0)
                                 {
-                                    OutputModeChange(accessAGVPortDatas, AGVStationID);
+                                    isOK = OutputModeChange(accessAGVPortDatas, AGVStationID);
                                 }
-                                isOK = true;
+                                //isOK = true;
                                 isMoreOutMode = true;
                             }
                             // 不可能有實盒 所以非空盒 = 空port。 有OHBC cmd 轉out ， 有AGVC cmd 轉in 補空，  若都無則不動作。
@@ -9567,13 +9603,13 @@ namespace com.mirle.ibg3k0.sc.Service
                             {
                                 if (OHBCCmdNumber > 0)
                                 {
-                                    OutputModeChange(accessAGVPortDatas, AGVStationID);
+                                    isOK = OutputModeChange(accessAGVPortDatas, AGVStationID);
                                 }
                                 else if (AGVCFromEQToStationCmdNum > 0)
                                 {
-                                    InputModeChange(accessAGVPortDatas, isEmergency);
+                                    isOK = InputModeChange(accessAGVPortDatas, isEmergency);
                                 }
-                                isOK = true;
+                                //isOK = true;
                                 isMoreOutMode = true;
                             }
                             else
@@ -9588,14 +9624,14 @@ namespace com.mirle.ibg3k0.sc.Service
                             AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Enter the One port One in One Out swap Emergency = " + isEmergency.ToString());
                             if (AGVCFromEQToStationCmdNum > 0)
                             {
-                                InputModeChange(accessAGVPortDatas, isEmergency);
+                                isOK = InputModeChange(accessAGVPortDatas, isEmergency);
                             }
                             else if (OHBCCmdNumber > 0)
                             {
-                                OutputModeChange(accessAGVPortDatas, AGVStationID);
+                                isOK = OutputModeChange(accessAGVPortDatas, AGVStationID);
                             }
                             isMoreOutMode = true;
-                            isOK = true;
+                            //isOK = true;
                         }
                     }
                     // 若有 2 Port 或者 3 Port 的第3個Port不為自動狀態，走一般2port 流程。
@@ -9612,14 +9648,14 @@ namespace com.mirle.ibg3k0.sc.Service
                             AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + AGVStationID + " Enter the One in One Out swap Emergency = " + isEmergency.ToString());
                             if (OHBCCmdNumber > 0) //A21.02.22.1
                             {
-                                InOutModeChange(accessAGVPortDatas, AGVStationID);
+                                isOK = InOutModeChange(accessAGVPortDatas, AGVStationID);
                             }
                             else if (AGVCFromEQToStationCmdNum > 0) //A21.02.22.1
                             {
-                                InputModeChange(accessAGVPortDatas, isEmergency); //A21.02.22.1
+                                isOK = InputModeChange(accessAGVPortDatas, isEmergency); //A21.02.22.1
                             }
                             isMoreOutMode = true;
-                            isOK = true;
+                            //isOK = true;
                         }
                     }
                     // 若有 3 Port 且為自動模式，走 3 Port 確認流程。只有在第3個port 上為 input mode 且空箱時，下 2 out ，其餘為1 in 1 out (但須注意是否有足夠的out 命令，沒有還是得轉in 補空)
@@ -9677,10 +9713,10 @@ namespace com.mirle.ibg3k0.sc.Service
                 else if (_AGVCFromEQToStationCmdNum >= 1)
                 {
                     AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + _AGVStationID + " Enter the Two IN MODE TYPE swap");
-                    InputModeChange(_accessAGVPortDatas, _isEmergency);
+                    _isOK = InputModeChange(_accessAGVPortDatas, _isEmergency);
                     _portTypeNum = PortTypeNum.Input_Mode;
                     _isMoreOutMode = false;
-                    _isOK = true;
+                    //_isOK = true;
                 }
             }
             else if (_OHBCCmdNumber == 1)
@@ -9714,9 +9750,9 @@ namespace com.mirle.ibg3k0.sc.Service
                     else
                     {
                         AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + _AGVStationID + " Enter the OutputModeChange 0A 2B More out swap");
-                        OutputModeChange(_accessAGVPortDatas, _AGVStationID);
+                        _isOK = OutputModeChange(_accessAGVPortDatas, _AGVStationID);
                         _isMoreOutMode = true;
-                        _isOK = true;
+                        //_isOK = true;
                     }
                 }
                 //有1 筆以上 AGVC命令 2  OHBC命令 此處需要判斷多進多出流程，及回復AGVC的內容。
@@ -9726,9 +9762,9 @@ namespace com.mirle.ibg3k0.sc.Service
                     if (_setMoreOutMode)
                     {
                         AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " 虛擬 port: " + _AGVStationID + " Enter the OutputModeChange 2A 2B  More out swap");
-                        OutputModeChange(_accessAGVPortDatas, _AGVStationID);
+                        _isOK = OutputModeChange(_accessAGVPortDatas, _AGVStationID);
                         _isMoreOutMode = true;
-                        _isOK = true;
+                        //_isOK = true;
                     }
                     // 若為設定多入模式 則走1 in 1 out
                     else

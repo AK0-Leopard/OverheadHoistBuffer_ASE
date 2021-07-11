@@ -3820,11 +3820,12 @@ namespace com.mirle.ibg3k0.sc.BLL
 
                         string vehicle_id = cmd.VH_ID.Trim();
                         AVEHICLE assignVH = scApp.VehicleBLL.getVehicleByID(vehicle_id);
-                        if (!assignVH.isTcpIpConnect || assignVH.IsError || !SCUtility.isEmpty(assignVH.OHTC_CMD) || (assignVH.ACT_STATUS == VHActionStatus.Commanding))
+                        //if (!assignVH.isTcpIpConnect || assignVH.IsError || !SCUtility.isEmpty(assignVH.OHTC_CMD) || (assignVH.ACT_STATUS == VHActionStatus.Commanding))
+                        if (!assignVH.isTcpIpConnect || assignVH.MODE_STATUS == VHModeStatus.Manual || assignVH.IsError || !SCUtility.isEmpty(assignVH.OHTC_CMD) || (assignVH.ACT_STATUS == VHActionStatus.Commanding))
                         {
                             LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(CMDBLL), Device: string.Empty,
                                Data: $"can't send command ,id:{SCUtility.Trim(cmd.CMD_ID)},vh id:{SCUtility.Trim(cmd.VH_ID)} current status not allowed." +
-                               $"is connect:{assignVH.isTcpIpConnect },is error:{assignVH.IsError }, current assign ohtc cmd id:{assignVH.OHTC_CMD}." +
+                               $"Mode status:{assignVH.MODE_STATUS },is connect:{assignVH.isTcpIpConnect },is error:{assignVH.IsError }, current assign ohtc cmd id:{assignVH.OHTC_CMD}." +
                                $"assignVH.ACT_STATUS:{assignVH.ACT_STATUS}.");
                             continue;
                         }
