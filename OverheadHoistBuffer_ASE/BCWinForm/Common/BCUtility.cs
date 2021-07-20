@@ -204,7 +204,13 @@ namespace com.mirle.ibg3k0.bc.winform.Common
             public string FUNCode { get; set; }
 
         }
-
+        public static void recordAction(BCApplication app, string formName, string tipMessage, string confirmResult)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(tipMessage);
+            sb.AppendLine(string.Format("{0}         ConfirmResult:{1}", new string(' ', 5), confirmResult));
+            app.SCApplication.BCSystemBLL.addOperationHis(app.LoginUserID, formName, sb.ToString());
+        }
 
 
         #region Pixels & RealLength 的轉換

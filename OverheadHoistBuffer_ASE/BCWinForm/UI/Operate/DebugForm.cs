@@ -243,6 +243,20 @@ namespace com.mirle.ibg3k0.bc.winform.UI
 
         private void button6_Click(object sender, EventArgs e)
         {
+            if (noticeCar == null)
+            {
+                MessageBox.Show($"Please select vh first.", "Force finish fail.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            string message = $"Do you want to force finish vh:{noticeCar.VEHICLE_ID} command?";
+            DialogResult confirmResult = MessageBox.Show(this, message,
+                BCApplication.getMessageString("CONFIRM"), MessageBoxButtons.YesNo);
+
+            BCUtility.recordAction(bcApp, this.Name, message, confirmResult.ToString());
+            if (confirmResult != System.Windows.Forms.DialogResult.Yes)
+            {
+                return;
+            }
             Task.Run(() =>
             {
                 bcApp.SCApplication.CMDBLL.forceUpdataCmdStatus2FnishByVhID(vh_id);

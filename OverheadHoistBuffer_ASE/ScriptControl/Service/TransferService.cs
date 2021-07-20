@@ -1886,7 +1886,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 return false;
             }
         }
-        const int IGNORE_STAGE_NUM = 1;
+        int IGNORE_STAGE_NUM = 1;
         public bool AreDestEnable(string destName)    //檢查目的狀態是否正確
         {
             return AreDestEnable(destName, out bool isDestCvPortFull);
@@ -1953,6 +1953,8 @@ namespace com.mirle.ibg3k0.sc.Service
                             {
                                 if (portINIData[destName].Stage > 1)//20210219目的Port不只一節，且在庫量與在途量相加小於總容量，就允許下達命令進行般送。
                                 {
+                                    if (scApp.VehicleService.IsOneVehicleSystem()) //如果是僅有一台車的系統，就不用怕多送一筆命令，而要預設-1
+                                        IGNORE_STAGE_NUM = 0;
                                     //if (portINIData[destName].Stage > (command_count + destPort.BoxCount))
                                     if ((portINIData[destName].Stage - IGNORE_STAGE_NUM) > (command_count + destPort.BoxCount))
                                     {

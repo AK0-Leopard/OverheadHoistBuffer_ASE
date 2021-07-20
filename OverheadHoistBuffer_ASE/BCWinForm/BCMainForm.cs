@@ -768,7 +768,7 @@ namespace com.mirle.ibg3k0.bc.winform
                 }
             }
         }
-        private void recordAction(string tipMessage, string confirmResult)
+        public void recordAction(string tipMessage, string confirmResult)
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(tipMessage);

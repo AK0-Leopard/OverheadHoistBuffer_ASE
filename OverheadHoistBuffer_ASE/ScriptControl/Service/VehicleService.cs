@@ -2561,7 +2561,7 @@ namespace com.mirle.ibg3k0.sc.Service
             IsMultiReserveSuccess(vhID, reserveInfos);
         }
 
-        private bool IsOneVehicleSystem()
+        public bool IsOneVehicleSystem()
         {
             try
             {

@@ -3725,6 +3725,7 @@ namespace com.mirle.ibg3k0.sc.BLL
             int count = 0;
             try
             {
+
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
                     List<ACMD_OHTC> cmds = cmd_ohtcDAO.loadExecuteCmd(con, vh_id);
