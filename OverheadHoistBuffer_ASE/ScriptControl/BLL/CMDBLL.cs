@@ -3719,13 +3719,30 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
 
         }
+        public List<ACMD_OHTC> loadExcutingCmdOhtcByVh(string vhID)
+        {
+            List<ACMD_OHTC> acmd_ohtcs = null;
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    acmd_ohtcs = cmd_ohtcDAO.loadExecuteCmd(con, vhID);
+                }
+                return acmd_ohtcs;
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return null;
+            }
+
+        }
 
         public bool forceUpdataCmdStatus2FnishByVhID(string vh_id)
         {
             int count = 0;
             try
             {
-
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
                     List<ACMD_OHTC> cmds = cmd_ohtcDAO.loadExecuteCmd(con, vh_id);
@@ -3757,6 +3774,19 @@ namespace com.mirle.ibg3k0.sc.BLL
                             }
                         }
                         cmd_ohtcDAO.Update(con, cmds);
+                    }
+                    else
+                    {
+                        AVEHICLE vh = scApp.VehicleBLL.cache.getVhByID(vh_id);
+                        //如果已經沒有命令且OHT也No command，但OHT Vh物件卻還有CmdID殘留則要將其強制清空
+                        if (vh.ACT_STATUS == VHActionStatus.NoCommand &&
+                            (!SCUtility.isEmpty(vh.OHTC_CMD)) || (!SCUtility.isEmpty(vh.MCS_CMD)))
+                        {
+                            TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") +
+                                                       $"強制結束OHT命令，但由於車子為No command，強制將Vehicle CMD ID:{SCUtility.Trim(vh.OHTC_CMD, true)}清除");
+                            scApp.VehicleBLL.updateVehicleExcuteCMD(vh_id, string.Empty, string.Empty);
+                            scApp.VehicleBLL.cache.updataExcuteCmdIDToEmpty(vh.VEHICLE_ID);
+                        }
                     }
                 }
                 return count != 0;

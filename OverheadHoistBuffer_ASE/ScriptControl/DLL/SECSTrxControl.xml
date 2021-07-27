@@ -4,12 +4,147 @@
         <name>SECSTrxControl</name>
     </assembly>
     <members>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.refreshConnection">
+            <summary>
+            將SECS Agent進行 refresh。
+            將對該SECS Driver 執行 1.Stop Driver、2.Destroy、3.New Instance、4.Start Driver
+            </summary>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.setLinkTestTimer(System.Int32)">
+            <summary>
+            設置發送Link Test的間隔時間。
+            Link Test為當雙方SECS在無進行Transaction時，將會進行發送給對方的訊號，用以確保雙方保持連線。
+            </summary>
+            <param name="linkTestTimer"></param>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.invalidLicense(System.String)">
+            <summary>
+            實作於ILicenseKeyProtect，使其呈現在License失效後，所需要的紀錄/提示。
+            </summary>
+            <param name="msg"></param>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.stopSystemByLicenseCheck">
+            <summary>
+            實作於ILicenseKeyProtect，使其在License失效後，停止該Agent的服務。
+            </summary>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.injectSFTypeCheck(com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.SFTypeCheck)">
+            <summary>
+            注入檢查Strame tpye、Function message id是否符合的Function，
+            用來在收到Stream function時，確認是否要回應
+            Unrecognized Stream Type或Unrecognized Function Type。
+            </summary>
+            <param name="sfTypeCheck">檢查Stream Function是否符合的Function</param>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.injectDataIllegalCheck(com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.DataIllegalCheck)">
+            <summary>
+            注入檢查Data format是否符合的Function，
+            用來在收到Stream function時，確認是否要回應
+            Illegal Data。
+            </summary>
+            <param name="dataIllegalCheck">檢查Data format是否符合的Function</param>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.checkStreamFunctionType(System.Int32,System.Int32)">
+            <summary>
+            進行Strame tpye、Function message id的檢查，
+            </summary>
+            <param name="S">Stream Type</param>
+            <param name="F">Function message id</param>
+            <returns></returns>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.checkIllegalDataValueFormat(System.Type,com.mirle.ibg3k0.stc.Data.SecsData.SXFY)">
+            <summary>
+            進行Data format的檢查
+            </summary>
+            <param name="type"></param>
+            <param name="sxfy"></param>
+            <returns></returns>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.start">
+            <summary>
+            啟動SECS Agent
+            </summary>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.stop">
+            <summary>
+            停止SECS Agent
+            </summary>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.getQSWrapper">
+            <summary>
+            取得QSWrapper的執行個體。
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.addSECSReceivedHandler(System.String,System.EventHandler{com.mirle.ibg3k0.stc.Common.SECSEventArgs})">
+            <summary>
+            註冊監聽收到的StreamFunction
+            </summary>
+            <param name="streamFunction">註冊的StreamFunction。(ex.SXFY)</param>
+            <param name="handler"></param>
+        </member>
         <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.addSystemErrorReceivedHandler(System.EventHandler{com.mirle.ibg3k0.stc.Common.SECSEventArgs})">
             <summary>
             A0.01
             System Error (S9FY) 的監聽
             </summary>
             <param name="handler"></param>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.removeSystemErrorReceivedHandler(System.EventHandler{com.mirle.ibg3k0.stc.Common.SECSEventArgs})">
+            <summary>
+            移除System error的監聽
+            </summary>
+            <param name="handler"></param>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.removeSECSReceivedHandler(System.String,System.EventHandler{com.mirle.ibg3k0.stc.Common.SECSEventArgs})">
+            <summary>
+            移除StreamFunction的監聽
+            </summary>
+            <param name="streamFunction"></param>
+            <param name="handler"></param>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.addSECSDisconnectedHandler(System.EventHandler{com.mirle.ibg3k0.stc.Common.SECSEventArgs})">
+            <summary>
+            註冊監聽SECS Disconnected
+            </summary>
+            <param name="handler"></param>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.removeSECSDisconnectedHandler(System.EventHandler{com.mirle.ibg3k0.stc.Common.SECSEventArgs})">
+            <summary>
+            移除監聽SECS Disconnected
+            </summary>
+            <param name="handler"></param>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.addSECSConnectedHandler(System.EventHandler{com.mirle.ibg3k0.stc.Common.SECSEventArgs})">
+            <summary>
+            註冊監聽SECS Connected
+            </summary>
+            <param name="handler"></param>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.removeSECSConnectedHandler(System.EventHandler{com.mirle.ibg3k0.stc.Common.SECSEventArgs})">
+            <summary>
+            移除監聽SECS Connected
+            </summary>
+            <param name="handler"></param>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.onSECSDisconnected(com.mirle.ibg3k0.stc.Common.SECSEventArgs)">
+            <summary>
+            通知SECS Disconnected
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.onSECSConnected(com.mirle.ibg3k0.stc.Common.SECSEventArgs)">
+            <summary>
+            通知SECS Connected
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.onSECSReceive(System.String,com.mirle.ibg3k0.stc.Common.SECSEventArgs)">
+            <summary>
+            通知Receive stream function
+            </summary>
+            <param name="streamFunction">通知的Stream Function</param>
+            <param name="e"></param>
         </member>
         <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.onSystemErrorReceive(System.String,com.mirle.ibg3k0.stc.Common.SECSEventArgs)">
             <summary>
@@ -19,9 +154,40 @@
             <param name="streamFunction"></param>
             <param name="e"></param>
         </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.triggerEvent(com.mirle.ibg3k0.stc.Common.SECS.ChangeEventStruct)">
+            <summary>
+            當有事件需要通知時(SECSDisconnected、SECSConnected、SECSReceive、SystemErrorReceive)
+            統一由此處通知。
+            </summary>
+            <param name="eventStruct"></param>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.addSECST3TimeOutHandler(System.EventHandler{com.mirle.ibg3k0.stc.Common.SECSEventArgs})">
+            <summary>
+            監聽T3TimeOut
+            </summary>
+            <param name="handler"></param>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.removeSECST3TimeOutHandler(System.EventHandler{com.mirle.ibg3k0.stc.Common.SECSEventArgs})">
+            <summary>
+            移除監聽T3TimeOut
+            </summary>
+            <param name="handler"></param>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.onSECST3Timeout(com.mirle.ibg3k0.stc.Common.SECSEventArgs)">
+            <summary>
+            通知T3 TimeOut
+            </summary>
+            <param name="e"></param>
+        </member>
         <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSAgent.replySECSMsg(com.mirle.ibg3k0.stc.Data.SecsData.SXFY)">
             回傳SECS 訊息
             
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Common.SECS.TriggerEventQueue">
+            <summary>
+            用來進行Receive By Queue的處理。
+            (即會按照接收到recive enevt進行處理)
+            </summary>
         </member>
         <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSConnection.sendS9F9(System.Object)">
             <summary>
@@ -40,6 +206,10 @@
             Unrecognized Stream Type
             </summary>
             <param name="obj"></param>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSConnection.reStartToListen">
+            重新聆聽 //A0.04
+            
         </member>
         <member name="M:com.mirle.ibg3k0.stc.Common.SECS.SECSConnection.startToListen">
             開始聆聽
@@ -186,16 +356,6 @@
             <param name="e"></param>
             <param name="inSecs"></param>
         </member>
-        <member name="M:com.mirle.ibg3k0.stc.Common.TrxSECS.conversationReceive``1(``0@,System.Int64,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
-            <summary>
-            指定接續進行談話(等待Host傳遞訊息)，並限定於特定時間內完成，否則回傳「ConversationTimeout」結果
-            </summary>
-            <typeparam name="TSource"></typeparam>
-            <param name="outSecs"></param>
-            <param name="conversationTimeoutSec"></param>
-            <param name="predicate"></param>
-            <returns></returns>
-        </member>
         <member name="T:com.mirle.ibg3k0.stc.Common.TrxSECS.ReturnCode">
             <summary>
             SECS通訊結果代碼
@@ -236,47 +396,14 @@
             中斷連續對話的等待
             </summary>
         </member>
-        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.SXFY.SECSAgentName">
+        <member name="M:com.mirle.ibg3k0.stc.Common.TrxSECS.conversationReceive``1(``0@,System.Int64,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
             <summary>
-            SECS Agent Name
+            指定接續進行談話(等待Host傳遞訊息)，並限定於特定時間內完成，否則回傳「ConversationTimeout」結果
             </summary>
-        </member>
-        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.SXFY.StreamFunction">
-            <summary>
-            Stream Function
-            </summary>
-        </member>
-        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.SXFY.W_Bit">
-            <summary>
-            Wait Bit
-            </summary>
-        </member>
-        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.SXFY.SystemByte">
-            <summary>
-            System Byte
-            </summary>
-        </member>
-        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.SXFY.CanAbort">
-            <summary>
-            Can Abort By SXF0
-            </summary>
-        </member>
-        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.SXFY.IsBaseType">
-            <summary>
-            Is Base Type (Don't check field count)
-            </summary>
-        </member>
-        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.SXFY.ValidateFormat">
-            <summary>
-            驗証格式(預設是需要驗証)
-            </summary>
-        </member>
-        <member name="M:com.mirle.ibg3k0.stc.Data.SecsData.SXFY.getAbortFunctionName">
-            <summary>
-            A0.03
-            取得對應用於Abort的Stream Function。
-            如果此SXFY不允許Abort，將會回傳空白字串。
-            </summary>
+            <typeparam name="TSource"></typeparam>
+            <param name="outSecs"></param>
+            <param name="conversationTimeoutSec"></param>
+            <param name="predicate"></param>
             <returns></returns>
         </member>
         <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S1F2.MDLN">
@@ -354,7 +481,7 @@
             Current Alarm Set List Request (H -> E)
             </summary>
         </member>
-        <!-- 忽略成員 "T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S5F104" 中格式錯誤的 XML 註解 -->
+        <!-- Badly formed XML comment ignored for member "T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S5F104" -->
         <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S5F5">
             <summary>
             List Alarms Data Request(LAR) (H -> E)
@@ -400,15 +527,15 @@
             Event Report Send: Ready To Start
             </summary>
         </member>
-        <!-- 忽略成員 "T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID111_114" 中格式錯誤的 XML 註解 -->
+        <!-- Badly formed XML comment ignored for member "T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID111_114" -->
         <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID118">
             <summary>
             Event Report Send: Operator Confirm Event about Operator Call Command
             </summary>
         </member>
-        <!-- 忽略成員 "T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID200_209" 中格式錯誤的 XML 註解 -->
-        <!-- 忽略成員 "T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID210_219" 中格式錯誤的 XML 註解 -->
-        <!-- 忽略成員 "T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID220_229" 中格式錯誤的 XML 註解 -->
+        <!-- Badly formed XML comment ignored for member "T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID200_209" -->
+        <!-- Badly formed XML comment ignored for member "T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID210_219" -->
+        <!-- Badly formed XML comment ignored for member "T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID220_229" -->
         <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S6F11_CEID301_307">
             <summary>
             Event Report Send: Process status change report
@@ -512,6 +639,12 @@
             Equipment ID or Unit ID or Sub-Unit ID
             </summary>
         </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S7F25">
+            <summary>
+            Formatted Process Program Request (H -> E)
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S7F26" -->
         <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.Sample.SECSConst.CEID_ALL_CEID">
             <summary>
             用來代表所有的CEID（於Enable、Disable All CEID時會使用到）。
@@ -536,6 +669,85 @@
             <summary>
             Equipment sets up any PPID which different from current PPID
             </summary>
+        </member>
+        <member name="T:com.mirle.ibg3k0.stc.Data.SecsData.Sample.S2F103">
+            <summary>
+            Lot(Glass) Information Download (H -> E)
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.SXFY.SECSAgentName">
+            <summary>
+            SECS Agent Name
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.SXFY.StreamFunction">
+            <summary>
+            Stream Function
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.SXFY.StreamFunctionName">
+            <summary>
+            Stream Function Name
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.SXFY.W_Bit">
+            <summary>
+            Wait Bit
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.SXFY.SystemByte">
+            <summary>
+            System Byte
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.SXFY.CanAbort">
+            <summary>
+            Can Abort By SXF0
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.SXFY.IsBaseType">
+            <summary>
+            Is Base Type (Don't check field count)
+            </summary>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.Data.SecsData.SXFY.ValidateFormat">
+            <summary>
+            驗証格式(預設是需要驗証)
+            </summary>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.Data.SecsData.SXFY.getAbortFunctionName">
+            <summary>
+            A0.03
+            取得對應用於Abort的Stream Function。
+            如果此SXFY不允許Abort，將會回傳空白字串。
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.License.AutomationLicenseKey.checkValidation(System.Object)">
+            <summary>
+            此FUN 要等到GVO現場的Key皆改為允許遠端控制後，再進行使用。//A0.05
+            </summary>
+            <param name="obj"></param>
+        </member>
+        <member name="F:com.mirle.ibg3k0.stc.License.AutomationLicenseKey.preCheckTime">
+            <summary>
+            在現場尚未將KeyPro中的"允許遠端桌面"設定開啟時，先使用使FUN。//A0.05
+            </summary>
+            <param name="obj"></param>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.License.AutomationLicenseKey.isOverCheckIntervalTime">
+            <summary>
+            A0.04
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:com.mirle.ibg3k0.stc.License.AutomationLicenseKey.getAppliedArea(System.String,com.mirle.ibg3k0.stc.License.AutomationLicenseKey.AppliedArea)">
+            <summary>
+            從AppSetting取得設定值，如果找不到該Key的設定值，將會回傳參數指定的預設值
+            </summary>
+            <param name="key">Key</param>
+            <param name="defaultValue">預設值</param>
+            <returns>System.Int32.</returns>
         </member>
     </members>
 </doc>

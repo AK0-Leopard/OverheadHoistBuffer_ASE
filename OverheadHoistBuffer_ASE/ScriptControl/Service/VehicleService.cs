@@ -2477,6 +2477,7 @@ namespace com.mirle.ibg3k0.sc.Service
                           (reservedVh.MODE_STATUS == VHModeStatus.AutoRemote ||
                            reservedVh.MODE_STATUS == VHModeStatus.AutoLocal) &&
                            reservedVh.ACT_STATUS == VHActionStatus.NoCommand &&
+                           !reservedVh.isSynchronizing &&
                            !scApp.CMDBLL.isCMD_OHTCExcuteByVh(reservedVh.VEHICLE_ID);
             //如果可以進行趕車，最後需再確認該車子是否停在CV上，且是不是需要等待BOX出來
             if (is_can && scApp.TransferService.isNeedWatingBoxComeIn(reservedVh.CUR_ADR_ID))

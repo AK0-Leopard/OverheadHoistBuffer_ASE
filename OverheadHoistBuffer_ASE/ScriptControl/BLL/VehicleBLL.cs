@@ -2158,6 +2158,16 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
 
 
+            public void updataExcuteCmdIDToEmpty(string vhID)
+            {
+                var vhs = eqObjCacheManager.getAllVehicle();
+                AVEHICLE vh = eqObjCacheManager.getVehicletByVHID(vhID);
+                if (vh == null) return;
+                vh.OHTC_CMD = "";
+                vh.MCS_CMD = "";
+            }
+
+
             public List<AVEHICLE> loadHasCmdVh()
             {
                 var vhs = eqObjCacheManager.getAllVehicle();

@@ -622,48 +622,49 @@ namespace com.mirle.ibg3k0.sc.Service
 
             #region 命令
 
-            foreach (var mcsCmd in cmdBLL.getCMD_ByOHTName(craneName))
-            {
-                bool deleteCmd = false;
-                string log = "";
+            //foreach (var mcsCmd in cmdBLL.getCMD_ByOHTName(craneName))
+            //{
+            //    bool deleteCmd = false;
+            //    string log = "";
 
-                if (vehicle.ACT_STATUS == VHActionStatus.NoCommand)
-                {
-                    log = " 沒有命令";
-                    deleteCmd = true;
-                }
-                else
-                {
-                    if (vehicle.MCS_CMD.Trim() != mcsCmd.CMD_ID.Trim())
-                    {
-                        log = " 命令名稱不一樣，vehicle.MCS_CMD: " + vehicle.MCS_CMD;
-                        deleteCmd = true;
-                    }
-                }
+            //    if (vehicle.ACT_STATUS == VHActionStatus.NoCommand)
+            //    {
+            //        log = " 沒有命令";
+            //        deleteCmd = true;
+            //    }
+            //    else
+            //    {
+            //        if (vehicle.MCS_CMD.Trim() != mcsCmd.CMD_ID.Trim())
+            //        {
+            //            log = " 命令名稱不一樣，vehicle.MCS_CMD: " + vehicle.MCS_CMD;
+            //            deleteCmd = true;
+            //        }
+            //    }
 
-                if (deleteCmd)
-                {
-                    TransferServiceLogger.Info
-                    (DateTime.Now.ToString("HH:mm:ss.fff ")
-                        + "iniOHTData " + craneName + log + "，刪除:" + GetCmdLog(mcsCmd)
-                    );
+            //    if (deleteCmd)
+            //    {
+            //        TransferServiceLogger.Info
+            //        (DateTime.Now.ToString("HH:mm:ss.fff ")
+            //            + "iniOHTData " + craneName + log + "，刪除:" + GetCmdLog(mcsCmd)
+            //        );
 
-                    Manual_DeleteCmd(mcsCmd.CMD_ID, "iniOHTData");
+            //        Manual_DeleteCmd(mcsCmd.CMD_ID, "iniOHTData");
 
-                    Task.Run(() =>
-                    {
-                        cmdBLL.forceUpdataCmdStatus2FnishByVhID(craneName); // Force finish Cmd
-                    });
-                }
-            }
+            //        Task.Run(() =>
+            //        {
+            //            cmdBLL.forceUpdataCmdStatus2FnishByVhID(craneName); // Force finish Cmd
+            //        });
+            //    }
+            //}
 
-            if (vehicle.ACT_STATUS == VHActionStatus.NoCommand && string.IsNullOrWhiteSpace(vehicle.MCS_CMD) == false)
-            {
-                Task.Run(() =>
-                {
-                    cmdBLL.forceUpdataCmdStatus2FnishByVhID(craneName); // Force finish Cmd
-                });
-            }
+            //if (vehicle.ACT_STATUS == VHActionStatus.NoCommand && string.IsNullOrWhiteSpace(vehicle.MCS_CMD) == false)
+            //{
+            //    Task.Run(() =>
+            //    {
+            //        cmdBLL.forceUpdataCmdStatus2FnishByVhID(craneName); // Force finish Cmd
+            //    });
+            //}
+            initialSyncVehicleCommandStatus(vehicle);
             #endregion
 
             #region 卡匣
@@ -708,6 +709,70 @@ namespace com.mirle.ibg3k0.sc.Service
             //    AVEHICLE.HAS_BOX
             //    AVEHICLE.HAS_CST 車上有沒有料
 
+        }
+
+        private void initialSyncVehicleCommandStatus(AVEHICLE vh)
+        {
+            try
+            {
+                if (vh == null)
+                {
+                    TransferServiceLogger.Info
+                    ($"{DateTime.Now.ToString("HH:mm:ss.fff ")} 想要對車子命令進行初始化，但沒有車子物件");
+                    return;
+                }
+                if (vh.ACT_STATUS == VHActionStatus.NoCommand)
+                {
+                    //1.確認是否有該車子的命令，有的話則要將他強制結束
+                    //2.若要強制結束的命令是MCS命令，則需要連帶報告給MCS該命令已結束
+                    var excute_cmd_ohtc = cmdBLL.loadExcutingCmdOhtcByVh(vh.VEHICLE_ID);
+                    foreach (var cmd_ohtc in excute_cmd_ohtc)
+                    {
+                        TransferServiceLogger.Info
+                            ($"{DateTime.Now.ToString("HH:mm:ss.fff ")} vh:{vh.VEHICLE_ID}沒有命令，" +
+                            $"但還有cmd_ohtc命令殘留:{SCUtility.Trim(cmd_ohtc.CMD_ID, true)}，開始進行強制命令結束流程...");
+
+                        if (!SCUtility.isEmpty(cmd_ohtc.CMD_ID_MCS))
+                        {
+                            TransferServiceLogger.Info
+                                ($"{DateTime.Now.ToString("HH:mm:ss.fff ")} cmd_ohtc:{SCUtility.Trim(cmd_ohtc.CMD_ID, true)}," +
+                                 $"為cmd_mcs:{SCUtility.Trim(cmd_ohtc.CMD_ID_MCS, true)}搬送命令");
+                            ACMD_MCS cmd_mcs = cmdBLL.GetCmdIDFromCmd(SCUtility.Trim(cmd_ohtc.CMD_ID_MCS, true));
+                            if (cmd_mcs == null)
+                            {
+                                TransferServiceLogger.Info
+                                    ($"{DateTime.Now.ToString("HH:mm:ss.fff ")} 進行強制命令結束流程，但cmd_mcs:{SCUtility.Trim(cmd_ohtc.CMD_ID_MCS, true)}," +
+                                     $"不存在");
+                            }
+                            CassetteData dbData = cassette_dataBLL.loadCassetteDataByBoxID(cmd_ohtc.BOX_ID);
+                            if (dbData == null)
+                            {
+                                TransferServiceLogger.Info
+                                    ($"{DateTime.Now.ToString("HH:mm:ss.fff ")} 進行強制命令結束流程，但box id:{SCUtility.Trim(cmd_ohtc.BOX_ID, true)}," +
+                                     $"不存在");
+                            }
+                            if (cmd_mcs != null && dbData != null)
+                                reportBLL.ReportTransferCompleted(cmd_mcs, dbData, ResultCode.OtherErrors);
+                            cmdBLL.updateCMD_MCS_TranStatus(cmd_mcs.CMD_ID, E_TRAN_STATUS.TransferCompleted);
+                        }
+                        cmdBLL.updateCommand_OHTC_StatusByCmdID(cmd_ohtc.CMD_ID, E_CMD_STATUS.AbnormalEndByOHTC);
+                        scApp.VehicleBLL.cache.updataExcuteCmdIDToEmpty(vh.VEHICLE_ID);
+
+                        TransferServiceLogger.Info
+                            ($"{DateTime.Now.ToString("HH:mm:ss.fff ")} vh:{vh.VEHICLE_ID}沒有命令，" +
+                            $"但還有cmd_ohtc命令殘留:{SCUtility.Trim(cmd_ohtc.CMD_ID, true)}，強制命令結束流程完成。");
+                    }
+                }
+                else
+                {
+                    //not thing...
+
+                }
+            }
+            catch (Exception ex)
+            {
+                TransferServiceLogger.Error(ex, "initialSyncVehicleCommandStatus");
+            }
         }
         public void iniCstData()    //卡匣資料初始化，刪除殘帳
         {
