@@ -54,5 +54,9 @@ namespace com.mirle.ibg3k0.sc
                 return 0;
             }
         }
+        public void put(ShelfDef ortherValue)
+        {
+            this.Enable = ortherValue.Enable;
+        }
     }
 }

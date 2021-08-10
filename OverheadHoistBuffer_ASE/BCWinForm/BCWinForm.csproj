@@ -247,14 +247,38 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="UI\Components\WPFComponents\uctlMapWPFNew.xaml.cs">
+      <DependentUpon>uctlMapWPFNew.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Components\WPFComponents\uctlMapWPF.xaml.cs">
       <DependentUpon>uctlMapWPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Components\WPFComponents\VehicleInfo.xaml.cs">
+      <DependentUpon>VehicleInfo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Maintenance\ShelfMaintenanceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Maintenance\ShelfMaintenanceForm.Designer.cs">
+      <DependentUpon>ShelfMaintenanceForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\OHT_FormNew2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\OHT_FormNew2.Designer.cs">
+      <DependentUpon>OHT_FormNew2.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\OHT_FormNew.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UI\OHT_FormNew.Designer.cs">
       <DependentUpon>OHT_FormNew.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Operate\DebugFormNew.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Operate\DebugFormNew.Designer.cs">
+      <DependentUpon>DebugFormNew.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\Test\CMD_CST_DATA.cs">
       <SubType>Form</SubType>
@@ -1044,8 +1068,17 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.zh-TW.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="UI\Maintenance\ShelfMaintenanceForm.resx">
+      <DependentUpon>ShelfMaintenanceForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\OHT_FormNew2.resx">
+      <DependentUpon>OHT_FormNew2.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\OHT_FormNew.resx">
       <DependentUpon>OHT_FormNew.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Operate\DebugFormNew.resx">
+      <DependentUpon>DebugFormNew.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Test\CMD_CST_DATA.resx">
       <DependentUpon>CMD_CST_DATA.cs</DependentUpon>
@@ -1314,6 +1347,10 @@
     </PublishFile>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="UI\Components\WPFComponents\uctlMapWPFNew.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="UI\Components\WPFComponents\uctlMapWPF.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1321,6 +1358,10 @@
     <Page Include="UI\Components\WPFComponents\uctlReserveSectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Components\WPFComponents\VehicleInfo.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -169,7 +169,6 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             List<ALARM> alarms = scApp.AlarmBLL.getCurrentAlarmsFromRedis();
             Adapter.Invoke((obj) =>
             {
-                dgv_Alarm.DataSource = alarms;
             }, null);
         }
 
@@ -265,11 +264,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             cmb_Vehicle.AutoCompleteSource = AutoCompleteSource.ListItems;
 
             cbm_Action.DataSource = Enum.GetValues(typeof(E_CMD_TYPE)).Cast<E_CMD_TYPE>()
-                                                  .Where(e => e == E_CMD_TYPE.Move ||
-                                                              e == E_CMD_TYPE.Scan ||
-                                                              e == E_CMD_TYPE.Load ||
-                                                              e == E_CMD_TYPE.Unload ||
-                                                              e == E_CMD_TYPE.LoadUnload).ToList();
+                                                  .Where(e => e == E_CMD_TYPE.Move).ToList();
 
 
             List<string> park_zone_type = scApp.ParkBLL.loadAllParkZoneType();
@@ -281,8 +276,6 @@ namespace com.mirle.ibg3k0.bc.winform.UI
         private void initialDataGreadView()
         {
             aLARMs.Add(new ALARM());
-            dgv_Alarm.AutoGenerateColumns = false;
-            dgv_Alarm.DataSource = aLARMs;
         }
 
 
@@ -772,7 +765,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                 //cmd_mcs_obj_to_show = mainform.BCApp.SCApplication.CMDBLL.loadACMD_MCSIsUnfinishedObjToShow();
                 cmsMCS_bindingSource.DataSource = cmd_mcs_obj_to_show;
                 dgv_TransferCommand.Refresh();
-        }
+            }
         }
 
 
@@ -1169,7 +1162,6 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             cmb_toAddress.Visible = false;
             cmb_cycRunZone.Visible = false;
             btn_start.Enabled = false;
-            dgv_TaskCommand.Enabled = false;
             btn_AutoMove.Enabled = false;
             lbl_destinationName.Text = "To Address";
             E_CMD_TYPE cmd_type;
@@ -1182,7 +1174,6 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                 case E_CMD_TYPE.SystemOut:
                     cmb_toAddress.Visible = true;
                     btn_start.Enabled = true;
-                    dgv_TaskCommand.Enabled = true;
                     btn_AutoMove.Enabled = true;
                     break;
                 case E_CMD_TYPE.Round:
@@ -1194,7 +1185,6 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                     cmb_fromAddress.Enabled = true;
                     cmb_toAddress.Visible = true;
                     btn_start.Enabled = true;
-                    dgv_TaskCommand.Enabled = true;
                     break;
                 case E_CMD_TYPE.Teaching:
                     cmb_fromAddress.Enabled = true;
@@ -1330,6 +1320,11 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             AVEHICLE vh = scApp.VehicleBLL.cache.getVhByID(vh_id);
             if (vh == null) return;
             txt_cstID.Text = vh.HAS_CST == 1 ? SCUtility.Trim(vh.CST_ID, true) : "Manual_CST";
+        }
+
+        private void dgv_vhStatus_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }

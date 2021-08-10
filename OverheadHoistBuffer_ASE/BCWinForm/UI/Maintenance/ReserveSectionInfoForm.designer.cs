@@ -29,7 +29,9 @@
         private void InitializeComponent()
         {
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.pnl_setting = new System.Windows.Forms.Panel();
+            this.label11 = new System.Windows.Forms.Label();
+            this.cmb_vh_sec_id = new System.Windows.Forms.ComboBox();
             this.txt_speed = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.txt_y = new System.Windows.Forms.TextBox();
@@ -56,10 +58,8 @@
             this.cmb_vh_ids = new System.Windows.Forms.ComboBox();
             this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
             this.uctlReserveSectionView1 = new com.mirle.ibg3k0.bc.winform.UI.Components.WPFComponents.uctlReserveSectionView();
-            this.label11 = new System.Windows.Forms.Label();
-            this.cmb_vh_sec_id = new System.Windows.Forms.ComboBox();
             this.tableLayoutPanel1.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.pnl_setting.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -67,7 +67,7 @@
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 88.15052F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 11.84948F));
-            this.tableLayoutPanel1.Controls.Add(this.panel1, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.pnl_setting, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.elementHost1, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
@@ -77,39 +77,57 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(1303, 558);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
-            // panel1
+            // pnl_setting
             // 
-            this.panel1.Controls.Add(this.label11);
-            this.panel1.Controls.Add(this.cmb_vh_sec_id);
-            this.panel1.Controls.Add(this.txt_speed);
-            this.panel1.Controls.Add(this.label10);
-            this.panel1.Controls.Add(this.txt_y);
-            this.panel1.Controls.Add(this.txt_x);
-            this.panel1.Controls.Add(this.btn_set_vh_by_axis);
-            this.panel1.Controls.Add(this.label8);
-            this.panel1.Controls.Add(this.label9);
-            this.panel1.Controls.Add(this.label6);
-            this.panel1.Controls.Add(this.label7);
-            this.panel1.Controls.Add(this.cmb_vh_fork_dir);
-            this.panel1.Controls.Add(this.cmb_vh_sensor_dir);
-            this.panel1.Controls.Add(this.label5);
-            this.panel1.Controls.Add(this.label4);
-            this.panel1.Controls.Add(this.cmb_fork_dir);
-            this.panel1.Controls.Add(this.cmb_sensor_dir);
-            this.panel1.Controls.Add(this.btn_reset_reserve_all);
-            this.panel1.Controls.Add(this.label3);
-            this.panel1.Controls.Add(this.cmb_reserve_section);
-            this.panel1.Controls.Add(this.btn_reserve_section);
-            this.panel1.Controls.Add(this.btn_set_vh);
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.cmb_adr_id);
-            this.panel1.Controls.Add(this.cmb_vh_ids);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(1151, 3);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(149, 552);
-            this.panel1.TabIndex = 0;
+            this.pnl_setting.Controls.Add(this.label11);
+            this.pnl_setting.Controls.Add(this.cmb_vh_sec_id);
+            this.pnl_setting.Controls.Add(this.txt_speed);
+            this.pnl_setting.Controls.Add(this.label10);
+            this.pnl_setting.Controls.Add(this.txt_y);
+            this.pnl_setting.Controls.Add(this.txt_x);
+            this.pnl_setting.Controls.Add(this.btn_set_vh_by_axis);
+            this.pnl_setting.Controls.Add(this.label8);
+            this.pnl_setting.Controls.Add(this.label9);
+            this.pnl_setting.Controls.Add(this.label6);
+            this.pnl_setting.Controls.Add(this.label7);
+            this.pnl_setting.Controls.Add(this.cmb_vh_fork_dir);
+            this.pnl_setting.Controls.Add(this.cmb_vh_sensor_dir);
+            this.pnl_setting.Controls.Add(this.label5);
+            this.pnl_setting.Controls.Add(this.label4);
+            this.pnl_setting.Controls.Add(this.cmb_fork_dir);
+            this.pnl_setting.Controls.Add(this.cmb_sensor_dir);
+            this.pnl_setting.Controls.Add(this.btn_reset_reserve_all);
+            this.pnl_setting.Controls.Add(this.label3);
+            this.pnl_setting.Controls.Add(this.cmb_reserve_section);
+            this.pnl_setting.Controls.Add(this.btn_reserve_section);
+            this.pnl_setting.Controls.Add(this.btn_set_vh);
+            this.pnl_setting.Controls.Add(this.label2);
+            this.pnl_setting.Controls.Add(this.label1);
+            this.pnl_setting.Controls.Add(this.cmb_adr_id);
+            this.pnl_setting.Controls.Add(this.cmb_vh_ids);
+            this.pnl_setting.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnl_setting.Location = new System.Drawing.Point(1151, 3);
+            this.pnl_setting.Name = "pnl_setting";
+            this.pnl_setting.Size = new System.Drawing.Size(149, 552);
+            this.pnl_setting.TabIndex = 0;
+            this.pnl_setting.Visible = false;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(9, 98);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(41, 12);
+            this.label11.TabIndex = 27;
+            this.label11.Text = "SEC ID";
+            // 
+            // cmb_vh_sec_id
+            // 
+            this.cmb_vh_sec_id.FormattingEnabled = true;
+            this.cmb_vh_sec_id.Location = new System.Drawing.Point(11, 113);
+            this.cmb_vh_sec_id.Name = "cmb_vh_sec_id";
+            this.cmb_vh_sec_id.Size = new System.Drawing.Size(121, 20);
+            this.cmb_vh_sec_id.TabIndex = 26;
             // 
             // txt_speed
             // 
@@ -328,23 +346,6 @@
             this.elementHost1.Text = "elementHost1";
             this.elementHost1.Child = this.uctlReserveSectionView1;
             // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(9, 98);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(41, 12);
-            this.label11.TabIndex = 27;
-            this.label11.Text = "SEC ID";
-            // 
-            // cmb_vh_sec_id
-            // 
-            this.cmb_vh_sec_id.FormattingEnabled = true;
-            this.cmb_vh_sec_id.Location = new System.Drawing.Point(11, 113);
-            this.cmb_vh_sec_id.Name = "cmb_vh_sec_id";
-            this.cmb_vh_sec_id.Size = new System.Drawing.Size(121, 20);
-            this.cmb_vh_sec_id.TabIndex = 26;
-            // 
             // ReserveSectionInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -355,8 +356,8 @@
             this.Text = "ReserveSectionInfo";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ReserveSectionInfoForm_FormClosed);
             this.tableLayoutPanel1.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.pnl_setting.ResumeLayout(false);
+            this.pnl_setting.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -364,7 +365,7 @@
         #endregion
 
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel pnl_setting;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox cmb_adr_id;

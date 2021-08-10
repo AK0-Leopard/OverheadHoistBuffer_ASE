@@ -1,0 +1,42 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Class="VehicleControl_Viewer.frm_Mainfrom.uctlMapWPFNew"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d" 
+             d:DesignHeight="860" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="1936" Loaded="UserControl_Loaded">
+
+    <Grid Height="860">
+
+        <Grid.RowDefinitions>
+
+            <!--EQ VIEW-->
+            <RowDefinition/>
+
+        </Grid.RowDefinitions>
+        <!--EQ VIEW-->
+        <Grid Background="#1D243C" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2">
+            <Slider
+            x:Name="ImageWidthSlider"
+            DockPanel.Dock="Bottom"
+            Minimum="200"
+            Maximum="10000"
+            Value="500"/>
+            <ScrollViewer x:Name="ScrollVehicleTrack"
+            HorizontalScrollBarVisibility="Auto"
+            VerticalScrollBarVisibility="Auto" Margin="50,50,50,50" >
+                <Viewbox Width="{Binding ElementName=ImageWidthSlider, Path=Value}">
+                    <Canvas  x:Name="VehicleTrack" MouseRightButtonDown="VehicleTrack_MouseRightButtonDown" Margin="500,500,500,500" >
+
+                    </Canvas>
+                </Viewbox>
+            </ScrollViewer>
+        </Grid>
+
+
+
+    </Grid>
+
+</UserControl>

@@ -5343,6 +5343,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 {
                     AVEHICLE vh_vo = scApp.VehicleBLL.cache.getVhByID(vhID);
                     vh_vo.VechileRemove();
+                    scApp.ReserveBLL.RemoveVehicle(vhID);
                 }
                 List<AMCSREPORTQUEUE> reportqueues = new List<AMCSREPORTQUEUE>();
                 is_success = is_success && scApp.ReportBLL.newReportVehicleRemoved(vhID, reportqueues);

@@ -25,7 +25,7 @@ using com.mirle.ibg3k0.bc.winform.Common;
 
 namespace com.mirle.ibg3k0.bc.winform.UI
 {
-    public partial class OHT_FormNew : Form
+    public partial class OHT_FormNew2 : Form
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
         BCMainForm mainform = null;
@@ -39,7 +39,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
 
         List<ALARM> aLARMs = new List<ALARM>();
 
-        public OHT_FormNew(BCMainForm _form)
+        public OHT_FormNew2(BCMainForm _form)
         {
             InitializeComponent();
             mainform = _form;
@@ -262,7 +262,11 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             cmb_Vehicle.AutoCompleteSource = AutoCompleteSource.ListItems;
 
             cbm_Action.DataSource = Enum.GetValues(typeof(E_CMD_TYPE)).Cast<E_CMD_TYPE>()
-                                                  .Where(e => e == E_CMD_TYPE.Move).ToList();
+                                                  .Where(e => e == E_CMD_TYPE.Move ||
+                                                              e == E_CMD_TYPE.Scan ||
+                                                              e == E_CMD_TYPE.Load ||
+                                                              e == E_CMD_TYPE.Unload ||
+                                                              e == E_CMD_TYPE.LoadUnload).ToList();
 
 
             List<string> park_zone_type = scApp.ParkBLL.loadAllParkZoneType();

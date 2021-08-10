@@ -23,6 +23,7 @@ namespace com.mirle.ibg3k0.bc.winform.App
     /// </summary>
     public class BCAppConstants
     {
+        public const string ADMIN_USER_NAME = "ADMIN";
         /****************************** UAS *******************************/
         public const string FUNC_LOGIN = "FUNC_LOGIN";                        //Login
         public const string FUNC_USER_MANAGEMENT = "FUNC_USER_MANAGEMENT";    //User Management

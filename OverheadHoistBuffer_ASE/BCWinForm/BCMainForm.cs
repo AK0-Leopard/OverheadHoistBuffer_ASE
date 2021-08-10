@@ -246,7 +246,8 @@ namespace com.mirle.ibg3k0.bc.winform
                 }
 #if DEBUG
                 //openForm(typeof(OHT_Form).Name);
-                if (SCUtility.isMatche(BCApp.SCApplication.BC_ID, "ASE_LOOP"))
+                if (SCUtility.isMatche(BCApp.SCApplication.BC_ID, "ASE_LOOP")||
+                    SCUtility.isMatche(BCApp.SCApplication.BC_ID, "ASE_LINE3"))
                 {
                     openForm(typeof(OHT_FormNew).Name, true, false);
                 }
@@ -949,7 +950,7 @@ namespace com.mirle.ibg3k0.bc.winform
 
         private void debugToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            openForm(typeof(DebugForm).Name, true, false);
+            openForm(typeof(DebugFormNew).Name, true, false);
         }
 
         private void engineeringModeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1067,6 +1068,10 @@ namespace com.mirle.ibg3k0.bc.winform
             return null;
         }
 
+        private void shelfToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            openForm(typeof(ShelfMaintenanceForm).Name, true, false);
+        }
 
     }
 }

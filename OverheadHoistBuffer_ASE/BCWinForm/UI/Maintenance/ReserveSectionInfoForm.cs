@@ -43,6 +43,10 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             cmb_vh_fork_dir.DataSource = Enum.GetValues(typeof(Mirle.Hlts.Utils.HltDirection)).Cast<Mirle.Hlts.Utils.HltDirection>();
             cmb_vh_sensor_dir.DataSource = Enum.GetValues(typeof(Mirle.Hlts.Utils.HltDirection)).Cast<Mirle.Hlts.Utils.HltDirection>();
             //bcApp.SCApplication.ReserveBLL.ReserveStatusChange += ReserveBLL_ReserveStatusChange;
+            if (sc.Common.SCUtility.isMatche(bcApp.LoginUserID, BCAppConstants.ADMIN_USER_NAME))
+            {
+                pnl_setting.Visible = true;
+            }
         }
 
         private void ReserveBLL_ReserveStatusChange(object sender, EventArgs e)

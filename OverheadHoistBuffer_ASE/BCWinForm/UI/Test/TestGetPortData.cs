@@ -33,7 +33,7 @@ namespace com.mirle.ibg3k0.bc.winform
             transferService = BCApp.SCApplication.TransferService;
             line = BCApp.SCApplication.getEQObjCacheManager().getLine();
             portList = BCApp.SCApplication.PortDefBLL.GetOHB_CVPortData(line.LINE_ID);
-
+            dataGridView1.AutoGenerateColumns = false;
             comboBox1.Items.Clear();
             comboBox2.Items.Clear();
 
@@ -290,6 +290,12 @@ namespace com.mirle.ibg3k0.bc.winform
             {
                 timer1.Enabled = false;
                 this.Close();
+            }
+            if (sc.Common.SCUtility.isMatche(BCApp.LoginUserID, App.BCAppConstants.ADMIN_USER_NAME))
+            {
+                grp_agvSetting.Visible = true;
+                btn_port_inservice.Visible = true;
+                btn_port_outservice.Visible = true;
             }
         }
 
