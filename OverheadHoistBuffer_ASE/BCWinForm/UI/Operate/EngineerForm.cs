@@ -15,8 +15,10 @@ namespace com.mirle.ibg3k0.bc.winform.UI
         public event SegmentSelectedEventHandler evtSegmentSelected;
         public delegate void SectionSelectedEventHandler(string[] sSec_ID, string startAdr, string fromAdr, string toAdr);
         public event SectionSelectedEventHandler evtSectionSelected;
+
         BCMainForm mainForm;
         BCApplication bcApp;
+
         /// <summary>
         /// This Form Show
         /// </summary>
@@ -135,54 +137,11 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             string toAdr = cmb_toAdr.Text;
 
             var test = bcApp.SCApplication.GuideBLL.getGuideInfo(fromAdr, toAdr);
-            var guide_info = bcApp.SCApplication.CMDBLL.FindGuideInfo(startAdr, fromAdr, toAdr, sc.ProtocolFormat.OHTMessage.ActiveType.Loadunload);
-
-            string[] ReutrnStart2From = new string[0];
-            string[] ReutrnFrom2To = bcApp.SCApplication.RouteGuide.DownstreamSearchSection(fromAdr, toAdr, 1);
-            StringBuilder sb = new StringBuilder();
-            if (startAdr != fromAdr)
+            var guide_info = bcApp.SCApplication.GuideBLL.getGuideInfo(fromAdr, toAdr);
+            if (guide_info.isSuccess)
             {
-                ReutrnStart2From = bcApp.SCApplication.RouteGuide.DownstreamSearchSection(startAdr, fromAdr, 1);
-                if (string.IsNullOrEmpty(ReutrnStart2From[0]))
-                    sb.AppendLine("ReutrnStart2From,SegmentClosed");
-                else
-                {
-                    var allRoute = ReutrnStart2From[1].Split(';');
-                    foreach (string route in allRoute)
-                        sb.AppendLine(route);
-                    sb.AppendLine("ReutrnStart2From,<MinRoute>");
-                    sb.AppendLine(ReutrnStart2From[0]);
-                }
+                mainForm.onTestGuideCompleted(guide_info.guideSectionIds);
             }
-
-            if (string.IsNullOrEmpty(ReutrnFrom2To[0]))
-                sb.AppendLine("ReutrnFrom2To,SegmentClosed");
-            else
-            {
-                var allRoute = ReutrnFrom2To[1].Split(';');
-                foreach (string route in allRoute)
-                    sb.AppendLine(route);
-                sb.AppendLine("ReutrnFrom2To,<MinRoute>");
-                sb.AppendLine(ReutrnFrom2To[0]);
-            }
-            txt_Route.Text = sb.ToString();
-            string[] minRoute_Start2From = new string[0];
-            string[] minRouteSeg_Start2From = new string[0];
-            if (ReutrnStart2From.Count() > 0)
-            {
-                minRoute_Start2From = ReutrnStart2From[0].Split('=');
-                minRouteSeg_Start2From = minRoute_Start2From[0].Split(',');
-            }
-
-            var minRoute_From2To = ReutrnFrom2To[0].Split('=');
-            string[] minRouteSeg_From2To = minRoute_From2To[0].Split(',');
-
-            List<string> minRouteSeg = new List<string>();
-            minRouteSeg.AddRange(minRouteSeg_Start2From);
-            minRouteSeg.AddRange(minRouteSeg_From2To);
-
-            //if (!string.IsNullOrWhiteSpace(minRoute_From2To[0]))
-            //    evtSectionSelected(minRouteSeg.ToArray(), startAdr, fromAdr, toAdr);
         }
 
         private void btn_seachSec2Adr_Click(object sender, EventArgs e)

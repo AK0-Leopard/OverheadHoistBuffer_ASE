@@ -273,69 +273,6 @@
   <data name="operatorToolStripMenuItem.Text" xml:space="preserve">
     <value>Operator</value>
   </data>
-  <data name="changePasswordToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>300, 28</value>
-  </data>
-  <data name="changePasswordToolStripMenuItem.Text" xml:space="preserve">
-    <value>Change Password</value>
-  </data>
-  <data name="changePasswordToolStripMenuItem.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="uASToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>300, 28</value>
-  </data>
-  <data name="uASToolStripMenuItem.Text" xml:space="preserve">
-    <value>User Authuority</value>
-  </data>
-  <data name="uASToolStripMenuItem.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>297, 6</value>
-  </data>
-  <data name="transferCommandToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>300, 28</value>
-  </data>
-  <data name="transferCommandToolStripMenuItem.Text" xml:space="preserve">
-    <value>Transfer Command</value>
-  </data>
-  <data name="transferCommandToolStripMenuItem.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="toolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>300, 28</value>
-  </data>
-  <data name="toolStripMenuItem1.Text" xml:space="preserve">
-    <value>Carrier Installed / Remove</value>
-  </data>
-  <data name="toolStripMenuItem1.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="shelfToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>300, 28</value>
-  </data>
-  <data name="shelfToolStripMenuItem1.Text" xml:space="preserve">
-    <value>Shelf</value>
-  </data>
-  <data name="命令卡匣資料ToolStripMenuItem.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft JhengHei UI, 14.25pt</value>
-  </data>
-  <data name="命令卡匣資料ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>300, 28</value>
-  </data>
-  <data name="命令卡匣資料ToolStripMenuItem.Text" xml:space="preserve">
-    <value>命令、卡匣資料</value>
-  </data>
-  <data name="toolStripSeparator3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>297, 6</value>
-  </data>
-  <data name="reserveInfoToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>300, 28</value>
-  </data>
-  <data name="reserveInfoToolStripMenuItem.Text" xml:space="preserve">
-    <value>Reserve Info</value>
-  </data>
   <data name="mataToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>128, 26</value>
   </data>
@@ -372,14 +309,20 @@
   <data name="engineerToolStripMenuItem1.Text" xml:space="preserve">
     <value>Engineer</value>
   </data>
+  <data name="搬送模擬ToolStripMenuItem.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft JhengHei UI, 14.25pt</value>
+  </data>
+  <data name="搬送模擬ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>156, 28</value>
+  </data>
+  <data name="搬送模擬ToolStripMenuItem.Text" xml:space="preserve">
+    <value>搬送模擬</value>
+  </data>
   <data name="testToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>82, 26</value>
   </data>
   <data name="testToolStripMenuItem.Text" xml:space="preserve">
     <value>測試用</value>
-  </data>
-  <data name="testToolStripMenuItem.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
   </data>
   <data name="menuStrip1.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
@@ -528,6 +471,9 @@
   <data name="maintainDeviceToolStripMenuItem.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
+  <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>232, 6</value>
+  </data>
   <data name="port內容值ToolStripMenuItem.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft JhengHei UI, 14.25pt</value>
   </data>
@@ -536,6 +482,69 @@
   </data>
   <data name="port內容值ToolStripMenuItem.Text" xml:space="preserve">
     <value>Port 內容值</value>
+  </data>
+  <data name="changePasswordToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>300, 28</value>
+  </data>
+  <data name="changePasswordToolStripMenuItem.Text" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
+  <data name="changePasswordToolStripMenuItem.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="uASToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>300, 28</value>
+  </data>
+  <data name="uASToolStripMenuItem.Text" xml:space="preserve">
+    <value>User Authuority</value>
+  </data>
+  <data name="uASToolStripMenuItem.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>297, 6</value>
+  </data>
+  <data name="transferCommandToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>300, 28</value>
+  </data>
+  <data name="transferCommandToolStripMenuItem.Text" xml:space="preserve">
+    <value>Transfer Command</value>
+  </data>
+  <data name="transferCommandToolStripMenuItem.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="toolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>300, 28</value>
+  </data>
+  <data name="toolStripMenuItem1.Text" xml:space="preserve">
+    <value>Carrier Installed / Remove</value>
+  </data>
+  <data name="toolStripMenuItem1.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="shelfToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>300, 28</value>
+  </data>
+  <data name="shelfToolStripMenuItem1.Text" xml:space="preserve">
+    <value>Shelf</value>
+  </data>
+  <data name="命令卡匣資料ToolStripMenuItem.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft JhengHei UI, 14.25pt</value>
+  </data>
+  <data name="命令卡匣資料ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>300, 28</value>
+  </data>
+  <data name="命令卡匣資料ToolStripMenuItem.Text" xml:space="preserve">
+    <value>命令、卡匣資料</value>
+  </data>
+  <data name="toolStripSeparator3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>297, 6</value>
+  </data>
+  <data name="reserveInfoToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>300, 28</value>
+  </data>
+  <data name="reserveInfoToolStripMenuItem.Text" xml:space="preserve">
+    <value>Reserve Info</value>
   </data>
   <data name="englishToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>160, 26</value>
@@ -572,21 +581,6 @@
   </data>
   <data name="engineeringModeToolStripMenuItem.Text" xml:space="preserve">
     <value>Engineering mode</value>
-  </data>
-  <data name="engineeringModeToolStripMenuItem.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="搬送模擬ToolStripMenuItem.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft JhengHei UI, 14.25pt</value>
-  </data>
-  <data name="搬送模擬ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>156, 28</value>
-  </data>
-  <data name="搬送模擬ToolStripMenuItem.Text" xml:space="preserve">
-    <value>搬送模擬</value>
-  </data>
-  <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>232, 6</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1367,6 +1361,12 @@
   <data name="&gt;&gt;maintainDeviceToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;toolStripSeparator2.Name" xml:space="preserve">
+    <value>toolStripSeparator2</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;port內容值ToolStripMenuItem.Name" xml:space="preserve">
     <value>port內容值ToolStripMenuItem</value>
   </data>
@@ -1409,12 +1409,6 @@
   <data name="&gt;&gt;toolStripMenuItem1.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;reserveInfoToolStripMenuItem.Name" xml:space="preserve">
-    <value>reserveInfoToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;reserveInfoToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="&gt;&gt;shelfToolStripMenuItem1.Name" xml:space="preserve">
     <value>shelfToolStripMenuItem1</value>
   </data>
@@ -1425,6 +1419,18 @@
     <value>命令卡匣資料ToolStripMenuItem</value>
   </data>
   <data name="&gt;&gt;命令卡匣資料ToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator3.Name" xml:space="preserve">
+    <value>toolStripSeparator3</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;reserveInfoToolStripMenuItem.Name" xml:space="preserve">
+    <value>reserveInfoToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;reserveInfoToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;languageToolStripMenuItem.Name" xml:space="preserve">
@@ -1498,18 +1504,6 @@
   </data>
   <data name="&gt;&gt;搬送模擬ToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator2.Name" xml:space="preserve">
-    <value>toolStripSeparator2</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator3.Name" xml:space="preserve">
-    <value>toolStripSeparator3</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator3.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>BCMainForm</value>

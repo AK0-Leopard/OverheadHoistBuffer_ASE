@@ -183,7 +183,7 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
         {
             string cmdType = string.Concat(source_port, "To", destn_port);
             string cmdID = DateTime.Now.ToString("yyyyMMddHHmmssfffff");
-            scApp.CMDBLL.doCreatMCSCommand(cmdID, "0", "0", carrier_id, source_port, destn_port,"0", "0","0" ,SECSConst.HCACK_Confirm, false);
+            scApp.CMDBLL.doCreatMCSCommand(cmdID, "0", "0", carrier_id, source_port, destn_port, "0", "0", "0", SECSConst.HCACK_Confirm, false);
             scApp.SysExcuteQualityBLL.creatSysExcuteQuality(cmdID, carrier_id, source_port, destn_port);
             SpinWait.SpinUntil(() => false, 10000);
             scApp.CMDBLL.checkMCS_TransferCommand();

@@ -47,6 +47,9 @@ namespace com.mirle.ibg3k0.bc.winform
     /// <seealso cref="System.Windows.Forms.Form" />
     public partial class BCMainForm : Form
     {
+
+        public event EventHandler<List<string>> TestGuideCompleted;
+
         /// <summary>
         /// The MPC tip MSG log
         /// </summary>
@@ -246,10 +249,13 @@ namespace com.mirle.ibg3k0.bc.winform
                 }
 #if DEBUG
                 //openForm(typeof(OHT_Form).Name);
-                if (SCUtility.isMatche(BCApp.SCApplication.BC_ID, "ASE_LOOP")||
-                    SCUtility.isMatche(BCApp.SCApplication.BC_ID, "ASE_LINE3"))
+                if (SCUtility.isMatche(BCApp.SCApplication.BC_ID, "ASE_LOOP"))
                 {
                     openForm(typeof(OHT_FormNew).Name, true, false);
+                }
+                else if(SCUtility.isMatche(BCApp.SCApplication.BC_ID, "ASE_LINE3"))
+                {
+                    openForm(typeof(OHT_FormNew2).Name, true, false);
                 }
                 else
                 {
@@ -1073,5 +1079,9 @@ namespace com.mirle.ibg3k0.bc.winform
             openForm(typeof(ShelfMaintenanceForm).Name, true, false);
         }
 
+        public void onTestGuideCompleted(List<string> guideSectionIDs)
+        {
+            TestGuideCompleted?.Invoke(this, guideSectionIDs);
+        }
     }
 }

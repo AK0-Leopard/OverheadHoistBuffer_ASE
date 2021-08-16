@@ -1740,6 +1740,10 @@ namespace com.mirle.ibg3k0.sc.Service
             var adrObject = scApp.ReserveBLL.GetHltMapAddress(curAdrID);
             if (!adrObject.isExist)
                 return (real_x_axis, real_y_axis);
+            if(real_x_axis == 0 && real_y_axis == 0)
+            {
+                return (adrObject.x, adrObject.y);
+            }
             double distance = getDistance(adrObject.x, adrObject.y, real_x_axis, real_y_axis);
             if (distance > SystemParameter.PassAxisDistance)
                 return (real_x_axis, real_y_axis);

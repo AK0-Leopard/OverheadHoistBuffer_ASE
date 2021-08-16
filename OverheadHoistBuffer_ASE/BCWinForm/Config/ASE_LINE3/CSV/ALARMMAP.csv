@@ -5022,6 +5022,85 @@ AGV,9956,1,[RFID4]
 AGV,9957,1,[RFID4]
 AGV,9958,1,[RFID4]
 AGV,9959,1,[RFID4]
+AGV,284,1,[Port1]continuous 3 box ERROR
+AGV,384,1,[Port2]continuous 3 box ERROR
+AGV,484,1,[Port3]continuous 3 box ERROR
+AGV,584,1,[Port4]continuous 3 box ERROR
+NTB,382,1,[CV1-1]SEND TO NO CST ID
+NTB,383,1,[CV1-1]SEND TO NO Box ID
+NTB,782,1,[CV4-3]SEND TO NO CST ID
+NTB,783,1,[CV4-3]SEND TO NO Box ID
+NTB,784,1,[CV4-3]3 BOX ERROR
+NTB,982,1,[CV2]SEND TO NO CST ID
+NTB,1083,1,[CV3]SEND TO NO Box ID
+NTB,1084,1,[CV3]continuous 3 box ERROR
+NTB,1282,1,[CV5]SEND TO NO CST ID
+NTB,1283,1,[CV5]SEND TO NO Box ID
+NTB,1284,1,[CV5]continuous 3 box ERROR
+OHCV_5,770,2,[CV1]BCR 15min auto 2 times
+OHCV_5,1470,2,[TUCV5]BCR 15min auto 2 times
+OHCV_7,770,2,[CV7]BCR 15min auto 2 times
+OHCV_7,1470,2,[TUCV1]BCR 15min auto 2 times
+CRANE,70001,2,Master PLC network request timed out
+CRANE,89000,2,Double Storage
+CRANE,89001,2,Empty Retrieval
+CRANE,99999,2,OHT is offline
+CRANE,99990,2,OHT rejects command repeatedly
+LINE,100015,2,Currently this device has command but the device has been IDLE time out.
+LINE,100016,2,"Queue Cmd hasn't been processed after recieve a while , TimeOut happened."
+LINE,100017,2,"AGV_has Cmds access but haven't wait in or change type , TimeOut happened."
+LINE,100018,2,AGV Station is unable to accept AGV store CST. Due to dont have enough empty box.
+LINE,100020,2,PORT_DOWN
+LINE,100021,2,BOX_NumberIsNotEnough
+LINE,100023,2,NotEmptyShelf
+LINE,100031,2,Vehicle has Command not complete in time.
+CRANE,100013,1,PORT_BOXID_READ_FAIL
+CRANE,100014,1,PORT_CSTID_READ_FAIL
+CRANE,100022,1,OHT_IDMismatchUNKU
+AGV,100013,1,PORT_BOXID_READ_FAIL
+AGV,100014,1,PORT_CSTID_READ_FAIL
+AGV,100019,2,PORT_CIM_OFF 
+AGV,100020,2,PORT_DOWN
+AGV,100024,2,PORT_OP_WaitOutTimeOut 
+AGV,100025,2,PORT_BP1_WaitOutTimeOut
+AGV,100026,2,PORT_BP2_WaitOutTimeOut
+AGV,100027,2,PORT_BP3_WaitOutTimeOut
+AGV,100028,2,PORT_BP4_WaitOutTimeOut
+AGV,100029,2,PORT_BP5_WaitOutTimeOut
+AGV,100030,2,PORT_LP_WaitOutTimeOut 
+NTB,100013,1,PORT_BOXID_READ_FAIL
+NTB,100014,1,PORT_CSTID_READ_FAIL
+NTB,100019,2,PORT_CIM_OFF 
+NTB,100020,2,PORT_DOWN
+NTB,100024,2,PORT_OP_WaitOutTimeOut 
+NTB,100025,2,PORT_BP1_WaitOutTimeOut
+NTB,100026,2,PORT_BP2_WaitOutTimeOut
+NTB,100027,2,PORT_BP3_WaitOutTimeOut
+NTB,100028,2,PORT_BP4_WaitOutTimeOut
+NTB,100029,2,PORT_BP5_WaitOutTimeOut
+NTB,100030,2,PORT_LP_WaitOutTimeOut 
+OHCV_5,100013,1,PORT_BOXID_READ_FAIL
+OHCV_5,100014,1,PORT_CSTID_READ_FAIL
+OHCV_5,100019,2,PORT_CIM_OFF 
+OHCV_5,100020,2,PORT_DOWN
+OHCV_5,100024,2,PORT_OP_WaitOutTimeOut 
+OHCV_5,100025,2,PORT_BP1_WaitOutTimeOut
+OHCV_5,100026,2,PORT_BP2_WaitOutTimeOut
+OHCV_5,100027,2,PORT_BP3_WaitOutTimeOut
+OHCV_5,100028,2,PORT_BP4_WaitOutTimeOut
+OHCV_5,100029,2,PORT_BP5_WaitOutTimeOut
+OHCV_5,100030,2,PORT_LP_WaitOutTimeOut 
+OHCV_7,100013,1,PORT_BOXID_READ_FAIL
+OHCV_7,100014,1,PORT_CSTID_READ_FAIL
+OHCV_7,100019,2,PORT_CIM_OFF 
+OHCV_7,100020,2,PORT_DOWN
+OHCV_7,100024,2,PORT_OP_WaitOutTimeOut 
+OHCV_7,100025,2,PORT_BP1_WaitOutTimeOut
+OHCV_7,100026,2,PORT_BP2_WaitOutTimeOut
+OHCV_7,100027,2,PORT_BP3_WaitOutTimeOut
+OHCV_7,100028,2,PORT_BP4_WaitOutTimeOut
+OHCV_7,100029,2,PORT_BP5_WaitOutTimeOut
+OHCV_7,100030,2,PORT_LP_WaitOutTimeOut 
 CRANE,111001,2,Fail to initial motor command position
 CRANE,111002,2,Fail to determine the direction of the vehicle
 CRANE,111003,2,Fail to determine the original Section of the vehicle
@@ -5048,6 +5127,7 @@ CRANE,111023,2,Jaws does not ready to be used
 CRANE,111024,2,OHBC reply nothing for event report
 CRANE,111025,2,Fail to get the Sick barcode
 CRANE,111026,2,Fail to get the OHT position
+CRANE,111027,2,Timeout for sending [132] event
 CRANE,111099,2,Exception in the moving process
 CRANE,121001,2,Area sensor parameter does not exist
 CRANE,121002,2,Fail to set the area sensor parameter
@@ -5055,21 +5135,25 @@ CRANE,121003,2,Fail in the back area sensor process
 CRANE,121004,2,Fail to check the front area sensor state
 CRANE,121005,2,Fail in the front area sensor process
 CRANE,121006,2,Fail to check the back area sensor state
-CRANE,121007,2,Area sensor actived
-CRANE,121008,2,Area sensor actived
-CRANE,121009,2,Area sensor actived
-CRANE,121010,2,Area sensor actived
-CRANE,121011,2,Area sensor actived
-CRANE,121012,2,Area sensor actived
-CRANE,121013,2,Area sensor actived
+CRANE,121007,2,Area sensor actived-Fail to stop (Emergency) 
+CRANE,121008,2,Area sensor actived-Fail to stop (Common)
+CRANE,121009,2,Area sensor actived-Timeout for stop
+CRANE,121010,2,Area sensor actived-Fail to reduce the velocity
+CRANE,121011,2,Area sensor actived-Fail to stop the motor (Emergency) 
+CRANE,121012,2,Area sensor actived-Fail to stop the motor (Common)
+CRANE,121013,2,Area sensor actived-Fail to change the motor velocity
 CRANE,121014,2,Fail to set the area sensor IO parameter
 CRANE,121015,2,High Temputre alarm for moving motor
-CRANE,121016,2,High Temputre alarm for moving driver
-CRANE,121017,2,High Temputre alarm for hoisting motor
+CRANE,121016,2,High Temputre alarm for moving regenerative resistor
+CRANE,121017,2,High Temputre alarm for hoisting regenerative resistor
+CRANE,121018,2,Fail to get the Distance sensor parameter
+CRANE,121019,2,Fail to select the deceleration parameter
+CRANE,121020,2,Fail to communication with distance sensor when AreaSensor_Near is ON
+CRANE,121021,2,AreaSensor_Near is ON beyond the Enter distance restriction
 CRANE,122001,1,ByPass BOX_BCR Sensor
 CRANE,122015,1,High Temputre memo for moving motor
-CRANE,122016,1,High Temputre memo for moving driver
-CRANE,122017,1,High Temputre memo for hoisting motor
+CRANE,122016,1,High Temputre memo for moving regenerative resistor
+CRANE,122017,1,High Temputre memo for hoisting regenerative resistor
 CRANE,121099,2,Exception in the area sensor process
 CRANE,131001,2,System emergency stop
 CRANE,131002,2,The motor used for moving was abnormal
@@ -5077,6 +5161,8 @@ CRANE,131003,2,The motor used for jaws lateral moving were abnormal
 CRANE,131004,2,The motor used for jaws hoist moving were abnormal
 CRANE,131005,2,The motor used for jaws grabbing were abnormal
 CRANE,131006,2,OHT Emergency Stop
+CRANE,131007,2,AreaSensor is active but walk on the wrong tack
+CRANE,131008,2,Fail to Read the Distance Sensor
 CRANE,131099,2,Exception in the command handling process
 CRANE,211001,2,High CPU useage for OHT IPC
 CRANE,211002,2,High memory useage for OHT IPC
@@ -5130,81 +5216,3 @@ CRANE,412010,1,InterLockNG Before BUSY turn ON
 CRANE,412011,1,Port error with Passive equipment HO_AVBL signal
 CRANE,412012,1,L_REQ/U_REQ turn ON before VALID turn ON
 CRANE,412014,1,Fail to change the PIO signals
-AGV,0284,1,[Port1]continuous 3 box ERROR
-AGV,0384,1,[Port2]continuous 3 box ERROR
-AGV,0484,1,[Port3]continuous 3 box ERROR
-AGV,0584,1,[Port4]continuous 3 box ERROR
-NTB,0382,1,[CV1-1]SEND TO NO CST ID
-NTB,0383,1,[CV1-1]SEND TO NO Box ID
-NTB,0782,1,[CV4-3]SEND TO NO CST ID
-NTB,0783,1,[CV4-3]SEND TO NO Box ID
-NTB,0784,1,[CV4-3]3 BOX ERROR
-NTB,0982,1,[CV2]SEND TO NO CST ID
-NTB,1083,1,[CV3]SEND TO NO Box ID
-NTB,1084,1,[CV3]continuous 3 box ERROR
-NTB,1282,1,[CV5]SEND TO NO CST ID
-NTB,1283,1,[CV5]SEND TO NO Box ID
-NTB,1284,1,[CV5]continuous 3 box ERROR
-OHCV_5,770,2,[CV1]BCR 15min auto 2 times
-OHCV_5,1470,2,[TUCV5]BCR 15min auto 2 times
-OHCV_7,770,2,[CV7]BCR 15min auto 2 times
-OHCV_7,1470,2,[TUCV1]BCR 15min auto 2 times
-CRANE,70001,2,Master PLC network request timed out
-CRANE,89000,2,Double Storage
-CRANE,89001,2,Empty Retrieval
-CRANE,99999,2,OHT is offline
-CRANE,99990,2,OHT rejects command repeatedly
-LINE,100015,2,Currently this device has command but the device has been IDLE time out.
-LINE,100016,2,"Queue Cmd hasn't been processed after recieve a while , TimeOut happened."
-LINE,100017,2,"AGV_has Cmds access but haven't wait in or change type , TimeOut happened."
-LINE,100018,2,AGV Station is unable to accept AGV store CST. Due to dont have enough empty box.
-LINE,100020,2,PORT_DOWN
-LINE,100021,2,BOX_NumberIsNotEnough
-LINE,100023,2,NotEmptyShelf
-CRANE,100013,1,PORT_BOXID_READ_FAIL
-CRANE,100014,1,PORT_CSTID_READ_FAIL
-CRANE,100022,1,OHT_IDMismatchUNKU
-AGV,100013,1,PORT_BOXID_READ_FAIL
-AGV,100014,1,PORT_CSTID_READ_FAIL
-AGV,100019,2,PORT_CIM_OFF 
-AGV,100020,2,PORT_DOWN
-AGV,100024,2,PORT_OP_WaitOutTimeOut 
-AGV,100025,2,PORT_BP1_WaitOutTimeOut
-AGV,100026,2,PORT_BP2_WaitOutTimeOut
-AGV,100027,2,PORT_BP3_WaitOutTimeOut
-AGV,100028,2,PORT_BP4_WaitOutTimeOut
-AGV,100029,2,PORT_BP5_WaitOutTimeOut
-AGV,100030,2,PORT_LP_WaitOutTimeOut 
-NTB,100013,1,PORT_BOXID_READ_FAIL
-NTB,100014,1,PORT_CSTID_READ_FAIL
-NTB,100019,2,PORT_CIM_OFF 
-NTB,100020,2,PORT_DOWN
-NTB,100024,2,PORT_OP_WaitOutTimeOut 
-NTB,100025,2,PORT_BP1_WaitOutTimeOut
-NTB,100026,2,PORT_BP2_WaitOutTimeOut
-NTB,100027,2,PORT_BP3_WaitOutTimeOut
-NTB,100028,2,PORT_BP4_WaitOutTimeOut
-NTB,100029,2,PORT_BP5_WaitOutTimeOut
-NTB,100030,2,PORT_LP_WaitOutTimeOut 
-OHCV_5,100013,1,PORT_BOXID_READ_FAIL
-OHCV_5,100014,1,PORT_CSTID_READ_FAIL
-OHCV_5,100019,2,PORT_CIM_OFF 
-OHCV_5,100020,2,PORT_DOWN
-OHCV_5,100024,2,PORT_OP_WaitOutTimeOut 
-OHCV_5,100025,2,PORT_BP1_WaitOutTimeOut
-OHCV_5,100026,2,PORT_BP2_WaitOutTimeOut
-OHCV_5,100027,2,PORT_BP3_WaitOutTimeOut
-OHCV_5,100028,2,PORT_BP4_WaitOutTimeOut
-OHCV_5,100029,2,PORT_BP5_WaitOutTimeOut
-OHCV_5,100030,2,PORT_LP_WaitOutTimeOut 
-OHCV_7,100013,1,PORT_BOXID_READ_FAIL
-OHCV_7,100014,1,PORT_CSTID_READ_FAIL
-OHCV_7,100019,2,PORT_CIM_OFF 
-OHCV_7,100020,2,PORT_DOWN
-OHCV_7,100024,2,PORT_OP_WaitOutTimeOut 
-OHCV_7,100025,2,PORT_BP1_WaitOutTimeOut
-OHCV_7,100026,2,PORT_BP2_WaitOutTimeOut
-OHCV_7,100027,2,PORT_BP3_WaitOutTimeOut
-OHCV_7,100028,2,PORT_BP4_WaitOutTimeOut
-OHCV_7,100029,2,PORT_BP5_WaitOutTimeOut
-OHCV_7,100030,2,PORT_LP_WaitOutTimeOut 

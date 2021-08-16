@@ -179,7 +179,7 @@ namespace VehicleControl_Viewer.frm_Mainfrom
                 if (will_pass_section == null || will_pass_section.Count == 0) return;
                 foreach (string sec in will_pass_section)
                 {
-                    var sec_obj = sections.Where(s => s.ID == sec).FirstOrDefault();
+                    var sec_obj = sections.Where(s => com.mirle.ibg3k0.sc.Common.SCUtility.isMatche(s.ID, sec)).FirstOrDefault();
                     guide_rail.AddLineSegment(this, sec, new Point(sec_obj.StartAddress.Point.X * 1, sec_obj.StartAddress.Point.Y),
                                                new Point(sec_obj.EndAddress.Point.X * 1, sec_obj.EndAddress.Point.Y), Brush, will_pass_section.Last() == sec);
                 }

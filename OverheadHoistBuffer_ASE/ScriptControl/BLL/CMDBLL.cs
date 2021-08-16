@@ -3693,7 +3693,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 {
                     count = cmd_ohtcDAO.getExecuteByBoxID(con, boxID);
                 }
-                return count != 0;
+                return count > 0;
             }
             catch (Exception ex)
             {

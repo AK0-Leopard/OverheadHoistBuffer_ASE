@@ -86,6 +86,7 @@ namespace com.mirle.ibg3k0.bc.winform
             this.sectionDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hostConnectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.maintainDeviceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.port內容值ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changePasswordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -93,9 +94,10 @@ namespace com.mirle.ibg3k0.bc.winform
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.transferCommandToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.reserveInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.shelfToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.命令卡匣資料ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.reserveInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.languageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.englishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zh_twToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -108,8 +110,6 @@ namespace com.mirle.ibg3k0.bc.winform
             this.engineeringModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.搬送模擬ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.statusStrip1.SuspendLayout();
             this.CMS_OnLineMode.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -362,6 +362,11 @@ namespace com.mirle.ibg3k0.bc.winform
             resources.ApplyResources(this.maintainDeviceToolStripMenuItem, "maintainDeviceToolStripMenuItem");
             this.maintainDeviceToolStripMenuItem.Click += new System.EventHandler(this.maintainDeviceToolStripMenuItem_Click);
             // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            resources.ApplyResources(this.toolStripSeparator2, "toolStripSeparator2");
+            // 
             // port內容值ToolStripMenuItem
             // 
             resources.ApplyResources(this.port內容值ToolStripMenuItem, "port內容值ToolStripMenuItem");
@@ -412,12 +417,6 @@ namespace com.mirle.ibg3k0.bc.winform
             resources.ApplyResources(this.toolStripMenuItem1, "toolStripMenuItem1");
             this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
-            // reserveInfoToolStripMenuItem
-            // 
-            this.reserveInfoToolStripMenuItem.Name = "reserveInfoToolStripMenuItem";
-            resources.ApplyResources(this.reserveInfoToolStripMenuItem, "reserveInfoToolStripMenuItem");
-            this.reserveInfoToolStripMenuItem.Click += new System.EventHandler(this.reserveInfoToolStripMenuItem_Click);
-            // 
             // shelfToolStripMenuItem1
             // 
             this.shelfToolStripMenuItem1.Name = "shelfToolStripMenuItem1";
@@ -429,6 +428,17 @@ namespace com.mirle.ibg3k0.bc.winform
             resources.ApplyResources(this.命令卡匣資料ToolStripMenuItem, "命令卡匣資料ToolStripMenuItem");
             this.命令卡匣資料ToolStripMenuItem.Name = "命令卡匣資料ToolStripMenuItem";
             this.命令卡匣資料ToolStripMenuItem.Click += new System.EventHandler(this.命令卡匣資料ToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            resources.ApplyResources(this.toolStripSeparator3, "toolStripSeparator3");
+            // 
+            // reserveInfoToolStripMenuItem
+            // 
+            this.reserveInfoToolStripMenuItem.Name = "reserveInfoToolStripMenuItem";
+            resources.ApplyResources(this.reserveInfoToolStripMenuItem, "reserveInfoToolStripMenuItem");
+            this.reserveInfoToolStripMenuItem.Click += new System.EventHandler(this.reserveInfoToolStripMenuItem_Click);
             // 
             // languageToolStripMenuItem
             // 
@@ -508,16 +518,6 @@ namespace com.mirle.ibg3k0.bc.winform
             resources.ApplyResources(this.搬送模擬ToolStripMenuItem, "搬送模擬ToolStripMenuItem");
             this.搬送模擬ToolStripMenuItem.Name = "搬送模擬ToolStripMenuItem";
             this.搬送模擬ToolStripMenuItem.Click += new System.EventHandler(this.搬送模擬ToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            resources.ApplyResources(this.toolStripSeparator2, "toolStripSeparator2");
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            resources.ApplyResources(this.toolStripSeparator3, "toolStripSeparator3");
             // 
             // BCMainForm
             // 

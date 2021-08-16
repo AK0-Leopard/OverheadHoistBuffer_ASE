@@ -58,6 +58,8 @@ namespace com.mirle.ibg3k0.sc.Service
             shelfDefBLL = _app.ShelfDefBLL;
             zoneBLL = _app.ZoneDefBLL;
             var zoneInfo = zoneBLL.loadZoneData();
+            if (zoneInfo == null || zoneInfo.Count == 0)
+                return;
             if (zoneInfo.FirstOrDefault().ZoneName.Contains("LOOP"))
             {
                 emergencyWaterLevel = 0.6;

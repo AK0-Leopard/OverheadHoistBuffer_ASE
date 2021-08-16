@@ -44,7 +44,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             InitializeComponent();
             mainform = _form;
             scApp = mainform.BCApp.SCApplication;
-            uctlMapWPF1.Start(mainform.BCApp);
+            uctlMapWPFNew1.Start(mainform.BCApp);
             //ui_Vehicle1.start("OHT001");
             initialComBox();
             initialDataGreadView();
@@ -159,6 +159,12 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                     }
                     );
             scApp.getNatsManager().Subscriber(SCAppConstants.NATS_SUBJECT_CURRENT_ALARM, SetCurrentAlarm);
+            mainform.TestGuideCompleted += Mainform_TestGuideCompleted;
+        }
+
+        private void Mainform_TestGuideCompleted(object sender, List<string> e)
+        {
+            uctlMapWPFNew1.setTestGideRail(e);
         }
 
         private void SetCurrentAlarm(object sender, EventArgs e)
@@ -938,6 +944,8 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             {
             }
         }
+
+
         string[] preSelectionSec = null;
         private void setSpecifyRail(string[] spacifyPath)
         {

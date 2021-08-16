@@ -33,8 +33,6 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.pnl_Map = new System.Windows.Forms.Panel();
-            this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
-            this.uctlMapWPF1 = new com.mirle.ibg3k0.bc.winform.UI.Components.WPFComponents.uctlMapWPF();
             this.panel1 = new System.Windows.Forms.Panel();
             this.lbl_HoseMode = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
@@ -129,6 +127,8 @@
             this.utilityLog_SECS = new com.mirle.ibg3k0.bc.winform.UI.Components.UtilityLog();
             this.timer_TimedUpdates = new System.Windows.Forms.Timer(this.components);
             this.vehicleObjToShowBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
+            this.uctlMapWPFNew1 = new VehicleControl_Viewer.frm_Mainfrom.uctlMapWPFNew();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -202,17 +202,6 @@
             this.pnl_Map.Name = "pnl_Map";
             this.pnl_Map.Size = new System.Drawing.Size(1559, 912);
             this.pnl_Map.TabIndex = 0;
-            // 
-            // elementHost1
-            // 
-            this.elementHost1.BackColor = System.Drawing.Color.LightGray;
-            this.elementHost1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.elementHost1.Location = new System.Drawing.Point(0, 0);
-            this.elementHost1.Name = "elementHost1";
-            this.elementHost1.Size = new System.Drawing.Size(1559, 912);
-            this.elementHost1.TabIndex = 0;
-            this.elementHost1.Text = "elementHost1";
-            this.elementHost1.Child = this.uctlMapWPF1;
             // 
             // panel1
             // 
@@ -1201,7 +1190,17 @@
             // 
             this.vehicleObjToShowBindingSource.DataSource = typeof(com.mirle.ibg3k0.sc.ObjectRelay.VehicleObjToShow);
             // 
-            // OHT_FormNew
+            // elementHost1
+            // 
+            this.elementHost1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.elementHost1.Location = new System.Drawing.Point(0, 0);
+            this.elementHost1.Name = "elementHost1";
+            this.elementHost1.Size = new System.Drawing.Size(1559, 912);
+            this.elementHost1.TabIndex = 0;
+            this.elementHost1.Text = "elementHost1";
+            this.elementHost1.Child = this.uctlMapWPFNew1;
+            // 
+            // OHT_FormNew2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -1212,7 +1211,7 @@
             this.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MaximizeBox = false;
-            this.Name = "OHT_FormNew";
+            this.Name = "OHT_FormNew2";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OHT_FormNew_FormClosing);
             this.Load += new System.EventHandler(this.OHT_Form_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -1347,6 +1346,6 @@
         private System.Windows.Forms.TextBox txt_boxID;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Integration.ElementHost elementHost1;
-        private Components.WPFComponents.uctlMapWPF uctlMapWPF1;
+        private VehicleControl_Viewer.frm_Mainfrom.uctlMapWPFNew uctlMapWPFNew1;
     }
 }
