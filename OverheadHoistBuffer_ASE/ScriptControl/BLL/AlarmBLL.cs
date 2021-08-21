@@ -359,7 +359,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                     if (cond != null)
                     {
                         cond.ENABLE_FLG = enable_flag;
-                        alarmRptCondDao.insertRptCond(con, cond);
+                        alarmRptCondDao.updateRptCond(con, cond);
                     }
                     else
                     {
@@ -385,6 +385,12 @@ namespace com.mirle.ibg3k0.sc.BLL
             List<AlarmMap> alarmMaps = alarmMapDao.loadAlarmMaps();
             return alarmMaps;
         }
+        public List<AlarmMap> loadAlarmMaps(string eqObject)
+        {
+            List<AlarmMap> alarmMaps = alarmMapDao.loadAlarmMapsByEQRealID(eqObject);
+            return alarmMaps;
+        }
+
 
         public string onMainAlarm(string mAlarmCode, params object[] args)
         {
