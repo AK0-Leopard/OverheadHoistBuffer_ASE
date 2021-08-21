@@ -65,8 +65,13 @@
             this.button17 = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.grp_agvSetting = new System.Windows.Forms.GroupBox();
+            this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.button40 = new System.Windows.Forms.Button();
+            this.button28 = new System.Windows.Forms.Button();
             this.button39 = new System.Windows.Forms.Button();
+            this.button29 = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.button36 = new System.Windows.Forms.Button();
@@ -75,7 +80,6 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
             this.dataGridView4 = new System.Windows.Forms.DataGridView();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.button35 = new System.Windows.Forms.Button();
@@ -84,10 +88,7 @@
             this.button34 = new System.Windows.Forms.Button();
             this.button42 = new System.Windows.Forms.Button();
             this.button32 = new System.Windows.Forms.Button();
-            this.button29 = new System.Windows.Forms.Button();
-            this.button28 = new System.Windows.Forms.Button();
             this.button20 = new System.Windows.Forms.Button();
-            this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.button21 = new System.Windows.Forms.Button();
@@ -104,9 +105,9 @@
             this.button38 = new System.Windows.Forms.Button();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.button41 = new System.Windows.Forms.Button();
-            this.grp_agvSetting = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel1.SuspendLayout();
+            this.grp_agvSetting.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
@@ -114,7 +115,6 @@
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
-            this.grp_agvSetting.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -512,6 +512,32 @@
             this.panel1.Size = new System.Drawing.Size(1362, 426);
             this.panel1.TabIndex = 30;
             // 
+            // grp_agvSetting
+            // 
+            this.grp_agvSetting.Controls.Add(this.comboBox3);
+            this.grp_agvSetting.Controls.Add(this.button40);
+            this.grp_agvSetting.Controls.Add(this.button28);
+            this.grp_agvSetting.Controls.Add(this.button39);
+            this.grp_agvSetting.Controls.Add(this.button29);
+            this.grp_agvSetting.Controls.Add(this.label5);
+            this.grp_agvSetting.Location = new System.Drawing.Point(826, 283);
+            this.grp_agvSetting.Name = "grp_agvSetting";
+            this.grp_agvSetting.Size = new System.Drawing.Size(503, 40);
+            this.grp_agvSetting.TabIndex = 15;
+            this.grp_agvSetting.TabStop = false;
+            this.grp_agvSetting.Text = "AGV Setting";
+            this.grp_agvSetting.Visible = false;
+            // 
+            // comboBox3
+            // 
+            this.comboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox3.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.comboBox3.FormattingEnabled = true;
+            this.comboBox3.Location = new System.Drawing.Point(92, 12);
+            this.comboBox3.Name = "comboBox3";
+            this.comboBox3.Size = new System.Drawing.Size(183, 24);
+            this.comboBox3.TabIndex = 5;
+            // 
             // button40
             // 
             this.button40.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
@@ -523,6 +549,17 @@
             this.button40.UseVisualStyleBackColor = true;
             this.button40.Click += new System.EventHandler(this.UseLast2Port_buttom_Click);
             // 
+            // button28
+            // 
+            this.button28.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.button28.Location = new System.Drawing.Point(281, 11);
+            this.button28.Name = "button28";
+            this.button28.Size = new System.Drawing.Size(30, 27);
+            this.button28.TabIndex = 7;
+            this.button28.Text = "開啟";
+            this.button28.UseVisualStyleBackColor = true;
+            this.button28.Click += new System.EventHandler(this.button28_Click);
+            // 
             // button39
             // 
             this.button39.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
@@ -533,6 +570,27 @@
             this.button39.Text = "前2Port";
             this.button39.UseVisualStyleBackColor = true;
             this.button39.Click += new System.EventHandler(this.UseFirst2Port_buttom_Click);
+            // 
+            // button29
+            // 
+            this.button29.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.button29.Location = new System.Drawing.Point(317, 12);
+            this.button29.Name = "button29";
+            this.button29.Size = new System.Drawing.Size(29, 27);
+            this.button29.TabIndex = 7;
+            this.button29.Text = "關閉";
+            this.button29.UseVisualStyleBackColor = true;
+            this.button29.Click += new System.EventHandler(this.button29_Click);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label5.Location = new System.Drawing.Point(6, 17);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(89, 16);
+            this.label5.TabIndex = 3;
+            this.label5.Text = "AGVZone：";
             // 
             // label10
             // 
@@ -622,16 +680,6 @@
             this.label7.TabIndex = 3;
             this.label7.Text = "強制讓貨先出去:";
             this.label7.Visible = false;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label5.Location = new System.Drawing.Point(6, 17);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(89, 16);
-            this.label5.TabIndex = 3;
-            this.label5.Text = "AGVZone：";
             // 
             // dataGridView4
             // 
@@ -733,28 +781,6 @@
             this.button32.Visible = false;
             this.button32.Click += new System.EventHandler(this.button32_Click);
             // 
-            // button29
-            // 
-            this.button29.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.button29.Location = new System.Drawing.Point(317, 12);
-            this.button29.Name = "button29";
-            this.button29.Size = new System.Drawing.Size(29, 27);
-            this.button29.TabIndex = 7;
-            this.button29.Text = "關閉";
-            this.button29.UseVisualStyleBackColor = true;
-            this.button29.Click += new System.EventHandler(this.button29_Click);
-            // 
-            // button28
-            // 
-            this.button28.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.button28.Location = new System.Drawing.Point(281, 11);
-            this.button28.Name = "button28";
-            this.button28.Size = new System.Drawing.Size(30, 27);
-            this.button28.TabIndex = 7;
-            this.button28.Text = "開啟";
-            this.button28.UseVisualStyleBackColor = true;
-            this.button28.Click += new System.EventHandler(this.button28_Click);
-            // 
             // button20
             // 
             this.button20.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
@@ -765,16 +791,6 @@
             this.button20.Text = "WaitIn";
             this.button20.UseVisualStyleBackColor = true;
             this.button20.Click += new System.EventHandler(this.button20_Click);
-            // 
-            // comboBox3
-            // 
-            this.comboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox3.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Location = new System.Drawing.Point(92, 12);
-            this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(183, 24);
-            this.comboBox3.TabIndex = 5;
             // 
             // groupBox1
             // 
@@ -905,7 +921,7 @@
             this.dataGridView5.Name = "dataGridView5";
             this.dataGridView5.ReadOnly = true;
             this.dataGridView5.RowTemplate.Height = 24;
-            this.dataGridView5.Size = new System.Drawing.Size(800, 119);
+            this.dataGridView5.Size = new System.Drawing.Size(788, 119);
             this.dataGridView5.TabIndex = 35;
             this.dataGridView5.Visible = false;
             // 
@@ -965,22 +981,6 @@
             this.button41.Visible = false;
             this.button41.Click += new System.EventHandler(this.button41_Click);
             // 
-            // grp_agvSetting
-            // 
-            this.grp_agvSetting.Controls.Add(this.comboBox3);
-            this.grp_agvSetting.Controls.Add(this.button40);
-            this.grp_agvSetting.Controls.Add(this.button28);
-            this.grp_agvSetting.Controls.Add(this.button39);
-            this.grp_agvSetting.Controls.Add(this.button29);
-            this.grp_agvSetting.Controls.Add(this.label5);
-            this.grp_agvSetting.Location = new System.Drawing.Point(826, 283);
-            this.grp_agvSetting.Name = "grp_agvSetting";
-            this.grp_agvSetting.Size = new System.Drawing.Size(503, 40);
-            this.grp_agvSetting.TabIndex = 15;
-            this.grp_agvSetting.TabStop = false;
-            this.grp_agvSetting.Text = "AGV Setting";
-            this.grp_agvSetting.Visible = false;
-            // 
             // TestGetPortData
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1023,6 +1023,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.grp_agvSetting.ResumeLayout(false);
+            this.grp_agvSetting.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
@@ -1030,8 +1032,6 @@
             this.groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
-            this.grp_agvSetting.ResumeLayout(false);
-            this.grp_agvSetting.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
