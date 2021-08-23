@@ -69,6 +69,17 @@ namespace com.mirle.ibg3k0.sc.Common
             Segments = scApp.MapBLL.loadAllSegments();
             Sections = scApp.MapBLL.loadAllSection();
             ReserveEnhanceInfos = scApp.ReserveEnhanceInfoDao.loadReserveInfos(scApp);
+            foreach(var re in ReserveEnhanceInfos)
+            {
+                foreach(var sec in re.EnhanceControlSections)
+                {
+                    var s = Sections.Where(section => SCUtility.isMatche(section.SEC_ID, sec)).FirstOrDefault();
+                    if(s== null)
+                    {
+
+                    }
+                }
+            }
             foreach (ASEGMENT segment in Segments)
             {
                 segment.SetSectionList(scApp.SectionBLL);
