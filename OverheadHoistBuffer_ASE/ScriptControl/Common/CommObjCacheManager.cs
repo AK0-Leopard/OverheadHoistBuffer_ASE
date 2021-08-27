@@ -42,6 +42,7 @@ namespace com.mirle.ibg3k0.sc.Common
         private List<ASEGMENT> Segments;
         private List<PortDef> PortDefs;
         private List<ReserveEnhanceInfo> ReserveEnhanceInfos;
+        private List<ALARMRPTCOND> AlarmReportCond;
         private CommonInfo CommonInfo;
 
         private CommObjCacheManager() { }
@@ -69,7 +70,8 @@ namespace com.mirle.ibg3k0.sc.Common
             Segments = scApp.MapBLL.loadAllSegments();
             Sections = scApp.MapBLL.loadAllSection();
             ReserveEnhanceInfos = scApp.ReserveEnhanceInfoDao.loadReserveInfos(scApp);
-            foreach(var re in ReserveEnhanceInfos)
+            AlarmReportCond = scApp.AlarmBLL.loadAllAlarmRptCond();
+            foreach (var re in ReserveEnhanceInfos)
             {
                 foreach(var sec in re.EnhanceControlSections)
                 {
@@ -140,6 +142,10 @@ namespace com.mirle.ibg3k0.sc.Common
         {
             return ReserveEnhanceInfos;
         }
+        public List<ALARMRPTCOND> getAlarmReportConds()
+        {
+            return AlarmReportCond;
+        }
 
         #endregion
 
@@ -156,6 +162,11 @@ namespace com.mirle.ibg3k0.sc.Common
 
         #region 從DB取得最新EQ Object，並更新Cache
         //NotImplemented
+        public void RefreshAlarmReportCond()
+        {
+            AlarmReportCond = scApp.AlarmBLL.loadAllAlarmRptCond();
+        }
+
         #endregion
 
 

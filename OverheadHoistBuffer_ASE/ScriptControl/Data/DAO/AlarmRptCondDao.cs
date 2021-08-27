@@ -99,16 +99,36 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
         /// <param name="eqpt_id">The eqpt_id.</param>
         /// <param name="alarm_code">The alarm_code.</param>
         /// <returns>AlarmRptCond.</returns>
-        public ALARMRPTCOND getRptCond(DBConnection_EF conn, string alarm_code)
+        public ALARMRPTCOND getRptCond(DBConnection_EF conn, string eqID, string alarm_code)
         {
 
             ALARMRPTCOND cond = null;
             try
             {
                 var query = from rptCond in conn.ALARMRPTCOND
-                            where rptCond.ALAM_CODE == alarm_code.Trim()
+                            where rptCond.ALAM_CODE == alarm_code.Trim() &&
+                                  rptCond.EQPT_ID == eqID.Trim()
                             select rptCond;
                 cond = query.SingleOrDefault();
+
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex);
+                throw;
+            }
+            return cond;
+        }
+
+        public List<ALARMRPTCOND> loadAllRptCond(DBConnection_EF conn)
+        {
+
+            List<ALARMRPTCOND> cond = null;
+            try
+            {
+                var query = from rptCond in conn.ALARMRPTCOND
+                            select rptCond;
+                cond = query.ToList();
 
             }
             catch (Exception ex)

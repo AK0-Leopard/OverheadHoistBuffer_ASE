@@ -30,9 +30,19 @@ namespace com.mirle.ibg3k0.bc.winform.UI
         private async void cb_eqType_SelectedIndexChanged(object sender, EventArgs e)
         {
             string selected_eq_id = cb_eqType.Text;
+            await refreshAlarmMap(selected_eq_id, "");
+        }
+
+        private async Task refreshAlarmMap(string selected_eq_id, string errorCode)
+        {
             List<sc.Data.VO.AlarmMap> alarmMaps = null;
             await Task.Run(() => alarmMaps = MainForm.BCApp.SCApplication.AlarmBLL.loadAlarmMaps(selected_eq_id));
-            dgv_alarmList.DataSource = alarmMaps;
+            var alarm_map_to_show = alarmMaps.Select(a => new sc.Data.VO.AlarmMapToShow(MainForm.BCApp.SCApplication.AlarmBLL, a)).ToList();
+            if (!sc.Common.SCUtility.isEmpty(errorCode))
+            {
+                alarm_map_to_show = alarm_map_to_show.Where(a => sc.Common.SCUtility.isMatche(a.ALARM_ID, errorCode)).ToList();
+            }
+            dgv_alarmList.DataSource = alarm_map_to_show;
         }
 
         private void AlarmEnableForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -41,20 +51,35 @@ namespace com.mirle.ibg3k0.bc.winform.UI
         }
 
         const int IS_REPORT_CHECK_BOX_COLUMN_INDEX = 4;
-        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        const int EQ_ID_COLUMN_INDEX = 0;
+        const int ALARM_CODE_COLUMN_INDEX = 1;
+        private async void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == 4)
+            if (e.ColumnIndex == IS_REPORT_CHECK_BOX_COLUMN_INDEX)
             {
                 var dgv = sender as DataGridView;
                 if (dgv == null) return;
                 var check_box_column_valus = (bool)dgv[e.ColumnIndex, e.RowIndex].Value;
-                if (check_box_column_valus)
+                string eq_id = dgv[EQ_ID_COLUMN_INDEX, e.RowIndex].Value as string;
+                string alarm_code = dgv[ALARM_CODE_COLUMN_INDEX, e.RowIndex].Value as string;
+                if (!check_box_column_valus)
                 {
                     DialogResult confirmResult = MessageBox.Show(this, $"Do you want to enable this alarm to report?",
                         App.BCApplication.getMessageString("CONFIRM"), MessageBoxButtons.YesNo);
                     if (confirmResult == DialogResult.Yes)
                     {
-
+                        bool is_success = false;
+                        await Task.Run(() => is_success = MainForm.BCApp.SCApplication.AlarmBLL.enableAlarmReport(eq_id, alarm_code, true));
+                        if (is_success)
+                        {
+                            MessageBox.Show(this, $"Enable success.",
+                                            "Alarm Enable", MessageBoxButtons.OK);
+                        }
+                        else
+                        {
+                            MessageBox.Show(this, $"Enable fail.",
+                                            "Alarm Enable", MessageBoxButtons.OK);
+                        }
                     }
                 }
                 else
@@ -63,10 +88,22 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                         App.BCApplication.getMessageString("CONFIRM"), MessageBoxButtons.YesNo);
                     if (confirmResult == DialogResult.Yes)
                     {
-
+                        bool is_success = false;
+                        await Task.Run(() => is_success = MainForm.BCApp.SCApplication.AlarmBLL.enableAlarmReport(eq_id, alarm_code, false));
+                        if (is_success)
+                        {
+                            MessageBox.Show(this, $"Disable success.",
+                                            "Alarm Disable", MessageBoxButtons.OK);
+                        }
+                        else
+                        {
+                            MessageBox.Show(this, $"Disable fail.",
+                                            "Alarm Disable", MessageBoxButtons.OK);
+                        }
                     }
                 }
             }
         }
+
     }
 }

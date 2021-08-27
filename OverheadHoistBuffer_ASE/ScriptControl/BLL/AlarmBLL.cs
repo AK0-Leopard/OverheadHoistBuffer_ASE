@@ -111,7 +111,45 @@ namespace com.mirle.ibg3k0.sc.BLL
         }
         #endregion Alarm Map
 
+        public string getAlarmDeviceType(string eq_id)
+        {
+            string alarmUnitType = "LINE";
 
+            if (scApp.TransferService.isUnitType(eq_id, Service.UnitType.AGV))
+            {
+                alarmUnitType = "AGV";
+            }
+            else if (scApp.TransferService.isUnitType(eq_id, Service.UnitType.CRANE))
+            {
+                alarmUnitType = "CRANE";
+            }
+            else if (scApp.TransferService.isUnitType(eq_id, Service.UnitType.NTB))
+            {
+                alarmUnitType = "NTB";
+            }
+            else if (scApp.TransferService.isUnitType(eq_id, Service.UnitType.OHCV)
+                  || scApp.TransferService.isUnitType(eq_id, Service.UnitType.STK)
+               )
+            {
+                int stage = scApp.TransferService.portINIData[eq_id].Stage;
+
+                if (stage == 7)
+                {
+                    alarmUnitType = "OHCV_7";
+                }
+                else
+                {
+                    alarmUnitType = "OHCV_5";
+                }
+            }
+            else if (scApp.TransferService.isUnitType(eq_id, Service.UnitType.AGVZONE))
+            {
+                //B7_OHBLINE1_ST01
+                alarmUnitType = "LINE";
+                //eq_id = eq_id.Remove(0, 12);
+            }
+            return alarmUnitType;
+        }
 
         object lock_obj_alarm = new object();
         public ALARM setAlarmReport(string node_id, string eq_id, string error_code, ACMD_MCS mcsCmdData)
@@ -145,7 +183,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 {
                     int stage = scApp.TransferService.portINIData[eq_id].Stage;
 
-                    if(stage == 7)
+                    if (stage == 7)
                     {
                         alarmUnitType = "OHCV_7";
                     }
@@ -163,7 +201,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
                 AlarmMap alarmMap = alarmMapDao.getAlarmMap(alarmUnitType, error_code);
 
-                if(alarmMap == null)
+                if (alarmMap == null)
                 {
                     scApp.TransferService.TransferServiceLogger.Info
                     (
@@ -174,8 +212,9 @@ namespace com.mirle.ibg3k0.sc.BLL
                     );
                 }
 
+
                 string strNow = BCFUtility.formatDateTime(DateTime.Now, SCAppConstants.TimestampFormat_19);
-                
+
                 ALARM alarm = new ALARM()
                 {
                     EQPT_ID = eq_id,
@@ -345,7 +384,7 @@ namespace com.mirle.ibg3k0.sc.BLL
             return true;
         }
 
-        public bool enableAlarmReport(string alarm_id, Boolean isEnable)
+        public bool enableAlarmReport(string eqID, string alarm_id, Boolean isEnable)
         {
             bool isSuccess = true;
             try
@@ -355,7 +394,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
                     ALARMRPTCOND cond = null;
-                    cond = alarmRptCondDao.getRptCond(con, alarm_id);
+                    cond = alarmRptCondDao.getRptCond(con, eqID, alarm_id);
                     if (cond != null)
                     {
                         cond.ENABLE_FLG = enable_flag;
@@ -365,20 +404,57 @@ namespace com.mirle.ibg3k0.sc.BLL
                     {
                         cond = new ALARMRPTCOND()
                         {
+                            EQPT_ID = eqID,
                             ALAM_CODE = alarm_id,
                             ENABLE_FLG = enable_flag
                         };
                         alarmRptCondDao.insertRptCond(con, cond);
                     }
                 }
+                scApp.getCommObjCacheManager().RefreshAlarmReportCond();
             }
             catch (Exception ex)
             {
-                isSuccess = true;
+                isSuccess = false;
                 logger.Error(ex, "Exception");
             }
             return isSuccess;
         }
+
+        public List<ALARMRPTCOND> loadAllAlarmRptCond()
+        {
+            List<ALARMRPTCOND> alarm_rpt_conds = null;
+            using (DBConnection_EF con = DBConnection_EF.GetUContext())
+            {
+                alarm_rpt_conds = alarmRptCondDao.loadAllRptCond(con);
+            }
+            return alarm_rpt_conds;
+        }
+
+        public bool isReportAlarmReport2MCS(string eqID, string alarmID, bool isDeviceTpye = false)
+        {
+            try
+            {
+                string device_type = eqID;
+                if (!isDeviceTpye)
+                    device_type = getAlarmDeviceType(eqID);
+                var alarm_report_conds = scApp.getCommObjCacheManager().getAlarmReportConds();
+                if (alarm_report_conds == null) return true;
+                var alarm_report_cond = alarm_report_conds.Where(cond => SCUtility.isMatche(cond.EQPT_ID, device_type) &&
+                                                                        SCUtility.isMatche(cond.ALAM_CODE, alarmID))
+                                                          .FirstOrDefault();
+                if (alarm_report_cond == null) return true;
+                return SCUtility.isMatche(alarm_report_cond.ENABLE_FLG, SCAppConstants.YES_FLAG);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception:");
+                return false;
+            }
+        }
+
+
+
 
         public List<AlarmMap> loadAlarmMaps()
         {
@@ -436,10 +512,11 @@ namespace com.mirle.ibg3k0.sc.BLL
                     ALINE line = scApp.getEQObjCacheManager().getLine();
                     List<ALARM> alarmLst = alarmDao.loadSetAlarm(con);
 
-                    if(alarmLst != null && alarmLst.Count > 0)
+                    if (alarmLst != null && alarmLst.Count > 0)
                     {
                         line.IsAlarmHappened = true;
-                    }else
+                    }
+                    else
                     {
                         line.IsAlarmHappened = false;
                     }
@@ -501,10 +578,10 @@ namespace com.mirle.ibg3k0.sc.BLL
                         .Where(data => data.ALAM_CODE == alarmId)
                         .FirstOrDefault();
 
-                    if(quary != null)
+                    if (quary != null)
                     {
                         alarmDao.DeleteAlarmByAlarmID(con, quary);
-                    }                    
+                    }
                 }
             }
             catch

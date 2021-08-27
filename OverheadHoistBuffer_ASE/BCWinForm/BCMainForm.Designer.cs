@@ -110,6 +110,7 @@ namespace com.mirle.ibg3k0.bc.winform
             this.engineeringModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.搬送模擬ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.alarmEnableDisableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.CMS_OnLineMode.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -384,7 +385,8 @@ namespace com.mirle.ibg3k0.bc.winform
             this.shelfToolStripMenuItem1,
             this.命令卡匣資料ToolStripMenuItem,
             this.toolStripSeparator3,
-            this.reserveInfoToolStripMenuItem});
+            this.reserveInfoToolStripMenuItem,
+            this.alarmEnableDisableToolStripMenuItem});
             this.mataToolStripMenuItem.Name = "mataToolStripMenuItem";
             resources.ApplyResources(this.mataToolStripMenuItem, "mataToolStripMenuItem");
             // 
@@ -518,6 +520,12 @@ namespace com.mirle.ibg3k0.bc.winform
             resources.ApplyResources(this.搬送模擬ToolStripMenuItem, "搬送模擬ToolStripMenuItem");
             this.搬送模擬ToolStripMenuItem.Name = "搬送模擬ToolStripMenuItem";
             this.搬送模擬ToolStripMenuItem.Click += new System.EventHandler(this.搬送模擬ToolStripMenuItem_Click);
+            // 
+            // alarmEnableDisableToolStripMenuItem
+            // 
+            this.alarmEnableDisableToolStripMenuItem.Name = "alarmEnableDisableToolStripMenuItem";
+            resources.ApplyResources(this.alarmEnableDisableToolStripMenuItem, "alarmEnableDisableToolStripMenuItem");
+            this.alarmEnableDisableToolStripMenuItem.Click += new System.EventHandler(this.alarmEnableDisableToolStripMenuItem_Click);
             // 
             // BCMainForm
             // 
@@ -677,6 +685,7 @@ namespace com.mirle.ibg3k0.bc.winform
         private System.Windows.Forms.ToolStripMenuItem 命令卡匣資料ToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripMenuItem alarmEnableDisableToolStripMenuItem;
     }
 
     /// <summary>

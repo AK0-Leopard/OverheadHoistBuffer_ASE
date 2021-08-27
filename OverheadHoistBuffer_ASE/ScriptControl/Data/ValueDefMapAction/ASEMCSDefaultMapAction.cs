@@ -1650,6 +1650,13 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
         {
             //var alarms = scApp.AlarmBLL.getCurrentAlarms();
             List<ALARM> alarms = scApp.AlarmBLL.loadSetAlarmListByError();
+            foreach (var alarm in alarms.ToList())
+            {
+                if (!scApp.AlarmBLL.isReportAlarmReport2MCS(alarm.EQPT_ID, alarm.ALAM_CODE))
+                {
+                    alarms.Remove(alarm);
+                }
+            }
             S6F11.RPTINFO.RPTITEM.ENHANCEDALID[] alarm_enhanced_alids = new S6F11.RPTINFO.RPTITEM.ENHANCEDALID[alarms.Count];
             for (int i = 0; i < alarms.Count; i++)
             {

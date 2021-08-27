@@ -1083,5 +1083,10 @@ namespace com.mirle.ibg3k0.bc.winform
         {
             TestGuideCompleted?.Invoke(this, guideSectionIDs);
         }
+
+        private void alarmEnableDisableToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openForm(typeof(AlarmEnableForm).Name, true, false);
+        }
     }
 }
