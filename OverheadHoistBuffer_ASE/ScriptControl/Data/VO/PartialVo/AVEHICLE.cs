@@ -74,6 +74,7 @@ namespace com.mirle.ibg3k0.sc
         public event EventHandler LongTimeNoCommuncation;
         public event EventHandler<string> LongTimeInaction;
         public event EventHandler<VhStopSingle> ErrorStatusChange;
+        public event EventHandler<VhStopSingle> ReserveStatusChange;
 
 
         VehicleTimerAction vehicleTimer = null;
@@ -102,6 +103,10 @@ namespace com.mirle.ibg3k0.sc
         public void onErrorStatusChange(VhStopSingle vhStopSingle)
         {
             ErrorStatusChange?.Invoke(this, vhStopSingle);
+        }
+        public void onReserveStatusChange(VhStopSingle vhStopSingle)
+        {
+            ReserveStatusChange?.Invoke(this, vhStopSingle);
         }
 
 

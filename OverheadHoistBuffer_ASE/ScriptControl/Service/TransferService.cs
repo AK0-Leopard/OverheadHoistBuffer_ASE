@@ -1388,10 +1388,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         {
                             TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|TransferCommandHandler 目的 Zone: " + mcsCmd.HOSTDESTINATION + " 沒有位置");
 
-                            cmdBLL.updateCMD_MCS_TranStatus(mcsCmd.CMD_ID, E_TRAN_STATUS.TransferCompleted);
-
-                            reportBLL.ReportTransferInitiated(mcsCmd.CMD_ID.Trim());
-                            reportBLL.ReportTransferCompleted(mcsCmd, null, ResultCode.ZoneIsfull);
+                            MCSCommandFinishByShelfNotEnough(mcsCmd);
                             break;
                         }
                         else
@@ -1404,6 +1401,12 @@ namespace com.mirle.ibg3k0.sc.Service
                             {
                                 TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|TransferCommandHandler: 目的 Zone: " + mcsCmd.HOSTDESTINATION + " 找到 " + shelfID);
                                 mcsCmd.HOSTDESTINATION = shelfID;
+                            }
+                            else
+                            {
+                                TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|TransferCommandHandler: 目的 Zone: " + mcsCmd.HOSTDESTINATION + " 找不到可用儲位。");
+                                MCSCommandFinishByShelfNotEnough(mcsCmd);
+                                break;
                             }
                         }
 
@@ -1572,6 +1575,13 @@ namespace com.mirle.ibg3k0.sc.Service
             }
 
             return TransferIng;
+        }
+
+        private void MCSCommandFinishByShelfNotEnough(ACMD_MCS mcsCmd)
+        {
+            cmdBLL.updateCMD_MCS_TranStatus(mcsCmd.CMD_ID, E_TRAN_STATUS.TransferCompleted);
+            reportBLL.ReportTransferInitiated(mcsCmd.CMD_ID.Trim());
+            reportBLL.ReportTransferCompleted(mcsCmd, null, ResultCode.ZoneIsfull);
         }
 
         private bool checkAndProcessIsAgvPortToStation(ACMD_MCS mcsCmd)
@@ -8970,7 +8980,6 @@ namespace com.mirle.ibg3k0.sc.Service
             SpinWait.SpinUntil(() => false, 200);
             Task.Run(() =>
             {
-
                 CyclingCheckReplenishment(AGVPortDatas);
             });
             return isSuccess;

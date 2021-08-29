@@ -34,6 +34,7 @@ using com.mirle.ibg3k0.sc.Data.VO;
 using com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage;
 using Google.Protobuf.Collections;
 using KingAOP;
+using Mirle.Hlts.Utils;
 using Newtonsoft.Json.Linq;
 using NLog;
 using System;
@@ -108,10 +109,31 @@ namespace com.mirle.ibg3k0.sc.Service
                 vh.LongTimeNoCommuncation += Vh_LongTimeNoCommuncation;
                 vh.LongTimeInaction += Vh_LongTimeInaction;
                 vh.ErrorStatusChange += (s1, e1) => Vh_ErrorStatusChange(s1, e1);
+                vh.ReserveStatusChange += Vh_ReserveStatusChange;
                 vh.TimerActionStart();
             }
 
             transferService = app.TransferService;
+        }
+
+        private void Vh_ReserveStatusChange(object sender, VhStopSingle e)
+        {
+            try
+            {
+                if (e == VhStopSingle.StopSingleOn)
+                {
+                    var vh = sender as AVEHICLE;
+                    scApp.ReserveBLL.RemoveAllReservedSectionsByVehicleID(vh.VEHICLE_ID);
+                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                       Data: $"remove vh:{vh.VEHICLE_ID} all reserve section, when reserve stop is on",
+                       VehicleID: vh.VEHICLE_ID,
+                       CarrierID: vh.CST_ID);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception:");
+            }
         }
 
         private void Vh_ErrorStatusChange(object sender, VhStopSingle vhStopSingle)
@@ -755,7 +777,8 @@ namespace com.mirle.ibg3k0.sc.Service
                     VhPowerStatus powerStat = receive_gpp.PowerStatus;
                     string cstID = receive_gpp.CSTID;
                     VhStopSingle obstacleStat = receive_gpp.ObstacleStatus;
-                    VhStopSingle blockingStat = receive_gpp.BlockingStatus;
+                    //VhStopSingle blockingStat = receive_gpp.BlockingStatus;
+                    VhStopSingle blockingStat = receive_gpp.ReserveStatus;
                     VhStopSingle pauseStat = receive_gpp.PauseStatus;
                     VhStopSingle hidStat = receive_gpp.HIDStatus;
                     VhStopSingle errorStat = receive_gpp.ErrorStatus;
@@ -771,6 +794,10 @@ namespace com.mirle.ibg3k0.sc.Service
                     if (errorStat != vh.ERROR)
                     {
                         vh.onErrorStatusChange(errorStat);
+                    }
+                    if (blockingStat != vh.BlockingStatus)
+                    {
+                        vh.onReserveStatusChange(errorStat);
                     }
 
                     int obstacleDIST = receive_gpp.ObstDistance;
@@ -1740,7 +1767,7 @@ namespace com.mirle.ibg3k0.sc.Service
             var adrObject = scApp.ReserveBLL.GetHltMapAddress(curAdrID);
             if (!adrObject.isExist)
                 return (real_x_axis, real_y_axis);
-            if(real_x_axis == 0 && real_y_axis == 0)
+            if (real_x_axis == 0 && real_y_axis == 0)
             {
                 return (adrObject.x, adrObject.y);
             }
@@ -2635,55 +2662,60 @@ namespace com.mirle.ibg3k0.sc.Service
                     //    result = new Mirle.Hlts.Utils.HltResult(true, "");
                     //}
                     //else
+                    if (scApp.SectionBLL.cache.IsNeedReserveChcek(reserve_section_id))
                     {
-                        if (scApp.SectionBLL.cache.IsNeedReserveChcek(reserve_section_id))
+                        Mirle.Hlts.Utils.HltDirection hltDirection = Mirle.Hlts.Utils.HltDirection.Forward;
+                        LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                           Data: $"vh:{vhID} Try add reserve section:{reserve_section_id} ,hlt dir:{hltDirection}...",
+                           VehicleID: vhID);
+
+                        //result = MultiCheckReserve(vhID, reserve_section_id);
+                        //if (result.OK)
+                        //{
+                        result = scApp.ReserveBLL.TryAddReservedSection(vhID, reserve_section_id,
+                                                                            sensorDir: hltDirection,
+                                                                            isAsk: isAsk);
+                        LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                           Data: $"vh:{vhID} Try add reserve section:{reserve_section_id},result:{result.ToString()}",
+                           VehicleID: vhID);
+                        LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                           Data: $"current reserve section:{scApp.ReserveBLL.GetCurrentReserveSection()}",
+                           VehicleID: vhID);
+
+                        //如果預約不到的時候，確認目前要的Section是否為CurrentAdr的上一段Section
+                        //是的話就代表已經走過了，就給他直接通過
+                        if (!result.OK)
                         {
-                            Mirle.Hlts.Utils.HltDirection hltDirection = Mirle.Hlts.Utils.HltDirection.Forward;
-                            LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
-                               Data: $"vh:{vhID} Try add reserve section:{reserve_section_id} ,hlt dir:{hltDirection}...",
-                               VehicleID: vhID);
-                            result = scApp.ReserveBLL.TryAddReservedSection(vhID, reserve_section_id,
-                                                                                sensorDir: hltDirection,
-                                                                                isAsk: isAsk);
-
-                            LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
-                               Data: $"vh:{vhID} Try add reserve section:{reserve_section_id},result:{result.ToString()}",
-                               VehicleID: vhID);
-                            LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
-                               Data: $"current reserve section:{scApp.ReserveBLL.GetCurrentReserveSection()}",
-                               VehicleID: vhID);
-                            //如果預約不到的時候，確認目前要的Section是否為CurrentAdr的上一段Section
-                            //式的話就代表已經走過了，就給他直接通過
-                            if (!result.OK)
+                            string current_adr = vh.CUR_ADR_ID;
+                            var last_sections = scApp.SectionBLL.cache.GetSectionsByToAddress(current_adr);
+                            if (last_sections.Count > 0)
                             {
-                                string current_adr = vh.CUR_ADR_ID;
-                                var last_sections = scApp.SectionBLL.cache.GetSectionsByToAddress(current_adr);
-                                if (last_sections.Count > 0)
+                                ASECTION last_sec = last_sections[0];
+                                if (SCUtility.isMatche(reserve_section_id, last_sec.SEC_ID))
                                 {
-                                    ASECTION last_sec = last_sections[0];
-                                    if (SCUtility.isMatche(reserve_section_id, last_sec.SEC_ID))
-                                    {
-                                        result.OK = true;
-                                        LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
-                                           Data: $"Froce pass reserve section:{reserve_section_id},becuse it is last section of adr:{current_adr}",
-                                           VehicleID: vhID);
+                                    result.OK = true;
+                                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                                       Data: $"Froce pass reserve section:{reserve_section_id},becuse it is last section of adr:{current_adr}",
+                                       VehicleID: vhID);
 
-                                    }
                                 }
                             }
                         }
-                        else
-                        {
-                            Mirle.Hlts.Utils.HltDirection hltDirection = Mirle.Hlts.Utils.HltDirection.Forward;
-                            LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
-                               Data: $"vh:{vhID} Try add(Only ask) reserve section:{reserve_section_id} ,hlt dir:{hltDirection}...",
-                               VehicleID: vhID);
-                            result = scApp.ReserveBLL.TryAddReservedSection(vhID, reserve_section_id,
-                                                                                sensorDir: hltDirection,
-                                                                                isAsk: true);
-                            //result = new Mirle.Hlts.Utils.HltResult(true, "");
-                        }
+                        //}
                     }
+                    else
+                    {
+                        Mirle.Hlts.Utils.HltDirection hltDirection = Mirle.Hlts.Utils.HltDirection.Forward;
+                        LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                           Data: $"vh:{vhID} Try add(Only ask) reserve section:{reserve_section_id} ,hlt dir:{hltDirection}...",
+                           VehicleID: vhID);
+                        result = scApp.ReserveBLL.TryAddReservedSection(vhID, reserve_section_id,
+                                                                            sensorDir: hltDirection,
+                                                                            isAsk: true);
+                        //result = new Mirle.Hlts.Utils.HltResult(true, "");
+                    }
+
+
                     if (result.OK)
                     {
                         reserve_success_section.Add(reserve_info);
@@ -2707,6 +2739,45 @@ namespace com.mirle.ibg3k0.sc.Service
                 return (false, string.Empty, null);
             }
         }
+
+        private HltResult MultiCheckReserve(string vhID, string reserve_section_id)
+        {
+            try
+            {
+                HltResult result;
+                //如果是可以給的路權，就拿最後一段在往下要3段，作為保留空間
+                int check_section_count = 4;
+                int check_count = 0;
+                string next_cehck_section = reserve_section_id;
+                do
+                {
+                    check_count++;
+                    result = scApp.ReserveBLL.TryAddReservedSection(vhID, next_cehck_section,
+                                    sensorDir: Mirle.Hlts.Utils.HltDirection.Forward,
+                                    isAsk: true);
+                    if (!result.OK)
+                    {
+                        LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                           Data: $"vh:{vhID} Try add(Only ask-MultiCheckReserve) reserve section:{next_cehck_section} fail, desc:{result.Description}",
+                           VehicleID: vhID);
+                        break;
+                    }
+                    ASECTION sec = scApp.SectionBLL.cache.GetSection(next_cehck_section);
+                    ASECTION last_sec = scApp.SectionBLL.cache.GetSectionsByFromAddress(sec.TO_ADR_ID).FirstOrDefault();
+
+                    next_cehck_section = SCUtility.Trim(last_sec.SEC_ID, true);
+                }
+                while (check_count >= check_section_count);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                //如果發生異常，就不用該邏輯進行路權的保護
+                logger.Error(ex, "Exception");
+                return new HltResult(true, "");
+            }
+        }
+
         private void TransferReportBCRRead(BCFApplication bcfApp, AVEHICLE eqpt, int seqNum,
                                              EventType eventType, string read_carrier_id, BCRReadResult bCRReadResult)
         {
@@ -4337,7 +4408,8 @@ namespace com.mirle.ibg3k0.sc.Service
             VhPowerStatus powerStat = recive_str.PowerStatus;
             string cstID = recive_str.CSTID;
             VhStopSingle obstacleStat = recive_str.ObstacleStatus;
-            VhStopSingle blockingStat = recive_str.BlockingStatus;
+            //VhStopSingle blockingStat = recive_str.BlockingStatus;
+            VhStopSingle blockingStat = recive_str.ReserveStatus;
             VhStopSingle pauseStat = recive_str.PauseStatus;
             VhStopSingle hidStat = recive_str.HIDStatus;
             VhStopSingle errorStat = recive_str.ErrorStatus;
@@ -4376,6 +4448,11 @@ namespace com.mirle.ibg3k0.sc.Service
                 {
                     scApp.ReportBLL.newReportTransferCommandPaused(eqpt.MCS_CMD, null);
                 }
+            }
+
+            if (eqpt.BlockingStatus != blockingStat)
+            {
+                eqpt.onReserveStatusChange(blockingStat);
             }
 
 

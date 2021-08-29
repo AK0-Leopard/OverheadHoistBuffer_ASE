@@ -214,7 +214,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
 
                 string strNow = BCFUtility.formatDateTime(DateTime.Now, SCAppConstants.TimestampFormat_19);
-
+                
                 ALARM alarm = new ALARM()
                 {
                     EQPT_ID = eq_id,
@@ -581,7 +581,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                     if (quary != null)
                     {
                         alarmDao.DeleteAlarmByAlarmID(con, quary);
-                    }
+                    }                    
                 }
             }
             catch

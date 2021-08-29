@@ -112,6 +112,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
         {
             TrunOffAllVhPLCControl();
             DebugParameter.IsDebugMode = false;
+            DebugParameter.isForcedPassReserve = false;
             mainForm.removeForm(typeof(DebugForm).Name);
         }
 

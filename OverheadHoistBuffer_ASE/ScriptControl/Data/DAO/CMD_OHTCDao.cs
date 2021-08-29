@@ -192,7 +192,23 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
         public int getExecuteByBoxID(DBConnection_EF con, string boxID)
         {
             var query = from cmd in con.ACMD_OHTC
-                        where cmd.BOX_ID == boxID.Trim() &&
+                        where cmd.BOX_ID.Trim() == boxID.Trim() &&
+                        cmd.CMD_STAUS < E_CMD_STATUS.NormalEnd
+                        select cmd;
+            return query.Count();
+        }
+        public int getExecuteByTargetPort(DBConnection_EF con, string portID)
+        {
+            var query = from cmd in con.ACMD_OHTC
+                        where cmd.DESTINATION.Trim() == portID.Trim() &&
+                        cmd.CMD_STAUS < E_CMD_STATUS.NormalEnd
+                        select cmd;
+            return query.Count();
+        }
+        public int getExecuteBySourecePort(DBConnection_EF con, string portID)
+        {
+            var query = from cmd in con.ACMD_OHTC
+                        where cmd.SOURCE.Trim() == portID.Trim() &&
                         cmd.CMD_STAUS < E_CMD_STATUS.NormalEnd
                         select cmd;
             return query.Count();
@@ -219,7 +235,7 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
         public ACMD_OHTC getCMD_OHTCByMCScmdID_And_NotFinishByDest(DBConnection_EF con, string mcs_cmd_id, string dest)
         {
             var query = from cmd in con.ACMD_OHTC
-                        where cmd.CMD_ID_MCS.Trim() == mcs_cmd_id.Trim() 
+                        where cmd.CMD_ID_MCS.Trim() == mcs_cmd_id.Trim()
                             && cmd.CMD_END_TIME == null
                             && cmd.DESTINATION.Trim() == dest.Trim()
                         select cmd;

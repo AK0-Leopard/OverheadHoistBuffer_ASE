@@ -132,6 +132,7 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
                 if (vh.isTcpIpConnect &&
                     vh.MODE_STATUS == ProtocolFormat.OHTMessage.VHModeStatus.AutoRemote &&
                     vh.ACT_STATUS == ProtocolFormat.OHTMessage.VHActionStatus.NoCommand &&
+                    vh.HAS_BOX == 0 &&
                     !SCUtility.isEmpty(vh.CUR_ADR_ID) &&
                     !scApp.CMDBLL.isCMD_OHTCExcuteByVh(vh.VEHICLE_ID))
                 {
@@ -150,10 +151,26 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
                                                                cst.Carrier_LOC.StartsWith("21") ||
                                                                cst.Carrier_LOC.StartsWith("20")).
                                                                ToList();
+                    foreach (var cst in cassetteDatas.ToList())
+                    {
+                        if (scApp.CMDBLL.hasExcuteCMDByBoxID(cst.BOXID))
+                        {
+                            cassetteDatas.Remove(cst);
+                        }
+                    }
+
                     List<string> current_cst_at_shelf_id = cassetteDatas.
                         Select(cst => SCUtility.Trim(cst.Carrier_LOC, true)).
                         ToList();
+
                     //刪除目前cst所在的儲位，讓他排除在Cycle Run的列表中
+                    foreach (var shelf in shelfDefs.ToList())
+                    {
+                        if (scApp.CMDBLL.hasExcuteCMDByTargetPort(shelf.ShelfID))
+                        {
+                            shelfDefs.Remove(shelf);
+                        }
+                    }
                     foreach (var shelf in shelfDefs.ToList())
                     {
                         if (current_cst_at_shelf_id.Contains(SCUtility.Trim(shelf.ShelfID)))
@@ -258,29 +275,39 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
                     !scApp.CMDBLL.isCMD_OHTCExcuteByVh(vh.VEHICLE_ID))
                 {
 
-                    //找出目前的AGVStation Port
-                    if (willTestAGVStationPorts == null || willTestAGVStationPorts.Count == 0)
-                    {
-                        willTestAGVStationPorts = scApp.PortBLL.OperateCatch.loadAGVStationPorts();
-                        willTestAGVStationPorts = willTestAGVStationPorts.Where(port => scApp.TransferService.GetPLC_PortData(port.PORT_ID).IsReadyToLoad &&
-                                                                                        scApp.TransferService.GetPLC_PortData(port.PORT_ID).IsAutoMode).
-                                                                          ToList();
-                        LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(RandomGeneratesCommandTimerAction), Device: "OHTC",
-                                 Data: $"Load ok:{string.Join(",", willTestAGVStationPorts.Select(port => port.PORT_ID).ToList())}");
-                    }
-                    //如果取完還是空的 就跳出去
-                    if (willTestAGVStationPorts == null || willTestAGVStationPorts.Count == 0)
-                    {
-                        LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(RandomGeneratesCommandTimerAction), Device: "OHTC",
-                                 Data: $"no agv station list.");
-                        return;
-                    }
+                    ////找出目前的AGVStation Port
+                    //if (willTestAGVStationPorts == null || willTestAGVStationPorts.Count == 0)
+                    //{
+                    //    willTestAGVStationPorts = scApp.PortBLL.OperateCatch.loadAGVStationPorts();
+                    //    willTestAGVStationPorts = willTestAGVStationPorts.Where(port => scApp.TransferService.GetPLC_PortData(port.PORT_ID).IsReadyToLoad &&
+                    //                                                                    scApp.TransferService.GetPLC_PortData(port.PORT_ID).IsAutoMode &&
+                    //                                                                    scApp.TransferService.GetPLC_PortData(port.PORT_ID).cim_on).
+                    //                                                      ToList();
+                    //    LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(RandomGeneratesCommandTimerAction), Device: "OHTC",
+                    //             Data: $"Load ok:{string.Join(",", willTestAGVStationPorts.Select(port => port.PORT_ID).ToList())}");
+                    //}
+                    ////如果取完還是空的 就跳出去
+                    //if (willTestAGVStationPorts == null || willTestAGVStationPorts.Count == 0)
+                    //{
+                    //    LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(RandomGeneratesCommandTimerAction), Device: "OHTC",
+                    //             Data: $"no agv station list.");
+                    //    return;
+                    //}
 
 
                     //找出目前Unload Ok的AGV Station
-                    var unload_ok_port = AllTestAGVStationPorts.Where(port => scApp.TransferService.GetPLC_PortData(port.PORT_ID).IsReadyToUnload &&
-                                                                              scApp.TransferService.GetPLC_PortData(port.PORT_ID).IsAutoMode).
-                                                                FirstOrDefault();
+                    var unload_ok_ports = AllTestAGVStationPorts.Where(port => scApp.TransferService.GetPLC_PortData(port.PORT_ID).IsReadyToUnload &&
+                                                                              scApp.TransferService.GetPLC_PortData(port.PORT_ID).IsAutoMode &&
+                                                                              scApp.TransferService.GetPLC_PortData(port.PORT_ID).cim_on).
+                                                                ToList();
+                    foreach (var port in unload_ok_ports.ToList())
+                    {
+                        if (scApp.CMDBLL.hasExcuteCMDBySourcePort(port.PORT_ID))
+                        {
+                            unload_ok_ports.Remove(port);
+                        }
+                    }
+                    var unload_ok_port = unload_ok_ports.FirstOrDefault();
                     //var unload_ok_port = AllTestAGVStationPorts.FirstOrDefault();
                     if (unload_ok_port == null)
                     {
@@ -288,11 +315,18 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
                                  Data: $"no unload ok of agv station, can't execute cycle run test.");
                         return;
                     }
-                    willTestAGVStationPorts.Remove(unload_ok_port);
                     //找出目前load Ok的AGV Station
-                    var load_ok_ports = willTestAGVStationPorts.Where(port => scApp.TransferService.GetPLC_PortData(port.PORT_ID).IsReadyToLoad &&
-                                                                              scApp.TransferService.GetPLC_PortData(port.PORT_ID).IsAutoMode).
+                    var load_ok_ports = AllTestAGVStationPorts.Where(port => scApp.TransferService.GetPLC_PortData(port.PORT_ID).IsReadyToLoad &&
+                                                                              scApp.TransferService.GetPLC_PortData(port.PORT_ID).IsAutoMode &&
+                                                                              scApp.TransferService.GetPLC_PortData(port.PORT_ID).cim_on).
                                                                 ToList();
+                    foreach (var port in load_ok_ports.ToList())
+                    {
+                        if (scApp.CMDBLL.hasExcuteCMDByTargetPort(port.PORT_ID))
+                        {
+                            load_ok_ports.Remove(port);
+                        }
+                    }
                     if (load_ok_ports == null || load_ok_ports.Count == 0)
                     {
                         LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(RandomGeneratesCommandTimerAction), Device: "OHTC",
@@ -315,7 +349,6 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
                                         target_port_def.PORT_ID, 0, 0,
                                         box_id, "",
                                         from_adr, to_adr);
-                    willTestAGVStationPorts.Remove(target_port_def);
                 }
             }
         }

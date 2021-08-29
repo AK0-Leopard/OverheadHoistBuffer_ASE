@@ -303,8 +303,8 @@ namespace VehicleControl_Viewer.frm_Mainfrom
                 myEllipse.Fill = mySolidColorBrush_ForPoint;
                 myEllipse.StrokeThickness = 10;
                 myEllipse.Stroke = mySolidColorBrush_ForRail;
-                myEllipse.Width = 400;
-                myEllipse.Height = 400;
+                myEllipse.Width = 250;
+                myEllipse.Height = 250;
                 double left = point.X - (myEllipse.Width / 2); double top = point.Y - (myEllipse.Height / 2);
                 myEllipse.Margin = new Thickness(left, top, 0, 0);
                 myEllipse.Cursor = Cursors.Hand;
