@@ -29,18 +29,20 @@ namespace com.mirle.ibg3k0.bc.winform.UI
 
         private async void cb_eqType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string selected_eq_id = cb_eqType.Text;
-            await refreshAlarmMap(selected_eq_id, "");
+            await refreshAlarmMap();
         }
 
-        private async Task refreshAlarmMap(string selected_eq_id, string errorCode)
+        private async Task refreshAlarmMap()
         {
+            string selected_eq_id = cb_eqType.Text;
+            string error_code = txt_alarmCode.Text;
+
             List<sc.Data.VO.AlarmMap> alarmMaps = null;
             await Task.Run(() => alarmMaps = MainForm.BCApp.SCApplication.AlarmBLL.loadAlarmMaps(selected_eq_id));
             var alarm_map_to_show = alarmMaps.Select(a => new sc.Data.VO.AlarmMapToShow(MainForm.BCApp.SCApplication.AlarmBLL, a)).ToList();
-            if (!sc.Common.SCUtility.isEmpty(errorCode))
+            if (!sc.Common.SCUtility.isEmpty(error_code))
             {
-                alarm_map_to_show = alarm_map_to_show.Where(a => sc.Common.SCUtility.isMatche(a.ALARM_ID, errorCode)).ToList();
+                alarm_map_to_show = alarm_map_to_show.Where(a => a.ALARM_ID.Contains(error_code)).ToList();
             }
             dgv_alarmList.DataSource = alarm_map_to_show;
         }
@@ -86,6 +88,26 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                 {
                     DialogResult confirmResult = MessageBox.Show(this, $"Do you want to disable this alarm to report?",
                         App.BCApplication.getMessageString("CONFIRM"), MessageBoxButtons.YesNo);
+                    AlarmEnablePopupForm loginForm = new AlarmEnablePopupForm(eq_id, alarm_code);
+                    System.Windows.Forms.DialogResult result = loginForm.ShowDialog(this);
+                    if (result != DialogResult.OK)
+                    {
+                        return;
+                    }
+                    string user_id = loginForm.getUserID();
+                    string reason = loginForm.getReason();
+                    if (sc.Common.SCUtility.isEmpty(user_id))
+                    {
+                        MessageBox.Show(this, $"Disable fail. Please enter user id. ",
+                                        "Alarm Disable", MessageBoxButtons.OK);
+                        return;
+                    }
+                    if (sc.Common.SCUtility.isEmpty(reason))
+                    {
+                        MessageBox.Show(this, $"Disable fail. Please enter reason. ",
+                                        "Alarm Disable", MessageBoxButtons.OK);
+                        return;
+                    }
                     if (confirmResult == DialogResult.Yes)
                     {
                         bool is_success = false;
@@ -105,5 +127,9 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             }
         }
 
+        private async void txt_alarmCode_TextChanged(object sender, EventArgs e)
+        {
+            await refreshAlarmMap();
+        }
     }
 }

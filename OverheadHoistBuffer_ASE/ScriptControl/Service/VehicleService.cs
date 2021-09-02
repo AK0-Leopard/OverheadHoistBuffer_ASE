@@ -5424,6 +5424,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 {
                     AVEHICLE vh_vo = scApp.VehicleBLL.cache.getVhByID(vhID);
                     vh_vo.VechileRemove();
+                    scApp.ReserveBLL.RemoveAllReservedSectionsByVehicleID(vhID);
                     scApp.ReserveBLL.RemoveVehicle(vhID);
                 }
                 List<AMCSREPORTQUEUE> reportqueues = new List<AMCSREPORTQUEUE>();

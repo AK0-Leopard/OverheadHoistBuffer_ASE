@@ -262,6 +262,12 @@
     <Compile Include="UI\Maintenance\AlarmEnableForm.Designer.cs">
       <DependentUpon>AlarmEnableForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\Maintenance\AlarmEnablePopupForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Maintenance\AlarmEnablePopupForm.Designer.cs">
+      <DependentUpon>AlarmEnablePopupForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\Maintenance\ShelfMaintenanceForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1076,6 +1082,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Maintenance\AlarmEnableForm.resx">
       <DependentUpon>AlarmEnableForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Maintenance\AlarmEnablePopupForm.resx">
+      <DependentUpon>AlarmEnablePopupForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Maintenance\ShelfMaintenanceForm.resx">
       <DependentUpon>ShelfMaintenanceForm.cs</DependentUpon>

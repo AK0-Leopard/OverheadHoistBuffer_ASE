@@ -132,7 +132,7 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
                 if (vh.isTcpIpConnect &&
                     vh.MODE_STATUS == ProtocolFormat.OHTMessage.VHModeStatus.AutoRemote &&
                     vh.ACT_STATUS == ProtocolFormat.OHTMessage.VHActionStatus.NoCommand &&
-                    vh.HAS_BOX == 0 &&
+                    vh.HAS_CST == 0 &&
                     !SCUtility.isEmpty(vh.CUR_ADR_ID) &&
                     !scApp.CMDBLL.isCMD_OHTCExcuteByVh(vh.VEHICLE_ID))
                 {
@@ -360,7 +360,7 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
                 if (vh.isTcpIpConnect &&
                     vh.MODE_STATUS == ProtocolFormat.OHTMessage.VHModeStatus.AutoRemote &&
                     vh.ACT_STATUS == ProtocolFormat.OHTMessage.VHActionStatus.NoCommand &&
-                    vh.HAS_BOX == 0 &&
+                    vh.HAS_CST == 0 &&
                     !SCUtility.isEmpty(vh.CUR_ADR_ID) &&
                     !scApp.CMDBLL.isCMD_OHTCExcuteByVh(vh.VEHICLE_ID))
                 {
@@ -440,7 +440,7 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
                 if (vh.isTcpIpConnect &&
                     vh.MODE_STATUS == ProtocolFormat.OHTMessage.VHModeStatus.AutoRemote &&
                     vh.ACT_STATUS == ProtocolFormat.OHTMessage.VHActionStatus.NoCommand &&
-                    vh.HAS_BOX == 0 &&
+                    vh.HAS_CST == 0 &&
                     !SCUtility.isEmpty(vh.CUR_ADR_ID) &&
                     !scApp.CMDBLL.isCMD_OHTCExcuteByVh(vh.VEHICLE_ID))
                 {
@@ -453,7 +453,7 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
                 if (vh.isTcpIpConnect &&
                     vh.MODE_STATUS == ProtocolFormat.OHTMessage.VHModeStatus.AutoRemote &&
                     vh.ACT_STATUS == ProtocolFormat.OHTMessage.VHActionStatus.NoCommand &&
-                    vh.HAS_BOX == 0 &&
+                    vh.HAS_CST == 0 &&
                     !SCUtility.isEmpty(vh.CUR_ADR_ID) &&
                     !scApp.CMDBLL.isCMD_OHTCExcuteByVh(vh.VEHICLE_ID))
                 {

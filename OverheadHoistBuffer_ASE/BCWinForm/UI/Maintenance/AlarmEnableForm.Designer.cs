@@ -80,6 +80,7 @@
             this.txt_alarmCode.Name = "txt_alarmCode";
             this.txt_alarmCode.Size = new System.Drawing.Size(186, 26);
             this.txt_alarmCode.TabIndex = 3;
+            this.txt_alarmCode.TextChanged += new System.EventHandler(this.txt_alarmCode_TextChanged);
             // 
             // dgv_alarmList
             // 

@@ -6471,7 +6471,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     string shelfName = "";
                     //A20.06.09.0
                     shelfData = cmdBLL.doSortShelfDataByDistanceFromHostSource(shelfData, portLoc.Trim())
-                                                                    .Where(data => data.ShelfState == ShelfDef.E_ShelfState.EmptyShelf).ToList();
+                                      .Where(data => data.ShelfState == ShelfDef.E_ShelfState.EmptyShelf).ToList();
 
                     foreach (var v in shelfData)
                     {
@@ -9572,7 +9572,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     return (isOK, isMoreOutMode);
                 }
                 //確認3 4 port 狀態及切換
-                CheckThreeFourPortSituationAndMove(AGVStationID, useFirst2Port, numOfAGVStation, AGVPortDatas);
+                CheckThreeFourPortSituationAndMove(AGVStationID, useFirst2Port, numOfAGVStation, AGVPortDatas, AGVCFromEQToStationCmdNum);
                 //若有第3個port 須納入考量
                 if (numOfAGVStation == 3)
                 {
@@ -9971,14 +9971,14 @@ namespace com.mirle.ibg3k0.sc.Service
             return isSuccess;
         }
 
-        private void CheckThreeFourPortSituationAndMove(string AGVStationID, bool useFirst2Port, int numOfAGVStation, List<PortDef> AGVPortDatas)
+        private void CheckThreeFourPortSituationAndMove(string AGVStationID, bool useFirst2Port, int numOfAGVStation, List<PortDef> AGVPortDatas, int AGVCFromEQToStationCmdNum = 0)
         {
             //先判定一次是否有可能有第3個port可以被派送命令。 //若有第3個port 確認其狀態可執行命令後，以其上盒子狀態判定是否要取放貨
             if (numOfAGVStation == 3)
             {
                 PortPLCInfo thirdAGVPort = new PortPLCInfo();
                 PortDef thirdAGVPort_DB = new PortDef();
-                if (useFirst2Port == false) //取3port的第一個
+                if (useFirst2Port == false) //取3 port 的第一個
                 {
                     thirdAGVPort_DB = AGVPortDatas.FirstOrDefault();
                     thirdAGVPort = GetPLC_PortData(thirdAGVPort_DB.PLCPortID);
@@ -9991,6 +9991,15 @@ namespace com.mirle.ibg3k0.sc.Service
                 // 當 AgvState 為 OutOfSevice 則可進行取放，因若為 InService 代表當作救帳 Port 使用
                 if (thirdAGVPort.OpAutoMode && thirdAGVPort_DB.AGVState == E_PORT_STATUS.OutOfService)
                 {
+                    //當AGVC沒有命令要回來，但此時Port上有三顆空盒時，就可以先把備用port的空盒拿掉
+                    if (AGVCFromEQToStationCmdNum == 0 &&
+                        isNeedAdvanceMoveBackThirdEmptyBox(AGVPortDatas))
+                    {
+                        //準備退空盒時，先將備用Port改成Output再產生退Port命令
+                        ExcuteAdvanceMoveBackThirdEmptyBox(AGVStationID, thirdAGVPort, thirdAGVPort_DB);
+                        return;
+                    }
+
                     if (thirdAGVPort.LoadPosition1 == true && thirdAGVPort.IsCSTPresence == false &&
                         thirdAGVPort.IsReadyToUnload == true && thirdAGVPort.AGVPortReady == true) // 若為空盒，則切為Input Mode
                     {
@@ -10002,6 +10011,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + " AGV " + AGVStationID + "enter " + thirdAGVPort_DB.PLCPortID + " third Port Check Method No box.");
                         PortTypeChange(thirdAGVPort_DB.PLCPortID, E_PortType.Out, "Third Port Check Method");
                     }
+
                 }
             }
             // 在判定是否為 4 port 狀況
@@ -10056,6 +10066,42 @@ namespace com.mirle.ibg3k0.sc.Service
                     }
                 }
             }
+        }
+
+        private void ExcuteAdvanceMoveBackThirdEmptyBox(string AGVStationID, PortPLCInfo thirdAGVPort, PortDef thirdAGVPort_DB)
+        {
+            try
+            {
+
+                AGVCTriggerLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + $" AGV {AGVStationID} 準備預先將 port:{thirdAGVPort_DB.PLCPortID} 上的空 Box退掉");
+                PortTypeChange(thirdAGVPort_DB.PLCPortID, E_PortType.Out, "ExcuteAdvanceMoveBackThirdEmptyBox");
+                MovebackBOX(thirdAGVPort.CassetteID, thirdAGVPort.BoxID, thirdAGVPort.EQ_ID, thirdAGVPort.IsCSTPresence, "ExcuteAdvanceMoveBackThirdEmptyBox");
+            }
+            catch (Exception ex)
+            {
+                AGVCTriggerLogger.Error(ex, "Exception");
+            }
+        }
+
+        private bool isNeedAdvanceMoveBackThirdEmptyBox(List<PortDef> AGVPortDatas)
+        {
+            foreach (var port in AGVPortDatas)
+            {
+                var plc_port_data = GetPLC_PortData(port.PLCPortID);
+                //確認是否為空盒，若有一個不是，就代表不需要判斷是否要預先退空盒
+                if (!hasEmptyBoxOnPort(plc_port_data))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        private bool hasEmptyBoxOnPort(PortPLCInfo portPlcInfo)
+        {
+            bool has_empty_box =
+               portPlcInfo.LoadPosition1 == true && portPlcInfo.IsCSTPresence == false &&
+               portPlcInfo.IsReadyToUnload == true && portPlcInfo.AGVPortReady == true;
+            return has_empty_box;
         }
 
         private void agvcTriggerAlarmCheck(string AGVStationID, int AGVCFromEQToStationCmdNum)
