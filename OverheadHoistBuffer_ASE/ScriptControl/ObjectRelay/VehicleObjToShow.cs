@@ -242,6 +242,16 @@ namespace com.mirle.ibg3k0.sc.ObjectRelay
                 NotifyPropertyChanged(BCFUtility.getPropertyName(() => this.vEHICLE_ACC_DIST2Show));
             }
         }
+        [DisplayName("Last Maintain Date")]
+        public DateTime? mANT_DATE
+        {
+            get { return vehicle.MANT_DATE ?? DateTime.MinValue; }
+            set
+            {
+                vehicle.MANT_DATE = value;
+                NotifyPropertyChanged(BCFUtility.getPropertyName(() => this.mANT_DATE));
+            }
+        }
         //[DisplayName("Maintain ODO")]
         //public int mANT_ACC_DIST
         //{

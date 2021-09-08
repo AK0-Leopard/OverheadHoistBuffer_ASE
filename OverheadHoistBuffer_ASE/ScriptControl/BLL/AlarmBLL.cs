@@ -214,7 +214,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
 
                 string strNow = BCFUtility.formatDateTime(DateTime.Now, SCAppConstants.TimestampFormat_19);
-                
+
                 ALARM alarm = new ALARM()
                 {
                     EQPT_ID = eq_id,
@@ -384,7 +384,7 @@ namespace com.mirle.ibg3k0.sc.BLL
             return true;
         }
 
-        public bool enableAlarmReport(string eqID, string alarm_id, Boolean isEnable)
+        public bool enableAlarmReport(string eqID, string alarm_id, Boolean isEnable, string userID = "", string reason = "")
         {
             bool isSuccess = true;
             try
@@ -394,10 +394,22 @@ namespace com.mirle.ibg3k0.sc.BLL
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
                     ALARMRPTCOND cond = null;
+                    DateTime? disable_time = null;
+                    if (isEnable)
+                    {
+                        disable_time = null;
+                    }
+                    else
+                    {
+                        disable_time = DateTime.Now;
+                    }
                     cond = alarmRptCondDao.getRptCond(con, eqID, alarm_id);
                     if (cond != null)
                     {
                         cond.ENABLE_FLG = enable_flag;
+                        cond.USER_ID = userID;
+                        cond.REASON = reason;
+                        cond.DISABLE_TIME = disable_time;
                         alarmRptCondDao.updateRptCond(con, cond);
                     }
                     else
@@ -406,7 +418,10 @@ namespace com.mirle.ibg3k0.sc.BLL
                         {
                             EQPT_ID = eqID,
                             ALAM_CODE = alarm_id,
-                            ENABLE_FLG = enable_flag
+                            ENABLE_FLG = enable_flag,
+                            USER_ID = userID,
+                            REASON = reason,
+                            DISABLE_TIME = disable_time
                         };
                         alarmRptCondDao.insertRptCond(con, cond);
                     }
@@ -453,7 +468,63 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
         }
 
-
+        public string getAlarmReportCondUserID(string deviceID, string alarmID)
+        {
+            try
+            {
+                var alarm_report_conds = scApp.getCommObjCacheManager().getAlarmReportConds();
+                if (alarm_report_conds == null) return "";
+                var alarm_report_cond = alarm_report_conds.Where(cond => SCUtility.isMatche(cond.EQPT_ID, deviceID) &&
+                                                                        SCUtility.isMatche(cond.ALAM_CODE, alarmID))
+                                                          .FirstOrDefault();
+                if (alarm_report_cond == null) return "";
+                return alarm_report_cond.USER_ID;
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception:");
+                return "";
+            }
+        }
+        public string getAlarmReportCondReason(string deviceID, string alarmID)
+        {
+            try
+            {
+                var alarm_report_conds = scApp.getCommObjCacheManager().getAlarmReportConds();
+                if (alarm_report_conds == null) return "";
+                var alarm_report_cond = alarm_report_conds.Where(cond => SCUtility.isMatche(cond.EQPT_ID, deviceID) &&
+                                                                        SCUtility.isMatche(cond.ALAM_CODE, alarmID))
+                                                          .FirstOrDefault();
+                if (alarm_report_cond == null) return "";
+                return alarm_report_cond.REASON;
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception:");
+                return "";
+            }
+        }
+        public string getAlarmReportCondDisableTime(string deviceID, string alarmID)
+        {
+            try
+            {
+                var alarm_report_conds = scApp.getCommObjCacheManager().getAlarmReportConds();
+                if (alarm_report_conds == null) return "";
+                var alarm_report_cond = alarm_report_conds.Where(cond => SCUtility.isMatche(cond.EQPT_ID, deviceID) &&
+                                                                        SCUtility.isMatche(cond.ALAM_CODE, alarmID))
+                                                          .FirstOrDefault();
+                if (alarm_report_cond == null) return "";
+                var disable_dateTime = alarm_report_cond.DISABLE_TIME.HasValue ?
+                                       alarm_report_cond.DISABLE_TIME.Value.ToString(SCAppConstants.DateTimeFormat_22) :
+                                       "";
+                return disable_dateTime;
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception:");
+                return "";
+            }
+        }
 
 
         public List<AlarmMap> loadAlarmMaps()
@@ -581,7 +652,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                     if (quary != null)
                     {
                         alarmDao.DeleteAlarmByAlarmID(con, quary);
-                    }                    
+                    }
                 }
             }
             catch

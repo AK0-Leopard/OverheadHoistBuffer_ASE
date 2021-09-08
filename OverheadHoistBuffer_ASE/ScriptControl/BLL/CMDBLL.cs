@@ -3332,7 +3332,7 @@ namespace com.mirle.ibg3k0.sc.BLL
         /// <param name="cmd_id"></param>
         /// <param name="status"></param>
         /// <returns></returns>
-        public bool updateCommand_OHTC_StatusByCmdID(string cmd_id, E_CMD_STATUS status)
+        public bool updateCommand_OHTC_StatusByCmdID(string cmd_id, E_CMD_STATUS status, int travelDis = 0)
         {
             bool isSuccess = false;
             //using (DBConnection_EF con = new DBConnection_EF())
@@ -3344,6 +3344,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                     ACMD_OHTC cmd = cmd_ohtcDAO.getByID(con, cmd_id);
                     if (cmd != null)
                     {
+                        cmd.CMD_PROGRESS = travelDis;
                         if (status == E_CMD_STATUS.Execution)
                         {
                             cmd.CMD_START_TIME = DateTime.Now;

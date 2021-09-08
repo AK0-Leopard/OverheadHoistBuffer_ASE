@@ -4693,7 +4693,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     //isSuccess = scApp.VehicleBLL.doTransferCommandFinish(eqpt.VEHICLE_ID, cmd_id);
                     isSuccess &= scApp.VehicleBLL.doTransferCommandFinish(eqpt.VEHICLE_ID, cmd_id, completeStatus);
                     E_CMD_STATUS ohtc_cmd_status = scApp.VehicleBLL.CompleteStatusToCmdStatus(completeStatus);
-                    isSuccess &= scApp.CMDBLL.updateCommand_OHTC_StatusByCmdID(cmd_id, ohtc_cmd_status);
+                    isSuccess &= scApp.CMDBLL.updateCommand_OHTC_StatusByCmdID(cmd_id, ohtc_cmd_status, travel_dis);
                     isSuccess &= scApp.VIDBLL.initialVIDCommandInfo(eqpt.VEHICLE_ID);
 
 
@@ -4780,6 +4780,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 //tryAskVhToIdlePosition(vh_id);//B0.11
             });
             eqpt.onCommandComplete(completeStatus);
+            scApp.VehicleBLL.updateVheicleTravelInfo(eqpt.VEHICLE_ID, travel_dis);
         }
 
         private bool replyCommandComplete(AVEHICLE eqpt, int seq_num, string finish_ohxc_cmd, string finish_mcs_cmd)
@@ -5446,6 +5447,17 @@ namespace com.mirle.ibg3k0.sc.Service
         }
 
         #region Specially Control
+        public void ResetODO(string vhID)
+        {
+            try
+            {
+                scApp.VehicleBLL.resetVheicleTravelInfo(vhID);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception:");
+            }
+        }
         public void forceReleaseBlockControl(string vh_id = "")
         {
             List<BLOCKZONEQUEUE> queues = null;

@@ -372,6 +372,23 @@ namespace com.mirle.ibg3k0.bc.winform.UI
 
             DebugParameter.cycleRunType = type;
         }
+
+        private async void btn_resetODO_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                btn_resetODO.Enabled = false;
+                await Task.Run(() => bcApp.SCApplication.VehicleService.ResetODO(vh_id));
+            }
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+                btn_resetODO.Enabled = true;
+            }
+        }
         //*************************************
         //A0.01
 

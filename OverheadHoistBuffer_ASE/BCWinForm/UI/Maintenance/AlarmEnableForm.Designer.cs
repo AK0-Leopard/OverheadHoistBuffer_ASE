@@ -39,15 +39,23 @@
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column4 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.txt_userID = new System.Windows.Forms.TextBox();
+            this.txt_reason = new System.Windows.Forms.TextBox();
+            this.txt_disableTime = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_alarmList)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
+            this.tableLayoutPanel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(41, 5);
+            this.label1.Location = new System.Drawing.Point(59, 5);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(81, 19);
             this.label1.TabIndex = 0;
@@ -57,7 +65,7 @@
             // 
             this.cb_eqType.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.cb_eqType.FormattingEnabled = true;
-            this.cb_eqType.Location = new System.Drawing.Point(128, 5);
+            this.cb_eqType.Location = new System.Drawing.Point(146, 5);
             this.cb_eqType.Name = "cb_eqType";
             this.cb_eqType.Size = new System.Drawing.Size(186, 27);
             this.cb_eqType.TabIndex = 1;
@@ -67,7 +75,7 @@
             // 
             this.label2.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(14, 35);
+            this.label2.Location = new System.Drawing.Point(32, 35);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(108, 19);
             this.label2.TabIndex = 2;
@@ -76,7 +84,7 @@
             // txt_alarmCode
             // 
             this.txt_alarmCode.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.txt_alarmCode.Location = new System.Drawing.Point(128, 33);
+            this.txt_alarmCode.Location = new System.Drawing.Point(146, 33);
             this.txt_alarmCode.Name = "txt_alarmCode";
             this.txt_alarmCode.Size = new System.Drawing.Size(186, 26);
             this.txt_alarmCode.TabIndex = 3;
@@ -96,7 +104,7 @@
             this.dgv_alarmList.Location = new System.Drawing.Point(3, 63);
             this.dgv_alarmList.Name = "dgv_alarmList";
             this.dgv_alarmList.RowTemplate.Height = 24;
-            this.dgv_alarmList.Size = new System.Drawing.Size(1054, 613);
+            this.dgv_alarmList.Size = new System.Drawing.Size(1205, 513);
             this.dgv_alarmList.TabIndex = 4;
             this.dgv_alarmList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             // 
@@ -139,27 +147,108 @@
             // 
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 11.88679F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 88.1132F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 88.11321F));
             this.tableLayoutPanel1.Controls.Add(this.dgv_alarmList, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.label2, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.txt_alarmCode, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.cb_eqType, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 3);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 3;
+            this.tableLayoutPanel1.RowCount = 4;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1060, 679);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1211, 679);
             this.tableLayoutPanel1.TabIndex = 5;
+            // 
+            // tableLayoutPanel2
+            // 
+            this.tableLayoutPanel2.ColumnCount = 2;
+            this.tableLayoutPanel1.SetColumnSpan(this.tableLayoutPanel2, 2);
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.94606F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 87.05394F));
+            this.tableLayoutPanel2.Controls.Add(this.label3, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.label4, 0, 1);
+            this.tableLayoutPanel2.Controls.Add(this.label5, 0, 2);
+            this.tableLayoutPanel2.Controls.Add(this.txt_userID, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.txt_reason, 1, 1);
+            this.tableLayoutPanel2.Controls.Add(this.txt_disableTime, 1, 2);
+            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 582);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.RowCount = 3;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(1205, 94);
+            this.tableLayoutPanel2.TabIndex = 5;
+            // 
+            // label3
+            // 
+            this.label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(27, 6);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(126, 19);
+            this.label3.TabIndex = 0;
+            this.label3.Text = "Disable User:";
+            // 
+            // label4
+            // 
+            this.label4.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(9, 37);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(144, 19);
+            this.label4.TabIndex = 0;
+            this.label4.Text = "Disable Reason:";
+            // 
+            // label5
+            // 
+            this.label5.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(27, 68);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(126, 19);
+            this.label5.TabIndex = 0;
+            this.label5.Text = "Disable Time:";
+            // 
+            // txt_userID
+            // 
+            this.txt_userID.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txt_userID.Location = new System.Drawing.Point(159, 3);
+            this.txt_userID.Name = "txt_userID";
+            this.txt_userID.ReadOnly = true;
+            this.txt_userID.Size = new System.Drawing.Size(1043, 26);
+            this.txt_userID.TabIndex = 1;
+            // 
+            // txt_reason
+            // 
+            this.txt_reason.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txt_reason.Location = new System.Drawing.Point(159, 34);
+            this.txt_reason.Name = "txt_reason";
+            this.txt_reason.ReadOnly = true;
+            this.txt_reason.Size = new System.Drawing.Size(1043, 26);
+            this.txt_reason.TabIndex = 1;
+            // 
+            // txt_disableTime
+            // 
+            this.txt_disableTime.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txt_disableTime.Location = new System.Drawing.Point(159, 65);
+            this.txt_disableTime.Name = "txt_disableTime";
+            this.txt_disableTime.ReadOnly = true;
+            this.txt_disableTime.Size = new System.Drawing.Size(1043, 26);
+            this.txt_disableTime.TabIndex = 1;
             // 
             // AlarmEnableForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1060, 679);
+            this.ClientSize = new System.Drawing.Size(1211, 679);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -169,6 +258,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgv_alarmList)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
+            this.tableLayoutPanel2.ResumeLayout(false);
+            this.tableLayoutPanel2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -181,6 +272,13 @@
         private System.Windows.Forms.TextBox txt_alarmCode;
         private System.Windows.Forms.DataGridView dgv_alarmList;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox txt_userID;
+        private System.Windows.Forms.TextBox txt_reason;
+        private System.Windows.Forms.TextBox txt_disableTime;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column5;

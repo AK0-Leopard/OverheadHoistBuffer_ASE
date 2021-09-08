@@ -17,5 +17,8 @@ namespace com.mirle.ibg3k0.sc
         public string EQPT_ID { get; set; }
         public string ALAM_CODE { get; set; }
         public string ENABLE_FLG { get; set; }
+        public string USER_ID { get; set; }
+        public string REASON { get; set; }
+        public Nullable<System.DateTime> DISABLE_TIME { get; set; }
     }
 }

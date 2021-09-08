@@ -1,4 +1,5 @@
-﻿using System;
+﻿using com.mirle.ibg3k0.sc.Data.VO;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -23,6 +24,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             eqs.AddRange(eq_ids);
             cb_eqType.DataSource = eqs;
             MainForm = mainForm;
+            dgv_alarmList.AutoGenerateColumns = false;
         }
 
         public BCMainForm MainForm { get; }
@@ -45,6 +47,11 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                 alarm_map_to_show = alarm_map_to_show.Where(a => a.ALARM_ID.Contains(error_code)).ToList();
             }
             dgv_alarmList.DataSource = alarm_map_to_show;
+            if (dgv_alarmList.SelectedRows.Count > 0)
+            {
+                int selected_index = dgv_alarmList.SelectedRows[0].Index;
+                referTextContent(selected_index);
+            }
         }
 
         private void AlarmEnableForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -57,10 +64,11 @@ namespace com.mirle.ibg3k0.bc.winform.UI
         const int ALARM_CODE_COLUMN_INDEX = 1;
         private async void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+            var dgv = sender as DataGridView;
+            if (dgv == null) return;
             if (e.ColumnIndex == IS_REPORT_CHECK_BOX_COLUMN_INDEX)
             {
-                var dgv = sender as DataGridView;
-                if (dgv == null) return;
                 var check_box_column_valus = (bool)dgv[e.ColumnIndex, e.RowIndex].Value;
                 string eq_id = dgv[EQ_ID_COLUMN_INDEX, e.RowIndex].Value as string;
                 string alarm_code = dgv[ALARM_CODE_COLUMN_INDEX, e.RowIndex].Value as string;
@@ -111,7 +119,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                     if (confirmResult == DialogResult.Yes)
                     {
                         bool is_success = false;
-                        await Task.Run(() => is_success = MainForm.BCApp.SCApplication.AlarmBLL.enableAlarmReport(eq_id, alarm_code, false));
+                        await Task.Run(() => is_success = MainForm.BCApp.SCApplication.AlarmBLL.enableAlarmReport(eq_id, alarm_code, false, user_id, reason));
                         if (is_success)
                         {
                             MessageBox.Show(this, $"Disable success.",
@@ -125,6 +133,18 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                     }
                 }
             }
+            referTextContent(e.RowIndex);
+        }
+
+        private void referTextContent(int selectedRowIndex)
+        {
+            var dgv_show_list = dgv_alarmList.DataSource as List<sc.Data.VO.AlarmMapToShow>;
+            if (dgv_show_list == null || dgv_show_list.Count == 0)
+                return;
+            var alarm_map_show = dgv_show_list[selectedRowIndex];
+            txt_userID.Text = alarm_map_show.USER_ID;
+            txt_reason.Text = alarm_map_show.REASON;
+            txt_disableTime.Text = alarm_map_show.DISABLE_TIME;
         }
 
         private async void txt_alarmCode_TextChanged(object sender, EventArgs e)

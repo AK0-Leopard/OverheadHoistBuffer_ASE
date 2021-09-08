@@ -70,7 +70,27 @@ namespace com.mirle.ibg3k0.sc.Data.VO
             {
                 return alarmBLL.isReportAlarmReport2MCS(EQPT_REAL_ID, ALARM_ID, true);
             }
-
+        }
+        public string USER_ID
+        {
+            get 
+            {
+                return alarmBLL.getAlarmReportCondUserID(EQPT_REAL_ID, ALARM_ID);
+            }
+        }
+        public string REASON
+        {
+            get 
+            {
+                return alarmBLL.getAlarmReportCondReason(EQPT_REAL_ID, ALARM_ID);
+            }
+        }
+        public string DISABLE_TIME
+        {
+            get 
+            {
+                return alarmBLL.getAlarmReportCondDisableTime(EQPT_REAL_ID, ALARM_ID);
+            }
         }
     }
 }

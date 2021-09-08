@@ -2,13 +2,13 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 02/26/2021 15:12:18
+-- Date Created: 09/02/2021 21:15:10
 -- Generated from EDMX file: C:\Git\AK0-Leopard\OverheadHoistBuffer_ASE\OverheadHoistBuffer_ASE\ScriptControl\OHTCContext.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
 GO
-USE [OHBC_ASE_K21_LINE1];
+USE [OHBC_ASE_K21_LINE3_V3];
 GO
 IF SCHEMA_ID(N'dbo') IS NULL EXECUTE(N'CREATE SCHEMA [dbo]');
 GO
@@ -201,6 +201,12 @@ IF OBJECT_ID(N'[dbo].[CONTROL_DATA]', 'U') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[HASHEET]', 'U') IS NOT NULL
     DROP TABLE [dbo].[HASHEET];
+GO
+IF OBJECT_ID(N'[dbo].[HCMD_MCS]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[HCMD_MCS];
+GO
+IF OBJECT_ID(N'[dbo].[HCMD_OHTC]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[HCMD_OHTC];
 GO
 IF OBJECT_ID(N'[dbo].[HOPERATION]', 'U') IS NOT NULL
     DROP TABLE [dbo].[HOPERATION];
@@ -1180,7 +1186,9 @@ GO
 CREATE TABLE [dbo].[ALARMRPTCOND] (
     [EQPT_ID] char(15)  NOT NULL,
     [ALAM_CODE] char(10)  NOT NULL,
-    [ENABLE_FLG] char(1)  NOT NULL
+    [ENABLE_FLG] char(1)  NOT NULL,
+    [USER_ID] char(10)  NULL,
+    [REASON] nvarchar(80)  NULL
 );
 GO
 
@@ -1340,6 +1348,60 @@ CREATE TABLE [dbo].[PortDef] (
     [PortTypeDef] int  NULL,
     [PRIORITY] int  NOT NULL,
     [ZoneName] varchar(64)  NULL
+);
+GO
+
+-- Creating table 'HCMD_MCS'
+CREATE TABLE [dbo].[HCMD_MCS] (
+    [CMD_ID] varchar(64)  NOT NULL,
+    [CARRIER_ID] varchar(64)  NULL,
+    [TRANSFERSTATE] int  NOT NULL,
+    [COMMANDSTATE] int  NOT NULL,
+    [HOSTSOURCE] varchar(64)  NULL,
+    [RelayStation] varchar(64)  NULL,
+    [HOSTDESTINATION] varchar(64)  NOT NULL,
+    [PRIORITY] int  NOT NULL,
+    [CHECKCODE] char(2)  NOT NULL,
+    [PAUSEFLAG] char(1)  NOT NULL,
+    [CMD_INSER_TIME] datetime  NOT NULL,
+    [CMD_START_TIME] datetime  NULL,
+    [CMD_FINISH_TIME] datetime  NULL,
+    [TIME_PRIORITY] int  NOT NULL,
+    [PORT_PRIORITY] int  NOT NULL,
+    [REPLACE] int  NOT NULL,
+    [PRIORITY_SUM] int  NOT NULL,
+    [BOX_ID] varchar(64)  NULL,
+    [CARRIER_LOC] varchar(64)  NULL,
+    [LOT_ID] varchar(64)  NOT NULL,
+    [CARRIER_ID_ON_CRANE] varchar(64)  NULL,
+    [CMDTYPE] varchar(64)  NULL,
+    [CRANE] varchar(64)  NOT NULL
+);
+GO
+
+-- Creating table 'HCMD_OHTC'
+CREATE TABLE [dbo].[HCMD_OHTC] (
+    [CMD_ID] char(64)  NOT NULL,
+    [VH_ID] char(32)  NOT NULL,
+    [CARRIER_ID] char(64)  NULL,
+    [CMD_ID_MCS] char(64)  NULL,
+    [CMD_TPYE] int  NOT NULL,
+    [SOURCE] char(64)  NULL,
+    [DESTINATION] char(64)  NULL,
+    [PRIORITY] int  NOT NULL,
+    [CMD_INSER_TIME] datetime  NOT NULL,
+    [CMD_START_TIME] datetime  NULL,
+    [CMD_END_TIME] datetime  NULL,
+    [CMD_STAUS] int  NOT NULL,
+    [CMD_PROGRESS] int  NOT NULL,
+    [INTERRUPTED_REASON] int  NULL,
+    [ESTIMATED_TIME] int  NOT NULL,
+    [ESTIMATED_EXCESS_TIME] int  NOT NULL,
+    [REAL_CMP_TIME] int  NULL,
+    [SOURCE_ADR] char(64)  NULL,
+    [DESTINATION_ADR] char(64)  NULL,
+    [BOX_ID] char(64)  NULL,
+    [LOT_ID] char(64)  NULL
 );
 GO
 
@@ -1839,6 +1901,18 @@ GO
 ALTER TABLE [dbo].[PortDef]
 ADD CONSTRAINT [PK_PortDef]
     PRIMARY KEY CLUSTERED ([PLCPortID] ASC);
+GO
+
+-- Creating primary key on [CMD_ID], [CMD_INSER_TIME] in table 'HCMD_MCS'
+ALTER TABLE [dbo].[HCMD_MCS]
+ADD CONSTRAINT [PK_HCMD_MCS]
+    PRIMARY KEY CLUSTERED ([CMD_ID], [CMD_INSER_TIME] ASC);
+GO
+
+-- Creating primary key on [CMD_ID], [CMD_INSER_TIME] in table 'HCMD_OHTC'
+ALTER TABLE [dbo].[HCMD_OHTC]
+ADD CONSTRAINT [PK_HCMD_OHTC]
+    PRIMARY KEY CLUSTERED ([CMD_ID], [CMD_INSER_TIME] ASC);
 GO
 
 -- Creating primary key on [CMD_ID], [TRANSFERSTATE], [COMMANDSTATE], [HOSTDESTINATION], [PRIORITY_SUM], [PRIORITY], [CHECKCODE], [PAUSEFLAG], [CMD_INSER_TIME], [TIME_PRIORITY], [PORT_PRIORITY], [REPLACE] in table 'VACMD_MCS'

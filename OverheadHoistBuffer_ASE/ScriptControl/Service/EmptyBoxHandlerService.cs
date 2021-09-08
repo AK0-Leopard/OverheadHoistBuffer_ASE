@@ -374,8 +374,8 @@ namespace com.mirle.ibg3k0.sc.Service
             {
                 //update water mark settings
                 var zonedata = from zd in zoneDatas
-                              where zd.ZoneID == z.ZoneID
-                              select zd;
+                               where zd.ZoneID == z.ZoneID
+                               select zd;
                 z.LowWaterMark = Decimal.ToInt32((decimal)zonedata.FirstOrDefault().LowWaterMark);
                 z.HighWaterMark = Decimal.ToInt32((decimal)zonedata.FirstOrDefault().HighWaterMark);
 
@@ -400,7 +400,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                  where b.Carrier_LOC == s.ShelfID &&
                                     !string.IsNullOrEmpty(b.CSTID) &&
                                     s.ZoneID == z.ZoneID
-                                 orderby b.StoreDT 
+                                 orderby b.StoreDT
                                  select b.BOXID;
                 z.EmptyBoxList = emptyBoxes.ToList();
                 z.SolidBoxList = solidBoxes.ToList();

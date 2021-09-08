@@ -269,25 +269,60 @@ namespace com.mirle.ibg3k0.sc.BLL
             //});
             //}
         }
-        //public bool doUpdateVehicleStatus(AVEHICLE vh,
-        //                          VHModeStatus mode_status, VHActionStatus act_status,
-        //                          VhStopSingle block_pause, VhStopSingle cmd_pause, VhStopSingle obs_pause,
-        //                          int has_cst)
-        //{
-        //    if (updateVehicleStatus(vh.VEHICLE_ID,
-        //                             mode_status, act_status,
-        //                             block_pause, cmd_pause, obs_pause,
-        //                             has_cst))
-        //    {
-        //        //updateVehicleStatus_CacheMangerExceptAct(vh,
-        //        //                       mode_status,
-        //        //                       block_pause, cmd_pause, obs_pause,
-        //        //                       has_cst, cst_id);
-        //        vh.NotifyVhStatusChange();
-        //        return true;
-        //    }
-        //    return false;
-        //}
+        public void updateVheicleTravelInfo(string vhID, int cmdFinish)
+        {
+            AVEHICLE vh = scApp.VehiclPool.GetObject();
+            string preNodeAdr = string.Empty;
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    vh.VEHICLE_ID = vhID;
+                    con.AVEHICLE.Attach(vh);
+                    vh.MANT_ACC_DIST += cmdFinish;
+                    con.Entry(vh).Property(p => p.MANT_ACC_DIST).IsModified = true;
+                    vehicleDAO.doUpdate(scApp, con, vh);
+                    con.Entry(vh).State = EntityState.Detached;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception:");
+            }
+            finally
+            {
+                scApp.VehiclPool.PutObject(vh);
+            }
+        }
+        public void resetVheicleTravelInfo(string vhID)
+        {
+            AVEHICLE vh = scApp.VehiclPool.GetObject();
+            string preNodeAdr = string.Empty;
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    vh.VEHICLE_ID = vhID;
+                    con.AVEHICLE.Attach(vh);
+                    vh.MANT_ACC_DIST = 0;
+                    vh.MANT_DATE = DateTime.Now;
+                    con.Entry(vh).Property(p => p.MANT_ACC_DIST).IsModified = true;
+                    con.Entry(vh).Property(p => p.MANT_DATE).IsModified = true;
+                    vehicleDAO.doUpdate(scApp, con, vh);
+                    con.Entry(vh).State = EntityState.Detached;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception:");
+            }
+            finally
+            {
+                scApp.VehiclPool.PutObject(vh);
+            }
+        }
+
+
         public bool doUpdateVehicleStatus(AVEHICLE vh, string cstID,
                                  VHModeStatus mode_status, VHActionStatus act_status,
                                  VhStopSingle block_pause, VhStopSingle cmd_pause, VhStopSingle obs_pause, VhStopSingle hid_pause, VhStopSingle error_status, VhLoadCarrierStatus load_cst_status)
@@ -296,10 +331,6 @@ namespace com.mirle.ibg3k0.sc.BLL
                                      mode_status, act_status,
                                      block_pause, cmd_pause, obs_pause, hid_pause, error_status, load_cst_status))
             {
-                //updateVehicleStatus_CacheMangerExceptAct(vh,
-                //                       mode_status,
-                //                       block_pause, cmd_pause, obs_pause,
-                //                       has_cst, cst_id);
                 vh.NotifyVhStatusChange();
                 return true;
             }
