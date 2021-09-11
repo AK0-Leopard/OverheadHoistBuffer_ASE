@@ -58,5 +58,23 @@ namespace com.mirle.ibg3k0.sc
         {
             this.Enable = ortherValue.Enable;
         }
+
+        public string SeqNo
+        {
+            get
+            {
+                if (Common.SCUtility.isEmpty(ShelfID))
+                {
+                    return "";
+                }
+                if (ShelfID.Length < 6)
+                {
+                    return "";
+                }
+                //100101
+                string seq_no = ShelfID.Substring(ShelfID.Length - 5, 3);
+                return seq_no;
+            }
+        }
     }
 }

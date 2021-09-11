@@ -106,12 +106,13 @@ namespace com.mirle.ibg3k0.sc.Service
             foreach (ZoneDef zoneData in zoneCacheDatas)
             {
                 //A1: zone內有沒有已經標記成待退的空box，有則跳過這次檢查
-                if (zoneData.WaitForRecycleBoxList.Count() != 0)
-                {
-                    continue;
-                }
+                //if (zoneData.WaitForRecycleBoxList.Count() != 0)
+                //{
+                //    continue;
+                //}
                 //A2: 檢查是否達緊急水位，有則強制送往STK，沒有STK就送往OHCV
-                if (zoneData.BoxCount > zoneData.ZoneSize * emergencyWaterLevel)
+                //if (zoneData.BoxCount > zoneData.ZoneSize * emergencyWaterLevel)
+                if (zoneData.BoxCount > zoneData.HighWaterMark)
                 {
                     //已達緊急水位，產生往Loop or STK的manual command退box
                     emptyBoxLogger.Info($"{zoneData.ZoneID} reaches emergency water level: {zoneData.ZoneSize * emergencyWaterLevel}, force to send empty box to STK or OHCV...");
@@ -126,8 +127,8 @@ namespace com.mirle.ibg3k0.sc.Service
                     else
                     {
                         //沒有找到STK、OHCV為OutMode => 請求MCS幫退
-                        emptyBoxLogger.Info($"No port is avaliable for recycling box directly, notice MCS and wait transfer command to recycling...");
-                        RecycleBoxByMCS(zoneData, zoneData.BoxCount);
+                        //emptyBoxLogger.Info($"No port is avaliable for recycling box directly, notice MCS and wait transfer command to recycling...");
+                        //RecycleBoxByMCS(zoneData, zoneData.BoxCount);
                     }
                 }
                 //A3: 檢查是否達高水位，是則請求MCS幫退空box
@@ -135,8 +136,8 @@ namespace com.mirle.ibg3k0.sc.Service
                 {
                     //還沒到緊急水位走這邊
                     //過多box，呼叫MCS退掉(優先退空的)
-                    emptyBoxLogger.Info($"{zoneData.ZoneID} do not reach emergency water level, just notice MCS and wait transfer command to recycling...");
-                    RecycleBoxByMCS(zoneData, zoneData.BoxCount);
+                    //emptyBoxLogger.Info($"{zoneData.ZoneID} do not reach emergency water level, just notice MCS and wait transfer command to recycling...");
+                    //RecycleBoxByMCS(zoneData, zoneData.BoxCount);
                 }
             }
 
@@ -182,7 +183,7 @@ namespace com.mirle.ibg3k0.sc.Service
             int requriedBoxAGV = 0;
             int emptyBoxNum = zoneData.EmptyBoxList.Count();
             var isEnoughEmptyBox = CheckIsEnoughEmptyBox(_emptyBoxList.Count - 1, out requriedBoxAGV);
-            if (emptyBoxNum != 0 && isEnoughEmptyBox.isEnough == true )
+            if (emptyBoxNum != 0 && isEnoughEmptyBox.isEnough == true)
             {
                 recycleBlockID = zoneData.EmptyBoxList.FirstOrDefault();
             }
@@ -298,7 +299,7 @@ namespace com.mirle.ibg3k0.sc.Service
             //紀錄log 因此處為實際執行命令之處
             //此部分需先確認目前沒有可執行的MCS命令，才進行要求退BOX動作。
 
-            if(scApp.TransferService.requireEmptyBox)
+            if (scApp.TransferService.requireEmptyBox)
             {
                 scApp.ReportBLL.ReportEmptyBoxRecycling(boxID);
             }

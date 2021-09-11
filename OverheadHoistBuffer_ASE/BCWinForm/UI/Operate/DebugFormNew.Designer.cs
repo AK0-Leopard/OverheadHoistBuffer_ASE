@@ -37,6 +37,7 @@
             this.cb_FroceReserveReject = new System.Windows.Forms.CheckBox();
             this.cb_FroceReservePass = new System.Windows.Forms.CheckBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.btn_resetODO = new System.Windows.Forms.Button();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -74,7 +75,6 @@
             this.cb_OperMode = new System.Windows.Forms.ComboBox();
             this.button3 = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.btn_resetODO = new System.Windows.Forms.Button();
             this.tabPage1.SuspendLayout();
             this.group_cycleRun.SuspendLayout();
             this.gb_blockControl.SuspendLayout();
@@ -110,7 +110,7 @@
             this.group_cycleRun.Controls.Add(this.cb_StartGenAntoCmd);
             this.group_cycleRun.Location = new System.Drawing.Point(790, 98);
             this.group_cycleRun.Name = "group_cycleRun";
-            this.group_cycleRun.Size = new System.Drawing.Size(387, 144);
+            this.group_cycleRun.Size = new System.Drawing.Size(387, 205);
             this.group_cycleRun.TabIndex = 58;
             this.group_cycleRun.TabStop = false;
             this.group_cycleRun.Text = "Cycle Run";
@@ -209,6 +209,16 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Specify Vehicle Action";
             this.groupBox4.Enter += new System.EventHandler(this.groupBox4_Enter);
+            // 
+            // btn_resetODO
+            // 
+            this.btn_resetODO.Location = new System.Drawing.Point(8, 652);
+            this.btn_resetODO.Name = "btn_resetODO";
+            this.btn_resetODO.Size = new System.Drawing.Size(252, 44);
+            this.btn_resetODO.TabIndex = 59;
+            this.btn_resetODO.Text = "Reset ODO";
+            this.btn_resetODO.UseVisualStyleBackColor = true;
+            this.btn_resetODO.Click += new System.EventHandler(this.btn_resetODO_Click);
             // 
             // groupBox9
             // 
@@ -600,16 +610,6 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(1206, 865);
             this.tabControl1.TabIndex = 23;
-            // 
-            // btn_resetODO
-            // 
-            this.btn_resetODO.Location = new System.Drawing.Point(8, 652);
-            this.btn_resetODO.Name = "btn_resetODO";
-            this.btn_resetODO.Size = new System.Drawing.Size(252, 44);
-            this.btn_resetODO.TabIndex = 59;
-            this.btn_resetODO.Text = "Reset ODO";
-            this.btn_resetODO.UseVisualStyleBackColor = true;
-            this.btn_resetODO.Click += new System.EventHandler(this.btn_resetODO_Click);
             // 
             // DebugFormNew
             // 
