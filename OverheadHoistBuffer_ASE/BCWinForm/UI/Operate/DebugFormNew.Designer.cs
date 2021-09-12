@@ -75,6 +75,7 @@
             this.cb_OperMode = new System.Windows.Forms.ComboBox();
             this.button3 = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.button1 = new System.Windows.Forms.Button();
             this.tabPage1.SuspendLayout();
             this.group_cycleRun.SuspendLayout();
             this.gb_blockControl.SuspendLayout();
@@ -105,6 +106,7 @@
             // 
             // group_cycleRun
             // 
+            this.group_cycleRun.Controls.Add(this.button1);
             this.group_cycleRun.Controls.Add(this.combox_cycle_type);
             this.group_cycleRun.Controls.Add(this.label4);
             this.group_cycleRun.Controls.Add(this.cb_StartGenAntoCmd);
@@ -611,6 +613,16 @@
             this.tabControl1.Size = new System.Drawing.Size(1206, 865);
             this.tabControl1.TabIndex = 23;
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(18, 152);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(167, 43);
+            this.button1.TabIndex = 59;
+            this.button1.Text = "Zone Full Test";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // DebugFormNew
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 22F);
@@ -694,5 +706,6 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.Button btn_resetODO;
+        private System.Windows.Forms.Button button1;
     }
 }

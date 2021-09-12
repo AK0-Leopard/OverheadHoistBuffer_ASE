@@ -389,6 +389,11 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                 btn_resetODO.Enabled = true;
             }
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Task.Run(() => bcApp.SCApplication.EmptyBoxHandlerService.CheckTheEmptyBoxStockLevel());
+        }
         //*************************************
         //A0.01
 

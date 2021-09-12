@@ -75,7 +75,8 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
                 //{
                 try
                 {
-                    scApp.VehicleService.CheckBlockControlByVehicleView();
+                    //scApp.VehicleService.CheckBlockControlByVehicleView();
+                    scApp.VehicleService.CheckObstacleStatusByVehicleView();
                 }
                 catch (Exception ex)
                 {

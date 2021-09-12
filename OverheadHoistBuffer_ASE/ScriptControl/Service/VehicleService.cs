@@ -2712,6 +2712,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         result = scApp.ReserveBLL.TryAddReservedSection(vhID, reserve_section_id,
                                                                             sensorDir: hltDirection,
                                                                             isAsk: true);
+                        //result = new HltResult(true, "No check,force Pass");
                         //result = new Mirle.Hlts.Utils.HltResult(true, "");
                     }
 
@@ -4079,6 +4080,107 @@ namespace com.mirle.ibg3k0.sc.Service
         }
 
 
+        public void CheckObstacleStatusByVehicleView()
+        {
+            try
+            {
+                List<AVEHICLE> lstVH = scApp.VehicleBLL.cache.loadVhs();
+                foreach (var vh in lstVH)
+                {
+                    if (vh.isTcpIpConnect &&
+                        (vh.MODE_STATUS != VHModeStatus.Manual) &&
+                        vh.IsObstacle
+                        )
+                    {
+                        LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                                               Data: $"start try find blocked vh...",
+                                               VehicleID: vh.VEHICLE_ID);
+
+                        LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                           Data: $"current segment id:{vh.CUR_SEG_ID},no find the next vh",
+                           VehicleID: vh.VEHICLE_ID);
+
+                        var cur_sec = scApp.SectionBLL.cache.GetSection(vh.CUR_SEC_ID);
+                        var sections_from = scApp.SectionBLL.cache.GetSectionsByAddress(cur_sec.FROM_ADR_ID);
+                        var sections_to = scApp.SectionBLL.cache.GetSectionsByAddress(cur_sec.TO_ADR_ID);
+                        sections_from.AddRange(sections_to);
+
+                        foreach (var sec in sections_from)
+                        {
+                            var result = scApp.ReserveBLL.TryAddReservedSection(vh.VEHICLE_ID, sec.SEC_ID,
+                                             sensorDir: HltDirection.ForwardReverse,
+                                             isAsk: true);
+
+                            if (!result.OK)
+                            {
+                                if (!SCUtility.isEmpty(result.VehicleID))
+                                {
+                                    //Task.Run(() => scApp.VehicleBLL.whenVhObstacle(result.VehicleID, vhID));
+                                    Task.Run(() => tryDriveOutTheVh(vh.VEHICLE_ID, result.VehicleID));
+                                    return;
+                                }
+                            }
+                        }
+
+                        var vh_cur_sec = scApp.SectionBLL.cache.GetSection(vh.CUR_SEC_ID);
+                        string start_search_adr = vh_cur_sec.TO_ADR_ID;
+                        var to_sections = scApp.SectionBLL.cache.GetSectionsByAddress(start_search_adr);
+                        foreach (var sec in to_sections)
+                        {
+                            var vhs = scApp.VehicleBLL.cache.getVhBySections(sec.SEC_ID);
+                            vhs.Remove(vh);
+                            if (vhs.Count != 0)
+                            {
+                                foreach (var v in vhs)
+                                {
+                                    Task.Run(() => tryDriveOutTheVh(vh.VEHICLE_ID, v.VEHICLE_ID));
+                                }
+                                return;
+                            }
+                            else
+                            {
+                                var vh_from = scApp.VehicleBLL.cache.getVhByAddressID(sec.FROM_ADR_ID);
+                                if (vh_from != null)
+                                {
+                                    Task.Run(() => tryDriveOutTheVh(vh.VEHICLE_ID, vh_from.VEHICLE_ID));
+                                    return;
+                                }
+                                var vh_to = scApp.VehicleBLL.cache.getVhByAddressID(sec.TO_ADR_ID);
+                                if (vh_to != null)
+                                {
+                                    Task.Run(() => tryDriveOutTheVh(vh.VEHICLE_ID, vh_to.VEHICLE_ID));
+                                    return;
+                                }
+                            }
+                        }
+                        var current_guide_sections = vh.WillPassSectionID;
+                        if (current_guide_sections != null && current_guide_sections.Count > 0)
+                        {
+                            foreach (string sec in current_guide_sections)
+                            {
+                                var result = scApp.ReserveBLL.TryAddReservedSection(vh.VEHICLE_ID, sec,
+                                                 sensorDir: HltDirection.ForwardReverse,
+                                                 isAsk: true);
+
+                                if (!result.OK)
+                                {
+                                    if (!SCUtility.isEmpty(result.VehicleID))
+                                    {
+                                        //Task.Run(() => scApp.VehicleBLL.whenVhObstacle(result.VehicleID, vhID));
+                                        Task.Run(() => tryDriveOutTheVh(vh.VEHICLE_ID, result.VehicleID));
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception:");
+            }
+        }
 
         public void CheckBlockControlByVehicleView()
         {

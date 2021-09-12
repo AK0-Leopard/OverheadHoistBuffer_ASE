@@ -106,23 +106,28 @@ namespace com.mirle.ibg3k0.sc.Service
             foreach (ZoneDef zoneData in zoneCacheDatas)
             {
                 //A1: zone內有沒有已經標記成待退的空box，有則跳過這次檢查
-                //if (zoneData.WaitForRecycleBoxList.Count() != 0)
-                //{
-                //    continue;
-                //}
+                if (zoneData.WaitForRecycleBoxList.Count() != 0)
+                {
+                    emptyBoxLogger.Info($"{zoneData.ZoneID} 已有等待退Box的命令,box ids:{string.Join(",", zoneData.WaitForRecycleBoxList)}");
+                    continue;
+                }
                 //A2: 檢查是否達緊急水位，有則強制送往STK，沒有STK就送往OHCV
                 //if (zoneData.BoxCount > zoneData.ZoneSize * emergencyWaterLevel)
                 if (zoneData.BoxCount > zoneData.HighWaterMark)
                 {
                     //已達緊急水位，產生往Loop or STK的manual command退box
-                    emptyBoxLogger.Info($"{zoneData.ZoneID} reaches emergency water level: {zoneData.ZoneSize * emergencyWaterLevel}, force to send empty box to STK or OHCV...");
+                    emptyBoxLogger.Info($"{zoneData.ZoneID} reaches emergency hight level: {zoneData.HighWaterMark}, force to send empty box to STK or OHCV...");
                     //找out mode下的STK port，沒有就找out mode下的OHCV port
                     string dest = scApp.TransferService.GetSTKorOHCV_OutModePortName();
                     if (string.IsNullOrWhiteSpace(dest) == false)
                     {
                         string recycleBoxID = FindBestRecycleBoxID(zoneData, emptyBox.emptyBox);
                         string recycleBoxLoc = cassette_dataBLL.GetCassetteLocByBoxID(recycleBoxID);
-                        scApp.TransferService.Manual_InsertCmd(recycleBoxLoc, dest, 5, "CheckTheEmptyBoxStockLevel", ACMD_MCS.CmdType.OHBC);
+                        string result = scApp.TransferService.Manual_InsertCmd(recycleBoxLoc, dest, 5, "CheckTheEmptyBoxStockLevel", ACMD_MCS.CmdType.OHBC);
+                        if (sc.Common.SCUtility.isMatche(result, "OK"))
+                        {
+                            zoneData.WaitForRecycleBoxList.Add(recycleBoxID);    //加入待回收box清單
+                        }
                     }
                     else
                     {
@@ -185,14 +190,46 @@ namespace com.mirle.ibg3k0.sc.Service
             var isEnoughEmptyBox = CheckIsEnoughEmptyBox(_emptyBoxList.Count - 1, out requriedBoxAGV);
             if (emptyBoxNum != 0 && isEnoughEmptyBox.isEnough == true)
             {
-                recycleBlockID = zoneData.EmptyBoxList.FirstOrDefault();
+                FilterHasCommandBox(zoneData.EmptyBoxList);
+                if (zoneData.EmptyBoxList.Count() != 0)
+                    recycleBlockID = zoneData.EmptyBoxList.FirstOrDefault();
+                else
+                {
+                    recycleBlockID = tryFindSolidBoxToRecycle(zoneData);
+                }
             }
             else
             {
-                zoneData.SolidBoxList.Sort();
-                recycleBlockID = zoneData.SolidBoxList.FirstOrDefault();
+                //recycleBlockID = zoneData.SolidBoxList.FirstOrDefault();
+                recycleBlockID = tryFindSolidBoxToRecycle(zoneData);
             }
             return recycleBlockID;
+        }
+
+        private string tryFindSolidBoxToRecycle(ZoneDef zoneData)
+        {
+            string recycleBlockID = "";
+            if (zoneData.SolidBoxList.Count() > 0)
+            {
+                FilterHasCommandBox(zoneData.SolidBoxList);
+                if (zoneData.SolidBoxList.Count() > 0)
+                {
+                    recycleBlockID = zoneData.SolidBoxList.FirstOrDefault();
+                }
+            }
+            return recycleBlockID;
+        }
+
+
+        private List<string> FilterHasCommandBox(List<string> boxList)
+        {
+            foreach (string box_id in boxList.ToList())
+            {
+                bool has_cmd_excute = scApp.CMDBLL.hasExcuteCMDMCSByBoxID(box_id);
+                if (has_cmd_excute)
+                    boxList.Remove(box_id);
+            }
+            return boxList;
         }
 
         private void RecycleBoxByMCS(ZoneDef zoneData, int boxCount)
@@ -392,8 +429,9 @@ namespace com.mirle.ibg3k0.sc.Service
                                  from s in shelfDatas
                                  where b.Carrier_LOC == s.ShelfID &&
                                     string.IsNullOrEmpty(b.CSTID) &&
-                                    s.ZoneID == z.ZoneID &&
-                                    s.ShelfState != ShelfDef.E_ShelfState.RetrievalReserved
+                                    s.ZoneID == z.ZoneID 
+                                    //&&
+                                    //s.ShelfState != ShelfDef.E_ShelfState.RetrievalReserved
                                  select b.BOXID;
                 //box(es) with cassette
                 var solidBoxes = from b in boxDatas
@@ -411,7 +449,8 @@ namespace com.mirle.ibg3k0.sc.Service
 
                 //找出已經回收成功的box
                 var recycledBoxes = from x in z.WaitForRecycleBoxList
-                                    where !(z.EmptyBoxList.Contains(x))
+                                        //where !(z.EmptyBoxList.Contains(x))
+                                    where !(z.EmptyBoxList.Contains(x)) && !(z.SolidBoxList.Contains(x))
                                     select x;
                 //把已經回收的box移出待回收列表
                 foreach (var box in recycledBoxes)

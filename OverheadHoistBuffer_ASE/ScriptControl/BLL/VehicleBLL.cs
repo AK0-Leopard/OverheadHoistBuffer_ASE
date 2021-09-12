@@ -2212,6 +2212,15 @@ namespace com.mirle.ibg3k0.sc.BLL
                 var vh = vhs.Where(v => SCUtility.isMatche(v.VEHICLE_ID, vhID)).FirstOrDefault();
                 return (vh != null, vh);
             }
+            public List<AVEHICLE> getVhBySections(string secID)
+            {
+                var vhs = eqObjCacheManager.getAllVehicle();
+                return vhs.
+                       Where(vh => SCUtility.isMatche(vh.CUR_SEC_ID, secID)).
+                       ToList();
+            }
+
+
         }
         public class Web
         {

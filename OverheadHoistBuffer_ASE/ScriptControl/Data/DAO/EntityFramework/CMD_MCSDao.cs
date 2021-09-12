@@ -111,6 +111,13 @@ namespace com.mirle.ibg3k0.sc.Data.DAO.EntityFramework
                         select cmd;
             return query.SingleOrDefault();
         }
+        public int getExcuteCmdCountByBoxID(DBConnection_EF con, String box_id)
+        {
+            var query = from cmd in con.ACMD_MCS
+                        where cmd.BOX_ID.Trim() == box_id.Trim() && cmd.TRANSFERSTATE < E_TRAN_STATUS.TransferCompleted
+                        select cmd;
+            return query.Count();
+        }
         public ACMD_MCS getByCstBoxID(DBConnection_EF con, string cst_id, string box_id)
         {
             var query = from cmd in con.ACMD_MCS
