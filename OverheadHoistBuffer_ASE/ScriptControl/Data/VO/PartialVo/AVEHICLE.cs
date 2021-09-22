@@ -75,6 +75,7 @@ namespace com.mirle.ibg3k0.sc
         public event EventHandler<string> LongTimeInaction;
         public event EventHandler<VhStopSingle> ErrorStatusChange;
         public event EventHandler<VhStopSingle> ReserveStatusChange;
+        public event EventHandler<int> HasBoxStatusChange;
 
 
         VehicleTimerAction vehicleTimer = null;
@@ -107,6 +108,10 @@ namespace com.mirle.ibg3k0.sc
         public void onReserveStatusChange(VhStopSingle vhStopSingle)
         {
             ReserveStatusChange?.Invoke(this, vhStopSingle);
+        }
+        public void onHasBoxStatusChange(int hasBoxStaus)
+        {
+            HasBoxStatusChange?.Invoke(this, hasBoxStaus);
         }
 
 
@@ -237,7 +242,8 @@ namespace com.mirle.ibg3k0.sc
         [JsonIgnore]
         public virtual List<string> Alarms { get; set; }
 
-
+        [JsonIgnore]
+        public virtual bool IsNeedAttentionBoxStatus { get; set; }
 
         [JsonIgnore]
         public virtual E_CMD_TYPE CmdType { get; set; } = default(E_CMD_TYPE);
@@ -531,6 +537,8 @@ namespace com.mirle.ibg3k0.sc
         {
             OnPropertyChanged(BCFUtility.getPropertyName(() => this.VhPositionChangeEvent), VEHICLE_ID);
         }
+
+
 
         public void Action()
         {

@@ -3918,6 +3918,14 @@ namespace com.mirle.ibg3k0.sc.BLL
                         if (is_send_success)
                         {
                             assignVH.AssignCommandFailTimes = 0;
+                            if (cmd.CMD_TPYE == E_CMD_TYPE.LoadUnload || cmd.CMD_TPYE == E_CMD_TYPE.Unload)
+                            {
+                                assignVH.IsNeedAttentionBoxStatus = true;
+                            }
+                            else
+                            {
+                                assignVH.IsNeedAttentionBoxStatus = false;
+                            }
                         }
                         else
                         {

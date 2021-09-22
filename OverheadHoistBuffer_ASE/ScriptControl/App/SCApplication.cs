@@ -2354,6 +2354,7 @@ namespace com.mirle.ibg3k0.sc.App
         /// </summary>
         public static Boolean isForcedPassReserve = false;
         public static Boolean isForcedRejectReserve = false;
+        public static Boolean isHandleBoxAbnormalPassOff = true;
 
         public enum CycleRunType
         {

@@ -40,6 +40,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             cb_StartGenAntoCmd.Checked = DebugParameter.CanAutoRandomGeneratesCommand;
             cb_FroceReservePass.Checked = DebugParameter.isForcedPassReserve;
             cb_FroceReserveReject.Checked = DebugParameter.isForcedRejectBlockControl;
+            cb_IsHandleBoxPassOff.Checked = DebugParameter.isHandleBoxAbnormalPassOff;
             List<string> lstVh = new List<string>();
             lstVh.Add(string.Empty);
             lstVh.AddRange(bcApp.SCApplication.getEQObjCacheManager().getAllVehicle().Select(vh => vh.VEHICLE_ID).ToList());
@@ -78,6 +79,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             {
                 group_cycleRun.Visible = true;
             }
+
         }
 
         private void DebugForm_Load(object sender, EventArgs e)
@@ -393,6 +395,11 @@ namespace com.mirle.ibg3k0.bc.winform.UI
         private void button1_Click(object sender, EventArgs e)
         {
             Task.Run(() => bcApp.SCApplication.EmptyBoxHandlerService.CheckTheEmptyBoxStockLevel());
+        }
+
+        private void cb_IsHandleBoxPassOff_CheckedChanged(object sender, EventArgs e)
+        {
+            DebugParameter.isHandleBoxAbnormalPassOff = cb_IsHandleBoxPassOff.Checked;
         }
         //*************************************
         //A0.01

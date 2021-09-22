@@ -75,7 +75,7 @@
             this.cb_OperMode = new System.Windows.Forms.ComboBox();
             this.button3 = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.button1 = new System.Windows.Forms.Button();
+            this.cb_IsHandleBoxPassOff = new System.Windows.Forms.CheckBox();
             this.tabPage1.SuspendLayout();
             this.group_cycleRun.SuspendLayout();
             this.gb_blockControl.SuspendLayout();
@@ -93,6 +93,7 @@
             // tabPage1
             // 
             this.tabPage1.AutoScroll = true;
+            this.tabPage1.Controls.Add(this.cb_IsHandleBoxPassOff);
             this.tabPage1.Controls.Add(this.group_cycleRun);
             this.tabPage1.Controls.Add(this.gb_blockControl);
             this.tabPage1.Controls.Add(this.groupBox4);
@@ -106,13 +107,12 @@
             // 
             // group_cycleRun
             // 
-            this.group_cycleRun.Controls.Add(this.button1);
             this.group_cycleRun.Controls.Add(this.combox_cycle_type);
             this.group_cycleRun.Controls.Add(this.label4);
             this.group_cycleRun.Controls.Add(this.cb_StartGenAntoCmd);
             this.group_cycleRun.Location = new System.Drawing.Point(790, 98);
             this.group_cycleRun.Name = "group_cycleRun";
-            this.group_cycleRun.Size = new System.Drawing.Size(387, 205);
+            this.group_cycleRun.Size = new System.Drawing.Size(387, 136);
             this.group_cycleRun.TabIndex = 58;
             this.group_cycleRun.TabStop = false;
             this.group_cycleRun.Text = "Cycle Run";
@@ -613,15 +613,16 @@
             this.tabControl1.Size = new System.Drawing.Size(1206, 865);
             this.tabControl1.TabIndex = 23;
             // 
-            // button1
+            // cb_IsHandleBoxPassOff
             // 
-            this.button1.Location = new System.Drawing.Point(18, 152);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(167, 43);
-            this.button1.TabIndex = 59;
-            this.button1.Text = "Zone Full Test";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.cb_IsHandleBoxPassOff.AutoSize = true;
+            this.cb_IsHandleBoxPassOff.Location = new System.Drawing.Point(808, 256);
+            this.cb_IsHandleBoxPassOff.Name = "cb_IsHandleBoxPassOff";
+            this.cb_IsHandleBoxPassOff.Size = new System.Drawing.Size(249, 26);
+            this.cb_IsHandleBoxPassOff.TabIndex = 58;
+            this.cb_IsHandleBoxPassOff.Text = "Is handle box pass off";
+            this.cb_IsHandleBoxPassOff.UseVisualStyleBackColor = true;
+            this.cb_IsHandleBoxPassOff.CheckedChanged += new System.EventHandler(this.cb_IsHandleBoxPassOff_CheckedChanged);
             // 
             // DebugFormNew
             // 
@@ -636,6 +637,7 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.DebugForm_FormClosed);
             this.Load += new System.EventHandler(this.DebugForm_Load);
             this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
             this.group_cycleRun.ResumeLayout(false);
             this.group_cycleRun.PerformLayout();
             this.gb_blockControl.ResumeLayout(false);
@@ -706,6 +708,6 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.Button btn_resetODO;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.CheckBox cb_IsHandleBoxPassOff;
     }
 }

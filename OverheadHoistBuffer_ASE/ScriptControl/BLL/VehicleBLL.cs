@@ -271,28 +271,26 @@ namespace com.mirle.ibg3k0.sc.BLL
         }
         public void updateVheicleTravelInfo(string vhID, int cmdFinish)
         {
-            AVEHICLE vh = scApp.VehiclPool.GetObject();
-            string preNodeAdr = string.Empty;
+            //AVEHICLE vh = scApp.VehiclPool.GetObject();
+            //string preNodeAdr = string.Empty;
             try
             {
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
-                    vh.VEHICLE_ID = vhID;
-                    con.AVEHICLE.Attach(vh);
+                    AVEHICLE vh = vehicleDAO.getByID(con, vhID);
                     vh.MANT_ACC_DIST += cmdFinish;
                     con.Entry(vh).Property(p => p.MANT_ACC_DIST).IsModified = true;
                     vehicleDAO.doUpdate(scApp, con, vh);
-                    con.Entry(vh).State = EntityState.Detached;
                 }
             }
             catch (Exception ex)
             {
                 logger.Error(ex, "Exception:");
             }
-            finally
-            {
-                scApp.VehiclPool.PutObject(vh);
-            }
+            //finally
+            //{
+            //    scApp.VehiclPool.PutObject(vh);
+            //}
         }
         public void resetVheicleTravelInfo(string vhID)
         {

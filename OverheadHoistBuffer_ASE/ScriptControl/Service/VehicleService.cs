@@ -76,6 +76,7 @@ namespace com.mirle.ibg3k0.sc.Service
         PORT_BP5_WaitOutTimeOut = 100029,
         PORT_LP_WaitOutTimeOut = 100030,
         OHT_CommandNotFinishedInTime = 100031,
+        OHT_BoxStatusAbnormalPassOff = 100032,
     }
     public class VehicleService : IDynamicMetaObjectProvider
     {
@@ -110,10 +111,56 @@ namespace com.mirle.ibg3k0.sc.Service
                 vh.LongTimeInaction += Vh_LongTimeInaction;
                 vh.ErrorStatusChange += (s1, e1) => Vh_ErrorStatusChange(s1, e1);
                 vh.ReserveStatusChange += Vh_ReserveStatusChange;
+                vh.HasBoxStatusChange += Vh_HasBoxStatusChange;
                 vh.TimerActionStart();
             }
 
             transferService = app.TransferService;
+        }
+
+
+        private void Vh_HasBoxStatusChange(object sender, int hasBoxStatus)
+        {
+            try
+            {
+                if (hasBoxStatus == 1) return;
+                var vh = sender as AVEHICLE;
+                if (DebugParameter.isHandleBoxAbnormalPassOff == false)
+                {
+                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                       Data: "By pass vh of box, abnormal pass off.",
+                       VehicleID: vh.VEHICLE_ID,
+                       CarrierID: vh.CST_ID);
+                    return;
+                }
+                if (vh.MODE_STATUS == VHModeStatus.Manual) return;
+                if (vh.ERROR == VhStopSingle.StopSingleOn) return;
+                if (vh.ACT_STATUS == VHActionStatus.Commanding)
+                {
+                    if (vh.IsNeedAttentionBoxStatus == false) return;
+                    ExcuteAbnormalBoxPassOffNotify(vh, true);
+                }
+                else
+                {
+                    ExcuteAbnormalBoxPassOffNotify(vh, false);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception:");
+            }
+        }
+
+        private void ExcuteAbnormalBoxPassOffNotify(AVEHICLE vh, bool isCommanding)
+        {
+            VehicleAutoModeCahnge(vh.VEHICLE_ID, VHModeStatus.AutoLocal);
+            string message = $"Attention! vh:{vh.VEHICLE_ID} has box single pass off on abnormal status ,change to auto local mode,is commanding:{isCommanding}";
+            LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+               Data: message,
+               VehicleID: vh.VEHICLE_ID,
+               CarrierID: vh.CST_ID);
+            BCFApplication.onWarningMsg(message);
+            scApp.TransferService.OHBC_AlarmSet(vh.VEHICLE_ID, ((int)AlarmLst.OHT_BoxStatusAbnormalPassOff).ToString());
         }
 
         private void Vh_ReserveStatusChange(object sender, VhStopSingle e)
@@ -2206,6 +2253,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                 break;
                             case EventType.Vhunloading:
                                 //scApp.CMDBLL.updateCMD_MCS_CmdStatus2Unloading(eqpt.MCS_CMD);
+                                eqpt.IsNeedAttentionBoxStatus = false;
                                 scApp.ReportBLL.newReportUnloading(eqpt.VEHICLE_ID, reportqueues);
                                 break;
                         }
@@ -4557,6 +4605,11 @@ namespace com.mirle.ibg3k0.sc.Service
                 eqpt.onReserveStatusChange(blockingStat);
             }
 
+            if (eqpt.HAS_CST != (int)loadBOXStatus)
+            {
+                eqpt.onHasBoxStatusChange((int)loadBOXStatus);
+            }
+
 
             int obstacleDIST = recive_str.ObstDistance;
             string obstacleVhID = recive_str.ObstVehicleID;
@@ -4744,7 +4797,7 @@ namespace com.mirle.ibg3k0.sc.Service
             VhLoadCarrierStatus vhLoadCSTStatus = recive_str.HasCst;
             string car_cst_id = recive_str.BOXID;
             bool isSuccess = true;
-
+            eqpt.IsNeedAttentionBoxStatus = false;
             if (scApp.CMDBLL.isCMCD_OHTCFinish(cmd_id))
             {
                 replyCommandComplete(eqpt, seq_num, finish_ohxc_cmd, finish_mcs_cmd);

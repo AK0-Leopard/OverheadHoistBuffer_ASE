@@ -179,6 +179,14 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                         select vh;
             return query.Count();
         }
+        public int getActVhCount(DBConnection_EF con ,string vhID)
+        {
+            var query = from vh in con.AVEHICLE
+                        where vh.VEHICLE_ID.Trim() == vhID.Trim()
+                        select vh.MANT_ACC_DIST;
+            return query.FirstOrDefault();
+        }
+
 
         public int getIdleVhCount(DBConnection_EF con)
         {
