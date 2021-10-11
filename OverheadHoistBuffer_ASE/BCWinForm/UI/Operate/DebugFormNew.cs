@@ -259,22 +259,22 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                 bool is_success = false;
                 string result = "";
                 await Task.Run(() =>
-                 {
-                     ACMD_OHTC ohtc_cmd = bcApp.SCApplication.CMDBLL.getExcuteCMD_OHTCByCmdID(noticeCar.OHTC_CMD);
-                     if (ohtc_cmd == null)
-                     {
-                         is_success = false;
-                         result = "command not exist.";
-                         return;
-                     }
-                     if (ohtc_cmd.CMD_TPYE != E_CMD_TYPE.Move)
-                     {
-                         is_success = false;
-                         result = "Curernt excute command type not move,cancel fail.";
-                         return;
-                     }
-                     is_success = noticeCar.sned_Str37(noticeCar.OHTC_CMD, type);
-                 });
+                {
+                    ACMD_OHTC ohtc_cmd = bcApp.SCApplication.CMDBLL.getExcuteCMD_OHTCByCmdID(noticeCar.OHTC_CMD);
+                    if (ohtc_cmd == null)
+                    {
+                        is_success = false;
+                        result = "command not exist.";
+                        return;
+                    }
+                    if (ohtc_cmd.CMD_TPYE != E_CMD_TYPE.Move)
+                    {
+                        is_success = false;
+                        result = "Curernt excute command type not move,cancel fail.";
+                        return;
+                    }
+                    is_success = noticeCar.sned_Str37(noticeCar.OHTC_CMD, type);
+                });
                 if (is_success)
                 {
                     MessageBox.Show($"Cacnel command sucess.", "Cacel command sucess.", MessageBoxButtons.OK, MessageBoxIcon.Information);

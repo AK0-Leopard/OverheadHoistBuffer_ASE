@@ -104,13 +104,13 @@ namespace com.mirle.ibg3k0.bc.winform
             this.zh_twToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zh_chToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tipMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.搬送模擬ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.monitorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.communectionStatusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.engineerToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.debugToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.engineeringModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.搬送模擬ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.CMS_OnLineMode.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -227,9 +227,9 @@ namespace com.mirle.ibg3k0.bc.winform
             this.mataToolStripMenuItem,
             this.languageToolStripMenuItem,
             this.tipMessageToolStripMenuItem,
-            this.engineerToolStripMenuItem1,
             this.testToolStripMenuItem,
-            this.monitorToolStripMenuItem});
+            this.monitorToolStripMenuItem,
+            this.engineerToolStripMenuItem1});
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.menuStrip1_MouseDoubleClick);
             // 
@@ -481,19 +481,6 @@ namespace com.mirle.ibg3k0.bc.winform
             resources.ApplyResources(this.tipMessageToolStripMenuItem, "tipMessageToolStripMenuItem");
             this.tipMessageToolStripMenuItem.Click += new System.EventHandler(this.tipMessageToolStripMenuItem_Click);
             // 
-            // testToolStripMenuItem
-            // 
-            this.testToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.搬送模擬ToolStripMenuItem});
-            this.testToolStripMenuItem.Name = "testToolStripMenuItem";
-            resources.ApplyResources(this.testToolStripMenuItem, "testToolStripMenuItem");
-            // 
-            // 搬送模擬ToolStripMenuItem
-            // 
-            resources.ApplyResources(this.搬送模擬ToolStripMenuItem, "搬送模擬ToolStripMenuItem");
-            this.搬送模擬ToolStripMenuItem.Name = "搬送模擬ToolStripMenuItem";
-            this.搬送模擬ToolStripMenuItem.Click += new System.EventHandler(this.搬送模擬ToolStripMenuItem_Click);
-            // 
             // monitorToolStripMenuItem
             // 
             this.monitorToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -526,6 +513,19 @@ namespace com.mirle.ibg3k0.bc.winform
             this.engineeringModeToolStripMenuItem.Name = "engineeringModeToolStripMenuItem";
             resources.ApplyResources(this.engineeringModeToolStripMenuItem, "engineeringModeToolStripMenuItem");
             this.engineeringModeToolStripMenuItem.Click += new System.EventHandler(this.engineeringModeToolStripMenuItem_Click);
+            // 
+            // testToolStripMenuItem
+            // 
+            this.testToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.搬送模擬ToolStripMenuItem});
+            this.testToolStripMenuItem.Name = "testToolStripMenuItem";
+            resources.ApplyResources(this.testToolStripMenuItem, "testToolStripMenuItem");
+            // 
+            // 搬送模擬ToolStripMenuItem
+            // 
+            resources.ApplyResources(this.搬送模擬ToolStripMenuItem, "搬送模擬ToolStripMenuItem");
+            this.搬送模擬ToolStripMenuItem.Name = "搬送模擬ToolStripMenuItem";
+            this.搬送模擬ToolStripMenuItem.Click += new System.EventHandler(this.搬送模擬ToolStripMenuItem_Click);
             // 
             // BCMainForm
             // 

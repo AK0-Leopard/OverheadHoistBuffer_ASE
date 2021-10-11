@@ -1893,7 +1893,7 @@ namespace com.mirle.ibg3k0.sc.Service
             lock (vh.PositionRefresh_Sync)
             {
                 ALINE line = scApp.getEQObjCacheManager().getLine();
-                scApp.VehicleBLL.updateVheiclePosition_CacheManager(vh, current_adr_id, current_sec_id, current_seg_id, sec_dis, x_axis, y_axis);
+                scApp.VehicleBLL.updateVheiclePosition_CacheManager(vh, current_adr_id, current_sec_id, current_seg_id, sec_dis, x_axis, y_axis, speed);
 
                 //var update_result = scApp.VehicleBLL.updateVheiclePositionToReserveControlModule
                 //    (scApp.ReserveBLL, vh, current_sec_id, x_axis, y_axis, 0, vh_angle, speed,
@@ -2392,11 +2392,19 @@ namespace com.mirle.ibg3k0.sc.Service
                     //Task.Run(() => tryNotifyVhAvoid_New(eqpt.VEHICLE_ID, ReserveResult.reservedVhID, reserve_fail_sections));
 
                     //在預約失敗以後，會嘗試看能不能將車子趕走
-                    ALINE line = scApp.getEQObjCacheManager().getLine();
-                    if (!IsCMD_MCSCanProcess() ||
-                        line.SCStats == ALINE.TSCState.PAUSED)
+                    var reserved_vh = scApp.VehicleBLL.cache.getVhByID(ReserveResult.reservedVhID);
+                    if (reserved_vh != null && !reserved_vh.IS_INSTALLED)
                     {
                         Task.Run(() => tryDriveOutTheVh(eqpt.VEHICLE_ID, ReserveResult.reservedVhID));
+                    }
+                    else
+                    {
+                        ALINE line = scApp.getEQObjCacheManager().getLine();
+                        if (!IsCMD_MCSCanProcess() ||
+                            line.SCStats == ALINE.TSCState.PAUSED)
+                        {
+                            Task.Run(() => tryDriveOutTheVh(eqpt.VEHICLE_ID, ReserveResult.reservedVhID));
+                        }
                     }
                 }
                 //B0.02 replyTranEventReport(bcfApp, EventType.ReserveReq, eqpt, seqNum, canReservePass: ReserveResult.isSuccess, reserveInfos: reserveInfos);

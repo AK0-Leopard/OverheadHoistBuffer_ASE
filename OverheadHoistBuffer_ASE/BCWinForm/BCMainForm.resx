@@ -513,24 +513,6 @@
   <data name="tipMessageToolStripMenuItem.Text" xml:space="preserve">
     <value>Tip Message</value>
   </data>
-  <data name="debugToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>235, 26</value>
-  </data>
-  <data name="debugToolStripMenuItem1.Text" xml:space="preserve">
-    <value>Debug Mode</value>
-  </data>
-  <data name="engineeringModeToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>235, 26</value>
-  </data>
-  <data name="engineeringModeToolStripMenuItem.Text" xml:space="preserve">
-    <value>Engineering mode</value>
-  </data>
-  <data name="engineerToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>98, 26</value>
-  </data>
-  <data name="engineerToolStripMenuItem1.Text" xml:space="preserve">
-    <value>Engineer</value>
-  </data>
   <data name="搬送模擬ToolStripMenuItem.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft JhengHei UI, 14.25pt</value>
   </data>
@@ -560,6 +542,24 @@
   </data>
   <data name="monitorToolStripMenuItem.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
+  </data>
+  <data name="debugToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>235, 26</value>
+  </data>
+  <data name="debugToolStripMenuItem1.Text" xml:space="preserve">
+    <value>Debug Mode</value>
+  </data>
+  <data name="engineeringModeToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>235, 26</value>
+  </data>
+  <data name="engineeringModeToolStripMenuItem.Text" xml:space="preserve">
+    <value>Engineering mode</value>
+  </data>
+  <data name="engineerToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>98, 26</value>
+  </data>
+  <data name="engineerToolStripMenuItem1.Text" xml:space="preserve">
+    <value>Engineer</value>
   </data>
   <data name="menuStrip1.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
@@ -1475,18 +1475,6 @@
   <data name="&gt;&gt;tipMessageToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;testToolStripMenuItem.Name" xml:space="preserve">
-    <value>testToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;testToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;搬送模擬ToolStripMenuItem.Name" xml:space="preserve">
-    <value>搬送模擬ToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;搬送模擬ToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="&gt;&gt;monitorToolStripMenuItem.Name" xml:space="preserve">
     <value>monitorToolStripMenuItem</value>
   </data>
@@ -1515,6 +1503,18 @@
     <value>engineeringModeToolStripMenuItem</value>
   </data>
   <data name="&gt;&gt;engineeringModeToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;testToolStripMenuItem.Name" xml:space="preserve">
+    <value>testToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;testToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;搬送模擬ToolStripMenuItem.Name" xml:space="preserve">
+    <value>搬送模擬ToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;搬送模擬ToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">

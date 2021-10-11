@@ -90,7 +90,7 @@ namespace VehicleControl_Viewer.frm_Mainfrom
         {
             positionUpdat3Timer = new System.Windows.Threading.DispatcherTimer();
             positionUpdat3Timer.Tick += new EventHandler(timeCycle);
-            positionUpdat3Timer.Interval = new TimeSpan(0, 0, 0, 1);
+            positionUpdat3Timer.Interval = new TimeSpan(0, 0, 0, 2);
             positionUpdat3Timer.Start();
         }
         public void timeCycle(object sender, EventArgs e)

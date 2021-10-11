@@ -752,7 +752,7 @@ namespace com.mirle.ibg3k0.bc.winform
                 recordAction("Close Master PC, Authority Check...", "Failed !!");
                 return;
             }
-
+            
             recordAction("Close Master PC, Authority Check...", "Success !!");
 
             if (e.Cancel == false)

@@ -2758,16 +2758,21 @@ namespace com.mirle.ibg3k0.sc.Service
                         }
                         else
                         {
-                            if (isShelfPort(ohtCmdData.DESTINATION))
-                            {
-                                TransferServiceLogger.Info
-                                (
-                                    DateTime.Now.ToString("HH:mm:ss.fff ")
-                                    + "OHT >> OHB|OHT_TestProcess 出料完成發現沒帳在車上，且目的在 Shelf 自動產生 SCAN 到 " + ohtCmdData.DESTINATION
-                                );
+                            TransferServiceLogger.Info
+                            (
+                                DateTime.Now.ToString("HH:mm:ss.fff ")
+                                + "OHT >> OHB|OHT_TestProcess 出料完成發現沒帳在車上"
+                            );
+                            //if (isShelfPort(ohtCmdData.DESTINATION))
+                            //{
+                            //    TransferServiceLogger.Info
+                            //    (
+                            //        DateTime.Now.ToString("HH:mm:ss.fff ")
+                            //        + "OHT >> OHB|OHT_TestProcess 出料完成發現沒帳在車上，且目的在 Shelf 自動產生 SCAN 到 " + ohtCmdData.DESTINATION
+                            //    );
 
-                                SetScanCmd("", "", ohtCmdData.DESTINATION);
-                            }
+                            //    SetScanCmd("", "", ohtCmdData.DESTINATION);
+                            //}
                         }
 
                         break;

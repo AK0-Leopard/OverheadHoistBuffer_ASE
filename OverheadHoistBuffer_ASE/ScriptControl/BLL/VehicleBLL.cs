@@ -125,7 +125,8 @@ namespace com.mirle.ibg3k0.sc.BLL
 
         //}
         public bool updateVheiclePosition_CacheManager(AVEHICLE vh, string adr_id, string sec_id, string seg_id, double sce_dis,
-                                                       double xAxis, double yAxis)
+                                                       double xAxis, double yAxis,
+                                                       double speed)
         {
             vh.CUR_ADR_ID = adr_id;
             vh.CUR_SEC_ID = sec_id;
@@ -133,6 +134,7 @@ namespace com.mirle.ibg3k0.sc.BLL
             vh.ACC_SEC_DIST = sce_dis;
             vh.X_Axis = xAxis;
             vh.Y_Axis = yAxis;
+            vh.Speed= speed;
 
             //var showObj = scApp.getEQObjCacheManager().CommonInfo.ObjectToShow_list.
             //    Where(o => o.VEHICLE_ID == vh.VEHICLE_ID).SingleOrDefault();
@@ -1024,6 +1026,18 @@ namespace com.mirle.ibg3k0.sc.BLL
 
         private void filterVh(ref List<AVEHICLE> vhs, E_VH_TYPE vh_type)
         {
+            foreach (AVEHICLE vh in vhs.ToList())
+            {
+                if (!vh.IS_INSTALLED)
+                {
+                    vhs.Remove(vh);
+                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleBLL), Device: "OHxC",
+                       Data: $"vh id:{vh.VEHICLE_ID} is install:{vh.IS_INSTALLED}," +
+                             $"so filter it out",
+                       VehicleID: vh.VEHICLE_ID,
+                       CarrierID: vh.CST_ID);
+                }
+            }
             foreach (AVEHICLE vh in vhs.ToList())
             {
                 if (!vh.isTcpIpConnect)

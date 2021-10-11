@@ -130,18 +130,19 @@ namespace com.mirle.ibg3k0.sc.Service
             {
                 isSuccess = isSuccess && reportBLL.ReportEquiptmentOffLine();
             }
-            
-            isSuccess = isSuccess && lineBLL.updateHostControlState(SCAppConstants.LineHostControlState.HostControlState.EQ_Off_line);            
+
+            isSuccess = isSuccess && lineBLL.updateHostControlState(SCAppConstants.LineHostControlState.HostControlState.EQ_Off_line);
         }
         public void OfflineWithHostByHost()
         {
             bool isSuccess = true;
             isSuccess = isSuccess && reportBLL.ReportEquiptmentOffLine();
-            isSuccess = isSuccess && lineBLL.updateHostControlState(SCAppConstants.LineHostControlState.HostControlState.EQ_Off_line);            
+            isSuccess = isSuccess && lineBLL.updateHostControlState(SCAppConstants.LineHostControlState.HostControlState.EQ_Off_line);
         }
 
         public bool canOnlineWithHost()
         {
+            return true;
             bool can_not_online = false;
             //1檢查目前沒有Remove的Vhicle，是否都已連線
             List<AVEHICLE> vhs = scApp.getEQObjCacheManager().getAllVehicle();

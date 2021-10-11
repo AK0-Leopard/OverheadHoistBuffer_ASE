@@ -253,8 +253,8 @@ namespace VehicleControl_Viewer.UI.Components
             moveStoryboard = new Storyboard();
             moveStoryboard.Children.Add(doubleAnimation_x);
             moveStoryboard.Children.Add(doubleAnimation_y);
-            doubleAnimation_x.Duration = TimeSpan.FromSeconds(1);
-            doubleAnimation_y.Duration = TimeSpan.FromSeconds(1);
+            doubleAnimation_x.Duration = TimeSpan.FromSeconds(2);
+            doubleAnimation_y.Duration = TimeSpan.FromSeconds(2);
 
             //doubleAnimation_x.To = vh.Num * 1500;
             //doubleAnimation_y.To = 5000;
@@ -434,7 +434,8 @@ namespace VehicleControl_Viewer.UI.Components
             {
                 AlertStatus = E_ALERT_STATUS.ERROR;
             }
-            else if (vh.BLOCK_PAUSE == VhStopSingle.StopSingleOn)
+            else if (vh.BLOCK_PAUSE == VhStopSingle.StopSingleOn &&
+                     vh.Speed == 0)
             {
                 AlertStatus = E_ALERT_STATUS.BLOCK;
             }
