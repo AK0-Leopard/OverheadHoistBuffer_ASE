@@ -251,7 +251,7 @@ namespace com.mirle.ibg3k0.bc.winform
                 //openForm(typeof(OHT_Form).Name);
                 if (SCUtility.isMatche(BCApp.SCApplication.BC_ID, "ASE_LOOP"))
                 {
-                    openForm(typeof(OHT_FormNew).Name, true, false);
+                    openForm(typeof(OHT_FormNew2).Name, true, false);
                 }
                 else if(SCUtility.isMatche(BCApp.SCApplication.BC_ID, "ASE_LINE3"))
                 {
@@ -746,15 +746,13 @@ namespace com.mirle.ibg3k0.bc.winform
                 return;
             }
 
-            if (!SCUtility.isMatche(bcApp.SCApplication.BC_ID, "ASE_LOOP"))
+            if (!BCUtility.doLogin(this, bcApp, BCAppConstants.FUNC_CLOSE_SYSTEM, true))
             {
-                if (!BCUtility.doLogin(this, bcApp, BCAppConstants.FUNC_CLOSE_SYSTEM, true))
-                {
-                    e.Cancel = true;
-                    recordAction("Close Master PC, Authority Check...", "Failed !!");
-                    return;
-                }
+                e.Cancel = true;
+                recordAction("Close Master PC, Authority Check...", "Failed !!");
+                return;
             }
+
             recordAction("Close Master PC, Authority Check...", "Success !!");
 
             if (e.Cancel == false)

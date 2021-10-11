@@ -70,8 +70,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
 
             cb_Abort_Type.DataSource = Enum.GetValues(typeof(sc.ProtocolFormat.OHTMessage.CMDCancelType))
                                            .Cast<sc.ProtocolFormat.OHTMessage.CMDCancelType>()
-                                           .Where(e => e == sc.ProtocolFormat.OHTMessage.CMDCancelType.CmdAbort ||
-                                                       e == sc.ProtocolFormat.OHTMessage.CMDCancelType.CmdCancel).ToList();
+                                           .Where(e => e == sc.ProtocolFormat.OHTMessage.CMDCancelType.CmdCancel).ToList();
 
             combox_cycle_type.DataSource = Enum.GetValues(typeof(DebugParameter.CycleRunType));
 
@@ -240,16 +239,59 @@ namespace com.mirle.ibg3k0.bc.winform.UI
         }
 
 
-        private void button9_Click(object sender, EventArgs e)
+        private async void button9_Click(object sender, EventArgs e)
         {
-            sc.ProtocolFormat.OHTMessage.CMDCancelType type;
-            Enum.TryParse(cb_Abort_Type.SelectedValue.ToString(), out type);
-
-            Task.Run(() =>
+            try
             {
-                noticeCar.sned_Str37(noticeCar.OHTC_CMD, type);
-            });
+                button9.Enabled = false;
+                sc.ProtocolFormat.OHTMessage.CMDCancelType type;
+                Enum.TryParse(cb_Abort_Type.SelectedValue.ToString(), out type);
+                string message = $"Do you want to cancel vh:{noticeCar.VEHICLE_ID} command?";
+                DialogResult confirmResult = MessageBox.Show(this, message,
+                    BCApplication.getMessageString("CONFIRM"), MessageBoxButtons.YesNo);
 
+                BCUtility.recordAction(bcApp, this.Name, message, confirmResult.ToString());
+                if (confirmResult != System.Windows.Forms.DialogResult.Yes)
+                {
+                    return;
+                }
+
+                bool is_success = false;
+                string result = "";
+                await Task.Run(() =>
+                 {
+                     ACMD_OHTC ohtc_cmd = bcApp.SCApplication.CMDBLL.getExcuteCMD_OHTCByCmdID(noticeCar.OHTC_CMD);
+                     if (ohtc_cmd == null)
+                     {
+                         is_success = false;
+                         result = "command not exist.";
+                         return;
+                     }
+                     if (ohtc_cmd.CMD_TPYE != E_CMD_TYPE.Move)
+                     {
+                         is_success = false;
+                         result = "Curernt excute command type not move,cancel fail.";
+                         return;
+                     }
+                     is_success = noticeCar.sned_Str37(noticeCar.OHTC_CMD, type);
+                 });
+                if (is_success)
+                {
+                    MessageBox.Show($"Cacnel command sucess.", "Cacel command sucess.", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show($"result:{result}", "Cacel command fail.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                NLog.LogManager.GetCurrentClassLogger().Warn(ex, "Exception");
+            }
+            finally
+            {
+                button9.Enabled = true;
+            }
         }
 
 

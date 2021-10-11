@@ -18,7 +18,7 @@ namespace com.mirle.ibg3k0.sc.Scheduler
         NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         SCApplication scApp = SCApplication.getInstance();
         const int BLOCK_QUEUE_KEEP_TIME_N_Day = 7;
-        private long syncPoint = 0;
+        private static long syncPoint = 0;
         public void Execute(IJobExecutionContext context)
         {
             if (Interlocked.Exchange(ref syncPoint, 1) == 0)

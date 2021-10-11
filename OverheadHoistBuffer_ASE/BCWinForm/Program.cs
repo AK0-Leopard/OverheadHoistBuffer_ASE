@@ -37,7 +37,7 @@ namespace com.mirle.ibg3k0.bc.winform
         /// <summary>
         /// The application unique identifier
         /// </summary>
-        static string appGuid = "{39ba7d51-cc5b-4b38-894e-313f12beb467}";
+        static string appGuid = "{39ba7d51-cc5b-4b38-894e-313f12beb468}";
 
         static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         static NLog.Logger TransferServiceLogger = NLog.LogManager.GetLogger("TransferServiceLogger");
