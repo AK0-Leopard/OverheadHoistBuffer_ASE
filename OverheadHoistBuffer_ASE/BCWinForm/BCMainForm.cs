@@ -1086,5 +1086,10 @@ namespace com.mirle.ibg3k0.bc.winform
         {
             openForm(typeof(AlarmEnableForm).Name, true, false);
         }
+
+        private void alarmHistoryQueryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openForm(typeof(HistoryAlarmsForm).Name, true, false);
+        }
     }
 }

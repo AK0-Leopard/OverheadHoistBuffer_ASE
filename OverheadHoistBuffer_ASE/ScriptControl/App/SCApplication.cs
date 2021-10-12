@@ -236,6 +236,13 @@ namespace com.mirle.ibg3k0.sc.App
         /// <value>The alarm DAO.</value>
         public AlarmDao AlarmDao { get { return alarmDao; } }
 
+        private VAlarmDao valarmDao = null;
+        /// <summary>
+        /// Gets the alarm DAO.
+        /// </summary>
+        /// <value>The alarm DAO.</value>
+        public VAlarmDao VAlarmDao { get { return valarmDao; } }
+
         /// <summary>
         /// The alarm DAO
         /// </summary>
@@ -602,6 +609,7 @@ namespace com.mirle.ibg3k0.sc.App
         public ShelfDefBLL ShelfDefBLL { get; private set; } = null;
         public CassetteDataBLL CassetteDataBLL { get; private set; } = null;
         public ReserveBLL ReserveBLL { get; private set; } = null; //A0.01
+        public VAlarmBLL VAlarmBLL { get; private set; } = null; //A0.01
 
         //WIF
         /// <summary>
@@ -1131,6 +1139,7 @@ namespace com.mirle.ibg3k0.sc.App
             functionCodeDao = new FunctionCodeDao();
             userFuncDao = new UserFuncDao();
             alarmDao = new AlarmDao();
+            valarmDao = new VAlarmDao();
             mainalarmDao = new MainAlarmDao();
             cassetteDao = new CassetteDao();
             bcStatusDao = new BCStatusDao();
@@ -1468,6 +1477,7 @@ namespace com.mirle.ibg3k0.sc.App
             ShelfDefBLL = new ShelfDefBLL();
             CassetteDataBLL = new CassetteDataBLL();
             ReserveBLL = new ReserveBLL(); //A0.01
+            VAlarmBLL = new VAlarmBLL(); //A0.01
         }
 
 
@@ -1530,6 +1540,7 @@ namespace com.mirle.ibg3k0.sc.App
             ShelfDefBLL.start(this);
             CassetteDataBLL.start(this);
             ReserveBLL.start(this); //A0.01
+            VAlarmBLL.start(this);
         }
 
         private void startService()

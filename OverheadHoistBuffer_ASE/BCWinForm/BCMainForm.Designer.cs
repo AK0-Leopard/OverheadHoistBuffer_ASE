@@ -104,13 +104,15 @@ namespace com.mirle.ibg3k0.bc.winform
             this.zh_twToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zh_chToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tipMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.搬送模擬ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.monitorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.communectionStatusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.engineerToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.debugToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.engineeringModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.搬送模擬ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.queryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.alarmHistoryQueryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.CMS_OnLineMode.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -224,6 +226,7 @@ namespace com.mirle.ibg3k0.bc.winform
             this.systemToolStripMenuItem,
             this.toolStripMenuItem2,
             this.operatorToolStripMenuItem,
+            this.queryToolStripMenuItem,
             this.mataToolStripMenuItem,
             this.languageToolStripMenuItem,
             this.tipMessageToolStripMenuItem,
@@ -481,6 +484,19 @@ namespace com.mirle.ibg3k0.bc.winform
             resources.ApplyResources(this.tipMessageToolStripMenuItem, "tipMessageToolStripMenuItem");
             this.tipMessageToolStripMenuItem.Click += new System.EventHandler(this.tipMessageToolStripMenuItem_Click);
             // 
+            // testToolStripMenuItem
+            // 
+            this.testToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.搬送模擬ToolStripMenuItem});
+            this.testToolStripMenuItem.Name = "testToolStripMenuItem";
+            resources.ApplyResources(this.testToolStripMenuItem, "testToolStripMenuItem");
+            // 
+            // 搬送模擬ToolStripMenuItem
+            // 
+            resources.ApplyResources(this.搬送模擬ToolStripMenuItem, "搬送模擬ToolStripMenuItem");
+            this.搬送模擬ToolStripMenuItem.Name = "搬送模擬ToolStripMenuItem";
+            this.搬送模擬ToolStripMenuItem.Click += new System.EventHandler(this.搬送模擬ToolStripMenuItem_Click);
+            // 
             // monitorToolStripMenuItem
             // 
             this.monitorToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -514,18 +530,18 @@ namespace com.mirle.ibg3k0.bc.winform
             resources.ApplyResources(this.engineeringModeToolStripMenuItem, "engineeringModeToolStripMenuItem");
             this.engineeringModeToolStripMenuItem.Click += new System.EventHandler(this.engineeringModeToolStripMenuItem_Click);
             // 
-            // testToolStripMenuItem
+            // queryToolStripMenuItem
             // 
-            this.testToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.搬送模擬ToolStripMenuItem});
-            this.testToolStripMenuItem.Name = "testToolStripMenuItem";
-            resources.ApplyResources(this.testToolStripMenuItem, "testToolStripMenuItem");
+            this.queryToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.alarmHistoryQueryToolStripMenuItem});
+            this.queryToolStripMenuItem.Name = "queryToolStripMenuItem";
+            resources.ApplyResources(this.queryToolStripMenuItem, "queryToolStripMenuItem");
             // 
-            // 搬送模擬ToolStripMenuItem
+            // alarmHistoryQueryToolStripMenuItem
             // 
-            resources.ApplyResources(this.搬送模擬ToolStripMenuItem, "搬送模擬ToolStripMenuItem");
-            this.搬送模擬ToolStripMenuItem.Name = "搬送模擬ToolStripMenuItem";
-            this.搬送模擬ToolStripMenuItem.Click += new System.EventHandler(this.搬送模擬ToolStripMenuItem_Click);
+            this.alarmHistoryQueryToolStripMenuItem.Name = "alarmHistoryQueryToolStripMenuItem";
+            resources.ApplyResources(this.alarmHistoryQueryToolStripMenuItem, "alarmHistoryQueryToolStripMenuItem");
+            this.alarmHistoryQueryToolStripMenuItem.Click += new System.EventHandler(this.alarmHistoryQueryToolStripMenuItem_Click);
             // 
             // BCMainForm
             // 
@@ -686,6 +702,8 @@ namespace com.mirle.ibg3k0.bc.winform
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem alarmEnableDisableToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem queryToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem alarmHistoryQueryToolStripMenuItem;
     }
 
     /// <summary>

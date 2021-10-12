@@ -405,6 +405,18 @@
   <data name="operatorToolStripMenuItem.Text" xml:space="preserve">
     <value>Operator</value>
   </data>
+  <data name="alarmHistoryQueryToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>248, 26</value>
+  </data>
+  <data name="alarmHistoryQueryToolStripMenuItem.Text" xml:space="preserve">
+    <value>Alarm History Query</value>
+  </data>
+  <data name="queryToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>73, 26</value>
+  </data>
+  <data name="queryToolStripMenuItem.Text" xml:space="preserve">
+    <value>Query</value>
+  </data>
   <data name="changePasswordToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>300, 28</value>
   </data>
@@ -517,7 +529,7 @@
     <value>Microsoft JhengHei UI, 14.25pt</value>
   </data>
   <data name="搬送模擬ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 28</value>
+    <value>156, 28</value>
   </data>
   <data name="搬送模擬ToolStripMenuItem.Text" xml:space="preserve">
     <value>搬送模擬</value>
@@ -1475,6 +1487,18 @@
   <data name="&gt;&gt;tipMessageToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;testToolStripMenuItem.Name" xml:space="preserve">
+    <value>testToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;testToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;搬送模擬ToolStripMenuItem.Name" xml:space="preserve">
+    <value>搬送模擬ToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;搬送模擬ToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;monitorToolStripMenuItem.Name" xml:space="preserve">
     <value>monitorToolStripMenuItem</value>
   </data>
@@ -1505,16 +1529,16 @@
   <data name="&gt;&gt;engineeringModeToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;testToolStripMenuItem.Name" xml:space="preserve">
-    <value>testToolStripMenuItem</value>
+  <data name="&gt;&gt;queryToolStripMenuItem.Name" xml:space="preserve">
+    <value>queryToolStripMenuItem</value>
   </data>
-  <data name="&gt;&gt;testToolStripMenuItem.Type" xml:space="preserve">
+  <data name="&gt;&gt;queryToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;搬送模擬ToolStripMenuItem.Name" xml:space="preserve">
-    <value>搬送模擬ToolStripMenuItem</value>
+  <data name="&gt;&gt;alarmHistoryQueryToolStripMenuItem.Name" xml:space="preserve">
+    <value>alarmHistoryQueryToolStripMenuItem</value>
   </data>
-  <data name="&gt;&gt;搬送模擬ToolStripMenuItem.Type" xml:space="preserve">
+  <data name="&gt;&gt;alarmHistoryQueryToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">

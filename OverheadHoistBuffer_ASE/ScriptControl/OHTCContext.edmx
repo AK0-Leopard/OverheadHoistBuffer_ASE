@@ -332,7 +332,7 @@
           <Property Name="CMD_ID" Type="varchar" MaxLength="64" />
         </EntityType>
         <!--產生期間發現錯誤:
-警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE3_V3.dbo.ALARMMAP' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
+警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE1.dbo.ALARMMAP' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
         <EntityType Name="ALARMMAP">
           <Key>
             <PropertyRef Name="EQPT_ID" />
@@ -1200,7 +1200,7 @@
           <Property Name="TrnDT" Type="varchar" MaxLength="20" />
         </EntityType>
         <!--產生期間發現錯誤:
-警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE3_V3.dbo.VACMD_MCS' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
+警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE1.dbo.VACMD_MCS' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
         <EntityType Name="VACMD_MCS">
           <Key>
             <PropertyRef Name="CMD_ID" />
@@ -1236,7 +1236,38 @@
           <Property Name="VH_ID" Type="char" MaxLength="32" />
         </EntityType>
         <!--產生期間發現錯誤:
-警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE3_V3.dbo.VSECTION_100' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
+警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE1.dbo.VALARM' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
+        <EntityType Name="VALARM">
+          <Key>
+            <PropertyRef Name="EQPT_ID" />
+            <PropertyRef Name="UNIT_NUM" />
+            <PropertyRef Name="RPT_DATE_TIME" />
+            <PropertyRef Name="ALAM_CODE" />
+            <PropertyRef Name="ALAM_LVL" />
+            <PropertyRef Name="ALAM_STAT" />
+          </Key>
+          <Property Name="EQPT_ID" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="UNIT_NUM" Type="int" Nullable="false" />
+          <Property Name="RPT_DATE_TIME" Type="char" MaxLength="19" Nullable="false" />
+          <Property Name="END_TIME" Type="char" MaxLength="19" />
+          <Property Name="ALAM_CODE" Type="char" MaxLength="10" Nullable="false" />
+          <Property Name="ALAM_LVL" Type="int" Nullable="false" />
+          <Property Name="ALAM_STAT" Type="int" Nullable="false" />
+          <Property Name="ALAM_DESC" Type="char" MaxLength="128" />
+          <Property Name="ERROR_ID" Type="char" MaxLength="64" />
+          <Property Name="UnitID" Type="varchar" MaxLength="20" />
+          <Property Name="UnitState" Type="varchar" MaxLength="2" />
+          <Property Name="RecoveryOption" Type="varchar" MaxLength="20" />
+          <Property Name="CMD_ID" Type="varchar" MaxLength="64" />
+          <Property Name="BOX_ID" Type="varchar" MaxLength="64" />
+          <Property Name="CARRIER_ID" Type="varchar" MaxLength="64" />
+          <Property Name="LOT_ID" Type="varchar" MaxLength="64" />
+          <Property Name="CRANE" Type="varchar" MaxLength="64" />
+          <Property Name="HOSTSOURCE" Type="varchar" MaxLength="64" />
+          <Property Name="TRANSFERSTATE" Type="int" />
+        </EntityType>
+        <!--產生期間發現錯誤:
+警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE1.dbo.VSECTION_100' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
         <EntityType Name="VSECTION_100">
           <Key>
             <PropertyRef Name="SEC_ID" />
@@ -1422,6 +1453,29 @@
     [VACMD_MCS].[VH_ID] AS [VH_ID]
     FROM [dbo].[VACMD_MCS] AS [VACMD_MCS]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="VALARM" EntityType="Self.VALARM" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [VALARM].[EQPT_ID] AS [EQPT_ID], 
+    [VALARM].[UNIT_NUM] AS [UNIT_NUM], 
+    [VALARM].[RPT_DATE_TIME] AS [RPT_DATE_TIME], 
+    [VALARM].[END_TIME] AS [END_TIME], 
+    [VALARM].[ALAM_CODE] AS [ALAM_CODE], 
+    [VALARM].[ALAM_LVL] AS [ALAM_LVL], 
+    [VALARM].[ALAM_STAT] AS [ALAM_STAT], 
+    [VALARM].[ALAM_DESC] AS [ALAM_DESC], 
+    [VALARM].[ERROR_ID] AS [ERROR_ID], 
+    [VALARM].[UnitID] AS [UnitID], 
+    [VALARM].[UnitState] AS [UnitState], 
+    [VALARM].[RecoveryOption] AS [RecoveryOption], 
+    [VALARM].[CMD_ID] AS [CMD_ID], 
+    [VALARM].[BOX_ID] AS [BOX_ID], 
+    [VALARM].[CARRIER_ID] AS [CARRIER_ID], 
+    [VALARM].[LOT_ID] AS [LOT_ID], 
+    [VALARM].[CRANE] AS [CRANE], 
+    [VALARM].[HOSTSOURCE] AS [HOSTSOURCE], 
+    [VALARM].[TRANSFERSTATE] AS [TRANSFERSTATE]
+    FROM [dbo].[VALARM] AS [VALARM]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="VSECTION_100" EntityType="Self.VSECTION_100" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [VSECTION_100].[SEC_ID] AS [SEC_ID], 
@@ -1552,6 +1606,7 @@
           <EntitySet Name="HCMD_OHTC" EntityType="OHTC_DevModel.HCMD_OHTC" />
           <EntitySet Name="VACMD_MCS" EntityType="OHTC_DevModel.VACMD_MCS" />
           <EntitySet Name="VSECTION_100" EntityType="OHTC_DevModel.VSECTION_100" />
+          <EntitySet Name="VALARM" EntityType="OHTC_DevModel.VALARM" />
         </EntityContainer>
         <EntityType Name="ABASEDATA_VER">
           <Key>
@@ -2995,6 +3050,35 @@
           <Property Name="AREA_SECSOR" Type="Int32" />
           <Property Name="LAST_TECH_TIME" Type="DateTime" Precision="7" />
         </EntityType>
+        <EntityType Name="VALARM">
+          <Key>
+            <PropertyRef Name="EQPT_ID" />
+            <PropertyRef Name="UNIT_NUM" />
+            <PropertyRef Name="RPT_DATE_TIME" />
+            <PropertyRef Name="ALAM_CODE" />
+            <PropertyRef Name="ALAM_LVL" />
+            <PropertyRef Name="ALAM_STAT" />
+          </Key>
+          <Property Name="EQPT_ID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="UNIT_NUM" Type="Int32" Nullable="false" />
+          <Property Name="RPT_DATE_TIME" Type="String" Nullable="false" MaxLength="19" FixedLength="true" Unicode="false" />
+          <Property Name="END_TIME" Type="String" MaxLength="19" FixedLength="true" Unicode="false" />
+          <Property Name="ALAM_CODE" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="false" />
+          <Property Name="ALAM_LVL" Type="Int32" Nullable="false" />
+          <Property Name="ALAM_STAT" Type="Int32" Nullable="false" />
+          <Property Name="ALAM_DESC" Type="String" MaxLength="128" FixedLength="true" Unicode="false" />
+          <Property Name="ERROR_ID" Type="String" MaxLength="64" FixedLength="true" Unicode="false" />
+          <Property Name="UnitID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="UnitState" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="RecoveryOption" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="CMD_ID" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="BOX_ID" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="CARRIER_ID" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="LOT_ID" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="CRANE" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="HOSTSOURCE" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="TRANSFERSTATE" Type="Int32" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3999,12 +4083,12 @@
     <EntitySetMapping Name="ALARMRPTCOND">
       <EntityTypeMapping TypeName="IsTypeOf(OHTC_DevModel.ALARMRPTCOND)">
         <MappingFragment StoreEntitySet="ALARMRPTCOND">
-          <ScalarProperty Name="DISABLE_TIME" ColumnName="DISABLE_TIME" />
-                <ScalarProperty Name="EQPT_ID" ColumnName="EQPT_ID" />
+          <ScalarProperty Name="EQPT_ID" ColumnName="EQPT_ID" />
           <ScalarProperty Name="ALAM_CODE" ColumnName="ALAM_CODE" />
           <ScalarProperty Name="ENABLE_FLG" ColumnName="ENABLE_FLG" />
           <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
           <ScalarProperty Name="REASON" ColumnName="REASON" />
+          <ScalarProperty Name="DISABLE_TIME" ColumnName="DISABLE_TIME" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -4231,7 +4315,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
           <EntitySetMapping Name="VACMD_MCS">
-            <EntityTypeMapping TypeName="OHTC_DevModel.VACMD_MCS">
+            <EntityTypeMapping TypeName="IsTypeOf(OHTC_DevModel.VACMD_MCS)">
               <MappingFragment StoreEntitySet="VACMD_MCS">
                 <ScalarProperty Name="VH_ID" ColumnName="VH_ID" />
                 <ScalarProperty Name="OHTC_CMD" ColumnName="OHTC_CMD" />
@@ -4255,7 +4339,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="VSECTION_100">
-            <EntityTypeMapping TypeName="OHTC_DevModel.VSECTION_100">
+            <EntityTypeMapping TypeName="IsTypeOf(OHTC_DevModel.VSECTION_100)">
               <MappingFragment StoreEntitySet="VSECTION_100">
                 <ScalarProperty Name="LAST_TECH_TIME" ColumnName="LAST_TECH_TIME" />
                 <ScalarProperty Name="AREA_SECSOR" ColumnName="AREA_SECSOR" />
@@ -4303,6 +4387,31 @@
                 <ScalarProperty Name="SEG_ORDER_NUM" ColumnName="SEG_ORDER_NUM" />
                 <ScalarProperty Name="SEC_ORDER_NUM" ColumnName="SEC_ORDER_NUM" />
                 <ScalarProperty Name="SEC_ID" ColumnName="SEC_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VALARM">
+            <EntityTypeMapping TypeName="OHTC_DevModel.VALARM">
+              <MappingFragment StoreEntitySet="VALARM">
+                <ScalarProperty Name="TRANSFERSTATE" ColumnName="TRANSFERSTATE" />
+                <ScalarProperty Name="HOSTSOURCE" ColumnName="HOSTSOURCE" />
+                <ScalarProperty Name="CRANE" ColumnName="CRANE" />
+                <ScalarProperty Name="LOT_ID" ColumnName="LOT_ID" />
+                <ScalarProperty Name="CARRIER_ID" ColumnName="CARRIER_ID" />
+                <ScalarProperty Name="BOX_ID" ColumnName="BOX_ID" />
+                <ScalarProperty Name="CMD_ID" ColumnName="CMD_ID" />
+                <ScalarProperty Name="RecoveryOption" ColumnName="RecoveryOption" />
+                <ScalarProperty Name="UnitState" ColumnName="UnitState" />
+                <ScalarProperty Name="UnitID" ColumnName="UnitID" />
+                <ScalarProperty Name="ERROR_ID" ColumnName="ERROR_ID" />
+                <ScalarProperty Name="ALAM_DESC" ColumnName="ALAM_DESC" />
+                <ScalarProperty Name="ALAM_STAT" ColumnName="ALAM_STAT" />
+                <ScalarProperty Name="ALAM_LVL" ColumnName="ALAM_LVL" />
+                <ScalarProperty Name="ALAM_CODE" ColumnName="ALAM_CODE" />
+                <ScalarProperty Name="END_TIME" ColumnName="END_TIME" />
+                <ScalarProperty Name="RPT_DATE_TIME" ColumnName="RPT_DATE_TIME" />
+                <ScalarProperty Name="UNIT_NUM" ColumnName="UNIT_NUM" />
+                <ScalarProperty Name="EQPT_ID" ColumnName="EQPT_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -661,5 +661,19 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
             return isSuccess;
         }
+
+        public List<ALARM> loadAlarms(DateTime startTime, DateTime endTime)
+        {
+            string start_time = BCFUtility.formatDateTime(startTime, SCAppConstants.TimestampFormat_19);
+            string end_time = BCFUtility.formatDateTime(endTime, SCAppConstants.TimestampFormat_19);
+            List<ALARM> alarm = null;
+            using (DBConnection_EF con = DBConnection_EF.GetUContext())
+            {
+                alarm = alarmDao.getAlarms(con, start_time, end_time);
+            }
+            return alarm;
+        }
+
+
     }
 }

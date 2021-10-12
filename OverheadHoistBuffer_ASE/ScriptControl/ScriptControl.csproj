@@ -463,6 +463,7 @@
     <Compile Include="BLL\191204Test\CassetteDataBLL.cs" />
     <Compile Include="BLL\191204Test\ShelfDefBLL.cs" />
     <Compile Include="BLL\191204Test\ZoneDefBLL.cs" />
+    <Compile Include="BLL\VAlarmBLL.cs" />
     <Compile Include="BLL\AlarmBLL.cs" />
     <Compile Include="BLL\BCSystemBLL.cs" />
     <Compile Include="BLL\BlockControlBLL.cs" />
@@ -526,6 +527,7 @@
     <Compile Include="Data\DAO\191204Test\ZoneDefDao.cs" />
     <Compile Include="Data\DAO\ADDRESSDao.cs" />
     <Compile Include="Data\DAO\AddressDataDao.cs" />
+    <Compile Include="Data\DAO\VAlarmDao.cs" />
     <Compile Include="Data\DAO\EntityFramework\HCMD_MCSDao.cs" />
     <Compile Include="Data\DAO\EntityFramework\HCMD_OHTCDao.cs" />
     <Compile Include="Data\DAO\EqptLocationInfoDao.cs" />
@@ -944,6 +946,7 @@
       <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="MQTTControl\MQTTControl.cs" />
+    <Compile Include="ObjectRelay\ALARMObjToShow.cs" />
     <Compile Include="ObjectRelay\CMD_MCSObjToShow.cs" />
     <Compile Include="ObjectRelay\IDataGridUpdateNotify.cs" />
     <Compile Include="ObjectRelay\VehicleObjToShow.cs" />
@@ -1009,6 +1012,9 @@
       <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="VACMD_MCS.cs">
+      <DependentUpon>OHTCContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="VALARM.cs">
       <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="ValueHandler\ProcessDataValueHandler.cs" />

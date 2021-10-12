@@ -260,7 +260,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
 
             List<string> lstVh = new List<string>();
             lstVh.Add(string.Empty);
-            lstVh.AddRange(scApp.VehicleBLL.loadAllVehicle().Select(vh => vh.VEHICLE_ID).ToList());
+            lstVh.AddRange(scApp.VehicleBLL.loadAllVehicle().Select(vh => SCUtility.Trim(vh.VEHICLE_ID, true)).ToList());
             string[] allVh = lstVh.ToArray();
             cmb_Vehicle.DataSource = allVh;
             cmb_Vehicle.AutoCompleteCustomSource.AddRange(allVh);

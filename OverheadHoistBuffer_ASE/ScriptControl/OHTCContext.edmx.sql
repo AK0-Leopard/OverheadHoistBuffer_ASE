@@ -2,13 +2,13 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 09/02/2021 21:15:10
+-- Date Created: 10/11/2021 18:17:04
 -- Generated from EDMX file: C:\Git\AK0-Leopard\OverheadHoistBuffer_ASE\OverheadHoistBuffer_ASE\ScriptControl\OHTCContext.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
 GO
-USE [OHBC_ASE_K21_LINE3_V3];
+USE [OHBC_ASE_K21_LINE1];
 GO
 IF SCHEMA_ID(N'dbo') IS NULL EXECUTE(N'CREATE SCHEMA [dbo]');
 GO
@@ -1188,7 +1188,8 @@ CREATE TABLE [dbo].[ALARMRPTCOND] (
     [ALAM_CODE] char(10)  NOT NULL,
     [ENABLE_FLG] char(1)  NOT NULL,
     [USER_ID] char(10)  NULL,
-    [REASON] nvarchar(80)  NULL
+    [REASON] nvarchar(80)  NULL,
+    [DISABLE_TIME] datetime  NULL
 );
 GO
 

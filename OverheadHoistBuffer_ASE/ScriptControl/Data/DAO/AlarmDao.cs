@@ -39,7 +39,7 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
         /// </summary>
         private static Logger logger = LogManager.GetCurrentClassLogger();
 
-        
+
 
         /// <summary>
         /// Inserts the alarm.
@@ -58,7 +58,7 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
             {
                 logger.Warn(ex);
                 return false;
-                throw;                
+                throw;
             }
         }
 
@@ -289,7 +289,15 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
             return compareTime > endTime;
         }
 
-
+        public List<ALARM> getAlarms(DBConnection_EF conn, string startTime, string endTime)
+        {
+            var alarm = from b in conn.ALARM
+                        where b.RPT_DATE_TIME.CompareTo(startTime) > 0 &&
+                         b.RPT_DATE_TIME.CompareTo(endTime) < 0
+                        orderby b.RPT_DATE_TIME
+                        select b;
+            return alarm.ToList();
+        }
 
 
     }

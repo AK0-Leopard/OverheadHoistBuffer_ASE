@@ -8096,6 +8096,11 @@ namespace com.mirle.ibg3k0.sc.Service
                                                     )
                                            ).ToList();
         }
+        public List<PortINIData> GetCRANEPort()
+        {
+            return portINIData.Values.Where(data => (data.UnitType == UnitType.CRANE.ToString())
+                                           ).ToList();
+        }
         public List<PortINIData> GetAGVPort(string agvZoneName)
         {
             return portINIData.Values.Where(data => data.Group == agvZoneName.Trim()
