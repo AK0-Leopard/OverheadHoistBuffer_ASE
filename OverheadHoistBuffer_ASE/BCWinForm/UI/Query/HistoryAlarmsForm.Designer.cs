@@ -54,10 +54,10 @@
             this.txt_CSTID = new System.Windows.Forms.TextBox();
             this.txt_LotID = new System.Windows.Forms.TextBox();
             this.dgv_TransferCommand = new System.Windows.Forms.DataGridView();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.BOX_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CST_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.LOT_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.aLAMCODEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.eQPTIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.aLAMSTATDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -444,14 +444,14 @@
             this.dgv_TransferCommand.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.aLAMCODEDataGridViewTextBoxColumn,
             this.eQPTIDDataGridViewTextBoxColumn,
+            this.BOX_ID,
+            this.CST_ID,
+            this.LOT_ID,
             this.aLAMSTATDataGridViewTextBoxColumn,
             this.aLAMLVLDataGridViewTextBoxColumn,
             this.rPTDATETIMEDataGridViewTextBoxColumn,
             this.cLEARDATETIMEDataGridViewTextBoxColumn,
-            this.aLAMDESCDataGridViewTextBoxColumn,
-            this.BOX_ID,
-            this.CST_ID,
-            this.LOT_ID});
+            this.aLAMDESCDataGridViewTextBoxColumn});
             this.dgv_TransferCommand.DataSource = this.aLARMObjToShowBindingSource;
             this.dgv_TransferCommand.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgv_TransferCommand.GridColor = System.Drawing.SystemColors.ControlDarkDark;
@@ -465,21 +465,6 @@
             this.dgv_TransferCommand.Size = new System.Drawing.Size(1596, 590);
             this.dgv_TransferCommand.TabIndex = 9;
             this.dgv_TransferCommand.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgv_TransferCommand_DataError);
-            // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.dgv_TransferCommand, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 120F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1602, 716);
-            this.tableLayoutPanel1.TabIndex = 0;
             // 
             // BOX_ID
             // 
@@ -504,6 +489,21 @@
             this.LOT_ID.Name = "LOT_ID";
             this.LOT_ID.ReadOnly = true;
             this.LOT_ID.Width = 95;
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 1;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Controls.Add(this.dgv_TransferCommand, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 120F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1602, 716);
+            this.tableLayoutPanel1.TabIndex = 0;
             // 
             // aLAMCODEDataGridViewTextBoxColumn
             // 
@@ -632,13 +632,13 @@
         private System.Windows.Forms.TextBox txt_LotID;
         private System.Windows.Forms.DataGridViewTextBoxColumn aLAMCODEDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn eQPTIDDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn BOX_ID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CST_ID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn LOT_ID;
         private System.Windows.Forms.DataGridViewTextBoxColumn aLAMSTATDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn aLAMLVLDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn rPTDATETIMEDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn cLEARDATETIMEDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn aLAMDESCDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn BOX_ID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CST_ID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn LOT_ID;
     }
 }

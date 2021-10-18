@@ -753,7 +753,14 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             //    dgv_vhStatus.Rows[currentSelectIndex].Selected = true;
             dgv_vhStatus.Refresh();
             updateTransferCommand();
+            var line = scApp.getEQObjCacheManager().getLine();
+            SetSCState(line);
         }
+        private void SetSCState(ALINE line)
+        {
+            lbl_HoseMode.Text = line.SCStats.GetDisplayName();
+        }
+
 
         private async void updateTransferCommand()
         {

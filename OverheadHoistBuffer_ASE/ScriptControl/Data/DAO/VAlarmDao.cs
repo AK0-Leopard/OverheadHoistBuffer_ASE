@@ -45,9 +45,17 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
             var alarm = from b in conn.VALARM
                         where b.RPT_DATE_TIME.CompareTo(startTime) > 0 &&
                               b.RPT_DATE_TIME.CompareTo(endTime) < 0
-                        orderby b.RPT_DATE_TIME
+                        orderby b.RPT_DATE_TIME descending
                         select b;
             return alarm.ToList();
+        }
+        public int getAlarmsCount(DBConnection_EF conn, string startTime, string endTime)
+        {
+            var alarm = from b in conn.VALARM
+                        where b.RPT_DATE_TIME.CompareTo(startTime) > 0 &&
+                              b.RPT_DATE_TIME.CompareTo(endTime) < 0
+                        select b;
+            return alarm.Count();
         }
 
 

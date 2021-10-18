@@ -102,6 +102,7 @@
             this.tRANSFERSTATEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.hOSTSOURCEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.hOSTDESTINATIONDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.RelayStation = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pRIORITYDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cMDINSERTIMEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cMDSTARTTIMEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -225,23 +226,21 @@
             // 
             this.lbl_HoseMode.AutoSize = true;
             this.lbl_HoseMode.BackColor = System.Drawing.Color.Gray;
-            this.lbl_HoseMode.Location = new System.Drawing.Point(185, 152);
+            this.lbl_HoseMode.Location = new System.Drawing.Point(176, 152);
+            this.lbl_HoseMode.MinimumSize = new System.Drawing.Size(72, 19);
             this.lbl_HoseMode.Name = "lbl_HoseMode";
-            this.lbl_HoseMode.Size = new System.Drawing.Size(54, 19);
+            this.lbl_HoseMode.Size = new System.Drawing.Size(72, 19);
             this.lbl_HoseMode.TabIndex = 12;
-            this.lbl_HoseMode.Text = "     ";
-            this.lbl_HoseMode.Visible = false;
             // 
             // label11
             // 
             this.label11.AutoSize = true;
             this.label11.ForeColor = System.Drawing.Color.White;
-            this.label11.Location = new System.Drawing.Point(245, 152);
+            this.label11.Location = new System.Drawing.Point(251, 152);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(99, 19);
             this.label11.TabIndex = 13;
             this.label11.Text = ":HOST Mode";
-            this.label11.Visible = false;
             // 
             // lbl_hostconn
             // 
@@ -287,7 +286,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(245, 124);
+            this.label2.Location = new System.Drawing.Point(251, 124);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(72, 19);
             this.label2.TabIndex = 5;
@@ -297,9 +296,10 @@
             // 
             this.lbl_isMaster.AutoSize = true;
             this.lbl_isMaster.BackColor = System.Drawing.Color.Gray;
-            this.lbl_isMaster.Location = new System.Drawing.Point(185, 124);
+            this.lbl_isMaster.Location = new System.Drawing.Point(176, 124);
+            this.lbl_isMaster.MinimumSize = new System.Drawing.Size(72, 19);
             this.lbl_isMaster.Name = "lbl_isMaster";
-            this.lbl_isMaster.Size = new System.Drawing.Size(54, 19);
+            this.lbl_isMaster.Size = new System.Drawing.Size(72, 19);
             this.lbl_isMaster.TabIndex = 4;
             this.lbl_isMaster.Text = "     ";
             // 
@@ -856,6 +856,7 @@
             this.tRANSFERSTATEDataGridViewTextBoxColumn,
             this.hOSTSOURCEDataGridViewTextBoxColumn,
             this.hOSTDESTINATIONDataGridViewTextBoxColumn,
+            this.RelayStation,
             this.pRIORITYDataGridViewTextBoxColumn,
             this.cMDINSERTIMEDataGridViewTextBoxColumn,
             this.cMDSTARTTIMEDataGridViewTextBoxColumn,
@@ -916,6 +917,13 @@
             this.hOSTDESTINATIONDataGridViewTextBoxColumn.HeaderText = "U Port";
             this.hOSTDESTINATIONDataGridViewTextBoxColumn.Name = "hOSTDESTINATIONDataGridViewTextBoxColumn";
             this.hOSTDESTINATIONDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // RelayStation
+            // 
+            this.RelayStation.DataPropertyName = "RelayStation";
+            this.RelayStation.HeaderText = "RelayStation";
+            this.RelayStation.Name = "RelayStation";
+            this.RelayStation.ReadOnly = true;
             // 
             // pRIORITYDataGridViewTextBoxColumn
             // 
@@ -1069,20 +1077,21 @@
         private System.Windows.Forms.TabPage tapTransferCmd;
         private System.Windows.Forms.DataGridView dgv_TransferCommand;
         private System.Windows.Forms.BindingSource cMDMCSObjToShowBindingSource;
+        private System.Windows.Forms.TextBox txt_cstID;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox txt_boxID;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.DataGridViewTextBoxColumn cMDIDDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn VEHICLE_ID;
         private System.Windows.Forms.DataGridViewTextBoxColumn cARRIERIDDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn tRANSFERSTATEDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn hOSTSOURCEDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn hOSTDESTINATIONDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn RelayStation;
         private System.Windows.Forms.DataGridViewTextBoxColumn pRIORITYDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn cMDINSERTIMEDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn cMDSTARTTIMEDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn rEPLACEDataGridViewTextBoxColumn;
-        private System.Windows.Forms.TextBox txt_cstID;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.TextBox txt_boxID;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

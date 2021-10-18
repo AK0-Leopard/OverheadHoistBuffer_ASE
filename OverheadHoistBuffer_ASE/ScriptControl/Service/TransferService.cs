@@ -879,6 +879,29 @@ namespace com.mirle.ibg3k0.sc.Service
                     {
                         var cmdData = cmdBLL.LoadCmdData();
 
+                        var queueCmdData = cmdData.Where(data => data.CMDTYPE != CmdType.PortTypeChange.ToString() && data.TRANSFERSTATE == E_TRAN_STATUS.Queue).ToList();
+                        var transferCmdData = cmdData.Where(data => data.CMDTYPE != CmdType.PortTypeChange.ToString() && data.TRANSFERSTATE != E_TRAN_STATUS.Queue).ToList();
+
+                        if (line.SCStats == ALINE.TSCState.AUTO)
+                        {
+                            //not thing...
+                        }
+                        else
+                        {
+                            TransferServiceLogger.Info
+                            (
+                                $"{DateTime.Now.ToString("HH:mm:ss.fff ")} current line scstats:{line.SCStats} ,can't excute transfer command"
+                            );
+                            if (line.SCStats == ALINE.TSCState.PAUSING)
+                            {
+                                if (transferCmdData.Count() == 0)
+                                {
+                                    scApp.LineService.TSCStateToPause("");
+                                }
+                            }
+                            return;
+                        }
+
                         if (cmdData.Count != 0)
                         {
                             #region 說明
@@ -910,8 +933,6 @@ namespace com.mirle.ibg3k0.sc.Service
                             //
                             //  取消下一行註解即可使用。 但不確定邏輯以及程式部分是否完全沒有問題。
                             #endregion
-                            var queueCmdData = cmdData.Where(data => data.CMDTYPE != CmdType.PortTypeChange.ToString() && data.TRANSFERSTATE == E_TRAN_STATUS.Queue).ToList();
-                            var transferCmdData = cmdData.Where(data => data.CMDTYPE != CmdType.PortTypeChange.ToString() && data.TRANSFERSTATE != E_TRAN_STATUS.Queue).ToList();
 
                             var portTypeChangeCmdData = cmdData.Where(data => data.CMDTYPE == CmdType.PortTypeChange.ToString()).ToList();
 
@@ -952,7 +973,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                         //cmdBLL.updateCMD_MCS_sumPriority(v.CMD_ID);
                                     }
                                 }
-                                #endregion                                
+                                #endregion
                                 #region 搬送命令
                                 if (TransferCommandHandler(v))
                                 {
@@ -981,6 +1002,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                 }
                                 #endregion
                             }
+
 
                             foreach (var v in portTypeChangeCmdData)
                             {
@@ -1662,10 +1684,30 @@ namespace com.mirle.ibg3k0.sc.Service
 
             return TransferIng;
         }
+        com.mirle.ibg3k0.sc.ALINE.TSCState PreSCState = com.mirle.ibg3k0.sc.ALINE.TSCState.NONE;
+        private bool checkIsJustResumeToAuto()
+        {
+            com.mirle.ibg3k0.sc.ALINE.TSCState current_sc_state = line.SCStats;
+            if (PreSCState != current_sc_state)
+            {
+                PreSCState = current_sc_state;
+                if (current_sc_state == ALINE.TSCState.AUTO)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         private void BoxDataHandler(List<CassetteData> cstDataList)
         {
             try
             {
+                bool is_just_resume_to_auto = checkIsJustResumeToAuto();
+                if (is_just_resume_to_auto)
+                {
+                    RefreshNotCompleteTrnDT(cstDataList);
+                }
+
                 foreach (var cst in cstDataList)
                 {
                     if (cst.CSTState == E_CSTState.WaitIn || cst.CSTState == E_CSTState.Installed || cst.CSTState == E_CSTState.Transferring)
@@ -1714,57 +1756,68 @@ namespace com.mirle.ibg3k0.sc.Service
 
                         if (cstTimeOut != 0 && success)
                         {
-                            TimeSpan cstTimeSpan = DateTime.Now - DateTime.Parse(cst.TrnDT);
-
-                            if (cstTimeSpan.TotalSeconds >= cstTimeOut)   //停在Port上 30秒(之後要設成可調)，自動搬到儲位上
+                            if (line.SCStats == ALINE.TSCState.AUTO)
                             {
-                                ACMD_MCS cmd = cmdBLL.getCMD_ByBoxID(cst.BOXID);
-                                cassette_dataBLL.UpdateCST_DateTime(cst.BOXID, UpdateCassetteTimeType.TrnDT);
+                                TimeSpan cstTimeSpan = DateTime.Now - DateTime.Parse(cst.TrnDT);
 
-                                if (cmd == null)
+                                if (cstTimeSpan.TotalSeconds >= cstTimeOut)   //停在Port上 30秒(之後要設成可調)，自動搬到儲位上
                                 {
-                                    List<ShelfDef> shelfData = shelfDefBLL.GetEmptyAndEnableShelf();    // 20/08/08，士偉提出不需要再設定到哪個ZONE，直接找空儲位搬
+                                    ACMD_MCS cmd = cmdBLL.getCMD_ByBoxID(cst.BOXID);
+                                    cassette_dataBLL.UpdateCST_DateTime(cst.BOXID, UpdateCassetteTimeType.TrnDT);
 
-                                    //string timeOutZone = portINIData[cst.Carrier_LOC.Trim()].timeOutForAutoInZone;
-                                    //List<ShelfDef> shelfData = shelfDefBLL.GetEmptyAndEnableShelfByZone(timeOutZone);
-
-                                    string shelfID = GetShelfRecentLocation(shelfData, cst.Carrier_LOC.Trim());
-
-                                    if (string.IsNullOrWhiteSpace(shelfID) == false)
+                                    if (cmd == null)
                                     {
-                                        TransferServiceLogger.Info
-                                        (
-                                            DateTime.Now.ToString("HH:mm:ss.fff ")
-                                            + "OHB >> OHB| 卡匣停留 " + cstTimeOut + " 秒，尚未搬走，產生自動搬走命令 " + GetCstLog(cst)
-                                        );
+                                        List<ShelfDef> shelfData = shelfDefBLL.GetEmptyAndEnableShelf();    // 20/08/08，士偉提出不需要再設定到哪個ZONE，直接找空儲位搬
 
-                                        string cmdSource = cst.Carrier_LOC.Trim();
-                                        string cmdDest = shelfID;
+                                        //string timeOutZone = portINIData[cst.Carrier_LOC.Trim()].timeOutForAutoInZone;
+                                        //List<ShelfDef> shelfData = shelfDefBLL.GetEmptyAndEnableShelfByZone(timeOutZone);
 
-                                        Manual_InsertCmd(cmdSource, cmdDest, 5, "cstTimeOut", CmdType.OHBC);
-                                        //portINIData[cst.Carrier_LOC.Trim()].timeOutForAutoInZone = "";
+                                        string shelfID = GetShelfRecentLocation(shelfData, cst.Carrier_LOC.Trim());
+
+                                        if (string.IsNullOrWhiteSpace(shelfID) == false)
+                                        {
+                                            TransferServiceLogger.Info
+                                            (
+                                                DateTime.Now.ToString("HH:mm:ss.fff ")
+                                                + "OHB >> OHB| 卡匣停留 " + cstTimeOut + " 秒，尚未搬走，產生自動搬走命令 " + GetCstLog(cst)
+                                            );
+
+                                            string cmdSource = cst.Carrier_LOC.Trim();
+                                            string cmdDest = shelfID;
+
+                                            Manual_InsertCmd(cmdSource, cmdDest, 5, "cstTimeOut", CmdType.OHBC);
+                                            //portINIData[cst.Carrier_LOC.Trim()].timeOutForAutoInZone = "";
+                                        }
+                                        else
+                                        {
+                                            //string log = portINIData[cst.Carrier_LOC.Trim()].timeOutForAutoInZone;
+
+                                            TransferServiceLogger.Info
+                                            (
+                                                DateTime.Now.ToString("HH:mm:ss.fff ")
+                                                + "OHB >> OHB| 卡匣停留 " + cstTimeOut + " 秒，尚未搬走，找不到空儲位可搬，停留卡匣為：" + GetCstLog(cst)
+                                            );
+
+                                        }
                                     }
                                     else
                                     {
-                                        //string log = portINIData[cst.Carrier_LOC.Trim()].timeOutForAutoInZone;
-
                                         TransferServiceLogger.Info
                                         (
                                             DateTime.Now.ToString("HH:mm:ss.fff ")
-                                            + "OHB >> OHB| 卡匣停留 " + cstTimeOut + " 秒，尚未搬走，找不到空儲位可搬，停留卡匣為：" + GetCstLog(cst)
+                                            + "OHB >> OHB| 卡匣停留 " + cstTimeOut + " 秒，尚未搬走，有命令在執行 " + GetCmdLog(cmd)
                                         );
-
                                     }
                                 }
-                                else
-                                {
-                                    TransferServiceLogger.Info
-                                    (
-                                        DateTime.Now.ToString("HH:mm:ss.fff ")
-                                        + "OHB >> OHB| 卡匣停留 " + cstTimeOut + " 秒，尚未搬走，有命令在執行 " + GetCmdLog(cmd)
-                                    );
-                                }
                             }
+                            else
+                            {
+                                TransferServiceLogger.Info
+                                (
+                                    $"{DateTime.Now.ToString("HH:mm:ss.fff ")} current line scstate:{line.SCStats} ,不進行檢查是否已經卡匣Time out的流程"
+                                );
+                            }
+
                         }
                     }
 
@@ -1784,6 +1837,35 @@ namespace com.mirle.ibg3k0.sc.Service
             catch (Exception ex)
             {
                 TransferServiceLogger.Error(ex, "BoxDataHandler");
+            }
+        }
+
+        public void RefreshNotCompleteTrnDT(List<CassetteData> cstDataList)
+        {
+            try
+            {
+                TransferServiceLogger.Info
+                (
+                    $"{DateTime.Now.ToString("HH:mm:ss.fff ")} 開始進行更新所有[Not Complete]的Cst Data 的TrnDT..."
+                );
+                foreach (var cst in cstDataList)
+                {
+                    if (cst.CSTState == E_CSTState.WaitIn || cst.CSTState == E_CSTState.Installed || cst.CSTState == E_CSTState.Transferring)
+                    {
+                        cassette_dataBLL.UpdateCST_DateTime(cst.BOXID, UpdateCassetteTimeType.TrnDT);
+
+                        string time = DateTime.Now.ToString("yy/MM/dd HH:mm:ss");
+                        cst.TrnDT = time;
+                    }
+                }
+                TransferServiceLogger.Info
+                (
+                    $"{DateTime.Now.ToString("HH:mm:ss.fff ")} 更新所有[Not Complete]的Cst Data 的TrnDT 結束。"
+                );
+            }
+            catch (Exception ex)
+            {
+                TransferServiceLogger.Warn(ex, "Exception:");
             }
         }
 

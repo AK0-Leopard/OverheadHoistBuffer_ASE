@@ -35,6 +35,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             m_EndDTCbx.Value = DateTime.Now;
         }
 
+        const int MAX_ALALM_QUERY_COUNT = 10000;
         DateTime preStartDateTime = DateTime.MinValue;
         DateTime preEndDateTime = DateTime.MinValue;
         private async void updateAlarms()
@@ -51,6 +52,20 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                 try
                 {
                     tableLayoutPanel6.Enabled = false;
+                    int alarms_count = 0;
+                    await Task.Run(() =>
+                    {
+                        alarms_count = mainform.BCApp.SCApplication.VAlarmBLL.getAlarmCount(start_time, end_time);
+                    });
+                    if (alarms_count > MAX_ALALM_QUERY_COUNT)
+                    {
+                        MessageBox.Show(this, $"Alarm query 數量超過:{MAX_ALALM_QUERY_COUNT}，請重新調整搜尋區間。"
+                                        , "Alarm Query"
+                                        , MessageBoxButtons.OK
+                                        , MessageBoxIcon.Information);
+                        return;
+                    }
+
                     await Task.Run(() =>
                      {
                          var alarms = mainform.BCApp.SCApplication.VAlarmBLL.loadAlarms(start_time, end_time);

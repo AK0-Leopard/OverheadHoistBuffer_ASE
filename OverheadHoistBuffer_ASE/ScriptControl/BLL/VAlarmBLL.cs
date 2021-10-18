@@ -67,6 +67,19 @@ namespace com.mirle.ibg3k0.sc.BLL
             valarmDao = scApp.VAlarmDao;
         }
 
+        public int getAlarmCount(DateTime startTime, DateTime endTime)
+        {
+            string start_time = BCFUtility.formatDateTime(startTime, SCAppConstants.TimestampFormat_19);
+            string end_time = BCFUtility.formatDateTime(endTime, SCAppConstants.TimestampFormat_19);
+            int alarm_count = 0;
+            using (DBConnection_EF con = DBConnection_EF.GetUContext())
+            {
+                alarm_count = valarmDao.getAlarmsCount(con, start_time, end_time);
+            }
+            return alarm_count;
+        }
+
+
         public List<VALARM> loadAlarms(DateTime startTime, DateTime endTime)
         {
             string start_time = BCFUtility.formatDateTime(startTime, SCAppConstants.TimestampFormat_19);

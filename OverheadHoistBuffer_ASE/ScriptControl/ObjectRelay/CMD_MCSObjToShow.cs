@@ -53,6 +53,7 @@ namespace com.mirle.ibg3k0.sc.ObjectRelay
                 return portstation == null ? cmd_mcs.HOSTDESTINATION : portstation.ToString();
             }
         }
+        public string RelayStation { get { return cmd_mcs.RelayStation; } }
 
         public int PRIORITY { get { return cmd_mcs.PRIORITY; } }
         public System.DateTime CMD_INSER_TIME { get { return cmd_mcs.CMD_INSER_TIME; } }

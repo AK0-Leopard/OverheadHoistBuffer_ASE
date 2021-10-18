@@ -65,7 +65,7 @@
             // 
             this.cb_eqType.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.cb_eqType.FormattingEnabled = true;
-            this.cb_eqType.Location = new System.Drawing.Point(146, 3);
+            this.cb_eqType.Location = new System.Drawing.Point(146, 5);
             this.cb_eqType.Name = "cb_eqType";
             this.cb_eqType.Size = new System.Drawing.Size(186, 27);
             this.cb_eqType.TabIndex = 1;

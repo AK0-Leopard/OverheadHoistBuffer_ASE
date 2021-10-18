@@ -1318,32 +1318,39 @@ namespace com.mirle.ibg3k0.sc.Service
                     else
                     {
                         AVEHICLE crane = GetVehicleDataByVehicleID(mcs_cmd.CRANE.Trim());
-
-                        if (crane.isTcpIpConnect)
+                        if (crane == null)
                         {
-                            if (crane.MCS_CMD.Trim() == mcs_cmd.CMD_ID.Trim())
+                            log = log + " crane 不存在";
+                            localDelete = true;
+                        }
+                        else
+                        {
+                            if (crane.isTcpIpConnect)
                             {
-                                is_success = cancleOrAbortCommandByMCSCmdID(cancel_abort_mcs_cmd_id, ProtocolFormat.OHTMessage.CMDCancelType.CmdAbort);
-                                if (is_success)
+                                if (crane.MCS_CMD.Trim() == mcs_cmd.CMD_ID.Trim())
                                 {
-                                    scApp.ReportBLL.ReportTransferAbortInitiated(cancel_abort_mcs_cmd_id);
-                                    scApp.CMDBLL.updateCMD_MCS_TranStatus(cancel_abort_mcs_cmd_id, E_TRAN_STATUS.Aborting);
+                                    is_success = cancleOrAbortCommandByMCSCmdID(cancel_abort_mcs_cmd_id, ProtocolFormat.OHTMessage.CMDCancelType.CmdAbort);
+                                    if (is_success)
+                                    {
+                                        scApp.ReportBLL.ReportTransferAbortInitiated(cancel_abort_mcs_cmd_id);
+                                        scApp.CMDBLL.updateCMD_MCS_TranStatus(cancel_abort_mcs_cmd_id, E_TRAN_STATUS.Aborting);
+                                    }
+                                    else
+                                    {
+                                        scApp.ReportBLL.newReportTransferAbortFailed(cancel_abort_mcs_cmd_id, null);
+                                    }
                                 }
                                 else
                                 {
-                                    scApp.ReportBLL.newReportTransferAbortFailed(cancel_abort_mcs_cmd_id, null);
+                                    log = log + " 命令ID不一樣";
+                                    localDelete = true;
                                 }
                             }
                             else
                             {
-                                log = log + " 命令ID不一樣";
+                                log = log + " " + crane.VEHICLE_ID + " 連線狀態(isTcpIpConnect) : " + crane.isTcpIpConnect;
                                 localDelete = true;
                             }
-                        }
-                        else
-                        {
-                            log = log + " " + crane.VEHICLE_ID + " 連線狀態(isTcpIpConnect) : " + crane.isTcpIpConnect;
-                            localDelete = true;
                         }
                     }
 
@@ -1360,10 +1367,13 @@ namespace com.mirle.ibg3k0.sc.Service
                         scApp.ReportBLL.ReportTransferAbortCompleted(cancel_abort_mcs_cmd_id);
 
                         //自動 Force finish cmd 可以加在這
-                        Task.Run(() =>
+                        if (!SCUtility.isEmpty(mcs_cmd.CRANE))
                         {
-                            scApp.CMDBLL.forceUpdataCmdStatus2FnishByVhID(mcs_cmd.CRANE.Trim()); // Force finish Cmd
-                        });
+                            Task.Run(() =>
+                            {
+                                scApp.CMDBLL.forceUpdataCmdStatus2FnishByVhID(mcs_cmd.CRANE.Trim()); // Force finish Cmd
+                            });
+                        }
                     }
                     break;
             }

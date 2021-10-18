@@ -655,7 +655,8 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                         switch (normal.RCMD)
                         {
                             case SECSConst.RCMD_Resume:
-                                if (line.TSC_state_machine.State == ALINE.TSCState.PAUSED || line.TSC_state_machine.State == ALINE.TSCState.PAUSING)
+                                if (line.TSC_state_machine.State == ALINE.TSCState.PAUSED || 
+                                    line.TSC_state_machine.State == ALINE.TSCState.PAUSING)
                                 {
                                     s2f42.HCACK = SECSConst.HCACK_Confirm_Executed;
                                     needToResume = true;

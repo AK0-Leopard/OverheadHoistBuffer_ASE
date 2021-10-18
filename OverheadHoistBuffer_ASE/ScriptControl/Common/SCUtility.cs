@@ -1545,4 +1545,17 @@ namespace com.mirle.ibg3k0.sc.Common
 
     }
 
+    public static class EnumOfExtension
+    {
+
+        public static string GetDisplayName(this Enum enumValue)
+        {
+            return enumValue.GetType()
+                            .GetMember(enumValue.ToString())
+                            .First()
+                            .GetCustomAttribute<System.ComponentModel.DataAnnotations.DisplayAttribute>()
+                            .GetName();
+        }
+    }
+
 }
