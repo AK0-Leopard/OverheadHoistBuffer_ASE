@@ -1078,6 +1078,7 @@
     <Content Include="Resources\VH_Display\Pause [Obstructed].png" />
     <Content Include="Resources\VH_Display\Pause [Pause].png" />
     <Content Include="Resources\VH_Display\Pause [Safety].png" />
+    <None Include="Resources\VH_Display\pauseStatus.png" />
     <Content Include="Resources\VH_Display\Speed [Fast].png" />
     <Content Include="Resources\VH_Display\Speed [Medium].png" />
     <Content Include="Resources\VH_Display\Speed [Slow].png" />
@@ -1087,6 +1088,7 @@
     <Content Include="Resources\VH_Display\Vehicle [Manual].png" />
     <Content Include="Resources\VH_Display\Vehicle [Power on].png" />
     <Content Include="Resources\VH_Display\Vehicle [Unconnected].png" />
+    <None Include="Resources\VH_Display\VehicleMode.png" />
     <Content Include="Resources\W95MBX03.ICO" />
     <Content Include="Resources\warning-28-xxl.png" />
     <Content Include="Resources\white.PNG" />
@@ -1106,6 +1108,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources1.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.zh-TW.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

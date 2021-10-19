@@ -19,7 +19,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
         public HistoryCMD_MCS(BCMainForm _mainForm)
         {
             InitializeComponent();
-             dgv_TransferCommand.AutoGenerateColumns = false;
+            dgv_TransferCommand.AutoGenerateColumns = false;
             mainform = _mainForm;
             showHCMD_MCSList = new List<HCMD_MCSObjToShow>();
             dgv_TransferCommand.DataSource = showHCMD_MCSList;
