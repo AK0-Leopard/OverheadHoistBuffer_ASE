@@ -57,6 +57,9 @@ namespace com.mirle.ibg3k0.sc
         public void put(ShelfDef ortherValue)
         {
             this.Enable = ortherValue.Enable;
+            this.Remark = ortherValue.Remark;
+            this.TrnDT= ortherValue.TrnDT;
+
         }
 
         public string SeqNo

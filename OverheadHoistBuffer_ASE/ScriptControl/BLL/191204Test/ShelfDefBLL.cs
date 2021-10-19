@@ -76,15 +76,18 @@ namespace com.mirle.ibg3k0.sc.BLL
 
         }
 
-        public bool UpdateEnableByID(string shelfid, bool enable)
+        public bool UpdateEnableByID(string shelfid, bool enable, string reason)
         {
             bool isSuccsess = true;
             try
             {
+                string disable_enabl_time = DateTime.Now.ToString(SCAppConstants.DateTimeFormat_19);
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
                     ShelfDef shelf = shelfdefDao.LoadShelfByID(con, shelfid);
                     shelf.Enable = enable == true ? "Y" : "N";
+                    shelf.Remark = reason;
+                    shelf.TrnDT = disable_enabl_time;
                     shelfdefDao.UpdateShelfDef(con);
                 }
             }
@@ -140,11 +143,11 @@ namespace com.mirle.ibg3k0.sc.BLL
             return true;
         }
 
-		internal bool updateRemark(string shelf_id, string remark)
-		{
+        internal bool updateRemark(string shelf_id, string remark)
+        {
             try
             {
-                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
                     var shelf_def = con.ShelfDef.Where(x => x.ShelfID == shelf_id).FirstOrDefault();
                     shelf_def.Remark = remark;
@@ -183,10 +186,10 @@ namespace com.mirle.ibg3k0.sc.BLL
                     + " status: " + status
                 );
 
-                if(status == ShelfDef.E_ShelfState.EmptyShelf)
+                if (status == ShelfDef.E_ShelfState.EmptyShelf)
                 {
                     scApp.TransferService.OHBC_AlarmCleared(scApp.getEQObjCacheManager().getLine().LINE_ID, ((int)AlarmLst.LINE_NotEmptyShelf).ToString());
-                }                
+                }
             }
             catch (Exception ex)
             {

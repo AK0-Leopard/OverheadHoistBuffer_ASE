@@ -57,6 +57,8 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             {
                 var shelfs = await Task.Run(() => BCApp.SCApplication.ShelfDefBLL.LoadShelf());
                 shelfs.ForEach(shelf => setNewData(shelf));
+
+                dgv_shelfData.DataSource = showShelfDefs;
                 dgv_shelfData.Refresh();
                 refreshZoneShelfInfo();
             }
@@ -87,7 +89,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             }
             var first_selected_row = selected_rows[0];
             string shelf_id = first_selected_row.Cells[CELL_INDEX_SHELFID].Value.ToString();
-            string result = await Task.Run(() => BCApp.SCApplication.TransferService.Manual_ShelfEnable(shelf_id, true));
+            string result = await Task.Run(() => BCApp.SCApplication.TransferService.Manual_ShelfEnable(shelf_id, true, ""));
             UpdateShelfData();
             MessageBox.Show($"Shelf:{shelf_id} enable {result}");
         }
@@ -100,9 +102,15 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                 MessageBox.Show("Please select want to enable shelf.");
                 return;
             }
+            string reason = txt_reason.Text;
+            if (sc.Common.SCUtility.isEmpty(reason))
+            {
+                MessageBox.Show("Please enter the reason for disable shelf.");
+                return;
+            }
             var first_selected_row = selected_rows[0];
             string shelf_id = first_selected_row.Cells[CELL_INDEX_SHELFID].Value.ToString();
-            string result = await Task.Run(() => BCApp.SCApplication.TransferService.Manual_ShelfEnable(shelf_id, false));
+            string result = await Task.Run(() => BCApp.SCApplication.TransferService.Manual_ShelfEnable(shelf_id, false, reason));
             UpdateShelfData();
             MessageBox.Show($"Shelf:{shelf_id} disable {result}");
 
@@ -190,13 +198,14 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             if (!(enable_status is string))
                 return;
             string enable = enable_status as string;
+            DataGridViewRow row = dgv_shelfData.Rows[e.RowIndex];
             if (sc.Common.SCUtility.isMatche(enable, sc.App.SCAppConstants.YES_FLAG))
             {
-                //not thing...
+                row.DefaultCellStyle.BackColor = Color.White;
+                row.DefaultCellStyle.ForeColor = Color.Black;
             }
             else
             {
-                DataGridViewRow row = dgv_shelfData.Rows[e.RowIndex];
                 row.DefaultCellStyle.BackColor = Color.Yellow;
                 row.DefaultCellStyle.ForeColor = Color.Red;
                 if (row.Selected)

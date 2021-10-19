@@ -57,10 +57,10 @@ namespace com.mirle.ibg3k0.sc.WebAPI
 					switch (action)
 					{
 						case "EnableUpdate":
-							bool enable = d.enable?.Value;
-							string s = scApp.TransferService.Manual_ShelfEnable(shelf_id, enable);
-							isSuccess = s == "OK" ? true : false;
-							result = isSuccess ? "OK" : "Update Shlef Enable failed.";
+							//bool enable = d.enable?.Value;
+							//string s = scApp.TransferService.Manual_ShelfEnable(shelf_id, enable);
+							//isSuccess = s == "OK" ? true : false;
+							//result = isSuccess ? "OK" : "Update Shlef Enable failed.";
 							break;
 
 						case "PriorityUpdate":
@@ -70,43 +70,43 @@ namespace com.mirle.ibg3k0.sc.WebAPI
 							break;
 
 						case "MultiEnableUpdate":
-							var enableJson = JsonConvert.DeserializeObject<List<ShelfDef>>(resultJson);
-							result = "Update these Shlef Enable failed.\n";
-							enableJson.ForEach(x =>
-							{
-								string enableStr = scApp.TransferService.Manual_ShelfEnable(x.ShelfID, true);
-								isSuccess = enableStr == "OK" ? true : false;
+							//var enableJson = JsonConvert.DeserializeObject<List<ShelfDef>>(resultJson);
+							//result = "Update these Shlef Enable failed.\n";
+							//enableJson.ForEach(x =>
+							//{
+							//	string enableStr = scApp.TransferService.Manual_ShelfEnable(x.ShelfID, true);
+							//	isSuccess = enableStr == "OK" ? true : false;
 
-								if (!isSuccess)
-								{
-									result += $"{x.ShelfID}   ";
-									allSuccess = false;
-								}
-							});
-							if (allSuccess == true)
-							{
-								result = "OK";
-							}
+							//	if (!isSuccess)
+							//	{
+							//		result += $"{x.ShelfID}   ";
+							//		allSuccess = false;
+							//	}
+							//});
+							//if (allSuccess == true)
+							//{
+							//	result = "OK";
+							//}
 							break;
 
 						case "MultiDisableUpdate":
-							var disableJson = JsonConvert.DeserializeObject<List<ShelfDef>>(resultJson);
-							result = "Update these Shlef Disable failed.\n";
-							disableJson.ForEach(x =>
-							{
-								string ss = scApp.TransferService.Manual_ShelfEnable(x.ShelfID, false);
-								isSuccess = ss == "OK" ? true : false;
+							//var disableJson = JsonConvert.DeserializeObject<List<ShelfDef>>(resultJson);
+							//result = "Update these Shlef Disable failed.\n";
+							//disableJson.ForEach(x =>
+							//{
+							//	string ss = scApp.TransferService.Manual_ShelfEnable(x.ShelfID, false);
+							//	isSuccess = ss == "OK" ? true : false;
 
-								if (!isSuccess)
-								{
-									result += $"{x.ShelfID}   ";
-									allSuccess = false;
-								}
-							});
-							if (allSuccess == true)
-							{
-								result = "OK";
-							}
+							//	if (!isSuccess)
+							//	{
+							//		result += $"{x.ShelfID}   ";
+							//		allSuccess = false;
+							//	}
+							//});
+							//if (allSuccess == true)
+							//{
+							//	result = "OK";
+							//}
 							break;
 
 						case "StateUpdate":

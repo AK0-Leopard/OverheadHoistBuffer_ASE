@@ -2001,6 +2001,25 @@ namespace com.mirle.ibg3k0.sc.BLL
                 return false;
             }
         }
+
+
+        public bool hasExcuteCMDMCSByTargetDest(string portID)
+        {
+            int count = 0;
+            try
+            {
+                using (DBConnection_EF con = new DBConnection_EF())
+                {
+                    count = cmd_mcsDao.getCMD_MCSByDestPort(con, portID);
+                }
+                return count > 0;
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return false;
+            }
+        }
         public List<ACMD_MCS> loadFinishCMD_MCS()
         {
             using (DBConnection_EF con = DBConnection_EF.GetUContext())

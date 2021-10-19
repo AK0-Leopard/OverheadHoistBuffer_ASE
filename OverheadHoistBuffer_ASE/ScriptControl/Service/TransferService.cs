@@ -7631,6 +7631,12 @@ namespace com.mirle.ibg3k0.sc.Service
                     return "來源或目的不存在";
                 }
 
+                if (isShelfPort(dest) &&
+                    scApp.CMDBLL.hasExcuteCMDMCSByTargetDest(dest))
+                {
+                    return $"目的地:{dest}已經有命令準備前往。";
+                }
+
                 #region 新增 MCS 命令
                 bool cmdExist = true;
                 int cmdNo = 1;
@@ -7994,12 +8000,12 @@ namespace com.mirle.ibg3k0.sc.Service
 
         #endregion
         #region 儲位操作
-        public string Manual_ShelfEnable(string shelfID, bool enable)
+        public string Manual_ShelfEnable(string shelfID, bool enable, string reason)
         {
             try
             {
                 ShelfDef shelf = shelfDefBLL.loadShelfDataByID(shelfID);
-                shelfDefBLL.UpdateEnableByID(shelfID, enable);
+                shelfDefBLL.UpdateEnableByID(shelfID, enable, reason);
                 ZoneDef zone = zoneBLL.loadZoneDataByID(shelf.ZoneID);
                 reportBLL.ReportShelfStatusChange(zone);
                 return "OK";

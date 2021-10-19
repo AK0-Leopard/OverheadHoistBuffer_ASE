@@ -1484,8 +1484,9 @@ namespace com.mirle.ibg3k0.sc.Service
         public bool doChgEnableShelfCommand(string shelf_id, bool enable)
         {
             bool is_success = true;
+            string disable_reason = enable ? "" : "Disable By MCS Command";
             ShelfDef shelf = scApp.ShelfDefBLL.loadShelfDataByID(shelf_id);
-            is_success &= scApp.ShelfDefBLL.UpdateEnableByID(shelf_id, enable);
+            is_success &= scApp.ShelfDefBLL.UpdateEnableByID(shelf_id, enable, disable_reason);
             ZoneDef zone = scApp.ZoneDefBLL.loadZoneDataByID(shelf.ZoneID);
             scApp.ReportBLL.ReportShelfStatusChange(zone);
             return is_success;
