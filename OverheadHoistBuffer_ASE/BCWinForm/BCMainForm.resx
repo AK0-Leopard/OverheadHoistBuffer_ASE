@@ -406,10 +406,16 @@
     <value>Operator</value>
   </data>
   <data name="alarmHistoryQueryToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>248, 26</value>
+    <value>269, 26</value>
   </data>
   <data name="alarmHistoryQueryToolStripMenuItem.Text" xml:space="preserve">
     <value>Alarm History Query</value>
+  </data>
+  <data name="transferHistoryQueryToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>269, 26</value>
+  </data>
+  <data name="transferHistoryQueryToolStripMenuItem.Text" xml:space="preserve">
+    <value>Transfer History Query</value>
   </data>
   <data name="queryToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>73, 26</value>
@@ -1391,6 +1397,18 @@
   <data name="&gt;&gt;port內容值ToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;queryToolStripMenuItem.Name" xml:space="preserve">
+    <value>queryToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;queryToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;alarmHistoryQueryToolStripMenuItem.Name" xml:space="preserve">
+    <value>alarmHistoryQueryToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;alarmHistoryQueryToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;mataToolStripMenuItem.Name" xml:space="preserve">
     <value>mataToolStripMenuItem</value>
   </data>
@@ -1529,16 +1547,10 @@
   <data name="&gt;&gt;engineeringModeToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;queryToolStripMenuItem.Name" xml:space="preserve">
-    <value>queryToolStripMenuItem</value>
+  <data name="&gt;&gt;transferHistoryQueryToolStripMenuItem.Name" xml:space="preserve">
+    <value>transferHistoryQueryToolStripMenuItem</value>
   </data>
-  <data name="&gt;&gt;queryToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;alarmHistoryQueryToolStripMenuItem.Name" xml:space="preserve">
-    <value>alarmHistoryQueryToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;alarmHistoryQueryToolStripMenuItem.Type" xml:space="preserve">
+  <data name="&gt;&gt;transferHistoryQueryToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">

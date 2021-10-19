@@ -1091,5 +1091,10 @@ namespace com.mirle.ibg3k0.bc.winform
         {
             openForm(typeof(HistoryAlarmsForm).Name, true, false);
         }
+
+        private void transferHistoryQueryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openForm(typeof(HistoryCMD_MCS).Name, true, false);
+        }
     }
 }

@@ -310,6 +310,12 @@
     <Compile Include="UI\Operate\DebugFormNew.Designer.cs">
       <DependentUpon>DebugFormNew.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\Query\HistoryCMD_MCS.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Query\HistoryCMD_MCS.Designer.cs">
+      <DependentUpon>HistoryCMD_MCS.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\Query\HistoryAlarmsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -936,6 +942,7 @@
     <None Include="packages.config" />
     <None Include="Properties\DataSources\com.mirle.ibg3k0.bc.winform.ObjectRelay.SectionObjToShow.datasource" />
     <None Include="Properties\DataSources\com.mirle.ibg3k0.sc.ObjectRelay.CMD_MCSObjToShow.datasource" />
+    <None Include="Properties\DataSources\com.mirle.ibg3k0.sc.ObjectRelay.HCMD_MCSObjToShow.datasource" />
     <None Include="Properties\DataSources\com.mirle.ibg3k0.sc.ObjectRelay.SectionObjToShow.datasource" />
     <None Include="Properties\DataSources\com.mirle.ibg3k0.sc.ObjectRelay.VehicleObjToShow.datasource" />
     <None Include="Resources\alert-red_org.png" />
@@ -1121,6 +1128,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Operate\DebugFormNew.resx">
       <DependentUpon>DebugFormNew.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Query\HistoryCMD_MCS.resx">
+      <DependentUpon>HistoryCMD_MCS.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Query\HistoryAlarmsForm.resx">
       <DependentUpon>HistoryAlarmsForm.cs</DependentUpon>

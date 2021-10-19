@@ -24,6 +24,23 @@ namespace com.mirle.ibg3k0.sc.Data.DAO.EntityFramework
                         select queue;
             return query.ToList();
         }
+        public int getCmdDataCountByStartEnd(DBConnection_EF conn, DateTime startTime, DateTime endTime)  //歷史記錄
+        {
+            try
+            {
+                var port = from a in conn.HCMD_MCS
+                               //orderby a.CMD_INSER_TIME descending
+                           where a.CMD_INSER_TIME > startTime && a.CMD_INSER_TIME < endTime
+                           && a.TRANSFERSTATE == E_TRAN_STATUS.TransferCompleted
+                           orderby a.CMD_INSER_TIME
+                           select a;
+                return port.Count();
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+        }
         public List<HCMD_MCS> LoadCmdDataByStartEnd(DBConnection_EF conn, DateTime startTime, DateTime endTime)  //歷史記錄
         {
             try
