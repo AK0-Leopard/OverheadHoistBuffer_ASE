@@ -752,7 +752,7 @@ namespace com.mirle.ibg3k0.bc.winform
                 recordAction("Close Master PC, Authority Check...", "Failed !!");
                 return;
             }
-            
+
             recordAction("Close Master PC, Authority Check...", "Success !!");
 
             if (e.Cancel == false)
@@ -988,7 +988,7 @@ namespace com.mirle.ibg3k0.bc.winform
 
         private void hostConnectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            openForm(typeof(HostModeChg_Form).Name);
+            openForm(typeof(HostModeChg_Form).Name, true, false);
         }
 
         private void maintainDeviceToolStripMenuItem_Click(object sender, EventArgs e)

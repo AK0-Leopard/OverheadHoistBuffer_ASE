@@ -131,6 +131,23 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
             }
         }
 
+        public int getShelfCountByIDAndDisable(DBConnection_EF conn, string shelfID)
+        {
+            try
+            {
+                var result = conn.ShelfDef
+                    .Where(x => x.Enable == "N" && x.ShelfID.Trim() == shelfID.Trim())
+                    .Count();
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex);
+                return 0;
+            }
+        }
+
         public List<ShelfDef> LoadShelfByZone(DBConnection_EF conn, string zoneid)
         {
             try
@@ -172,7 +189,7 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                                 x.ShelfState == ShelfDef.E_ShelfState.EmptyShelf &&
                                 x.Enable == "Y")
                     .OrderByDescending(x => x.ShelfID).ToList();
-                    //.FirstOrDefault();
+                //.FirstOrDefault();
                 return result;
             }
             catch (Exception ex)

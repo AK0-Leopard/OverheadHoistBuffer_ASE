@@ -7624,6 +7624,17 @@ namespace com.mirle.ibg3k0.sc.Service
                     return returnLog;
                 }
 
+
+                if (checkShelfIsDisable(source))
+                {
+                    return $"Source shelf:{source} is disable.";
+                }   
+
+                if (checkShelfIsDisable(dest))
+                {
+                    return $"Dest. shelf:{dest} is disable.";
+                }
+
                 if (portINIData.ContainsKey(source) == false
                  || portINIData.ContainsKey(dest) == false
                    )
@@ -7706,6 +7717,21 @@ namespace com.mirle.ibg3k0.sc.Service
                 return "命令建立失敗";
             }
         }
+
+        private bool checkShelfIsDisable(string shelfID)
+        {
+            try
+            {
+                bool is_disable = shelfDefBLL.IsShelfDisable(shelfID);
+                return is_disable;
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception:");
+                return false;
+            }
+        }
+
         public string Manual_DeleteCmd(string cmdid, string cmdSource)    //刪除命令
         {
             #region Log

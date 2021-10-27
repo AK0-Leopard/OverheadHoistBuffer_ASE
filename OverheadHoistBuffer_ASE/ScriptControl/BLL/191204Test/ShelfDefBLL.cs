@@ -27,7 +27,22 @@ namespace com.mirle.ibg3k0.sc.BLL
             zonedefDao = scApp.ZoneDefDao;
             cassetteDataDao = scApp.CassetteDataDao;
         }
-
+        public bool IsShelfDisable(string shelfID)
+        {
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    int shelf_def_count = shelfdefDao.getShelfCountByIDAndDisable(con, shelfID);
+                    return shelf_def_count > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return false;
+            }
+        }
         public ShelfDef loadShelfDataByID(string shelfid)
         {
             try
@@ -166,6 +181,8 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
             return true;
         }
+
+
 
         public bool updateStatus(string shelf_id, string status)
         {

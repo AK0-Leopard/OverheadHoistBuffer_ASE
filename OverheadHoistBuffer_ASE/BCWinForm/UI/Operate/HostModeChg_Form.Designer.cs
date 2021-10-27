@@ -367,6 +367,7 @@
             this.Controls.Add(this.skinGroupBox2);
             this.Controls.Add(this.skinGroupBox1);
             this.Name = "HostModeChg_Form";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "HostModeChg_Form";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.HostModeChg_Form_FormClosed);
             this.skinGroupBox3.ResumeLayout(false);
