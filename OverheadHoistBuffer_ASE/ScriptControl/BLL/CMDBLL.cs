@@ -842,7 +842,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 //A20.05.27
                 string cmdMCSSort = "";
                 cmdMCSSort = scApp.CMDBLL.CombineMCSLogData(originMCSCmdData);
-                bool isCmdPriorityMoreThan99 = false;
+                bool isCmdPriorityMoreThanWatershed = false;
                 if (cmdMCSSort != oldBeforeSortingLog)
                 {
                     TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "OHB >> DB|MCS排序前 前 5 筆: " + cmdMCSSort);
@@ -898,13 +898,14 @@ namespace com.mirle.ibg3k0.sc.BLL
                         (_, double distance) = scApp.VehicleBLL.findBestSuitableVhStepByNearest(sourceAddr);
                         cmdMCS.DistanceFromVehicleToHostSource = (int)distance;
                     }
-                    if (cmdMCS.PRIORITY_SUM >= 99)
+                    //if (cmdMCS.PRIORITY_SUM >= 99)
+                    if (cmdMCS.PRIORITY_SUM >= SystemParameter.cmdPriorityWatershed)
                     {
-                        isCmdPriorityMoreThan99 = true;
+                        isCmdPriorityMoreThanWatershed = true;
                     }
                 }
                 bool isAGVCmdNumMoreThan1 = false;
-                if (isCmdPriorityMoreThan99 != true)
+                if (isCmdPriorityMoreThanWatershed != true)
                 {
                     isAGVCmdNumMoreThan1 = IsAGVCmdNumMoreThanOne(originMCSCmdData);
                     if (isAGVCmdNumMoreThan1 == true)
@@ -966,21 +967,21 @@ namespace com.mirle.ibg3k0.sc.BLL
 
             //A20.06.04
             // 1.先取priority 判斷
-            if ((MCSCmd1.PRIORITY_SUM >= 99 && MCSCmd2.PRIORITY_SUM >= 99) ||
-                (MCSCmd1.PRIORITY_SUM < 99 && MCSCmd2.PRIORITY_SUM < 99))
-            {
-                //代表兩者相等，不動，且接著判斷距離
-            }
-            if (MCSCmd1.PRIORITY_SUM < 99 && MCSCmd2.PRIORITY_SUM >= 99)
-            {
-                return 1;
-                //代表後者較優先，換位
-            }
-            if (MCSCmd1.PRIORITY_SUM >= 99 && MCSCmd2.PRIORITY_SUM < 99)
-            {
-                return -1;
-                //代表前者較優先，不動
-            }
+            //if ((MCSCmd1.PRIORITY_SUM >= 99 && MCSCmd2.PRIORITY_SUM >= 99) ||
+            //    (MCSCmd1.PRIORITY_SUM < 99 && MCSCmd2.PRIORITY_SUM < 99))
+            //{
+            //    //代表兩者相等，不動，且接著判斷距離
+            //}
+            //if (MCSCmd1.PRIORITY_SUM < 99 && MCSCmd2.PRIORITY_SUM >= 99)
+            //{
+            //    return 1;
+            //    //代表後者較優先，換位
+            //}
+            //if (MCSCmd1.PRIORITY_SUM >= 99 && MCSCmd2.PRIORITY_SUM < 99)
+            //{
+            //    return -1;
+            //    //代表前者較優先，不動
+            //}
 
             // 2. 若priority 相同，則獲得各自 shelf 的 address 與起始 address的距離
             if (MCSCmd1.DistanceFromVehicleToHostSource == MCSCmd2.DistanceFromVehicleToHostSource)
@@ -1046,21 +1047,21 @@ namespace com.mirle.ibg3k0.sc.BLL
 
             //A20.06.04
             // 1.先取priority 判斷
-            if ((MCSCmd1.PRIORITY_SUM >= 99 && MCSCmd2.PRIORITY_SUM >= 99) ||
-                (MCSCmd1.PRIORITY_SUM < 99 && MCSCmd2.PRIORITY_SUM < 99))
-            {
-                //代表兩者相等，不動，且接著判斷距離
-            }
-            if (MCSCmd1.PRIORITY_SUM < 99 && MCSCmd2.PRIORITY_SUM >= 99)
-            {
-                return 1;
-                //代表後者較優先，換位
-            }
-            if (MCSCmd1.PRIORITY_SUM >= 99 && MCSCmd2.PRIORITY_SUM < 99)
-            {
-                return -1;
-                //代表前者較優先，不動
-            }
+            //if ((MCSCmd1.PRIORITY_SUM >= 99 && MCSCmd2.PRIORITY_SUM >= 99) ||
+            //    (MCSCmd1.PRIORITY_SUM < 99 && MCSCmd2.PRIORITY_SUM < 99))
+            //{
+            //    //代表兩者相等，不動，且接著判斷距離
+            //}
+            //if (MCSCmd1.PRIORITY_SUM < 99 && MCSCmd2.PRIORITY_SUM >= 99)
+            //{
+            //    return 1;
+            //    //代表後者較優先，換位
+            //}
+            //if (MCSCmd1.PRIORITY_SUM >= 99 && MCSCmd2.PRIORITY_SUM < 99)
+            //{
+            //    return -1;
+            //    //代表前者較優先，不動
+            //}
 
             // 2. 若priority 相同，則獲得各自 shelf 的 address 與起始 address的距離
             if (MCSCmd1.DistanceFromVehicleToHostSource == MCSCmd2.DistanceFromVehicleToHostSource)

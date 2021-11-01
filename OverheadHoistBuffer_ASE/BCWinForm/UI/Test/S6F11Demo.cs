@@ -524,13 +524,13 @@ namespace com.mirle.ibg3k0.bc.winform
 
         private void button42_Click(object sender, EventArgs e)
         {
-            sc.App.SystemParameter.cmdPriorityAdd = (int)numericUpDown3.Value;
+            //sc.App.SystemParameter.cmdPriorityAdd = (int)numericUpDown3.Value;
             Update();
         }
         public void Update()
         {
             numericUpDown2.Value = sc.App.SystemParameter.cmdTimeOutToAlternate;
-            numericUpDown3.Value = sc.App.SystemParameter.cmdPriorityAdd;
+            //numericUpDown3.Value = sc.App.SystemParameter.cmdPriorityAdd;
         }
 
         private void button44_Click(object sender, EventArgs e)

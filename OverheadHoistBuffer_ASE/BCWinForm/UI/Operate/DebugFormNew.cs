@@ -41,6 +41,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             cb_FroceReservePass.Checked = DebugParameter.isForcedPassReserve;
             cb_FroceReserveReject.Checked = DebugParameter.isForcedRejectBlockControl;
             cb_IsHandleBoxPassOff.Checked = DebugParameter.isHandleBoxAbnormalPassOff;
+            num_priorityWatershed.Value= sc.App.SystemParameter.cmdPriorityWatershed;
             List<string> lstVh = new List<string>();
             lstVh.Add(string.Empty);
             lstVh.AddRange(bcApp.SCApplication.getEQObjCacheManager().getAllVehicle().Select(vh => vh.VEHICLE_ID).ToList());
@@ -77,6 +78,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             if (sc.Common.SCUtility.isMatche(bcApp.LoginUserID, BCAppConstants.ADMIN_USER_NAME))
             {
                 group_cycleRun.Visible = true;
+                groupBox6.Enabled = true;
             }
 
         }
@@ -442,6 +444,11 @@ namespace com.mirle.ibg3k0.bc.winform.UI
         private void cb_IsHandleBoxPassOff_CheckedChanged(object sender, EventArgs e)
         {
             DebugParameter.isHandleBoxAbnormalPassOff = cb_IsHandleBoxPassOff.Checked;
+        }
+
+        private void num_priorityWatershed_ValueChanged(object sender, EventArgs e)
+        {
+            sc.App.SystemParameter.setcmdPriorityWatershed((int)num_priorityWatershed.Value);
         }
         //*************************************
         //A0.01

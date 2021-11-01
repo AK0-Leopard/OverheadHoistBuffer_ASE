@@ -879,7 +879,9 @@ namespace com.mirle.ibg3k0.sc.Service
                     {
                         var cmdData = cmdBLL.LoadCmdData();
 
-                        var queueCmdData = cmdData.Where(data => data.CMDTYPE != CmdType.PortTypeChange.ToString() && data.TRANSFERSTATE == E_TRAN_STATUS.Queue).ToList();
+                        var queueCmdData = cmdData.Where(data => data.CMDTYPE != CmdType.PortTypeChange.ToString() && data.TRANSFERSTATE == E_TRAN_STATUS.Queue).
+                                                   OrderByDescending(d => d.PRIORITY_SUM).
+                                                   ToList();
                         var transferCmdData = cmdData.Where(data => data.CMDTYPE != CmdType.PortTypeChange.ToString() && data.TRANSFERSTATE != E_TRAN_STATUS.Queue).ToList();
 
                         if (line.SCStats == ALINE.TSCState.AUTO)
@@ -959,19 +961,27 @@ namespace com.mirle.ibg3k0.sc.Service
                                 }
                                 else
                                 {
-                                    DateTime nowTime = DateTime.Now;
+                                    //DateTime nowTime = DateTime.Now;
 
-                                    int addtime = v.TIME_PRIORITY / SystemParameter.cmdPriorityAdd;
+                                    //int addtime = v.TIME_PRIORITY / SystemParameter.cmdPriorityAdd;
 
-                                    DateTime cmdTime = v.CMD_INSER_TIME.AddMinutes(addtime);
+                                    //DateTime cmdTime = v.CMD_INSER_TIME.AddMinutes(addtime);
 
-                                    TimeSpan span = nowTime - cmdTime;
-                                    if (span.Minutes >= 1)
+                                    //TimeSpan span = nowTime - cmdTime;
+                                    //if (span.Minutes >= 1)
+                                    //{
+                                    //    TimeSpan span1 = nowTime - v.CMD_INSER_TIME;
+                                    //    cmdBLL.updateCMD_MCS_TimePriority(v.CMD_ID, span1.Minutes * SystemParameter.cmdPriorityAdd);
+                                    //    //cmdBLL.updateCMD_MCS_sumPriority(v.CMD_ID);
+                                    //}
+
+                                    double AccumulateTime_minute = SystemParameter.cmdPriorityAdd;
+                                    int current_time_priority = (int)((DateTime.Now - v.CMD_INSER_TIME).TotalMinutes * AccumulateTime_minute);
+                                    if (current_time_priority > v.TIME_PRIORITY)
                                     {
-                                        TimeSpan span1 = nowTime - v.CMD_INSER_TIME;
-                                        cmdBLL.updateCMD_MCS_TimePriority(v.CMD_ID, span1.Minutes * SystemParameter.cmdPriorityAdd);
-                                        //cmdBLL.updateCMD_MCS_sumPriority(v.CMD_ID);
+                                        cmdBLL.updateCMD_MCS_TimePriority(v.CMD_ID, current_time_priority);
                                     }
+
                                 }
                                 #endregion
                                 #region 搬送命令
@@ -7628,7 +7638,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 if (checkShelfIsDisable(source))
                 {
                     return $"Source shelf:{source} is disable.";
-                }   
+                }
 
                 if (checkShelfIsDisable(dest))
                 {

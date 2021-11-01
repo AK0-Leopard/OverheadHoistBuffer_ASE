@@ -338,7 +338,8 @@ namespace com.mirle.ibg3k0.sc.Common
                     Fy = f,
                     DeviceID = device_id,
                     FunName = sxfy.StreamFunction,
-                    Message = sxfy.toSECSString(),
+                    //Message = sxfy.toSECSString(),
+                    Message = "",
                 };
                 logTitleTemp.Time = sDateTime;
                 logUtility.addLogInfo(logTitleTemp);
@@ -1284,7 +1285,8 @@ namespace com.mirle.ibg3k0.sc.Common
                 0, 0,//134 reply
                 0,
                 string.Empty,
-                sxfyMessage.toSECSString(),
+                //sxfyMessage.toSECSString(),
+                "",
                 string.Empty);//144          
         }
         public static void RecodeReportInfo(SXFY sxfyMessage, string mcsCmdID)
@@ -1299,7 +1301,8 @@ namespace com.mirle.ibg3k0.sc.Common
                 0, 0,//134 reply
                 0,
                 string.Empty,
-                sxfyMessage.toSECSString(),
+                //sxfyMessage.toSECSString(),
+                "",
                 string.Empty);//144          
         }
         public static void RecodeReportInfo(string vh_id, string mcs_cmd_id, SXFY send_str, string ceid)
@@ -1339,7 +1342,8 @@ namespace com.mirle.ibg3k0.sc.Common
                 0, 0,//134 reply
                 0,
                 act_status,
-                send_str.toSECSString(),
+                //send_str.toSECSString(),
+                "",
                 string.Empty);
         }
         public static void RecodeReportInfo(string vh_id, string mcs_cmd_id, SXFY receive_str, string ceid, string reply_result)
@@ -1379,7 +1383,8 @@ namespace com.mirle.ibg3k0.sc.Common
                 0, 0,//134 reply
                 0,
                 act_status,
-                receive_str.toSECSString(),
+                //receive_str.toSECSString(),
+                "",
                 reply_result);
         }
         #endregion SECS Msg Log

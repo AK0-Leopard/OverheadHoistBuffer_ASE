@@ -49,7 +49,8 @@ namespace com.mirle.ibg3k0.sc.Common
                 ThreadID: ThreadID,
                 Lot: Lot,
                 XID: XID,
-                Details: Data.toSECSString(),
+                //Details: Data.toSECSString(),
+                Details: "",
                 Method: Method
                 );
         }

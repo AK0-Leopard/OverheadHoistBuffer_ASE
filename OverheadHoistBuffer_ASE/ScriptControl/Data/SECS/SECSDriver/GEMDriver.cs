@@ -42,8 +42,11 @@ namespace com.mirle.ibg3k0.sc.Data.SECSDriver
                 SCUtility.actionRecordMsg(scApp, s1f1.StreamFunction, line.Real_ID,
                         "Receive Are You There From MES.", "");
 
+                //scApp.TransferService.TransferServiceLogger.Info(
+                //    DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|s1f1:\n" + s1f1.toSECSString());
+
                 scApp.TransferService.TransferServiceLogger.Info(
-                    DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|s1f1:\n" + s1f1.toSECSString());
+                    DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|s1f1:\n" + "");
 
                 //if (!isProcess(s1f1)) { return; }
                 S1F2 s1f2 = new S1F2()
@@ -224,8 +227,11 @@ namespace com.mirle.ibg3k0.sc.Data.SECSDriver
                 SCUtility.actionRecordMsg(scApp, s1f13.StreamFunction, line.Real_ID,
                         "Receive Establish Communication From MES.", "");
 
+                //scApp.TransferService.TransferServiceLogger.Info(
+                //    DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|s1f13:\n" + s1f13.toSECSString());
+
                 scApp.TransferService.TransferServiceLogger.Info(
-                    DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|s1f13:\n" + s1f13.toSECSString());
+                    DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|s1f13:\n" + "");
 
                 //if (!isProcessEAP(s1f13)) { return; }
                 S1F14 s1f14 = new S1F14();
@@ -554,8 +560,10 @@ namespace com.mirle.ibg3k0.sc.Data.SECSDriver
                 Boolean isEnable = SCUtility.isMatche(s5f3.ALED, SECSConst.ALED_Enable);
                 string alarm_code = s5f3.ALID;
 
+                //scApp.TransferService.TransferServiceLogger.Info(
+                //    DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|s5f3:\n" + s5f3.toSECSString());
                 scApp.TransferService.TransferServiceLogger.Info(
-                    DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|s5f3:\n" + s5f3.toSECSString());
+                    DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|s5f3:\n" + "");
 
                 //isSuccess = scApp.AlarmBLL.enableAlarmReport(alarm_code, isEnable);
 

@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.cb_IsHandleBoxPassOff = new System.Windows.Forms.CheckBox();
             this.group_cycleRun = new System.Windows.Forms.GroupBox();
             this.combox_cycle_type = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -75,7 +76,9 @@
             this.cb_OperMode = new System.Windows.Forms.ComboBox();
             this.button3 = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.cb_IsHandleBoxPassOff = new System.Windows.Forms.CheckBox();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.num_priorityWatershed = new System.Windows.Forms.NumericUpDown();
             this.tabPage1.SuspendLayout();
             this.group_cycleRun.SuspendLayout();
             this.gb_blockControl.SuspendLayout();
@@ -88,11 +91,14 @@
             this.groupBox5.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
+            this.groupBox6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.num_priorityWatershed)).BeginInit();
             this.SuspendLayout();
             // 
             // tabPage1
             // 
             this.tabPage1.AutoScroll = true;
+            this.tabPage1.Controls.Add(this.groupBox6);
             this.tabPage1.Controls.Add(this.cb_IsHandleBoxPassOff);
             this.tabPage1.Controls.Add(this.group_cycleRun);
             this.tabPage1.Controls.Add(this.gb_blockControl);
@@ -104,6 +110,17 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "TcpIp Control";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // cb_IsHandleBoxPassOff
+            // 
+            this.cb_IsHandleBoxPassOff.AutoSize = true;
+            this.cb_IsHandleBoxPassOff.Location = new System.Drawing.Point(808, 256);
+            this.cb_IsHandleBoxPassOff.Name = "cb_IsHandleBoxPassOff";
+            this.cb_IsHandleBoxPassOff.Size = new System.Drawing.Size(249, 26);
+            this.cb_IsHandleBoxPassOff.TabIndex = 58;
+            this.cb_IsHandleBoxPassOff.Text = "Is handle box pass off";
+            this.cb_IsHandleBoxPassOff.UseVisualStyleBackColor = true;
+            this.cb_IsHandleBoxPassOff.CheckedChanged += new System.EventHandler(this.cb_IsHandleBoxPassOff_CheckedChanged);
             // 
             // group_cycleRun
             // 
@@ -613,16 +630,45 @@
             this.tabControl1.Size = new System.Drawing.Size(1206, 865);
             this.tabControl1.TabIndex = 23;
             // 
-            // cb_IsHandleBoxPassOff
+            // groupBox6
             // 
-            this.cb_IsHandleBoxPassOff.AutoSize = true;
-            this.cb_IsHandleBoxPassOff.Location = new System.Drawing.Point(808, 256);
-            this.cb_IsHandleBoxPassOff.Name = "cb_IsHandleBoxPassOff";
-            this.cb_IsHandleBoxPassOff.Size = new System.Drawing.Size(249, 26);
-            this.cb_IsHandleBoxPassOff.TabIndex = 58;
-            this.cb_IsHandleBoxPassOff.Text = "Is handle box pass off";
-            this.cb_IsHandleBoxPassOff.UseVisualStyleBackColor = true;
-            this.cb_IsHandleBoxPassOff.CheckedChanged += new System.EventHandler(this.cb_IsHandleBoxPassOff_CheckedChanged);
+            this.groupBox6.Controls.Add(this.num_priorityWatershed);
+            this.groupBox6.Controls.Add(this.label7);
+            this.groupBox6.Enabled = false;
+            this.groupBox6.Location = new System.Drawing.Point(790, 335);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(386, 102);
+            this.groupBox6.TabIndex = 59;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Parameter Setting";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(24, 32);
+            this.label7.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(173, 22);
+            this.label7.TabIndex = 58;
+            this.label7.Text = "Priority 分水嶺:";
+            // 
+            // num_priorityWatershed
+            // 
+            this.num_priorityWatershed.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.num_priorityWatershed.Location = new System.Drawing.Point(195, 29);
+            this.num_priorityWatershed.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.num_priorityWatershed.Name = "num_priorityWatershed";
+            this.num_priorityWatershed.Size = new System.Drawing.Size(172, 30);
+            this.num_priorityWatershed.TabIndex = 59;
+            this.num_priorityWatershed.ValueChanged += new System.EventHandler(this.num_priorityWatershed_ValueChanged);
             // 
             // DebugFormNew
             // 
@@ -656,6 +702,9 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.tabControl1.ResumeLayout(false);
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.num_priorityWatershed)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -709,5 +758,8 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.Button btn_resetODO;
         private System.Windows.Forms.CheckBox cb_IsHandleBoxPassOff;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.NumericUpDown num_priorityWatershed;
+        private System.Windows.Forms.Label label7;
     }
 }

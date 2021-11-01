@@ -868,12 +868,13 @@ namespace com.mirle.ibg3k0.sc.App
 
         private void iniOHBC_Data()
         {
-            SystemParameter.cmdPriorityAdd = getInt("cmdPriorityAdd", 1);
+            //SystemParameter.cmdPriorityAdd = getInt("cmdPriorityAdd", 1);
+            SystemParameter.cmdPriorityAdd = getDouble("cmdPriorityAdd", 1);
 
-            if (SystemParameter.cmdPriorityAdd <= 0)
-            {
-                SystemParameter.cmdPriorityAdd = 1;
-            }
+            //if (SystemParameter.cmdPriorityAdd <= 0)
+            //{
+            //    SystemParameter.cmdPriorityAdd = 1;
+            //}
 
             SystemParameter.cmdTimeOutToAlternate = getInt("cmdTimeOutToAlternate", 30);
 
@@ -2208,8 +2209,10 @@ namespace com.mirle.ibg3k0.sc.App
 
         public static bool IsEnableIDReadFailScenario { private set; get; } = false;
 
-        public static int cmdPriorityAdd = 1;
+        //public static int cmdPriorityAdd = 1;
+        public static double cmdPriorityAdd = 1;
         public static int cmdTimeOutToAlternate = 30;
+        public static int cmdPriorityWatershed = 50;
         /// <summary>
         /// Sets the secs conversaction timeout.
         /// </summary>
@@ -2261,6 +2264,10 @@ namespace com.mirle.ibg3k0.sc.App
         public static void setPreStageWatingTime_ms(int _preStageWatingTime_ms)
         {
             PreStageWatingTime_ms = _preStageWatingTime_ms;
+        }
+        public static void setcmdPriorityWatershed(int _cmdPriorityWatershed)
+        {
+            cmdPriorityWatershed = _cmdPriorityWatershed;
         }
 
     }
