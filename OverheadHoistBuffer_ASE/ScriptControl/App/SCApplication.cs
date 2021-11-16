@@ -2213,6 +2213,7 @@ namespace com.mirle.ibg3k0.sc.App
         public static double cmdPriorityAdd = 1;
         public static int cmdTimeOutToAlternate = 30;
         public static int cmdPriorityWatershed = 50;
+        public static int BoxMovePriority = 99;
         /// <summary>
         /// Sets the secs conversaction timeout.
         /// </summary>
@@ -2268,6 +2269,11 @@ namespace com.mirle.ibg3k0.sc.App
         public static void setcmdPriorityWatershed(int _cmdPriorityWatershed)
         {
             cmdPriorityWatershed = _cmdPriorityWatershed;
+        }
+
+        public static void setBoxMovePriority(int _BoxMovePriority)
+        {
+            BoxMovePriority = _BoxMovePriority;
         }
 
     }

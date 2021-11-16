@@ -41,7 +41,8 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             cb_FroceReservePass.Checked = DebugParameter.isForcedPassReserve;
             cb_FroceReserveReject.Checked = DebugParameter.isForcedRejectBlockControl;
             cb_IsHandleBoxPassOff.Checked = DebugParameter.isHandleBoxAbnormalPassOff;
-            num_priorityWatershed.Value= sc.App.SystemParameter.cmdPriorityWatershed;
+            num_priorityWatershed.Value = sc.App.SystemParameter.cmdPriorityWatershed;
+            num_priorityForBoxMove.Value = sc.App.SystemParameter.BoxMovePriority;
             List<string> lstVh = new List<string>();
             lstVh.Add(string.Empty);
             lstVh.AddRange(bcApp.SCApplication.getEQObjCacheManager().getAllVehicle().Select(vh => vh.VEHICLE_ID).ToList());
@@ -449,6 +450,11 @@ namespace com.mirle.ibg3k0.bc.winform.UI
         private void num_priorityWatershed_ValueChanged(object sender, EventArgs e)
         {
             sc.App.SystemParameter.setcmdPriorityWatershed((int)num_priorityWatershed.Value);
+        }
+
+        private void num_priorityForBoxMove_ValueChanged(object sender, EventArgs e)
+        {
+            sc.App.SystemParameter.setBoxMovePriority((int)num_priorityForBoxMove.Value);
         }
         //*************************************
         //A0.01

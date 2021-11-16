@@ -57,6 +57,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.cmb_dest = new System.Windows.Forms.ComboBox();
             this.dgv_TransferCommand = new System.Windows.Forms.DataGridView();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.cMDIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cARRIERIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tRANSFERSTATEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -80,7 +81,6 @@
             this.cMDTYPEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cRANEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.hCMDMCSObjToShowBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.hCMDMCSObjToShowBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.aLARMObjToShowBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.cMDMCSObjToShowBindingSource = new System.Windows.Forms.BindingSource(this.components);
@@ -95,8 +95,8 @@
             this.skinGroupBox1.SuspendLayout();
             this.tableLayoutPanel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_TransferCommand)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.hCMDMCSObjToShowBindingSource1)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.hCMDMCSObjToShowBindingSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.hCMDMCSObjToShowBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.aLARMObjToShowBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cMDMCSObjToShowBindingSource)).BeginInit();
@@ -541,6 +541,21 @@
             this.dgv_TransferCommand.TabIndex = 9;
             this.dgv_TransferCommand.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgv_TransferCommand_DataError);
             // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 1;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Controls.Add(this.dgv_TransferCommand, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 120F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1602, 716);
+            this.tableLayoutPanel1.TabIndex = 0;
+            // 
             // cMDIDDataGridViewTextBoxColumn
             // 
             this.cMDIDDataGridViewTextBoxColumn.DataPropertyName = "CMD_ID";
@@ -721,21 +736,6 @@
             // 
             this.hCMDMCSObjToShowBindingSource1.DataSource = typeof(com.mirle.ibg3k0.sc.ObjectRelay.HCMD_MCSObjToShow);
             // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.dgv_TransferCommand, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 120F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1602, 716);
-            this.tableLayoutPanel1.TabIndex = 0;
-            // 
             // hCMDMCSObjToShowBindingSource
             // 
             this.hCMDMCSObjToShowBindingSource.DataSource = typeof(com.mirle.ibg3k0.sc.ObjectRelay.HCMD_MCSObjToShow);
@@ -774,8 +774,8 @@
             this.tableLayoutPanel5.ResumeLayout(false);
             this.tableLayoutPanel5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_TransferCommand)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.hCMDMCSObjToShowBindingSource1)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.hCMDMCSObjToShowBindingSource1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.hCMDMCSObjToShowBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.aLARMObjToShowBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cMDMCSObjToShowBindingSource)).EndInit();

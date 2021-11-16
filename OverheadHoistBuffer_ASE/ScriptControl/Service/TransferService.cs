@@ -5335,7 +5335,8 @@ namespace com.mirle.ibg3k0.sc.Service
                         reportBLL.ReportPortTypeOutput(cmdDest);
                     }
 
-                    Manual_InsertCmd(cmdSource, cmdDest, 45, "BoxMovCmd", CmdType.AGVStation);
+                    //Manual_InsertCmd(cmdSource, cmdDest, 45, "BoxMovCmd", CmdType.AGVStation);
+                    Manual_InsertCmd(cmdSource, cmdDest, SystemParameter.BoxMovePriority, "BoxMovCmd", CmdType.AGVStation);
                 }
                 catch (Exception ex)
                 {
@@ -6871,6 +6872,10 @@ namespace com.mirle.ibg3k0.sc.Service
         {
             return isUnitType(portName, UnitType.AGVZONE);
         }
+        public bool isSTKPort(string portName)
+        {
+            return isUnitType(portName, UnitType.STK);
+        }
         public bool isFirstStageForInput(string portName, int stateNum)
         {
             if (!portINIData.ContainsKey(portName)) return false;
@@ -6987,6 +6992,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     log = log + "   CMD_TRANSFERSTATE:" + cmdData?.TRANSFERSTATE ?? "";
                     log = log + "   CMD_SOURCE:" + cmdData?.CMDTYPE?.Trim() ?? "";
                     log = log + "   CRANE:" + cmdData?.CRANE?.Trim() ?? "";
+                    log = log + "   Priority:" + cmdData?.PRIORITY.ToString();
                 }
                 else
                 {
