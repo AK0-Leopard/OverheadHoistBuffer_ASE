@@ -5156,8 +5156,8 @@ CRANE,99999,2,OHT is offline
 CRANE,99990,2,OHT rejects command repeatedly
 LINE,100015,2,Currently this device has command but the device has been IDLE time out.
 LINE,100016,2,"Queue Cmd hasn't been processed after recieve a while , TimeOut happened."
-LINE,100017,1,"AGV_has Cmds access but haven't wait in or change type , TimeOut happened."
-LINE,100018,1,AGV Station is unable to accept AGV store CST. Due to dont have enough empty box.
+LINE,100017,2,"AGV_has Cmds access but haven't wait in or change type , TimeOut happened."
+LINE,100018,2,AGV Station is unable to accept AGV store CST. Due to dont have enough empty box.
 LINE,100020,2,PORT_DOWN
 LINE,100021,2,BOX_NumberIsNotEnough
 LINE,100023,2,NotEmptyShelf

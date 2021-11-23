@@ -21,9 +21,9 @@ Id,FromAddress,ToAddress,Speed, Type,PermitDirection
 30147,12275,12276,1000,Horizontal,Forward
 30148,12276,13277,1000,Horizontal,Forward
 30149,13277,12278,1000,Horizontal,Forward
-30150,12278,12279,1000,Horizontal,Forward
-30151,12279,13280,1000,Horizontal,Forward
-30152,13280,12281,1000,Horizontal,Forward
+30150,12278,13280,1000,Horizontal,Forward
+30151,13280,12279,1000,Horizontal,Forward
+30152,12279,12281,1000,Horizontal,Forward
 30153,12281,13282,1000,Horizontal,Forward
 30154,13282,12283,1000,Horizontal,Forward
 30155,12283,12284,1000,Horizontal,Forward
@@ -164,9 +164,9 @@ Id,FromAddress,ToAddress,Speed, Type,PermitDirection
 30101,12181,12182,1000,Horizontal,Forward
 30102,12182,12183,1000,Horizontal,Forward
 30103,12183,12184,1000,Horizontal,Forward
-30104,12184,13185,1000,Horizontal,Forward
-30105,13185,12186,1000,Horizontal,Forward
-30106,12186,12187,1000,Horizontal,Forward
+30104,12184,12186,1000,Horizontal,Forward
+30105,12186,13185,1000,Horizontal,Forward
+30106,13185,12187,1000,Horizontal,Forward
 30107,12187,12188,1000,Horizontal,Forward
 30108,12188,12189,1000,Horizontal,Forward
 30109,12189,12190,1000,Horizontal,Forward

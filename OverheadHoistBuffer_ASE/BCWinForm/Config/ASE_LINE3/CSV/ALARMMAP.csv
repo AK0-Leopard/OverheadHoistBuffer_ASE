@@ -5216,3 +5216,5 @@ CRANE,412010,1,InterLockNG Before BUSY turn ON
 CRANE,412011,1,Port error with Passive equipment HO_AVBL signal
 CRANE,412012,1,L_REQ/U_REQ turn ON before VALID turn ON
 CRANE,412014,1,Fail to change the PIO signals
+CRANE,332008,1,Loadunload Sensor is mismatch with logic_Prevent
+CRANE,332009,1,Loadunload Sensor is mismatch with logic_Jaws
