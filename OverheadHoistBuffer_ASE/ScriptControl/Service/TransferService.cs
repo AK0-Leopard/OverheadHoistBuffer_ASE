@@ -1895,14 +1895,14 @@ namespace com.mirle.ibg3k0.sc.Service
                     DateTime.Now.ToString("HH:mm:ss.fff ")
                     + "OHB >> OHT|命令執行成功，" + GetCmdLog(cmd)
                 );
-
+                cmdBLL.updateCMD_MCS_TranStatus(cmd.CMD_ID, E_TRAN_STATUS.Transferring);
+                
                 if (isCVPort(cmd.HOSTDESTINATION))
                 {
                     PortCommanding(cmd.HOSTDESTINATION, true);
                 }
 
-                cmdBLL.updateCMD_MCS_TranStatus(cmd.CMD_ID, E_TRAN_STATUS.Transferring);
-                //cmdBLL.updateCMD_MCS_Source(cmd.CMD_ID, cmd.HOSTSOURCE);
+                //cmdBLL.updateCMD_MCS_TranStatus(cmd.CMD_ID, E_TRAN_STATUS.Transferring);
 
                 ohtCmdTimeOut = 0;
 
@@ -4390,6 +4390,11 @@ namespace com.mirle.ibg3k0.sc.Service
             else
             {
                 OHBC_AlarmAllCleared(plcInfo.EQ_ID);
+
+                if (scApp.TransferService.isSTKPort(plcInfo.EQ_ID))
+                {
+                    return;
+                }
 
                 OHBC_AlarmSet(plcInfo.EQ_ID, ((int)AlarmLst.PORT_CIM_OFF).ToString());
             }

@@ -828,8 +828,13 @@ namespace com.mirle.ibg3k0.sc
         internal double getFromTheLastCommTime(BCFApplication bcfApp)
         {
             return ITcpIpControl.StopWatch_FromTheLastCommTime(bcfApp, TcpIpAgentName).Elapsed.TotalSeconds;
-
         }
+        internal void StopTcpIpConnection(BCFApplication bcfApp)
+        {
+            bcfApp.getTcpIpAgent(TcpIpAgentName).stop();
+        }
+
+
 
         #endregion TcpIpAgentInfo
 

@@ -419,10 +419,6 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 //    XID: eqpt.EQPT_ID, Data: function.ToString());
                 //3.logical (include db save)
 
-                if (scApp.TransferService.isSTKPort(port.PORT_ID))
-                {
-                    return;
-                }
                 if (scApp.TransferService.GetIgnoreModeChange(function))
                 {
                     return;

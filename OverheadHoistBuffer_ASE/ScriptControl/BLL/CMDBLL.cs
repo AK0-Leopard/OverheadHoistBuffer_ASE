@@ -188,7 +188,8 @@ namespace com.mirle.ibg3k0.sc.BLL
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
                     return cmd_mcsDao.LoadCmdData(con).Where(cmdData => cmdData.CARRIER_ID.Trim() == carrierID
-                                                                     && cmdData.TRANSFERSTATE < E_TRAN_STATUS.TransferCompleted).First();
+                                                                     //&& cmdData.TRANSFERSTATE < E_TRAN_STATUS.TransferCompleted).First();
+                                                                     && cmdData.TRANSFERSTATE < E_TRAN_STATUS.TransferCompleted).FirstOrDefault();
                 }
             }
             catch (Exception ex)
@@ -1484,6 +1485,10 @@ namespace com.mirle.ibg3k0.sc.BLL
 
         public bool updateCMD_MCS_TranStatus2Queue(string cmd_id)
         {
+            return updateCMD_MCS_TranStatus2Queue(cmd_id, false);
+        }
+        public bool updateCMD_MCS_TranStatus2Queue(string cmd_id, bool isKeepRelatSt)
+        {
             bool isSuccess = true;
             try
             {
@@ -1492,6 +1497,8 @@ namespace com.mirle.ibg3k0.sc.BLL
                     ACMD_MCS cmd = cmd_mcsDao.getByID(con, cmd_id);
                     cmd.TRANSFERSTATE = E_TRAN_STATUS.Queue;
                     cmd.COMMANDSTATE = 0;
+                    if (!isKeepRelatSt)
+                        cmd.RelayStation = "";
                     cmd_mcsDao.update(con, cmd);
                 }
             }
@@ -1500,8 +1507,6 @@ namespace com.mirle.ibg3k0.sc.BLL
                 logger.Error(ex, "Exception");
                 isSuccess = false;
             }
-
-
             return isSuccess;
         }
         //public bool updateCMD_MCS_TranStatus2Complete(string cmd_id, E_TRAN_STATUS tran_status)

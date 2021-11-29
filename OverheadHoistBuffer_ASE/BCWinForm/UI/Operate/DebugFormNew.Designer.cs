@@ -30,6 +30,8 @@
         {
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.num_priorityForBoxMove = new System.Windows.Forms.NumericUpDown();
+            this.label8 = new System.Windows.Forms.Label();
             this.num_priorityWatershed = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
             this.cb_IsHandleBoxPassOff = new System.Windows.Forms.CheckBox();
@@ -79,10 +81,10 @@
             this.cb_OperMode = new System.Windows.Forms.ComboBox();
             this.button3 = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.label8 = new System.Windows.Forms.Label();
-            this.num_priorityForBoxMove = new System.Windows.Forms.NumericUpDown();
+            this.btn_closeSession = new com.mirle.ibg3k0.bc.winform.UI.Components.uctlButton();
             this.tabPage1.SuspendLayout();
             this.groupBox6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.num_priorityForBoxMove)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.num_priorityWatershed)).BeginInit();
             this.group_cycleRun.SuspendLayout();
             this.gb_blockControl.SuspendLayout();
@@ -95,7 +97,6 @@
             this.groupBox5.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.num_priorityForBoxMove)).BeginInit();
             this.SuspendLayout();
             // 
             // tabPage1
@@ -121,12 +122,35 @@
             this.groupBox6.Controls.Add(this.num_priorityWatershed);
             this.groupBox6.Controls.Add(this.label7);
             this.groupBox6.Enabled = false;
-            this.groupBox6.Location = new System.Drawing.Point(748, 335);
+            this.groupBox6.Location = new System.Drawing.Point(774, 335);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(428, 102);
             this.groupBox6.TabIndex = 59;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Parameter Setting";
+            // 
+            // num_priorityForBoxMove
+            // 
+            this.num_priorityForBoxMove.Location = new System.Drawing.Point(226, 65);
+            this.num_priorityForBoxMove.Maximum = new decimal(new int[] {
+            99,
+            0,
+            0,
+            0});
+            this.num_priorityForBoxMove.Name = "num_priorityForBoxMove";
+            this.num_priorityForBoxMove.Size = new System.Drawing.Size(172, 30);
+            this.num_priorityForBoxMove.TabIndex = 61;
+            this.num_priorityForBoxMove.ValueChanged += new System.EventHandler(this.num_priorityForBoxMove_ValueChanged);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(24, 67);
+            this.label8.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(205, 22);
+            this.label8.TabIndex = 60;
+            this.label8.Text = "退、補空盒Priority:";
             // 
             // num_priorityWatershed
             // 
@@ -244,6 +268,7 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.btn_closeSession);
             this.groupBox4.Controls.Add(this.btn_resetODO);
             this.groupBox4.Controls.Add(this.groupBox9);
             this.groupBox4.Controls.Add(this.groupBox3);
@@ -263,7 +288,7 @@
             this.groupBox4.Controls.Add(this.groupBox2);
             this.groupBox4.Location = new System.Drawing.Point(6, 6);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(744, 806);
+            this.groupBox4.Size = new System.Drawing.Size(762, 806);
             this.groupBox4.TabIndex = 21;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Specify Vehicle Action";
@@ -285,9 +310,9 @@
             this.groupBox9.Controls.Add(this.label1);
             this.groupBox9.Controls.Add(this.num_section_dis);
             this.groupBox9.Controls.Add(this.txt_current_sec_id);
-            this.groupBox9.Location = new System.Drawing.Point(364, 648);
+            this.groupBox9.Location = new System.Drawing.Point(563, 649);
             this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(208, 151);
+            this.groupBox9.Size = new System.Drawing.Size(194, 151);
             this.groupBox9.TabIndex = 58;
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "Position Set Test";
@@ -670,28 +695,16 @@
             this.tabControl1.Size = new System.Drawing.Size(1206, 865);
             this.tabControl1.TabIndex = 23;
             // 
-            // label8
+            // btn_closeSession
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(24, 67);
-            this.label8.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(205, 22);
-            this.label8.TabIndex = 60;
-            this.label8.Text = "退、補空盒Priority:";
-            // 
-            // num_priorityForBoxMove
-            // 
-            this.num_priorityForBoxMove.Location = new System.Drawing.Point(226, 65);
-            this.num_priorityForBoxMove.Maximum = new decimal(new int[] {
-            99,
-            0,
-            0,
-            0});
-            this.num_priorityForBoxMove.Name = "num_priorityForBoxMove";
-            this.num_priorityForBoxMove.Size = new System.Drawing.Size(172, 30);
-            this.num_priorityForBoxMove.TabIndex = 61;
-            this.num_priorityForBoxMove.ValueChanged += new System.EventHandler(this.num_priorityForBoxMove_ValueChanged);
+            this.btn_closeSession.Location = new System.Drawing.Point(352, 754);
+            this.btn_closeSession.Name = "btn_closeSession";
+            this.btn_closeSession.Size = new System.Drawing.Size(205, 45);
+            this.btn_closeSession.TabIndex = 60;
+            this.btn_closeSession.Text = "Close Session Port";
+            this.btn_closeSession.UseVisualStyleBackColor = true;
+            this.btn_closeSession.Visible = false;
+            this.btn_closeSession.Click += new System.EventHandler(this.btn_closeSession_Click);
             // 
             // DebugFormNew
             // 
@@ -709,6 +722,7 @@
             this.tabPage1.PerformLayout();
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.num_priorityForBoxMove)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.num_priorityWatershed)).EndInit();
             this.group_cycleRun.ResumeLayout(false);
             this.group_cycleRun.PerformLayout();
@@ -728,7 +742,6 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.tabControl1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.num_priorityForBoxMove)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -787,5 +800,6 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.NumericUpDown num_priorityForBoxMove;
+        private Components.uctlButton btn_closeSession;
     }
 }

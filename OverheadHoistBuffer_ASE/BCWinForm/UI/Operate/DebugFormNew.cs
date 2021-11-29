@@ -395,6 +395,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             {
                 btn_open_tcp_port.Visible = true;
                 btn_close_tcp_port.Visible = true;
+                btn_closeSession.Visible = true;
             }
         }
 
@@ -455,6 +456,14 @@ namespace com.mirle.ibg3k0.bc.winform.UI
         private void num_priorityForBoxMove_ValueChanged(object sender, EventArgs e)
         {
             sc.App.SystemParameter.setBoxMovePriority((int)num_priorityForBoxMove.Value);
+        }
+
+        private async void btn_closeSession_Click(object sender, EventArgs e)
+        {
+            await Task.Run(() =>
+            {
+                bcApp.SCApplication.VehicleService.stopVehicleTcpIpSessionTest(vh_id);
+            });
         }
         //*************************************
         //A0.01
