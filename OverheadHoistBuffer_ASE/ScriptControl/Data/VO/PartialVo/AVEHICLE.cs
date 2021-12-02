@@ -65,6 +65,7 @@ namespace com.mirle.ibg3k0.sc
         /// 單筆命令，最大允許的搬送時間
         /// </summary>
         public static UInt16 MAX_ALLOW_ACTION_TIME_SECOND { get; private set; } = 300;
+        public static UInt16 MAX_ALLOW_IMPORTANT_EVENT_RETRY_COUNT { get; private set; } = 5;
 
         public event EventHandler<LocationChangeEventArgs> LocationChange;
         public event EventHandler<SegmentChangeEventArgs> SegmentChange;
@@ -76,6 +77,7 @@ namespace com.mirle.ibg3k0.sc
         public event EventHandler<VhStopSingle> ErrorStatusChange;
         public event EventHandler<VhStopSingle> ReserveStatusChange;
         public event EventHandler<int> HasBoxStatusChange;
+        public event EventHandler<EventType> HasImportantEventReportRetryOverTimes;
 
 
         VehicleTimerAction vehicleTimer = null;
@@ -275,6 +277,21 @@ namespace com.mirle.ibg3k0.sc
 
         private EventType vhRecentTranEcent = EventType.AdrPass;
 
+        [JsonIgnore]
+        [BaseElement(NonChangeFromOtherVO = true)]
+        private int repeatReceiveImportantEventCount = 0;
+        public int RepeatReceiveImportantEventCount
+        {
+            get { return repeatReceiveImportantEventCount; }
+            set
+            {
+                repeatReceiveImportantEventCount = value;
+                if (repeatReceiveImportantEventCount > MAX_ALLOW_IMPORTANT_EVENT_RETRY_COUNT)
+                {
+                    HasImportantEventReportRetryOverTimes?.Invoke(this, vhRecentTranEcent);
+                }
+            }
+        }
         public virtual EventType VhRecentTranEvent
         {
             get { return vhRecentTranEcent; }

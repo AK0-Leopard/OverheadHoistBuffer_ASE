@@ -112,12 +112,33 @@ namespace com.mirle.ibg3k0.sc.Service
                 vh.ErrorStatusChange += (s1, e1) => Vh_ErrorStatusChange(s1, e1);
                 vh.ReserveStatusChange += Vh_ReserveStatusChange;
                 vh.HasBoxStatusChange += Vh_HasBoxStatusChange;
+                vh.HasImportantEventReportRetryOverTimes += Vh_HasImportantEventReportRetryOverTimes;
                 vh.TimerActionStart();
             }
 
             transferService = app.TransferService;
         }
 
+        private void Vh_HasImportantEventReportRetryOverTimes(object sender, EventType overRetryImportantEvent)
+        {
+            try
+            {
+                AVEHICLE vh = sender as AVEHICLE;
+                vh.RepeatReceiveImportantEventCount = 0;
+                //1.當偵測到車子重複上報某的事件達到N次，OHBC將會強制將對應的section關閉，讓車子在重新連線上來
+                int port_num = vh.getPortNum(scApp.getBCFApplication());
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                   Data: $"Over {AVEHICLE.MAX_ALLOW_IMPORTANT_EVENT_RETRY_COUNT} times report important:{overRetryImportantEvent}, begin force close tcpip section ...",
+                   VehicleID: vh.VEHICLE_ID,
+                   CarrierID: vh.CST_ID);
+
+                vh.StopTcpIpConnection(scApp.getBCFApplication());
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception:");
+            }
+        }
 
         private void Vh_HasBoxStatusChange(object sender, int hasBoxStatus)
         {
@@ -1638,6 +1659,7 @@ namespace com.mirle.ibg3k0.sc.Service
             }
             if (isSuccess)
             {
+                vh.RepeatReceiveImportantEventCount = 0;
                 int reply_code = receive_gpp.ReplyCode;
                 if (reply_code != 0)
                 {

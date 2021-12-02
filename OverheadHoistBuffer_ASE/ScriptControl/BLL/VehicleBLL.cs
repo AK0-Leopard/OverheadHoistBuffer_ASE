@@ -134,7 +134,7 @@ namespace com.mirle.ibg3k0.sc.BLL
             vh.ACC_SEC_DIST = sce_dis;
             vh.X_Axis = xAxis;
             vh.Y_Axis = yAxis;
-            vh.Speed= speed;
+            vh.Speed = speed;
 
             //var showObj = scApp.getEQObjCacheManager().CommonInfo.ObjectToShow_list.
             //    Where(o => o.VEHICLE_ID == vh.VEHICLE_ID).SingleOrDefault();
@@ -152,6 +152,23 @@ namespace com.mirle.ibg3k0.sc.BLL
 
         public void updateVehicleActionStatus(AVEHICLE vh, EventType vhPassEvent)
         {
+            switch (vhPassEvent)
+            {
+                case EventType.LoadArrivals:
+                case EventType.LoadComplete:
+                case EventType.UnloadArrivals:
+                case EventType.UnloadComplete:
+                case EventType.Bcrread:
+                    if (vh.VhRecentTranEvent == vhPassEvent)
+                    {
+                        vh.RepeatReceiveImportantEventCount++;
+                    }
+                    else
+                    {
+                        vh.RepeatReceiveImportantEventCount = 0;
+                    }
+                    break;
+            }
             vh.VhRecentTranEvent = vhPassEvent;
             vh.NotifyVhStatusChange();
         }
