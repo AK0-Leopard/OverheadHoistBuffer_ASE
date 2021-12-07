@@ -213,10 +213,10 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 if (function.CSTPresenceMismatch)
                 {
                     //TODO
-                    if (function.IsInputMode)
-                    {
-                        scApp.TransferService.OpenAGV_Station(function.EQ_ID.Trim(), true, "CSTPresenceMismatch");
-                    }
+                    //if (function.IsInputMode)
+                    //{
+                    scApp.TransferService.OpenAGV_Station(function.EQ_ID.Trim(), true, "CSTPresenceMismatch");
+                    //}
 
                     scApp.TransferService.PLC_AGV_Station(function, "CSTPresenceMismatch");
                 }
