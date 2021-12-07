@@ -159,8 +159,13 @@ namespace com.mirle.ibg3k0.sc.BLL
                 case EventType.UnloadArrivals:
                 case EventType.UnloadComplete:
                 case EventType.Bcrread:
+                case EventType.CommandComplete:
                     if (vh.VhRecentTranEvent == vhPassEvent)
                     {
+                        LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleBLL), Device: Service.VehicleService.DEVICE_NAME_OHx,
+                           Data: $"vh:{vh.VEHICLE_ID} repeat report event:{vhPassEvent},current count:{vh.RepeatReceiveImportantEventCount}",
+                           VehicleID: vh.VEHICLE_ID,
+                           CarrierID: vh.CST_ID);
                         vh.RepeatReceiveImportantEventCount++;
                     }
                     else

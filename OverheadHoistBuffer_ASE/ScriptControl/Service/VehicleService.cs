@@ -3653,7 +3653,14 @@ namespace com.mirle.ibg3k0.sc.Service
             //using (TransactionScope tx = new
             //    TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
 
-
+            if(DebugParameter.Is_136_retry_test)
+            {
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                   Data: $"ID 136 retry test flag is open,DebugParameter.Is_136_retry_test:{DebugParameter.Is_136_retry_test}",
+                   VehicleID: eqpt.VEHICLE_ID,
+                   CarrierID: eqpt.CST_ID);
+                return;
+            }
             switch (eventType)
             {
                 case EventType.LoadArrivals:
@@ -4873,6 +4880,7 @@ namespace com.mirle.ibg3k0.sc.Service
             string car_cst_id = recive_str.BOXID;
             bool isSuccess = true;
             eqpt.IsNeedAttentionBoxStatus = false;
+            scApp.VehicleBLL.updateVehicleActionStatus(eqpt, EventType.CommandComplete);
             if (scApp.CMDBLL.isCMCD_OHTCFinish(cmd_id))
             {
                 replyCommandComplete(eqpt, seq_num, finish_ohxc_cmd, finish_mcs_cmd);

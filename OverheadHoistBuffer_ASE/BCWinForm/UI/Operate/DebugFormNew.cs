@@ -41,6 +41,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             cb_FroceReservePass.Checked = DebugParameter.isForcedPassReserve;
             cb_FroceReserveReject.Checked = DebugParameter.isForcedRejectBlockControl;
             cb_IsHandleBoxPassOff.Checked = DebugParameter.isHandleBoxAbnormalPassOff;
+            cb_id_136_retry_test.Checked = DebugParameter.Is_136_retry_test;
             num_priorityWatershed.Value = sc.App.SystemParameter.cmdPriorityWatershed;
             num_priorityForBoxMove.Value = sc.App.SystemParameter.BoxMovePriority;
             List<string> lstVh = new List<string>();
@@ -94,6 +95,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             TrunOffAllVhPLCControl();
             DebugParameter.IsDebugMode = false;
             mainForm.removeForm(typeof(DebugFormNew).Name);
+            cb_id_136_retry_test.Checked = false;
         }
 
 
@@ -396,6 +398,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                 btn_open_tcp_port.Visible = true;
                 btn_close_tcp_port.Visible = true;
                 btn_closeSession.Visible = true;
+                cb_id_136_retry_test.Visible = true;
             }
         }
 
@@ -464,6 +467,11 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             {
                 bcApp.SCApplication.VehicleService.stopVehicleTcpIpSessionTest(vh_id);
             });
+        }
+
+        private void cb_id_136_retry_test_CheckedChanged(object sender, EventArgs e)
+        {
+            DebugParameter.Is_136_retry_test = cb_id_136_retry_test.Checked;
         }
         //*************************************
         //A0.01

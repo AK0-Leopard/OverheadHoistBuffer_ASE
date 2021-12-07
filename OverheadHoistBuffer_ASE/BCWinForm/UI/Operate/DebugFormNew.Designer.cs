@@ -43,6 +43,7 @@
             this.cb_FroceReserveReject = new System.Windows.Forms.CheckBox();
             this.cb_FroceReservePass = new System.Windows.Forms.CheckBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.btn_closeSession = new com.mirle.ibg3k0.bc.winform.UI.Components.uctlButton();
             this.btn_resetODO = new System.Windows.Forms.Button();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -81,7 +82,7 @@
             this.cb_OperMode = new System.Windows.Forms.ComboBox();
             this.button3 = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.btn_closeSession = new com.mirle.ibg3k0.bc.winform.UI.Components.uctlButton();
+            this.cb_id_136_retry_test = new System.Windows.Forms.CheckBox();
             this.tabPage1.SuspendLayout();
             this.groupBox6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.num_priorityForBoxMove)).BeginInit();
@@ -268,6 +269,7 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.cb_id_136_retry_test);
             this.groupBox4.Controls.Add(this.btn_closeSession);
             this.groupBox4.Controls.Add(this.btn_resetODO);
             this.groupBox4.Controls.Add(this.groupBox9);
@@ -293,6 +295,17 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Specify Vehicle Action";
             this.groupBox4.Enter += new System.EventHandler(this.groupBox4_Enter);
+            // 
+            // btn_closeSession
+            // 
+            this.btn_closeSession.Location = new System.Drawing.Point(352, 754);
+            this.btn_closeSession.Name = "btn_closeSession";
+            this.btn_closeSession.Size = new System.Drawing.Size(205, 45);
+            this.btn_closeSession.TabIndex = 60;
+            this.btn_closeSession.Text = "Close Session Port";
+            this.btn_closeSession.UseVisualStyleBackColor = true;
+            this.btn_closeSession.Visible = false;
+            this.btn_closeSession.Click += new System.EventHandler(this.btn_closeSession_Click);
             // 
             // btn_resetODO
             // 
@@ -695,16 +708,17 @@
             this.tabControl1.Size = new System.Drawing.Size(1206, 865);
             this.tabControl1.TabIndex = 23;
             // 
-            // btn_closeSession
+            // cb_id_136_retry_test
             // 
-            this.btn_closeSession.Location = new System.Drawing.Point(352, 754);
-            this.btn_closeSession.Name = "btn_closeSession";
-            this.btn_closeSession.Size = new System.Drawing.Size(205, 45);
-            this.btn_closeSession.TabIndex = 60;
-            this.btn_closeSession.Text = "Close Session Port";
-            this.btn_closeSession.UseVisualStyleBackColor = true;
-            this.btn_closeSession.Visible = false;
-            this.btn_closeSession.Click += new System.EventHandler(this.btn_closeSession_Click);
+            this.cb_id_136_retry_test.AutoSize = true;
+            this.cb_id_136_retry_test.Location = new System.Drawing.Point(352, 722);
+            this.cb_id_136_retry_test.Name = "cb_id_136_retry_test";
+            this.cb_id_136_retry_test.Size = new System.Drawing.Size(199, 26);
+            this.cb_id_136_retry_test.TabIndex = 61;
+            this.cb_id_136_retry_test.Text = "ID_136_Retry_test";
+            this.cb_id_136_retry_test.UseVisualStyleBackColor = true;
+            this.cb_id_136_retry_test.Visible = false;
+            this.cb_id_136_retry_test.CheckedChanged += new System.EventHandler(this.cb_id_136_retry_test_CheckedChanged);
             // 
             // DebugFormNew
             // 
@@ -801,5 +815,6 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.NumericUpDown num_priorityForBoxMove;
         private Components.uctlButton btn_closeSession;
+        private System.Windows.Forms.CheckBox cb_id_136_retry_test;
     }
 }
