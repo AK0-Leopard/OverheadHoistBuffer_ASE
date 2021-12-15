@@ -93,7 +93,7 @@ namespace com.mirle.ibg3k0.sc.Service
         public void Start(SCApplication app)
         {
             scApp = app;
-            SubscriptionPositionChangeEvent();
+            //SubscriptionPositionChangeEvent();
 
             List<AVEHICLE> vhs = scApp.getEQObjCacheManager().getAllVehicle();
 
@@ -388,8 +388,8 @@ namespace com.mirle.ibg3k0.sc.Service
             leave_section?.Leave(vh.VEHICLE_ID);
             entry_section?.Entry(vh.VEHICLE_ID);
 
-            if (scApp.getEQObjCacheManager().getLine().ServiceMode == AppServiceMode.Active)
-                scApp.VehicleBLL.NetworkQualityTest(vh.VEHICLE_ID, e.EntrySection, vh.CUR_ADR_ID, 0);
+            //if (scApp.getEQObjCacheManager().getLine().ServiceMode == AppServiceMode.Active)
+            //    scApp.VehicleBLL.NetworkQualityTest(vh.VEHICLE_ID, e.EntrySection, vh.CUR_ADR_ID, 0);
 
             if (leave_section != null)
             {
@@ -422,11 +422,11 @@ namespace com.mirle.ibg3k0.sc.Service
 
         private void Vh_SegementChange(object sender, SegmentChangeEventArgs e)
         {
-            AVEHICLE vh = sender as AVEHICLE;
-            ASEGMENT leave_segment = scApp.SegmentBLL.cache.GetSegment(e.LeaveSegment);
-            ASEGMENT entry_segment = scApp.SegmentBLL.cache.GetSegment(e.EntrySegment);
-            leave_segment?.Leave(vh);
-            entry_segment?.Entry(vh, scApp.SectionBLL, leave_segment == null);
+            //AVEHICLE vh = sender as AVEHICLE;
+            //ASEGMENT leave_segment = scApp.SegmentBLL.cache.GetSegment(e.LeaveSegment);
+            //ASEGMENT entry_segment = scApp.SegmentBLL.cache.GetSegment(e.EntrySegment);
+            //leave_segment?.Leave(vh);
+            //entry_segment?.Entry(vh, scApp.SectionBLL, leave_segment == null);
         }
 
         private void PublishVhInfo(object sender, PropertyChangedEventArgs e)
@@ -1957,43 +1957,43 @@ namespace com.mirle.ibg3k0.sc.Service
             string last_adr_id, string last_sec_id, string last_seg_id,
             uint sec_dis, double x_axis, double y_axis, double vh_angle, double speed)
         {
-            lock (vh.PositionRefresh_Sync)
+            //lock (vh.PositionRefresh_Sync)
+            //{
+            ALINE line = scApp.getEQObjCacheManager().getLine();
+            scApp.VehicleBLL.updateVheiclePosition_CacheManager(vh, current_adr_id, current_sec_id, current_seg_id, sec_dis, x_axis, y_axis, speed);
+
+            //var update_result = scApp.VehicleBLL.updateVheiclePositionToReserveControlModule
+            //    (scApp.ReserveBLL, vh, current_sec_id, x_axis, y_axis, 0, vh_angle, speed,
+            //     Mirle.Hlts.Utils.HltDirection.Forward, Mirle.Hlts.Utils.HltDirection.None);
+            var update_result = scApp.VehicleBLL.updateVheiclePositionToReserveControlModule
+                (scApp.ReserveBLL, vh, current_sec_id, x_axis, y_axis, 0, vh_angle, speed,
+                 Mirle.Hlts.Utils.HltDirection.None, Mirle.Hlts.Utils.HltDirection.None);
+
+            if (line.ServiceMode == SCAppConstants.AppServiceMode.Active)
             {
-                ALINE line = scApp.getEQObjCacheManager().getLine();
-                scApp.VehicleBLL.updateVheiclePosition_CacheManager(vh, current_adr_id, current_sec_id, current_seg_id, sec_dis, x_axis, y_axis, speed);
-
-                //var update_result = scApp.VehicleBLL.updateVheiclePositionToReserveControlModule
-                //    (scApp.ReserveBLL, vh, current_sec_id, x_axis, y_axis, 0, vh_angle, speed,
-                //     Mirle.Hlts.Utils.HltDirection.Forward, Mirle.Hlts.Utils.HltDirection.None);
-                var update_result = scApp.VehicleBLL.updateVheiclePositionToReserveControlModule
-                    (scApp.ReserveBLL, vh, current_sec_id, x_axis, y_axis, 0, vh_angle, speed,
-                     Mirle.Hlts.Utils.HltDirection.None, Mirle.Hlts.Utils.HltDirection.None);
-
-                if (line.ServiceMode == SCAppConstants.AppServiceMode.Active)
+                if (!SCUtility.isMatche(last_sec_id, current_sec_id))
                 {
-                    if (!SCUtility.isMatche(last_sec_id, current_sec_id))
-                    {
-                        //TODO 要改成查一次CMD出來然後直接帶入CMD ID
-                        if (!SCUtility.isEmpty(vh.OHTC_CMD))
-                        {
-                            scApp.CMDBLL.update_CMD_DetailEntryTime(vh.OHTC_CMD, current_adr_id, current_sec_id);
-                            scApp.CMDBLL.update_CMD_DetailLeaveTime(vh.OHTC_CMD, last_adr_id, last_sec_id);
-                            List<string> willPassSecID = null;
-                            vh.procProgress_Percen = scApp.CMDBLL.getAndUpdateVhCMDProgress(vh.VEHICLE_ID, out willPassSecID);
-                            vh.WillPassSectionID = willPassSecID;
-                            //scApp.VehicleBLL.NetworkQualityTest(vh.VEHICLE_ID, current_adr_id, current_sec_id, 0);
-                        }
-                        vh.onLocationChange(current_sec_id, last_sec_id);
-                    }
-                    if (!SCUtility.isMatche(current_seg_id, last_seg_id))
-                    {
-                        vh.onSegmentChange(current_seg_id, last_seg_id);
-                    }
-                    //if (!SCUtility.isMatche(current_adr_id, last_adr_id) || !SCUtility.isMatche(current_sec_id, last_sec_id))
-                    //    scApp.VehicleBLL.updateVheiclePosition(vh.VEHICLE_ID, current_adr_id, current_sec_id, sec_dis, vhPassEvent);
+                    //TODO 要改成查一次CMD出來然後直接帶入CMD ID
+                    //if (!SCUtility.isEmpty(vh.OHTC_CMD))
+                    //{
+                    //    scApp.CMDBLL.update_CMD_DetailEntryTime(vh.OHTC_CMD, current_adr_id, current_sec_id);
+                    //    scApp.CMDBLL.update_CMD_DetailLeaveTime(vh.OHTC_CMD, last_adr_id, last_sec_id);
+                    //    List<string> willPassSecID = null;
+                    //    vh.procProgress_Percen = scApp.CMDBLL.getAndUpdateVhCMDProgress(vh.VEHICLE_ID, out willPassSecID);
+                    //    vh.WillPassSectionID = willPassSecID;
+                    //    //scApp.VehicleBLL.NetworkQualityTest(vh.VEHICLE_ID, current_adr_id, current_sec_id, 0);
+                    //}
+                    vh.onLocationChange(current_sec_id, last_sec_id);
                 }
-
+                if (!SCUtility.isMatche(current_seg_id, last_seg_id))
+                {
+                    vh.onSegmentChange(current_seg_id, last_seg_id);
+                }
+                //if (!SCUtility.isMatche(current_adr_id, last_adr_id) || !SCUtility.isMatche(current_sec_id, last_sec_id))
+                //    scApp.VehicleBLL.updateVheiclePosition(vh.VEHICLE_ID, current_adr_id, current_sec_id, sec_dis, vhPassEvent);
             }
+
+            //}
             //tryDriveTheOnWillPassVh(vh.VEHICLE_ID);
         }
 
@@ -3653,7 +3653,7 @@ namespace com.mirle.ibg3k0.sc.Service
             //using (TransactionScope tx = new
             //    TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
 
-            if(DebugParameter.Is_136_retry_test)
+            if (DebugParameter.Is_136_retry_test)
             {
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
                    Data: $"ID 136 retry test flag is open,DebugParameter.Is_136_retry_test:{DebugParameter.Is_136_retry_test}",

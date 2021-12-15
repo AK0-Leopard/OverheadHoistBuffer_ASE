@@ -521,6 +521,7 @@
     <Compile Include="CONTROL_DATA.cs">
       <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
+    <Compile Include="Data\BackgroundWorkProcVehiclePosition.cs" />
     <Compile Include="Data\BackgroundWorkSample.cs" />
     <Compile Include="Data\DAO\191204Test\CassetteDataDao.cs" />
     <Compile Include="Data\DAO\191204Test\ShelfDefDao.cs" />

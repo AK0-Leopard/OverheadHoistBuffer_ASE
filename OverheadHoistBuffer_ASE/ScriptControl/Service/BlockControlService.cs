@@ -41,7 +41,7 @@ namespace com.mirle.ibg3k0.sc.Service
             sectionBLL = app.SectionBLL;
             vehicleService = app.VehicleService;
 
-            RegisterReleaseAddressOfKeySection();
+            //RegisterReleaseAddressOfKeySection();
 
         }
 

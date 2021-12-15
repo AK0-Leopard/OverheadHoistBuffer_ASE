@@ -187,14 +187,18 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             }
         }
 
-        const int IGNORE_SECTION_DISTANCE = 60;
+        //protected void str134_ReceiveProcess(object sender, TcpIpEventArgs e)
+        //{
+        //    ID_134_TRANS_EVENT_REP recive_str = (ID_134_TRANS_EVENT_REP)e.objPacket;
+        //    SCUtility.RecodeReportInfo(eqpt.VEHICLE_ID, 0, recive_str);
+        //    scApp.VehicleBLL.setAndPublishPositionReportInfo2Redis(eqpt.VEHICLE_ID, recive_str);
+        //}
+
         protected void str134_ReceiveProcess(object sender, TcpIpEventArgs e)
         {
-            ID_134_TRANS_EVENT_REP recive_str = (ID_134_TRANS_EVENT_REP)e.objPacket;
-            SCUtility.RecodeReportInfo(eqpt.VEHICLE_ID, 0, recive_str);
-            scApp.VehicleBLL.setAndPublishPositionReportInfo2Redis(eqpt.VEHICLE_ID, recive_str);
+            var workItem = new com.mirle.ibg3k0.bcf.Data.BackgroundWorkItem(scApp, eqpt, e);
+            scApp.BackgroundWorkProcVehiclePosition.triggerBackgroundWork(eqpt.VEHICLE_ID, workItem);
         }
-
 
 
         object str136_lockObj = new object();

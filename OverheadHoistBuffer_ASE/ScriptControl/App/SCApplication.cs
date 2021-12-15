@@ -659,6 +659,7 @@ namespace com.mirle.ibg3k0.sc.App
         /// </summary>
         /// <value>The background work sample.</value>
         public BackgroundWorkDriver BackgroundWorkSample { get; private set; }              //A0.03
+        public BackgroundWorkDriver BackgroundWorkProcVehiclePosition { get; private set; }              //A0.03
 
 
         public IScheduler Scheduler { get; private set; }
@@ -1088,6 +1089,7 @@ namespace com.mirle.ibg3k0.sc.App
         private void initBackgroundWork()
         {
             BackgroundWorkSample = new BackgroundWorkDriver(new BackgroundWorkSample());            //A0.03
+            BackgroundWorkProcVehiclePosition = new BackgroundWorkDriver(new BackgroundWorkProcVehiclePosition());            //A0.01
         }
         private void initScheduler()
         {

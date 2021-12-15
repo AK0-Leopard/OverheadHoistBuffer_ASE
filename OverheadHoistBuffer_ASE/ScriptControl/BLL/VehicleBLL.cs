@@ -1934,7 +1934,8 @@ namespace com.mirle.ibg3k0.sc.BLL
         public void setAndPublishPositionReportInfo2Redis(string vh_id, ID_134_TRANS_EVENT_REP report_obj)
         {
             setPositionReportInfo2Redis(vh_id, report_obj);
-            PublishPositionReportInfo2Redis(vh_id, report_obj);
+            //PublishPositionReportInfo2Redis(vh_id, report_obj);
+            UpdatePositionReportInfo2Cache(vh_id, report_obj);//A0.03
         }
         private void setPositionReportInfo2Redis(string vh_id, ID_134_TRANS_EVENT_REP report_obj)
         {
@@ -1952,7 +1953,12 @@ namespace com.mirle.ibg3k0.sc.BLL
             report_obj.WriteTo(new Google.Protobuf.CodedOutputStream(arrayByte));
             scApp.getRedisCacheManager().PublishEvent(key_word_position, arrayByte);
         }
-
+        private void UpdatePositionReportInfo2Cache(string vh_id, ID_134_TRANS_EVENT_REP report_obj)
+        {
+            AVEHICLE vh = scApp.getEQObjCacheManager().getVehicletByVHID(vh_id);
+            dynamic service = scApp.VehicleService;
+            service.PositionReport(scApp.getBCFApplication(), vh, report_obj);
+        }
 
         Google.Protobuf.MessageParser<ID_134_TRANS_EVENT_REP> trans_event_rep_parser = new Google.Protobuf.MessageParser<ID_134_TRANS_EVENT_REP>(() => new ID_134_TRANS_EVENT_REP());
         public void VehiclePositionChangeHandler(RedisChannel channel, RedisValue value)
