@@ -11,7 +11,7 @@ namespace com.mirle.ibg3k0.sc
 {
     using System;
     using System.Collections.Generic;
-    
+
     public partial class ALARM
     {
         public string EQPT_ID { get; set; }
@@ -21,6 +21,9 @@ namespace com.mirle.ibg3k0.sc
         public E_ALARM_LVL ALAM_LVL { get; set; }
         public com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.ErrorStatus ALAM_STAT { get; set; }
         public string ALAM_DESC { get; set; }
+        /// <summary>
+        /// 用來作為是否已經上報給MCS的Flag，已上報為Y，未上報的為N
+        /// </summary>
         public string ERROR_ID { get; set; }
         public string UnitID { get; set; }
         public string UnitState { get; set; }

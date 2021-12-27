@@ -1896,7 +1896,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     + "OHB >> OHT|命令執行成功，" + GetCmdLog(cmd)
                 );
                 cmdBLL.updateCMD_MCS_TranStatus(cmd.CMD_ID, E_TRAN_STATUS.Transferring);
-                
+
                 if (isCVPort(cmd.HOSTDESTINATION))
                 {
                     PortCommanding(cmd.HOSTDESTINATION, true);
@@ -7201,6 +7201,59 @@ namespace com.mirle.ibg3k0.sc.Service
                 OHBC_AlarmSetIng(_eqName, false);
             }
         }
+
+        public void ReportSetAlarmToMcs()
+        {
+            var alarms = scApp.AlarmBLL.loadSetAlarmAndNonReportAndTenAgo();
+            if (alarms == null || alarms.Count == 0)
+            {
+                return;
+            }
+            foreach (var alarm in alarms)
+            {
+                using (TransactionScope tx = SCUtility.getTransactionScope())
+                {
+                    using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                    {
+                        bool is_success = true;
+                        string eq_name = SCUtility.Trim(alarm.EQPT_ID, true);
+                        string err_code = SCUtility.Trim(alarm.ALAM_CODE, true);
+                        string rtp_time = SCUtility.Trim(alarm.RPT_DATE_TIME, true);
+                        is_success = is_success && scApp.AlarmBLL.SetAlarmAlreadyReport(alarm);
+                        bool is_need_report = scApp.AlarmBLL.isReportAlarmReport2MCS(eq_name, err_code);
+                        if (!is_need_report)
+                        {
+                            TransferServiceLogger.Info
+                            (
+                                $"{DateTime.Now.ToString("HH:mm:ss.fff ")} OHT_AlarmSet| eq type:{eq_name} code:{err_code} set 發生，不需要報告MCS"
+                            );
+                            if (is_success)
+                            {
+                                tx.Complete();
+                            }
+                            return;
+                        }
+                        if (alarm.ALAM_LVL == E_ALARM_LVL.Error)
+                        {
+                            is_success = is_success && reportBLL.ReportAlarmHappend(ErrorStatus.ErrSet, alarm.ALAM_CODE, alarm.ALAM_DESC);
+                            ACMD_MCS cmd_mcs = null;
+                            if (!SCUtility.isEmpty(alarm.CMD_ID))
+                                cmd_mcs = scApp.CMDBLL.getCMD_MCSByID(alarm.CMD_ID);
+                            is_success = is_success && reportBLL.ReportAlarmSet(cmd_mcs, alarm, alarm.UnitID, alarm.UnitState, alarm.RecoveryOption);
+                        }
+                        else if (alarm.ALAM_LVL == E_ALARM_LVL.Warn)
+                        {
+                            is_success = is_success && reportBLL.ReportUnitAlarmSet(alarm.EQPT_ID, alarm.ALAM_CODE, alarm.ALAM_DESC);
+                        }
+                        if (is_success)
+                        {
+                            tx.Complete();
+                        }
+                    }
+                }
+            }
+        }
+
         public void OHBC_AlarmCleared(string _craneName, string errCode)
         {
             try
@@ -9677,7 +9730,7 @@ namespace com.mirle.ibg3k0.sc.Service
         }
         #endregion
 
-        #region Call by AGVC Restful API. Use swap method.
+        #region Call by AGVC Restful API. Use swap method.    
         public (bool is_OK, bool is_More_out) CanExcuteUnloadTransferAGVStationFromAGVC_Swap(string AGVStationID, int AGVCFromEQToStationCmdNum, bool isEmergency)
         {
             PortTypeNum portTypeNum = PortTypeNum.No_Change;

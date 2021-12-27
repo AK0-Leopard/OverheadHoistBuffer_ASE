@@ -300,5 +300,24 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
         }
 
 
+        public List<ALARM> loadSetAlarmAndNoReportAndTenAgo(DBConnection_EF conn)
+        {
+            try
+            {
+                string ten_sencond_before = BCFUtility.formatDateTime(DateTime.Now.AddSeconds(-10), SCAppConstants.TimestampFormat_19);
+                var alarm = from a in conn.ALARM
+                            where a.ALAM_STAT == ProtocolFormat.OHTMessage.ErrorStatus.ErrSet
+                                && a.ERROR_ID.Trim() == SCAppConstants.NO_FLAG
+                                && a.RPT_DATE_TIME.CompareTo(ten_sencond_before) < 0
+                            select a;
+                return alarm.ToList();
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex);
+                throw;
+            }
+        }
+
     }
 }

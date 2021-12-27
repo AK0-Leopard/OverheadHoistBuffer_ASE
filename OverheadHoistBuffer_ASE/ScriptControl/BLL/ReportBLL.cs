@@ -310,7 +310,7 @@ namespace com.mirle.ibg3k0.sc.BLL
             return isSuccsess;
         }
         public bool ReportAlarmCleared(ACMD_MCS CMD_MCS, ALARM ALARM, string unitid, string unitstate)
-        {      
+        {
             bool isSuccsess = true;
             isSuccsess = isSuccsess && iBSEMDriver.S6F11SendAlarmCleared(CMD_MCS, ALARM,  unitid,  unitstate);
             return isSuccsess;
@@ -647,7 +647,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
         public void Send(string ceid, VIDCollection vids)
         {
-            (iBSEMDriver as ASEMCSDefaultMapAction).SendS6F11(ceid, vids); 
+            (iBSEMDriver as ASEMCSDefaultMapAction).SendS6F11(ceid, vids);
         }
 
 

@@ -223,7 +223,8 @@ namespace com.mirle.ibg3k0.sc.BLL
                     ALAM_LVL = alarmMap == null ? E_ALARM_LVL.Warn : alarmMap.ALARM_LVL,
                     ALAM_STAT = ProtocolFormat.OHTMessage.ErrorStatus.ErrSet,
                     ALAM_DESC = alarmMap == null ? $"unknow alarm code:{error_code}" : $"{eq_id} {alarmMap.ALARM_DESC}(error code:{error_code})",
-                    ERROR_ID = error_code,  //alarmMap?.ALARM_ID ?? "0",
+                    //ERROR_ID = error_code,  //alarmMap?.ALARM_ID ?? "0",
+                    ERROR_ID = SCAppConstants.NO_FLAG,
                     UnitID = eq_id,
                     UnitState = "3",
                     RecoveryOption = "",
@@ -638,6 +639,16 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
         }
 
+        public List<ALARM> loadSetAlarmAndNonReportAndTenAgo()
+        {
+            List<ALARM> alarms = null;
+            using (DBConnection_EF con = DBConnection_EF.GetUContext())
+            {
+                alarms = alarmDao.loadSetAlarmAndNoReportAndTenAgo(con);
+            }
+            return alarms;
+        }
+
         public bool DeleteAlarmByAlarmID(string alarmId)
         {
             bool isSuccess = true;
@@ -672,6 +683,33 @@ namespace com.mirle.ibg3k0.sc.BLL
                 alarm = alarmDao.getAlarms(con, start_time, end_time);
             }
             return alarm;
+        }
+
+        public bool SetAlarmAlreadyReport(ALARM sourceAlarm)
+        {
+            bool isSuccess = false;
+            ALARM alarm = new ALARM();
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    alarm.EQPT_ID = sourceAlarm.EQPT_ID;
+                    alarm.ALAM_CODE = sourceAlarm.ALAM_CODE;
+                    alarm.RPT_DATE_TIME = sourceAlarm.RPT_DATE_TIME;
+
+                    con.ALARM.Attach(alarm);
+                    alarm.ERROR_ID = SCAppConstants.YES_FLAG;
+                    con.Entry(alarm).Property(p => p.ERROR_ID).IsModified = true;
+                    alarmDao.updateAlarm(con, alarm);
+                    con.Entry(alarm).State = System.Data.Entity.EntityState.Detached;
+                    isSuccess = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                NLog.LogManager.GetCurrentClassLogger().Error(ex, "Exception:");
+            }
+            return isSuccess;
         }
 
 

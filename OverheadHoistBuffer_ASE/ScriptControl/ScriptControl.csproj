@@ -798,6 +798,7 @@
     <Compile Include="Data\TimerAction\SECSHeartBeatTimerAction.cs" />
     <Compile Include="Data\TimerAction\TraceDataReportTimer.cs" />
     <Compile Include="Data\TimerAction\PositionReportTimerAction.cs" />
+    <Compile Include="Data\TimerAction\AlarmReportTimerAction.cs" />
     <Compile Include="Data\TimerAction\ZoneBlockCheck.cs" />
     <Compile Include="Data\TimerAction\IdleVehicleTimerAction.cs" />
     <Compile Include="Data\TimerAction\TaskCommandTimerAction.cs" />
