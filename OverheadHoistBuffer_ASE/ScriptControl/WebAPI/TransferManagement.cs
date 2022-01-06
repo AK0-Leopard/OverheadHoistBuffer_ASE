@@ -412,16 +412,19 @@ namespace com.mirle.ibg3k0.sc.WebAPI
                 // 因為目前回復NG時會產生AGV走行命令回到AGV Station，但目前預設值設定為false 因避免exception情形(AGVC Cmd == 0 時回復True 不會停止觸發OHBC)
                 bool is_ok = false;
                 bool is_more_out = false;
+                Service.TransferService.AGVStRequestResult ng_reason = Service.TransferService.AGVStRequestResult.OK;
 
                 //todo 執行確認能否讓AGVC開始進行該AGV Station進貨的流程
-                (is_ok, is_more_out) = scApp.TransferService.CanExcuteUnloadTransferAGVStationFromAGVC_Swap(agv_station_id.Trim(), Int32.Parse(excute_count), emergency);
+                (is_ok, is_more_out, ng_reason) = scApp.TransferService.CanExcuteUnloadTransferAGVStationFromAGVC_Swap(agv_station_id.Trim(), Int32.Parse(excute_count), emergency);
 
                 string check_result = is_ok ? "OK" : "NG";
                 E_AGVStationTranMode tran_mode = is_more_out ? E_AGVStationTranMode.MoreOut : E_AGVStationTranMode.MoreIn;
 
-                int s_tran_mode = (int)tran_mode;
+                int i_tran_mode = (int)tran_mode;
+                int i_ng_reason = (int)ng_reason;
                 //var response = (Response)(is_ok ? "OK" : "NG");
-                var response = (Response)($"{check_result},{s_tran_mode}");
+                //var response = (Response)($"{check_result},{i_tran_mode}");
+                var response = (Response)($"{check_result},{i_tran_mode},{i_ng_reason}");
                 response.ContentType = restfulContentType;
 
                 return response;

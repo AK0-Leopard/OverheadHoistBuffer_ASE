@@ -5100,128 +5100,6 @@ OHCV_7,100027,2,PORT_BP3_WaitOutTimeOut
 OHCV_7,100028,2,PORT_BP4_WaitOutTimeOut
 OHCV_7,100029,2,PORT_BP5_WaitOutTimeOut
 OHCV_7,100030,2,PORT_LP_WaitOutTimeOut 
-CRANE,111001,2,Fail to initial motor command position
-CRANE,111002,2,Fail to determine the direction of the vehicle
-CRANE,111003,2,Fail to determine the original Section of the vehicle
-CRANE,111004,2,Fail to calculate the positon correction
-CRANE,111005,2,Fail to reserve the moving section
-CRANE,111006,2,Fail to calculate the distance of moving
-CRANE,111007,2,Fail to calculate the parameter of moving
-CRANE,111008,2,Fail to control the moving (vehicle)
-CRANE,111009,2,Fail to check the area sensor state
-CRANE,111010,2,Fail to pause the moving (motor)
-CRANE,111011,2,Fail to resume the moving (motor)
-CRANE,111012,2,Fail to correct the positon
-CRANE,111013,2,timeout for communication about the moving section data of the reservation
-CRANE,111014,2,error in moving section data of the reservation
-CRANE,111015,2,fail to set the parameter of section type
-CRANE,111016,2,Vehicle data for moving dose not exist
-CRANE,111017,2,error in moving section data
-CRANE,111018,2,Fail to control the moving motion (motor)
-CRANE,111019,2,There is no address for moving
-CRANE,111020,2,The start section do not match the section now
-CRANE,111021,2,Fail to calculate the positon correction
-CRANE,111022,2,The positon correction is too long
-CRANE,111023,2,Jaws does not ready to be used
-CRANE,111024,2,OHBC reply nothing for event report
-CRANE,111025,2,Fail to get the Sick barcode
-CRANE,111026,2,Fail to get the OHT position
-CRANE,111027,2,Timeout for sending [132] event
-CRANE,111099,2,Exception in the moving process
-CRANE,121001,2,Area sensor parameter does not exist
-CRANE,121002,2,Fail to set the area sensor parameter
-CRANE,121003,2,Fail in the back area sensor process
-CRANE,121004,2,Fail to check the front area sensor state
-CRANE,121005,2,Fail in the front area sensor process
-CRANE,121006,2,Fail to check the back area sensor state
-CRANE,121007,2,Area sensor actived-Fail to stop (Emergency) 
-CRANE,121008,2,Area sensor actived-Fail to stop (Common)
-CRANE,121009,2,Area sensor actived-Timeout for stop
-CRANE,121010,2,Area sensor actived-Fail to reduce the velocity
-CRANE,121011,2,Area sensor actived-Fail to stop the motor (Emergency) 
-CRANE,121012,2,Area sensor actived-Fail to stop the motor (Common)
-CRANE,121013,2,Area sensor actived-Fail to change the motor velocity
-CRANE,121014,2,Fail to set the area sensor IO parameter
-CRANE,121015,2,High Temputre alarm for moving motor
-CRANE,121016,2,High Temputre alarm for moving regenerative resistor
-CRANE,121017,2,High Temputre alarm for hoisting regenerative resistor
-CRANE,121018,2,Fail to get the Distance sensor parameter
-CRANE,121019,2,Fail to select the deceleration parameter
-CRANE,121020,2,Fail to communication with distance sensor when AreaSensor_Near is ON
-CRANE,121021,2,AreaSensor_Near is ON beyond the Enter distance restriction
-CRANE,122001,1,ByPass BOX_BCR Sensor
-CRANE,122015,1,High Temputre memo for moving motor
-CRANE,122016,1,High Temputre memo for moving regenerative resistor
-CRANE,122017,1,High Temputre memo for hoisting regenerative resistor
-CRANE,121099,2,Exception in the area sensor process
-CRANE,131001,2,System emergency stop
-CRANE,131002,2,The motor used for moving was abnormal
-CRANE,131003,2,The motor used for jaws lateral moving were abnormal
-CRANE,131004,2,The motor used for jaws hoist moving were abnormal
-CRANE,131005,2,The motor used for jaws grabbing were abnormal
-CRANE,131006,2,OHT Emergency Stop
-CRANE,131007,2,AreaSensor is active but walk on the wrong tack
-CRANE,131008,2,Fail to Read the Distance Sensor
-CRANE,131099,2,Exception in the command handling process
-CRANE,211001,2,High CPU useage for OHT IPC
-CRANE,211002,2,High memory useage for OHT IPC
-CRANE,211003,2,Low HDD capacity for OHT IPC
-CRANE,211004,2,Timeout for moving in position
-CRANE,212001,1,Timeout for Receiving OHBC Message
-CRANE,311001,2,Error in the vehicle mounted station
-CRANE,311002,2,A foreign object in the anti-dropping detecting process
-CRANE,311003,2,Jaws isn't in the home position
-CRANE,311004,2,Error in the carrier position before hoist moving
-CRANE,311005,2,Timeout for lateraling excursion
-CRANE,311006,2,Timeout for hoisting
-CRANE,311007,2,Error in check box sensors before the jaws going
-CRANE,311008,2,Timeout for jaws closing
-CRANE,311009,2,Timeout for jaws opening
-CRANE,311010,2,Fail to getting hoist in position
-CRANE,311011,2,Error Position while Loading
-CRANE,311012,2,Error Position while Unloading
-CRANE,311013,2,Error in the carrier position before lateral moving
-CRANE,321001,2,There is a belt rewind
-CRANE,321002,2,vehicle mounted station's runout sensors turn ON
-CRANE,321003,2,Error in belt tension
-CRANE,321007,2,Error in checking box sensor turns ON
-CRANE,331001,2,Fail to threw out the back anti-dropping device
-CRANE,331002,2,Fail to threw out the front anti-dropping device
-CRANE,331003,2,Fail to take back the back anti-dropping device
-CRANE,331004,2,Fail to take back the front anti-dropping device
-CRANE,331005,2,Fail to getting lateraling excursion in position
-CRANE,331007,2,Fail to control the Z-axis
-CRANE,331008,2,Fail to going jaws
-CRANE,331012,2,Fail to run the lateral excursion
-CRANE,332001,1,OHT Have Box but anti-dropping device
-CRANE,332007,1,Warning in checking box sensor turns ON
-CRANE,332010,1,Error in OHB box detecter
-CRANE,332011,1,Error in OHB box detecter
-CRANE,411001,2,HPIO setting error for ID/CH
-CRANE,411003,2,Emergency Stop with Passive equipment ES signal
-CRANE,411004,2,CS0/CS1 signal did not turn ON
-CRANE,411012,2,Carrier was not detected/removed within specified time.[TP3 Timeout]
-CRANE,411013,2,BUSY signal did not turn OFF within specified time.[TP4 Timeout]
-CRANE,412001,1,VALID signal did not turn ON within specified time.[TD0 Timeout]
-CRANE,412002,1,L_REQ/U_REQ signal did not turn ON within specified time.[TA1 timeout]
-CRANE,412003,1,TR_REQ signal did not turn ON within specified time.[TP1 Timeout]
-CRANE,412004,1,READY signal did not turn ON within specified time.[TA2 Timeout]
-CRANE,412005,1,BUSY signal did not turn ON within specified time.[TP2 Timeout]
-CRANE,412006,1,READY signal did not turn OFF within specified time.[TA3 Timeout]
-CRANE,412007,1,VALID signal did not turn OFF within specified time.[TP5 Timeout]
-CRANE,412008,1,VALID signal did not turn ON within specified time.[TD1 Timeout]
-CRANE,412009,1,GO signal did not turn ON within specified time.
-CRANE,412010,1,InterLockNG Before BUSY turn ON
-CRANE,412011,1,Port error with Passive equipment HO_AVBL signal
-CRANE,412012,1,L_REQ/U_REQ turn ON before VALID turn ON
-CRANE,412014,1,Fail to change the PIO signals
-CRANE,332008,1,Loadunload Sensor is mismatch with logic_Prevent
-CRANE,332009,1,Loadunload Sensor is mismatch with logic_Jaws
-CRANE,70001,2,Master PLC network request timed out
-CRANE,89000,2,Double Storage
-CRANE,89001,2,Empty Retrieval
-CRANE,99999,2,OHT is offline
-CRANE,99990,2,OHT rejects command repeatedly
 LINE,100015,2,Currently this device has command but the device has been IDLE time out.
 LINE,100016,2,"Queue Cmd hasn't been processed after recieve a while , TimeOut happened."
 LINE,100017,2,"AGV_has Cmds access but haven't wait in or change type , TimeOut happened."
@@ -5276,3 +5154,137 @@ OHCV_7,100027,2,PORT_BP3_WaitOutTimeOut
 OHCV_7,100028,2,PORT_BP4_WaitOutTimeOut
 OHCV_7,100029,2,PORT_BP5_WaitOutTimeOut
 OHCV_7,100030,2,PORT_LP_WaitOutTimeOut 
+CRANE,111001,2,Fail to initial motor command position
+CRANE,111002,2,Fail to determine the direction of the vehicle
+CRANE,111003,2,Fail to determine the original Section of the vehicle
+CRANE,111004,2,Fail to calculate the positon correction
+CRANE,111005,2,Fail to reserve the moving section
+CRANE,111006,2,Fail to calculate the distance of moving
+CRANE,111007,2,Fail to calculate the parameter of moving
+CRANE,111008,2,Fail to control the moving (vehicle)
+CRANE,111009,2,Fail to check the area sensor state
+CRANE,111010,2,Fail to pause the moving (motor)
+CRANE,111011,2,Fail to resume the moving (motor)
+CRANE,111012,2,Fail to correct the positon
+CRANE,111013,2,timeout for communication about the moving section data of the reservation
+CRANE,111014,2,error in moving section data of the reservation
+CRANE,111015,2,fail to set the parameter of section type
+CRANE,111016,2,Vehicle data for moving dose not exist
+CRANE,111017,2,error in moving section data
+CRANE,111018,2,Fail to control the moving motion (motor)
+CRANE,111019,2,There is no address for moving
+CRANE,111020,2,The start section do not match the section now
+CRANE,111021,2,Fail to calculate the positon correction
+CRANE,111022,2,The positon correction is too long
+CRANE,111023,2,Jaws does not ready to be used
+CRANE,111024,2,OHBC reply nothing for event report
+CRANE,111025,2,Fail to get the Sick barcode
+CRANE,111026,2,Fail to get the OHT position
+CRANE,111027,2,Timeout for sending [132] event
+CRANE,111028,2,The positon correction is too long to go to the station
+CRANE,111029,2,Fail to go to the station(No BCR define data found)
+CRANE,111030,2,Fail to go to the station(BCR between Dest and Now is not match)
+CRANE,111031,2,Fail to calculate the positon(No BCR define data found)
+CRANE,111032,2,Fail to calculate the positon(BCR between Dest and Now is not match)
+CRANE,111099,2,Exception in the moving process
+CRANE,121001,2,Area sensor parameter does not exist
+CRANE,121002,2,Fail to set the area sensor parameter
+CRANE,121003,2,Fail in the back area sensor process
+CRANE,121004,2,Fail to check the front area sensor state
+CRANE,121005,2,Fail in the front area sensor process
+CRANE,121006,2,Fail to check the back area sensor state
+CRANE,121007,2,Area sensor actived-Fail to stop (Emergency) 
+CRANE,121008,2,Area sensor actived-Fail to stop (Common)
+CRANE,121009,2,Area sensor actived-Timeout for stop
+CRANE,121010,2,Area sensor actived-Fail to reduce the velocity
+CRANE,121011,2,Area sensor actived-Fail to stop the motor (Emergency) 
+CRANE,121012,2,Area sensor actived-Fail to stop the motor (Common)
+CRANE,121013,2,Area sensor actived-Fail to change the motor velocity
+CRANE,121014,2,Fail to set the area sensor IO parameter
+CRANE,121015,2,High Temputre alarm for moving motor
+CRANE,121016,2,High Temputre alarm for moving regenerative resistor
+CRANE,121017,2,High Temputre alarm for hoisting regenerative resistor
+CRANE,121018,2,Fail to get the Distance sensor parameter
+CRANE,121019,2,Fail to select the deceleration parameter
+CRANE,121020,2,Fail to communication with distance sensor when AreaSensor_Near is ON
+CRANE,121021,2,AreaSensor_Near is ON beyond the Enter distance restriction
+CRANE,121022,2, No Response in Area Sensor flow
+CRANE,121023,2,Timeout warning for AreaSensor Near ON
+CRANE,122023,1,Timeout alarm for AreaSensor Near ON
+CRANE,122001,1,ByPass BOX_BCR Sensor
+CRANE,122015,1,High Temputre memo for moving motor
+CRANE,122016,1,High Temputre memo for moving regenerative resistor
+CRANE,122017,1,High Temputre memo for hoisting regenerative resistor
+CRANE,121099,2,Exception in the area sensor process
+CRANE,131001,2,System emergency stop
+CRANE,131002,2,The motor used for moving was abnormal
+CRANE,131003,2,The motor used for jaws lateral moving were abnormal
+CRANE,131004,2,The motor used for jaws hoist moving were abnormal
+CRANE,131005,2,The motor used for jaws grabbing were abnormal
+CRANE,131006,2,OHT Emergency Stop
+CRANE,131007,2,AreaSensor is active but walk on the wrong tack
+CRANE,131008,2,Fail to Read the Distance Sensor
+CRANE,131099,2,Exception in the command handling process
+CRANE,211001,2,High CPU useage for OHT IPC
+CRANE,211002,2,High memory useage for OHT IPC
+CRANE,211003,2,Low HDD capacity for OHT IPC
+CRANE,211004,2,Timeout for moving in position
+CRANE,212001,1,Timeout for Receiving OHBC Message
+CRANE,311001,2,Error in the vehicle mounted station
+CRANE,311002,2,A foreign object in the anti-dropping detecting process
+CRANE,311003,2,Jaws isn't in the home position
+CRANE,311004,2,Error in the carrier position before hoist moving
+CRANE,311005,2,Timeout for lateraling excursion
+CRANE,311006,2,Timeout for hoisting
+CRANE,311007,2,Error in check box sensors before the jaws going
+CRANE,311008,2,Timeout for jaws closing
+CRANE,311009,2,Timeout for jaws opening
+CRANE,311010,2,Fail to getting hoist in position
+CRANE,311011,2,Error Position while Loading
+CRANE,311012,2,Error Position while Unloading
+CRANE,311013,2,Error in the carrier position before lateral moving
+CRANE,321001,2,There is a belt rewind
+CRANE,321002,2,vehicle mounted station's runout sensors turn ON
+CRANE,321003,2,Error in belt tension
+CRANE,321007,2,Error in checking box sensor turns ON
+CRANE,321008,1,Defense Succeed.Hoist value is too short.
+CRANE,321009,1,Defense Succeed.Hoist value is too long.
+CRANE,331001,2,Fail to threw out the back anti-dropping device
+CRANE,331002,2,Fail to threw out the front anti-dropping device
+CRANE,331003,2,Fail to take back the back anti-dropping device
+CRANE,331004,2,Fail to take back the front anti-dropping device
+CRANE,331005,2,Fail to getting lateraling excursion in position
+CRANE,331007,2,Fail to control the Z-axis
+CRANE,331008,2,Fail to going jaws
+CRANE,331012,2,Fail to run the lateral excursion
+CRANE,331013,2,OHT Have Box but anti-dropping device
+CRANE,331014,2,Totque Alarm for moving motor
+CRANE,331015,2,Totque Alarm  for lateraling
+CRANE,331016,2,Totque Alarm  for hoisting
+CRANE,331017,2,Loadunload Sensor is mismatch with logic_Carrier
+CRANE,331018,2,Loadunload Sensor is mismatch with logic_Prevent
+CRANE,331019,2,Loadunload Sensor is mismatch with logic_Jaws
+CRANE,331099,2,Exception between loadunload sensor and logic
+CRANE,332010,1,Error in OHB box detecter
+CRANE,332011,1,Error in OHB box detecter
+CRANE,332014,1,Totque warning for moving motor
+CRANE,332015,1,Totque warning for lateraling
+CRANE,332016,1,Totque warning for hoisting
+CRANE,411001,2,HPIO setting error for ID/CH
+CRANE,411003,2,Emergency Stop with Passive equipment ES signal
+CRANE,411004,2,CS0/CS1 signal did not turn ON
+CRANE,411012,2,Carrier was not detected/removed within specified time.[TP3 Timeout]
+CRANE,411013,2,BUSY signal did not turn OFF within specified time.[TP4 Timeout]
+CRANE,412001,1,VALID signal did not turn ON within specified time.[TD0 Timeout]
+CRANE,412002,1,L_REQ/U_REQ signal did not turn ON within specified time.[TA1 timeout]
+CRANE,412003,1,TR_REQ signal did not turn ON within specified time.[TP1 Timeout]
+CRANE,412004,1,READY signal did not turn ON within specified time.[TA2 Timeout]
+CRANE,412005,1,BUSY signal did not turn ON within specified time.[TP2 Timeout]
+CRANE,412006,1,READY signal did not turn OFF within specified time.[TA3 Timeout]
+CRANE,412007,1,VALID signal did not turn OFF within specified time.[TP5 Timeout]
+CRANE,412008,1,VALID signal did not turn ON within specified time.[TD1 Timeout]
+CRANE,412009,1,GO signal did not turn ON within specified time.
+CRANE,412010,1,InterLockNG Before BUSY turn ON
+CRANE,412011,1,Port error with Passive equipment HO_AVBL signal
+CRANE,412012,1,L_REQ/U_REQ turn ON before VALID turn ON
+CRANE,412014,1,Fail to change the PIO signals
