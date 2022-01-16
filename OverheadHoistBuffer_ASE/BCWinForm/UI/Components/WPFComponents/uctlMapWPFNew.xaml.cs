@@ -34,6 +34,7 @@ namespace VehicleControl_Viewer.frm_Mainfrom
         GridLength gl80 = new GridLength(80, GridUnitType.Pixel);
         GridLength gl250 = new GridLength(250, GridUnitType.Pixel);
         com.mirle.ibg3k0.bc.winform.App.BCApplication bcApp;
+        public event EventHandler<string> AddressSelected;
         #endregion 全域變數
 
 
@@ -67,7 +68,11 @@ namespace VehicleControl_Viewer.frm_Mainfrom
         bool isSourceSelected = false;
         private void RailsCollection_AddressSelected(object sender, EventArgs e)
         {
-
+            var ellipse = sender as Ellipse;
+            if (ellipse == null) return;
+            var adr = ellipse.Tag as Address;
+            if (adr == null) return;
+            AddressSelected?.Invoke(this, adr.ID);
         }
 
         private void ObjCacheManager_RailStatusChanged(object sender, EventArgs e)
@@ -113,13 +118,22 @@ namespace VehicleControl_Viewer.frm_Mainfrom
             {
                 DataTable dt = bcApp.SCApplication.OHxCConfig.Tables["AADDRESS"];
                 var query = from c in dt.AsEnumerable()
-                            select new Address(c.Field<string>("Id"), startToDouble(c.Field<string>("PositionX")), startToDouble(c.Field<string>("PositionY")));
+                            select GetAddress(c);
                 return query.ToList();
             }
             catch (Exception ex)
             {
                 throw;
             }
+        }
+
+        private Address GetAddress(DataRow c)
+        {
+            string id = c.Field<string>("Id");
+            double x = startToDouble(c.Field<string>("PositionX"));
+            double y = startToDouble(c.Field<string>("PositionY"));
+            bool is_mtl = bcApp.SCApplication.MapBLL.IsMTLAdr(id);
+            return new Address(id, x, y, is_mtl);
         }
 
         public List<Section> loadASection()
@@ -139,6 +153,12 @@ namespace VehicleControl_Viewer.frm_Mainfrom
         private double startToDouble(string value)
         {
             double.TryParse(value, out double result);
+            return result;
+        }
+        private bool parseToBool(string value)
+        {
+            if (value == null) return false;
+            Boolean.TryParse(value, out bool result);
             return result;
         }
 
@@ -285,8 +305,9 @@ namespace VehicleControl_Viewer.frm_Mainfrom
 
         class ShapeCollection
         {
-            public EventHandler AddressSelected;
+            public event EventHandler AddressSelected;
             SolidColorBrush mySolidColorBrush_ForPoint = new SolidColorBrush();
+            SolidColorBrush mySolidColorBrush_ForMTLPoint = new SolidColorBrush();
             SolidColorBrush mySolidColorBrush_ForRail = new SolidColorBrush();
             public List<Shape> shapes = null;
             public ShapeCollection()
@@ -295,16 +316,26 @@ namespace VehicleControl_Viewer.frm_Mainfrom
                 //mySolidColorBrush.Color = Color.FromArgb(int.Parse("FF0080FF ", NumberStyles.AllowHexSpecifier));
                 mySolidColorBrush_ForRail.Color = Color.FromArgb(0xFF, 0, 0x80, 0xFF);
                 mySolidColorBrush_ForPoint.Color = Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF);
+                mySolidColorBrush_ForMTLPoint.Color = Color.FromArgb(0xFF, 0xFF, 0xD7, 0x00);
                 shapes = new List<Shape>();
             }
             public void AddEllipse(FrameworkElement frameworkElement, Address adr, Point point)
             {
                 Ellipse myEllipse = new Ellipse();
-                myEllipse.Fill = mySolidColorBrush_ForPoint;
+                if (adr.IsMTL)
+                {
+                    myEllipse.Fill = mySolidColorBrush_ForMTLPoint;
+                    myEllipse.Width = 500;
+                    myEllipse.Height = 500;
+                }
+                else
+                {
+                    myEllipse.Fill = mySolidColorBrush_ForPoint;
+                    myEllipse.Width = 250;
+                    myEllipse.Height = 250;
+                }
                 myEllipse.StrokeThickness = 10;
                 myEllipse.Stroke = mySolidColorBrush_ForRail;
-                myEllipse.Width = 250;
-                myEllipse.Height = 250;
                 double left = point.X - (myEllipse.Width / 2); double top = point.Y - (myEllipse.Height / 2);
                 myEllipse.Margin = new Thickness(left, top, 0, 0);
                 myEllipse.Cursor = Cursors.Hand;
@@ -313,7 +344,14 @@ namespace VehicleControl_Viewer.frm_Mainfrom
                 var t = new ToolTip();
                 //t.Style = (Style)frameworkElement.FindResource("MaterialDesignToolTip");
                 ToolTipService.SetInitialShowDelay(t, 0);
-                t.Content = adr.ID;
+                if (adr.IsMTL)
+                {
+                    t.Content = $"{adr.ID}(MTL)";
+                }
+                else
+                {
+                    t.Content = adr.ID;
+                }
                 myEllipse.ToolTip = t;
 
                 shapes.Add(myEllipse);
@@ -401,13 +439,15 @@ namespace VehicleControl_Viewer.frm_Mainfrom
         {
             public string ID { get; private set; }
             public double X, Y;
+            public bool IsMTL { get; private set; }
             public Point Point { get; private set; }
             public Address() { }
-            public Address(string id, double x, double y)
+            public Address(string id, double x, double y, bool isMtl)
             {
                 ID = id;
                 X = x;
                 Y = y;
+                IsMTL = isMtl;
                 Point = new Point(x, y);
             }
         }

@@ -45,6 +45,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             mainform = _form;
             scApp = mainform.BCApp.SCApplication;
             uctlMapWPFNew1.Start(mainform.BCApp);
+            uctlMapWPFNew1.AddressSelected += UctlMapWPFNew1_AddressSelected;
             //ui_Vehicle1.start("OHT001");
             initialComBox();
             initialDataGreadView();
@@ -71,6 +72,22 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             initialEvent();
             SetHostControlState(scApp.getEQObjCacheManager().getLine());
 
+        }
+
+        bool isSourceSelected = false;
+        private void UctlMapWPFNew1_AddressSelected(object sender, string e)
+        {
+            if (sc.Common.SCUtility.isEmpty(e)) return;
+            if (!isSourceSelected)
+            {
+                cmb_fromAddress.Text = e;
+                isSourceSelected = true;
+            }
+            else
+            {
+                cmb_toAddress.Text = e;
+                isSourceSelected = false;
+            }
         }
 
         private void initialEvent()

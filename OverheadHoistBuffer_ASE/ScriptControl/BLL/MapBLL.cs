@@ -174,6 +174,16 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
             return count;
         }
+        public bool IsMTLAdr(string adrID)
+        {
+            E_ADR_TYPE type = E_ADR_TYPE.Address;
+            //DBConnection_EF con = DBConnection_EF.GetContext();
+            using (DBConnection_EF con = new DBConnection_EF())
+            {
+                type = adrDAO.getAdrType(con, adrID);
+            }
+            return type == E_ADR_TYPE.MTL;
+        }
         #endregion Address
         #region Section
         Dictionary<string, List<ASECTION>> dicNextSection = new Dictionary<string, List<ASECTION>>();

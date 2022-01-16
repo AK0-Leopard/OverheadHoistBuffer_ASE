@@ -243,6 +243,7 @@
       <HintPath>DLL\System.IO.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Management" />
     <Reference Include="System.Net" />
     <Reference Include="System.Net.Http" />
@@ -781,6 +782,7 @@
     <Compile Include="Data\SECS\SECSDriver\SEMDriver.cs" />
     <Compile Include="Data\TcpIp\MsgStructure.cs" />
     <Compile Include="Data\TimerAction\EmptyBoxHandlerTimer.cs" />
+    <Compile Include="Data\TimerAction\LogFileHandlerTimer.cs" />
     <Compile Include="Data\TimerAction\OHCVAliveTimer.cs" />
     <Compile Include="Data\TimerAction\OHxCAliveTimer.cs" />
     <Compile Include="Data\TimerAction\PLCAliveTimer.cs" />

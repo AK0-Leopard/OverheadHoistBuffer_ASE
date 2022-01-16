@@ -2468,7 +2468,9 @@ namespace com.mirle.ibg3k0.sc.Service
                     {
                         ALINE line = scApp.getEQObjCacheManager().getLine();
                         if (!IsCMD_MCSCanProcess() ||
-                            line.SCStats == ALINE.TSCState.PAUSED)
+                            line.SCStats == ALINE.TSCState.PAUSED ||
+                            line.SCStats == ALINE.TSCState.PAUSING
+                           )
                         {
                             Task.Run(() => tryDriveOutTheVh(eqpt.VEHICLE_ID, ReserveResult.reservedVhID));
                         }

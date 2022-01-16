@@ -18,7 +18,7 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
         {
             //bool isDetached = con.Entry(rail).State == EntityState.Detached;
             //if (isDetached)
-                con.AADDRESS.Attach(rail);
+            con.AADDRESS.Attach(rail);
             con.SaveChanges();
         }
 
@@ -51,6 +51,12 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                         select b;
             return query.Count();
         }
+        public E_ADR_TYPE getAdrType(DBConnection_EF con, string adrID)
+        {
+            var query = from b in con.AADDRESS
+                        where b.ADR_ID == adrID
+                        select b.ADRTYPE;
+            return query.FirstOrDefault();
+        }
     }
-
 }
