@@ -664,7 +664,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                         switch (normal.RCMD)
                         {
                             case SECSConst.RCMD_Resume:
-                                if (line.TSC_state_machine.State == ALINE.TSCState.PAUSED || 
+                                if (line.TSC_state_machine.State == ALINE.TSCState.PAUSED ||
                                     line.TSC_state_machine.State == ALINE.TSCState.PAUSING)
                                 {
                                     s2f42.HCACK = SECSConst.HCACK_Confirm_Executed;
@@ -2423,9 +2423,10 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
         }
         public override bool S6F11SendEquiptmentOffLine()
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 Vids.VIDITEM_61_ECV_EqpName.EQPT_NAME = line.LINE_ID;
                 SendS6F11(SECSConst.CEID_Equipment_OFF_LINE, Vids);
             }
@@ -2434,13 +2435,19 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
+
             return true;
         }
         public override bool S6F11SendControlStateLocal()
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 //Vids.VIDITEM_61_ECV_EqpName.EQPT_NAME = line.LINE_ID;
                 Vids.VIDITEM_06_SV_ControlState.CONTROLSTATE = ((int)line.Host_Control_State).ToString();
                 SendS6F11(SECSConst.CEID_Control_Status_Local, Vids);
@@ -2450,13 +2457,19 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
+
             return true;
         }
         public override bool S6F11SendControlStateRemote()
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 Vids.VIDITEM_61_ECV_EqpName.EQPT_NAME = line.LINE_ID;
                 SendS6F11(SECSConst.CEID_Control_Status_Remote, Vids);
             }
@@ -2465,14 +2478,19 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
             return true;
         }
         public override bool S6F11SendAlarmCleared(ACMD_MCS CMD_MCS, ALARM ALARM, string unitid, string unitstate)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
                 string cstLoc = scApp.CassetteDataBLL.GetCassetteLocByBoxID(CMD_MCS?.BOX_ID ?? "");
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 Vids.VIDITEM_58_DVVAL_CommandID.COMMAND_ID = CMD_MCS?.CMD_ID ?? "";
                 Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = CMD_MCS?.CARRIER_ID ?? "";
                 Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = CMD_MCS?.BOX_ID ?? "";
@@ -2491,15 +2509,20 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
             return true;
         }
 
         public override bool S6F11SendAlarmSet(ACMD_MCS CMD_MCS, ALARM ALARM, string unitid, string unitstate, string RecoveryOption)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
                 string cstLoc = scApp.CassetteDataBLL.GetCassetteLocByBoxID(CMD_MCS?.BOX_ID ?? "");
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 Vids.VIDITEM_58_DVVAL_CommandID.COMMAND_ID = CMD_MCS?.CMD_ID ?? "";
                 Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = CMD_MCS?.CARRIER_ID ?? "";
                 Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = CMD_MCS?.BOX_ID ?? "";
@@ -2519,14 +2542,19 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
             return true;
         }
 
         public override bool S6F11SendTSCAutoCompleted()
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 Vids.VIDITEM_61_ECV_EqpName.EQPT_NAME = line.LINE_ID;
                 SendS6F11(SECSConst.CEID_TSC_Auto_Completed, Vids);
             }
@@ -2535,14 +2563,19 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
             return true;
         }
 
         public override bool S6F11SendTSCAutoInitiated()
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 Vids.VIDITEM_61_ECV_EqpName.EQPT_NAME = line.LINE_ID;
                 SendS6F11(SECSConst.CEID_TSC_Auto_Initiated, Vids);
             }
@@ -2551,13 +2584,18 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
             return true;
         }
         public override bool S6F11SendTSCPauseCompleted()
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 Vids.VIDITEM_61_ECV_EqpName.EQPT_NAME = line.LINE_ID;
                 SendS6F11(SECSConst.CEID_TSC_Pause_Completed, Vids);
             }
@@ -2566,13 +2604,18 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
             return true;
         }
         public override bool S6F11SendTSCPaused()
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 Vids.VIDITEM_61_ECV_EqpName.EQPT_NAME = line.LINE_ID;
                 SendS6F11(SECSConst.CEID_TSC_Paused, Vids);
             }
@@ -2581,14 +2624,19 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
             return true;
         }
 
         public override bool S6F11SenSCPauseInitiated()
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 Vids.VIDITEM_61_ECV_EqpName.EQPT_NAME = line.LINE_ID;
                 SendS6F11(SECSConst.CEID_TSC_Pause_Initiated, Vids);
             }
@@ -2597,13 +2645,18 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
             return true;
         }
         public override bool S6F11SendTransferAbortCompleted(string cmd_id, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 ACMD_MCS cmd = scApp.CMDBLL.getCMD_MCSByID(cmd_id);
                 CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByBoxID(cmd.BOX_ID);
                 string cstID = cassette?.CSTID ?? "";
@@ -2631,14 +2684,19 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
             return true;
         }
 
         public override bool S6F11SendTransferAbortFailed(string cmd_id, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 ACMD_MCS cmd = scApp.CMDBLL.getCMD_MCSByID(cmd_id);
                 CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByCstBoxID(cmd.CARRIER_ID, cmd.BOX_ID);
                 string cstID = cassette?.CSTID ?? "";
@@ -2667,14 +2725,19 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
             return true;
         }
 
         public override bool S6F11SendTransferAbortInitiated(string cmd_id, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 ACMD_MCS cmd = scApp.CMDBLL.getCMD_MCSByID(cmd_id);
 
                 CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByBoxID(cmd.BOX_ID);
@@ -2703,13 +2766,18 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
             return true;
         }
         public override bool S6F11SendTransferCancelCompleted(string cmd_id, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 ACMD_MCS cmd = scApp.CMDBLL.getCMD_MCSByID(cmd_id);
 
                 CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByBoxID(cmd.BOX_ID);
@@ -2741,12 +2809,17 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                    Data: ex);
                 return false;
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
         }
         public override bool S6F11SendTransferCancelFailed(string cmd_id, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 ACMD_MCS cmd = scApp.CMDBLL.getCMD_MCSByID(cmd_id);
 
                 CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByBoxID(cmd.BOX_ID);
@@ -2777,13 +2850,18 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                    Data: ex);
                 return false;
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
         }
 
         public override bool S6F11SendTransferCancelInitial(string cmd_id, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 ACMD_MCS cmd = scApp.CMDBLL.getCMD_MCSByID(cmd_id);
                 CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByBoxID(cmd.BOX_ID);
 
@@ -2823,14 +2901,19 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                    Data: ex);
                 return false;
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
         }
 
         public override bool S6F11SendTransferCompleted(ACMD_MCS cmd, CassetteData cassette, string result_code, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
                 //if (!isSend()) return true;
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 //ACMD_MCS cmd = scApp.CMDBLL.getCMD_MCSByID(cmd_id);
                 //CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByBoxID(cmd.BOX_ID.Trim());
 
@@ -2865,14 +2948,19 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                    Data: ex);
                 return false;
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
         }
 
         public override bool S6F11SendTransferInitiated(string cmd_id, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
                 //if (!isSend()) return true;
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 ACMD_MCS cmd = scApp.CMDBLL.getCMD_MCSByID(cmd_id);
                 CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByBoxID(cmd.BOX_ID);
                 string cmdID = cmd?.CMD_ID ?? "";
@@ -2916,12 +3004,17 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                    Data: ex);
                 return false;
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
         }
         public override bool S6F11SendTransferPaused(string cmd_id, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 ACMD_MCS cmd = scApp.CMDBLL.getCMD_MCSByID(cmd_id);
 
                 CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByBoxID(cmd.BOX_ID);
@@ -2953,13 +3046,18 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                    Data: ex);
                 return false;
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
         }
 
         public override bool S6F11SendTransferResume(string cmd_id, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 ACMD_MCS cmd = scApp.CMDBLL.getCMD_MCSByID(cmd_id);
 
                 CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByBoxID(cmd.BOX_ID);
@@ -2991,13 +3089,18 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                    Data: ex);
                 return false;
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
         }
         public override bool S6F11SendCarrierTransferring(ACMD_MCS cmd, CassetteData cassette, string ohtName, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
                 //if (!isSend()) return true;
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 //ACMD_MCS cmd = scApp.CMDBLL.getCMD_MCSByID(cmd_id);
                 //ACMD_OHTC cmd_oht = scApp.CMDBLL.getCMD_OHTCByID(cmd_id);
                 //CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByBoxID(cmd.BOX_ID);
@@ -3026,13 +3129,18 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                    Data: ex);
                 return false;
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
         }
         public override bool S6F11SendCarrierInstallCompleted(CassetteData cst, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
                 //if (!isSend()) return true;
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 //var cassette = scApp.CassetteDataBLL.loadCassetteDataByCSTID(cst_id);
                 string zonename = scApp.CassetteDataBLL.GetZoneName(cst.Carrier_LOC);
 
@@ -3057,13 +3165,18 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                    Data: ex);
                 return false;
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
         }
         public override bool S6F11SendCarrierRemovedCompleted(string cst_id, string box_id, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
                 //if (!isSend()) return true;
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 //var aa = scApp.CassetteDataBLL.loadCassetteData();
                 var cassette = scApp.CassetteDataBLL.loadCassetteDataByCstBoxID(cst_id, box_id);
                 string zonename = scApp.CassetteDataBLL.GetZoneName(cassette.Carrier_LOC);
@@ -3092,13 +3205,18 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                    Data: ex);
                 return false;
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
         }
         public override bool S6F11SendCarrierRemovedFromPort(CassetteData cst, string Handoff_Type, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
                 //if (!isSend()) return true;
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 string zonename = scApp.CassetteDataBLL.GetZoneName(cst.Carrier_LOC);
 
                 Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cst.CSTID;
@@ -3121,13 +3239,18 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                    Data: ex);
                 return false;
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
         }
 
         public override bool S6F11SendCarrierResumed(string cmd_id, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 ACMD_MCS cmd = scApp.CMDBLL.getCMD_MCSByID(cmd_id);
                 //ACMD_OHTC cmd_oht = scApp.CMDBLL.getCMD_OHTCByID(cmd_id);
                 //CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByCSTID(cmd.CARRIER_ID);
@@ -3174,14 +3297,19 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                    Data: ex);
                 return false;
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
         }
 
         public override bool S6F11SendCarrierStored(CassetteData cst, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
                 //if (!isSend()) return true;
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 string zonename = scApp.CassetteDataBLL.GetZoneName(cst.Carrier_LOC);
 
                 Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cst.CSTID;
@@ -3205,13 +3333,18 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                    Data: ex);
                 return false;
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
         }
 
         public override bool S6F11SendCarrierStoredAlt(ACMD_MCS cmd, CassetteData cassette, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 //ACMD_MCS cmd = scApp.CMDBLL.getCMD_MCSByID(cmd_id);
                 //ACMD_OHTC cmd_oht = scApp.CMDBLL.getCMD_OHTCByID(cmd_id);
                 //CassetteData cassette = scApp.CassetteDataBLL.loadCassetteDataByCSTID(cmd.CARRIER_ID);
@@ -3251,14 +3384,19 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                    Data: ex);
                 return false;
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
         }
 
         public override bool S6F11SendShelfStatusChange(ZoneDef zone, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
                 //if (!isSend()) return true;
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 //List<ZoneDef> zones = scApp.ZoneDefBLL.loadZoneData();
                 int capacity = scApp.ZoneDefBLL.GetZoneCapacity(zone.ZoneID);
                 int totalsize = scApp.ZoneDefBLL.GetZoneTotalSize(zone.ZoneID);
@@ -3299,14 +3437,19 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                    Data: ex);
                 return false;
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
         }
 
         public override bool S6F11SendCarrierWaitIn(CassetteData cst, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
                 //if (!isSend()) return true;
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 string zonename = scApp.CassetteDataBLL.GetZoneName(cst.Carrier_LOC);
 
                 Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cst.CSTID;
@@ -3334,15 +3477,20 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                    Data: ex);
                 return false;
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
         }
 
 
         public override bool S6F11SendCarrierWaitOut(CassetteData cst, string portType, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
                 //if (!isSend()) return true;
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 string zonename = scApp.CassetteDataBLL.GetZoneName(cst.Carrier_LOC);
 
                 Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cst.CSTID;
@@ -3375,13 +3523,18 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                    Data: ex);
                 return false;
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
         }
 
         public override bool S6F11SendUnitAlarmSet(string unitID, string alarmID, string alarmTest, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 Vids.VIDITEM_83_DVVAL_UnitID.UNIT_ID = unitID;
                 Vids.VIDITEM_81_DVVAL_AlarmID.ALARM_ID = alarmID;
                 Vids.VIDITEM_82_DVVAL_AlarmText.ALARM_TEXT = alarmTest;
@@ -3402,15 +3555,20 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
             return true;
 
         }
 
         public override bool S6F11SendUnitAlarmCleared(string unitID, string alarmID, string alarmTest, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
 
                 Vids.VIDITEM_83_DVVAL_UnitID.UNIT_ID = unitID;
                 Vids.VIDITEM_81_DVVAL_AlarmID.ALARM_ID = alarmID;
@@ -3432,14 +3590,19 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
             return true;
         }
 
         public override bool S6F11SendCraneActive(string cmdID, string craneID, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 //ACMD_OHTC ohtc = scApp.CMDBLL.getCMD_OHTCByVehicleID(craneID);
                 Vids.VIDITEM_58_DVVAL_CommandID.COMMAND_ID = cmdID;   //要上報的是MCS cmd ID
                 Vids.VIDITEM_70_DVVAL_CraneID.Crane_ID = craneID;
@@ -3460,14 +3623,19 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
             return true;
         }
 
         public override bool S6F11SendCraneIdle(string craneID, string cmdID, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 //ACMD_OHTC ohtc = scApp.CMDBLL.getCMD_OHTCByVehicleID(craneID.Trim());
                 Vids.VIDITEM_58_DVVAL_CommandID.COMMAND_ID = cmdID;
                 Vids.VIDITEM_70_DVVAL_CraneID.Crane_ID = craneID;
@@ -3488,14 +3656,19 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
             return true;
         }
 
         public override bool S6F11SendCraneInEscape(string craneID, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 Vids.VIDITEM_70_DVVAL_CraneID.Crane_ID = craneID;
 
                 AMCSREPORTQUEUE mcs_queue = S6F11BulibMessage(SECSConst.CEID_Crane_In_Escape, Vids);
@@ -3514,14 +3687,19 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
             return true;
         }
 
         public override bool S6F11SendCraneOutEscape(string craneID, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 Vids.VIDITEM_70_DVVAL_CraneID.Crane_ID = craneID;
 
                 AMCSREPORTQUEUE mcs_queue = S6F11BulibMessage(SECSConst.CEID_Crane_Out_Escape, Vids);
@@ -3540,14 +3718,19 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
             return true;
         }
 
         public override bool S6F11SendCraneOutServce(string craneID, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 Vids.VIDITEM_70_DVVAL_CraneID.Crane_ID = craneID;
 
                 AMCSREPORTQUEUE mcs_queue = S6F11BulibMessage(SECSConst.CEID_Crane_Out_Servce, Vids);
@@ -3566,14 +3749,19 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
             return true;
         }
 
         public override bool S6F11SendCraneInServce(string craneID, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 Vids.VIDITEM_70_DVVAL_CraneID.Crane_ID = craneID;
 
                 AMCSREPORTQUEUE mcs_queue = S6F11BulibMessage(SECSConst.CEID_Crane_In_Servce, Vids);
@@ -3592,14 +3780,20 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
+
             return true;
         }
 
         public override bool S6F11SendCarrierIDRead(CassetteData cst, string IDreadStatus, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 //CassetteData cst = scApp.CassetteDataBLL.loadCassetteDataByBoxID(BOXID);
                 Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cst.CSTID;
                 Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = cst.BOXID;
@@ -3622,14 +3816,19 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
             return true;
         }
 
         public override bool S6F11SendZoneCapacityChange(string loc, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
 
                 ShelfDef targetShelf = scApp.ShelfDefBLL.loadShelfDataByID(loc);
                 ZoneDef zone = scApp.ZoneDefBLL.loadZoneDataByID(targetShelf.ZoneID);
@@ -3673,13 +3872,18 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                    Data: ex);
                 return false;
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
         }
 
         public override bool S6F11SendOperatorInitiatedAction(string cmd_id, string cmd_type, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 ACMD_MCS cmd = scApp.CMDBLL.getCMD_MCSByID(cmd_id);
                 ACMD_OHTC cmd_oht = scApp.CMDBLL.getCMD_OHTCByID(cmd_id);
 
@@ -3729,15 +3933,21 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                    Data: ex);
                 return false;
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
         }
 
 
 
         public override bool S6F11SendPortOutOfService(string port_id, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
+
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 //Vids.VIDITEM_61_ECV_EqpName.EQPT_NAME = line.LINE_ID;
                 Vids.VIDITEM_115_DVVAL_PortID.PORT_ID = port_id;
 
@@ -3760,13 +3970,18 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
             return true;
         }
         public override bool S6F11SendPortInService(string port_id, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 //Vids.VIDITEM_61_ECV_EqpName.EQPT_NAME = line.LINE_ID;
                 Vids.VIDITEM_115_DVVAL_PortID.PORT_ID = port_id;
 
@@ -3785,14 +4000,19 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
             return true;
         }
 
         public override bool S6F11SendLoadReq(string port_id, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 Vids.VIDITEM_115_DVVAL_PortID.PORT_ID = port_id;
 
                 AMCSREPORTQUEUE mcs_queue = S6F11BulibMessage(SECSConst.CEID_Load_Req, Vids);
@@ -3810,14 +4030,19 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
             return true;
         }
 
         public override bool S6F11SendUnLoadReq(string port_id, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 Vids.VIDITEM_115_DVVAL_PortID.PORT_ID = port_id;
 
                 AMCSREPORTQUEUE mcs_queue = S6F11BulibMessage(SECSConst.CEID_Unload_Req, Vids);
@@ -3835,13 +4060,18 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
             return true;
         }
         public override bool S6F11SendNoReq(string port_id, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 Vids.VIDITEM_115_DVVAL_PortID.PORT_ID = port_id;
 
                 AMCSREPORTQUEUE mcs_queue = S6F11BulibMessage(SECSConst.CEID_No_Req, Vids);
@@ -3859,14 +4089,19 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
             return true;
         }
 
         public override bool S6F11SendPortTypeInput(string port_id, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 Vids.VIDITEM_115_DVVAL_PortID.PORT_ID = port_id;
 
                 AMCSREPORTQUEUE mcs_queue = S6F11BulibMessage(SECSConst.CEID_Port_Type_Input, Vids);
@@ -3884,14 +4119,19 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
             return true;
         }
 
         public override bool S6F11SendPortTypeOutput(string port_id, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 Vids.VIDITEM_115_DVVAL_PortID.PORT_ID = port_id;
 
                 AMCSREPORTQUEUE mcs_queue = S6F11BulibMessage(SECSConst.CEID_Port_Type_Output, Vids);
@@ -3909,14 +4149,20 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
+
             return true;
         }
 
         public override bool S6F11SendPortTypeChanging(string port_id, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 Vids.VIDITEM_115_DVVAL_PortID.PORT_ID = port_id;
 
                 AMCSREPORTQUEUE mcs_queue = S6F11BulibMessage(SECSConst.CEID_Port_Type_Changing, Vids);
@@ -3934,14 +4180,19 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
             return true;
         }
 
         public override bool S6F11SendCarrierBoxIDRename(string cstID, string boxID, string cstLOC, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cstID;
                 Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = boxID;
                 Vids.VIDITEM_56_DVVAL_CarrierLoc.CARRIER_LOC = cstLOC;
@@ -3961,14 +4212,19 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
             return true;
         }
 
         public override bool S6F11SendEmptyBoxSupply(string ReqCount, string zoneName, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 Vids.VIDITEM_890_DVVAL_RequestCount.REQUEST_COUNT = ReqCount;
                 Vids.VIDITEM_370_DVVAL_CarrierZoneName.CARRIER_ZONE_NAME = zoneName;
 
@@ -3989,14 +4245,19 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
 
                 return false;
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
             return true;
         }
 
         public override bool S6F11SendEmptyBoxRecycling(string boxID, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = boxID;
 
                 AMCSREPORTQUEUE mcs_queue = S6F11BulibMessage(SECSConst.CEID_Empty_Box_Recycling, Vids);
@@ -4014,14 +4275,19 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(ASEMCSDefaultMapAction), Device: DEVICE_NAME_MCS,
                    Data: ex);
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
             return true;
         }
 
         public override bool S6F11SendQueryLotID(string cstID, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 Vids.VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = cstID;
 
                 AMCSREPORTQUEUE mcs_queue = S6F11BulibMessage(SECSConst.CEID_QueryLotID, Vids);
@@ -4041,13 +4307,18 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
 
                 return false;
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
             return true;
         }
         public override bool S6F11SendClearBoxMoveReq(string boxID, string portID, List<AMCSREPORTQUEUE> reportQueues = null)
         {
+            VIDCollection Vids = scApp.VIDCollectionPool.GetObject();
             try
             {
-                VIDCollection Vids = new VIDCollection();
+                //VIDCollection Vids = new VIDCollection();
                 Vids.VIDITEM_115_DVVAL_PortID.PORT_ID = portID;
                 Vids.VIDITEM_179_DVVAL_BOXID.BOX_ID = boxID;
 
@@ -4068,6 +4339,11 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
 
                 return false;
             }
+            finally
+            {
+                scApp.VIDCollectionPool.PutObject(Vids);
+            }
+
             return true;
         }
         public override AMCSREPORTQUEUE S6F11BulibMessage(string ceid, object vidCollection)

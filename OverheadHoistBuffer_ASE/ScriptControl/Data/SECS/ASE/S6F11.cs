@@ -696,6 +696,7 @@ namespace com.mirle.ibg3k0.sc.Data.SECS.ASE
                     public VIDITEM_74_DVVAL UNITSTATE;
                     public VIDITEM_72_SV()
                     {
+                        UNITID = new VIDITEM_83_DVVAL();
                         UNITSTATE = new VIDITEM_74_DVVAL();
                     }
                 }
@@ -969,11 +970,11 @@ namespace com.mirle.ibg3k0.sc.Data.SECS.ASE
                     [SecsElement(Index = 1, ListSpreadOut = true, Type = SecsElement.SecsElementType.TYPE_ASCII, Length = 64)]
                     public string Zone_Name; //1: Shelf 2: Port 3: Other 9: HandOff
                     [SecsElement(Index = 2)]
-                    VIDITEM_174_DVVAL Zone_Capacity_OBJ;
+                    public VIDITEM_174_DVVAL Zone_Capacity_OBJ;
                     [SecsElement(Index = 3)]
-                    VIDITEM_175_DVVAL Zone_Total_Size_OBJ;
+                    public VIDITEM_175_DVVAL Zone_Total_Size_OBJ;
                     [SecsElement(Index = 4)]
-                    VIDITEM_176_DVVAL Zone_Type_OBJ;
+                    public VIDITEM_176_DVVAL Zone_Type_OBJ;
                     public VIDITEM_177_SV()
                     {
                         Zone_Name = string.Empty;
@@ -1527,7 +1528,7 @@ namespace com.mirle.ibg3k0.sc.Data.SECS.ASE
                 public class VIDITEM_370_SV : SXFY
                 {
                     [SecsElement(Index = 1, Type = SecsElement.SecsElementType.TYPE_ASCII, Length = 64)]
-                    string CARRIER_ZONE_NAME;
+                    public string CARRIER_ZONE_NAME;
                     public VIDITEM_370_SV()
                     {
                         CARRIER_ZONE_NAME = string.Empty;
@@ -1591,7 +1592,7 @@ namespace com.mirle.ibg3k0.sc.Data.SECS.ASE
                 public class VIDITEM_886_SV : SXFY
                 {
                     [SecsElement(Index = 1, ListSpreadOut = true)]
-                    VIDITEM_55_SV[] CARRIER_INFO; //1=Queued 2=Transferring 3=Paused 4=Canceling 5=Aborting
+                    public VIDITEM_55_SV[] CARRIER_INFO; //1=Queued 2=Transferring 3=Paused 4=Canceling 5=Aborting
                     public VIDITEM_886_SV()
                     {
                         CARRIER_INFO = new VIDITEM_55_SV[0];
@@ -1659,11 +1660,11 @@ namespace com.mirle.ibg3k0.sc.Data.SECS.ASE
                 public class VIDITEM_893_SV : SXFY
                 {
                     [SecsElement(Index = 1, ListSpreadOut = true)]
-                    VIDITEM_70_DVVAL CRANE_ID_OBJ;
+                    public VIDITEM_70_DVVAL CRANE_ID_OBJ;
                     [SecsElement(Index = 2, ListSpreadOut = true)]
-                    VIDITEM_891_DVVAL CRANE_CURRENT_POSITION_OBJ;
+                    public VIDITEM_891_DVVAL CRANE_CURRENT_POSITION_OBJ;
                     [SecsElement(Index = 3, ListSpreadOut = true)]
-                    VIDITEM_892_DVVAL DISTANCE_FROM_HP_TO_OP_OBJ;
+                    public VIDITEM_892_DVVAL DISTANCE_FROM_HP_TO_OP_OBJ;
                     public VIDITEM_893_SV()
                     {
                         CRANE_ID_OBJ = new VIDITEM_70_DVVAL();
@@ -1702,6 +1703,7 @@ namespace com.mirle.ibg3k0.sc.Data.SECS.ASE
             }
         }
     }
+
     public class VIDCollection
     {
         public VIDCollection()
@@ -1796,6 +1798,171 @@ namespace com.mirle.ibg3k0.sc.Data.SECS.ASE
             VIDITEM_892_DVVAL_CraneTotalDistance = new S6F11.RPTINFO.RPTITEM.VIDITEM_892_DVVAL();
             VIDITEM_893_SV_MonitoredCraneInfo = new S6F11.RPTINFO.RPTITEM.VIDITEM_893_SV();
         }
+        public void initial()
+        {
+            try
+            {
+                VH_ID = "";
+                VIDITEM_04_SV_AlarmsSet.ALIDs = null;
+                VIDITEM_06_SV_ControlState.CONTROLSTATE = "";
+                VIDITEM_51_SV_EnhancedCarriers.ENHANCED_CARRIER_INFO = null;
+                VIDITEM_73_DVVAL_SCState.SC_STATE = "";
+                VIDITEM_76_SV_EnhancedTransfers.ENHANCED_TRANSFER_CMD = null;
+                VIDITEM_107_SV_EnhancedActiveZones.ZoneData = null;
+                VIDITEM_118_SV_CurrentPortStates.PORT_INFO_OBJ = null;
+                VIDITEM_350_SV_CurrEqPortStatus.EQ_PORT_INFO_OBJ = null;
+                VIDITEM_351_SV_PortTypes.PORT_TYPE_INFO_OBJ = null;
+                VIDITEM_360_SV_UnitAlarmList.UNIT_ALARM_INFO_OBJ = null;
+
+                VIDITEM_10_SV_EnhancedCarrierInfo.CARRIER_ID_OBJ.CARRIER_ID = "";
+                VIDITEM_10_SV_EnhancedCarrierInfo.CARRIER_LOC_OBJ.CARRIER_LOC = "";
+                VIDITEM_10_SV_EnhancedCarrierInfo.CARRIER_ZONE_NAME_OBJ.CARRIER_ZONE_NAME = "";
+                VIDITEM_10_SV_EnhancedCarrierInfo.INSTALL_TIME_OBJ.INSTALLTIME = "";
+                VIDITEM_10_SV_EnhancedCarrierInfo.CARRIER_STATE.Carrier_State = "";
+                VIDITEM_10_SV_EnhancedCarrierInfo.BOX_ID_OBJ.BOX_ID = "";
+
+                VIDITEM_11_SV_CommandInfo.COMMAND_ID_OBJ.COMMAND_ID = "";
+                VIDITEM_11_SV_CommandInfo.PRIORITY_OBJ.PRIORITY = "";
+
+                VIDITEM_12_DVVAL_InstallTime.INSTALLTIME = "";
+
+                VIDITEM_13_SV_EnhancedTransferCmd.TRANSFER_STATE_OBJ.Transfer_State = "";
+                VIDITEM_13_SV_EnhancedTransferCmd.COMMAND_INFO_OBJ.COMMAND_ID_OBJ.COMMAND_ID = "";
+                VIDITEM_13_SV_EnhancedTransferCmd.COMMAND_INFO_OBJ.PRIORITY_OBJ.PRIORITY = "";
+
+                VIDITEM_15_DVVAL_EmptyCarrier.ENPTY_CARRIER = "";
+
+                VIDITEM_54_DVVAL_CarrierID.CARRIER_ID = "";
+
+                VIDITEM_54_SV_CarrierID.CARRIER_ID = "";
+
+                VIDITEM_55_DVVAL_CarrierInfo.CARRIER_ID_OBJ.CARRIER_ID = "";
+                VIDITEM_55_DVVAL_CarrierInfo.CARRIER_LOC_OBJ.CARRIER_LOC = "";
+                VIDITEM_55_DVVAL_CarrierInfo.CARRIER_ZONE_NAME_OBJ.CARRIER_ZONE_NAME = "";
+
+                VIDITEM_55_SV_CarrierInfo.CARRIER_ID_OBJ.CARRIER_ID = "";
+                VIDITEM_55_SV_CarrierInfo.CARRIER_LOC_OBJ.CARRIER_LOC = "";
+                VIDITEM_55_SV_CarrierInfo.CARRIER_ZONE_NAME_OBJ.CARRIER_ZONE_NAME = "";
+
+                VIDITEM_56_DVVAL_CarrierLoc.CARRIER_LOC = "";
+
+                VIDITEM_56_SV_CarrierLoc.CARRIER_LOC = "";
+
+                VIDITEM_58_DVVAL_CommandID.COMMAND_ID = "";
+
+                VIDITEM_60_DVVAL_DestPort.DESTINATION_ID = "";
+                VIDITEM_60_SV_DestPort.DESTINATION_PORT = "";
+                VIDITEM_61_ECV_EqpName.EQPT_NAME = "";
+                VIDITEM_62_DVVAL_Priority.PRIORITY = "";
+                VIDITEM_62_SV_Priority.PRIORITY = "";
+                VIDITEM_63_DVVAL_ErrorId.ERRORID = "";
+                VIDITEM_63_SV_ErrorId.REPLACE = "";
+                VIDITEM_64_DVVAL_ResultCode.RESULT_CODE = "";
+                VIDITEM_65_DVVAL_SourceID.SOURCE_ID = "";
+                VIDITEM_66_DVVAL_HandoffType.Handoff_Type = "";
+                VIDITEM_67_DVVAL_IDreadStatus.Carrier_ID_Read_Status = "";
+                VIDITEM_68_DVVAL_RecoeryOption.Recoery_Option = "";
+
+                VIDITEM_70_DVVAL_CraneID.Crane_ID = "";
+                VIDITEM_70_SV_CraneID.Crane_ID = "";
+
+                VIDITEM_72_SV_UnitInfo.UNITID.UNIT_ID = "";
+                VIDITEM_72_SV_UnitInfo.UNITSTATE.Unit_State = "";
+
+                VIDITEM_74_DVVAL_UnitState.Unit_State = "";
+
+                VIDITEM_80_DVVAL_CommandType.COMMAND_TYPE = "";
+                VIDITEM_81_DVVAL_AlarmID.ALARM_ID = "";
+                VIDITEM_82_DVVAL_AlarmText.ALARM_TEXT = "";
+                VIDITEM_83_DVVAL_UnitID.UNIT_ID = "";
+                VIDITEM_84_DVVAL_ErrorNumber.ERROR_NUNBER = "";
+
+                VIDITEM_114_DVVAL_SpecVersion.SPEC_VERSION = "";
+                VIDITEM_115_DVVAL_PortID.PORT_ID = "";
+                VIDITEM_115_SV_PortID.PORT_ID = "";
+                VIDITEM_116_DVVAL_PortType.PORT_TYPE = "";
+
+                VIDITEM_172_SV_ZoneData.ZONE_NAME = "";
+                VIDITEM_172_SV_ZoneData.ZONE_CAPACITY_OBJ.Zone_Capacity = "";
+                VIDITEM_172_SV_ZoneData.ZONE_TOTAL_SIZE_OBJ.Zone_Total_Size = "";
+                VIDITEM_172_SV_ZoneData.ZONE_TYPE_OBJ.Zone_Type = "";
+                VIDITEM_172_SV_ZoneData.DISABLE_LOCATIONS_OBJ.DISABLE_LOC_OBJ = null;
+
+                VIDITEM_174_DVVAL_ZoneCapacity.Zone_Capacity = "";
+                VIDITEM_175_DVVAL_ZoneTotalSize.Zone_Total_Size = "";
+                VIDITEM_176_DVVAL_ZoneType.Zone_Type = "";
+
+                VIDITEM_177_SV_EnhancedZoneData.Zone_Name = "";
+                VIDITEM_177_SV_EnhancedZoneData.Zone_Capacity_OBJ.Zone_Capacity = "";
+                VIDITEM_177_SV_EnhancedZoneData.Zone_Total_Size_OBJ.Zone_Total_Size = "";
+                VIDITEM_177_SV_EnhancedZoneData.Zone_Type_OBJ.Zone_Type = "";
+
+
+                VIDITEM_179_DVVAL_BOXID.BOX_ID = "";
+
+                VIDITEM_203_DVVAL_CarrierState.Carrier_State = "";
+
+                VIDITEM_352_DVVAL_EqReqSatus.EQ_REQ_STATUS = "";
+                VIDITEM_353_DVVAL_EqPresenceStatus.EQ_PRESENCE_STATUS = "";
+
+                VIDITEM_354_SV_PortInfo.PORT_ID_OBJ.PORT_ID = "";
+                VIDITEM_354_SV_PortInfo.PORT_TRANSFTER_STATE_OBJ.PORT_TRANSFER_STATE = "";
+
+                VIDITEM_355_DVVAL_PortTransferState.PORT_TRANSFER_STATE = "";
+
+                VIDITEM_355_SV_PortTransferState.PORT_TRANSFER_STATE = "";
+
+                VIDITEM_356_SV_EqPortInfo.PORT_ID_OBJ.PORT_ID = "";
+                VIDITEM_356_SV_EqPortInfo.PORT_TRANSFTER_STATE_OBJ.PORT_TRANSFER_STATE = "";
+                VIDITEM_356_SV_EqPortInfo.EQ_REQ_SATUS_OBJ.EQ_REQ_STATUS = "";
+                VIDITEM_356_SV_EqPortInfo.EQ_PRESENCE_STATUS_OBJ.EQ_PRESENCE_STATUS = "";
+
+                VIDITEM_361_SV_UnitAlarmInfo.UNIT_ID_OBJ.UNIT_ID = "";
+                VIDITEM_361_SV_UnitAlarmInfo.ALARM_ID_OBJ.ALARM_ID = "";
+                VIDITEM_361_SV_UnitAlarmInfo.ALARM_TEXT_OBJ.ALARM_TEXT = "";
+                VIDITEM_361_SV_UnitAlarmInfo.MAINT_STATE_OBJ.MAINT_STATE = "";
+
+
+                VIDITEM_362_DVVAL_MaintState.MAINT_STATE = "";
+
+                VIDITEM_370_DVVAL_CarrierZoneName.CARRIER_ZONE_NAME = "";
+                VIDITEM_370_SV_CarrierZoneName.CARRIER_ZONE_NAME = "";
+
+                VIDITEM_601_SV_PortTypeInfo.PORT_ID_OBJ.PORT_ID = "";
+                VIDITEM_601_SV_PortTypeInfo.PORT_UNIT_TYPE_OBJ.PORT_UNIT_TYPE = "";
+
+
+                VIDITEM_602_DVVAL_PortUnitType.PORT_UNIT_TYPE = "";
+
+                VIDITEM_720_SV_TransferInfo.CARRIER_ID_OBJ.CARRIER_ID = "";
+                VIDITEM_720_SV_TransferInfo.BOX_ID_OBJ.BOX_ID = "";
+                VIDITEM_720_SV_TransferInfo.SOURCE_ID_OBJ.SOURCE_ID = "";
+                VIDITEM_720_SV_TransferInfo.DESTINATION_ID_OBJ.DESTINATION_ID = "";
+
+
+                VIDITEM_722_DVVAL_TransferState.Transfer_State = "";
+
+                VIDITEM_886_SV_CarrierLocations.CARRIER_INFO = null;
+                VIDITEM_888_SV_DisabledLocations.DISABLE_LOC_OBJ = null;
+
+                VIDITEM_889_SV_DisabledLoc.CARRIER_LOC_OBJ.CARRIER_LOC = "";
+                VIDITEM_889_SV_DisabledLoc.CARRIER_ID_OBJ.CARRIER_ID = "";
+
+
+                VIDITEM_890_DVVAL_RequestCount.REQUEST_COUNT = "";
+                VIDITEM_891_DVVAL_CraneCurrentPosition.CRANE_CURRENT_POSITION = "";
+                VIDITEM_892_DVVAL_CraneTotalDistance.DISTANCE_FROM_HP_TO_OP = "";
+
+                VIDITEM_893_SV_MonitoredCraneInfo.CRANE_ID_OBJ.Crane_ID = "";
+                VIDITEM_893_SV_MonitoredCraneInfo.CRANE_CURRENT_POSITION_OBJ.CRANE_CURRENT_POSITION = "";
+                VIDITEM_893_SV_MonitoredCraneInfo.DISTANCE_FROM_HP_TO_OP_OBJ.DISTANCE_FROM_HP_TO_OP = "";
+            }
+            catch(Exception ex)
+            {
+                NLog.LogManager.GetCurrentClassLogger().Error(ex, "Exception:");
+            }
+        }
+
         public string VH_ID;
 
         public com.mirle.ibg3k0.sc.Data.SECS.ASE.S6F11.RPTINFO.RPTITEM.VIDITEM_04_SV VIDITEM_04_SV_AlarmsSet;

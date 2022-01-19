@@ -26,6 +26,7 @@ namespace com.mirle.ibg3k0.sc.Scheduler
 
                 try
                 {
+
                     //using (TransactionScope tx = SCUtility.getTransactionScope())
                     //{
                     //    using (DBConnection_EF con = DBConnection_EF.GetUContext())
@@ -69,7 +70,6 @@ namespace com.mirle.ibg3k0.sc.Scheduler
                     System.Threading.Interlocked.Exchange(ref syncPoint, 0);
                 }
             }
-
         }
 
         private void MoveACMD_MCSToHCMD_MCS()

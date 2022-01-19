@@ -649,10 +649,12 @@ namespace com.mirle.ibg3k0.sc.Common
             return reply.Status == IPStatus.Success;
         }
 
+
+        static System.Runtime.Serialization.Formatters.Binary.BinaryFormatter Formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
         //物件序列化
         public static byte[] ToByteArray(object source)
         {
-            var Formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+            //var Formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
             using (var stream = new System.IO.MemoryStream())
             {
                 Formatter.Serialize(stream, source);
@@ -662,7 +664,7 @@ namespace com.mirle.ibg3k0.sc.Common
         //序列還原物件
         public static object ToObject(byte[] source)
         {
-            var Formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+            //var Formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
             using (var stream = new System.IO.MemoryStream(source))
             {
                 return Formatter.Deserialize(stream);

@@ -66,7 +66,39 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                 throw;
             }
         }
+        public List<string> LoadEnableShelfIDsByZone(DBConnection_EF conn, string zoneid)
+        {
+            try
+            {
+                var result = conn.ShelfDef
+                    .Where(x => x.Enable == "Y" && x.ZoneID.Trim() == zoneid.Trim())
+                    .Select(shelf => shelf.ShelfID.Trim())
+                    .ToList();
 
+                return result;
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex);
+                throw;
+            }
+        }
+        public int LoadEnableShelfCountByZone(DBConnection_EF conn, string zoneid)
+        {
+            try
+            {
+                var result = conn.ShelfDef
+                    .Where(x => x.Enable == "Y" && x.ZoneID.Trim() == zoneid.Trim())
+                    .Count();
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex);
+                throw;
+            }
+        }
         public IQueryable getQueryAllSQL(DBConnection_EF conn)
         {
             try

@@ -681,6 +681,8 @@ namespace com.mirle.ibg3k0.sc.App
 
         public ObjectPool<Stopwatch> StopwatchPool = new ObjectPool<Stopwatch>(() => new Stopwatch());
         public ObjectPool<AVEHICLE> VehiclPool = new ObjectPool<AVEHICLE>(() => new AVEHICLE());
+        public ObjectPool<Data.SECS.ASE.VIDCollection> VIDCollectionPool =
+            new ObjectPool<Data.SECS.ASE.VIDCollection>(() => new Data.SECS.ASE.VIDCollection());
 
         private ConcurrentDictionary<string, ObjectPool<PLC_FunBase>> dicPLC_FunBasePool =
          new ConcurrentDictionary<string, ObjectPool<PLC_FunBase>>();

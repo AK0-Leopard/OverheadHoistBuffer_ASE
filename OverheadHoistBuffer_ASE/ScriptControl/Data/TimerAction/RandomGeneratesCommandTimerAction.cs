@@ -352,6 +352,7 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
                 }
             }
         }
+
         private void CVPortTest()
         {
             List<AVEHICLE> vhs = scApp.VehicleBLL.cache.loadVhs();

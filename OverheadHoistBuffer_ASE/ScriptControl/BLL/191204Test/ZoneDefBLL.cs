@@ -148,15 +148,25 @@ namespace com.mirle.ibg3k0.sc.BLL
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
 
-                    var enable = shelfdefDao.LoadShelfDef(con).Where(x => x.ZoneID == zoneid && x.Enable == "Y").Count();
+                    //var enable = shelfdefDao.LoadShelfDef(con).Where(x => x.ZoneID == zoneid && x.Enable == "Y").Count();
+                    var enable_shelf_ids = shelfdefDao.LoadEnableShelfIDsByZone(con, zoneid);
                     var cassette = cassetteDao.LoadCassetteData(con);
-                    int i = 0;
-                    cassette.ForEach(x =>
+                    foreach (var cst in cassette)
                     {
-                        i = i + shelfdefDao.LoadShelfDef(con).Where(y => y.ZoneID == zoneid && y.Enable == "Y" && y.ShelfID == x.Carrier_LOC).Count();
-                    });
+                        if (enable_shelf_ids.Contains(cst.Carrier_LOC))
+                        {
+                            enable_shelf_ids.Remove(cst.Carrier_LOC);
+                        }
+                    }
+                    //int i = 0;
 
-                    return enable - i;
+                    //cassette.ForEach(x =>
+                    //{
+                    //    i = i + shelfdefDao.LoadShelfDef(con).Where(y => y.ZoneID == zoneid && y.Enable == "Y" && y.ShelfID == x.Carrier_LOC).Count();
+                    //});
+
+                    //return enable_shelf_ids - i;
+                    return enable_shelf_ids.Count();
                 }
             }
             catch (Exception ex)
@@ -175,13 +185,19 @@ namespace com.mirle.ibg3k0.sc.BLL
             {
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
-                    int result = shelfdefDao.LoadShelfDef(con)
-                        .Where(x => x.ZoneID == zoneid && x.Enable == "Y")
-                        .ToList()
-                        .Count;
+                    int result = shelfdefDao.LoadEnableShelfCountByZone(con, zoneid);
 
                     return result;
                 }
+                //using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                //{
+                //    int result = shelfdefDao.LoadShelfDef(con)
+                //        .Where(x => x.ZoneID == zoneid && x.Enable == "Y")
+                //        .ToList()
+                //        .Count;
+
+                //    return result;
+                //}
             }
             catch (Exception ex)
             {

@@ -96,6 +96,10 @@ namespace com.mirle.ibg3k0.sc.Common
             {
                 (item as LogObj).reset();
             }
+            else if (item is Data.SECS.ASE.VIDCollection)
+            {
+                (item as Data.SECS.ASE.VIDCollection).initial();
+            }
 
             _objects.Add(item);
         }
