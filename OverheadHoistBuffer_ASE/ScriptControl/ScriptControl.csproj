@@ -464,6 +464,11 @@
     <Compile Include="BLL\191204Test\CassetteDataBLL.cs" />
     <Compile Include="BLL\191204Test\ShelfDefBLL.cs" />
     <Compile Include="BLL\191204Test\ZoneDefBLL.cs" />
+    <Compile Include="BLL\Interface\IVehicleBLL.cs" />
+    <Compile Include="BLL\Interface\ISectionBLL.cs" />
+    <Compile Include="BLL\Interface\IZoneCommandBLL.cs" />
+    <Compile Include="BLL\Interface\IPortBLL.cs" />
+    <Compile Include="BLL\ZoneCommandBLL.cs" />
     <Compile Include="BLL\VAlarmBLL.cs" />
     <Compile Include="BLL\AlarmBLL.cs" />
     <Compile Include="BLL\BCSystemBLL.cs" />
@@ -529,6 +534,7 @@
     <Compile Include="Data\DAO\191204Test\ZoneDefDao.cs" />
     <Compile Include="Data\DAO\ADDRESSDao.cs" />
     <Compile Include="Data\DAO\AddressDataDao.cs" />
+    <Compile Include="Data\DAO\ZoneCommandDao.cs" />
     <Compile Include="Data\DAO\VAlarmDao.cs" />
     <Compile Include="Data\DAO\EntityFramework\HCMD_MCSDao.cs" />
     <Compile Include="Data\DAO\EntityFramework\HCMD_OHTCDao.cs" />
@@ -820,6 +826,8 @@
     <Compile Include="Data\ValueDefMapAction\ValueDefMapActionBase.cs" />
     <Compile Include="Data\ValueDefMapAction\EQTcpIpMapAction.cs" />
     <Compile Include="Data\VO\AlarmHisList.cs" />
+    <Compile Include="Data\VO\ZoneCommandGroup.cs" />
+    <Compile Include="Data\VO\ZoneCommandInfo.cs" />
     <Compile Include="Data\VO\Interface\IConnectionStatusChange.cs" />
     <Compile Include="Data\VO\Interface\IMaintainDevice.cs" />
     <Compile Include="Data\VO\OHCV.cs" />
@@ -949,6 +957,7 @@
     <Compile Include="HOPERATION.cs">
       <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
+    <Compile Include="Module\LoopTransferEnhance.cs" />
     <Compile Include="MQTTControl\MQTTControl.cs" />
     <Compile Include="ObjectRelay\ALARMObjToShow.cs" />
     <Compile Include="ObjectRelay\CMD_MCSObjToShow.cs" />

@@ -43,6 +43,7 @@ namespace com.mirle.ibg3k0.sc.Common
         private List<PortDef> PortDefs;
         private List<ReserveEnhanceInfo> ReserveEnhanceInfos;
         private List<ALARMRPTCOND> AlarmReportCond;
+        private List<ZoneCommandGroup> ZoneCommandGroups;
         private CommonInfo CommonInfo;
 
         private CommObjCacheManager() { }
@@ -70,13 +71,15 @@ namespace com.mirle.ibg3k0.sc.Common
             Segments = scApp.MapBLL.loadAllSegments();
             Sections = scApp.MapBLL.loadAllSection();
             ReserveEnhanceInfos = scApp.ReserveEnhanceInfoDao.loadReserveInfos(scApp);
+            //ZoneCommandGroups = scApp.ZoneCommandDao.loadZoneCommandInfos(scApp);
+            //ZoneCommandGroups = 
             AlarmReportCond = scApp.AlarmBLL.loadAllAlarmRptCond();
             foreach (var re in ReserveEnhanceInfos)
             {
-                foreach(var sec in re.EnhanceControlSections)
+                foreach (var sec in re.EnhanceControlSections)
                 {
                     var s = Sections.Where(section => SCUtility.isMatche(section.SEC_ID, sec)).FirstOrDefault();
-                    if(s== null)
+                    if (s == null)
                     {
 
                     }
@@ -90,6 +93,21 @@ namespace com.mirle.ibg3k0.sc.Common
             CommonInfo = new CommonInfo();
         }
 
+        public void setZoneCommandGroup()
+        {
+            var zone_command_infos = scApp.ZoneCommandDao.loadZoneCommandInfos(scApp);
+
+            var zone_command_groups = zone_command_infos.GroupBy(info => info.ZoneCommandID)
+                                                        .ToDictionary(grp => grp.Key, grp => grp.Select(v => v.PortID).ToArray());
+            List<ZoneCommandGroup> zone_command_groups_obj = new List<ZoneCommandGroup>();
+            foreach (var group in zone_command_groups)
+            {
+                string zone_id = group.Key;
+                string[] port_ids = group.Value;
+                zone_command_groups_obj.Add(new ZoneCommandGroup(zone_id, port_ids.ToList()));
+            }
+            ZoneCommandGroups = zone_command_groups_obj;
+        }
 
         public void setPortDefsInfo()
         {
@@ -145,6 +163,10 @@ namespace com.mirle.ibg3k0.sc.Common
         public List<ALARMRPTCOND> getAlarmReportConds()
         {
             return AlarmReportCond;
+        }
+        public List<ZoneCommandGroup> getZoneCommandGroups()
+        {
+            return ZoneCommandGroups;
         }
 
         #endregion

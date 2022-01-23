@@ -462,6 +462,9 @@ namespace com.mirle.ibg3k0.sc.App
         private HCMD_OHTCDao hcmd_ohtcDao = null;
         public HCMD_OHTCDao HCMD_OHTCDao { get { return hcmd_ohtcDao; } }
 
+        private ZoneCommandDao zoneCommandDao = null;
+        public ZoneCommandDao ZoneCommandDao { get { return zoneCommandDao; } }
+
         //BLL
         /// <summary>
         /// The user BLL
@@ -1215,6 +1218,7 @@ namespace com.mirle.ibg3k0.sc.App
             hcmd_mcsDao = new HCMD_MCSDao();
             hcmd_ohtcDao = new HCMD_OHTCDao();
             flexsimcommandDao = new FlexsimCommandDao();
+            zoneCommandDao = new ZoneCommandDao();
         }
 
         /// <summary>
@@ -1233,6 +1237,7 @@ namespace com.mirle.ibg3k0.sc.App
                 loadCSVToDataset(ohxcConfig, "RETURNCODEMAP");
                 loadCSVToDataset(ohxcConfig, "EQPTLOCATIONINFO");
                 loadCSVToDataset(ohxcConfig, "RESERVEENHANCEINFO");
+                loadCSVToDataset(ohxcConfig, "ZONECOMMANDINFO");
                 loadMapInfoCSVToDataset(ohxcConfig, "AADDRESS");
                 loadMapInfoCSVToDataset(ohxcConfig, "ASECTION");
                 logger.Info("init bc_Config success");
@@ -1791,6 +1796,7 @@ namespace com.mirle.ibg3k0.sc.App
 
             eqObjCacheManager.start(/*eqptCss, nodeFlowRelCss, */recoverFromDB);      //啟動EQ Object Cache.. 將從DB取得Line資訊建立EQ Object
             commObjCacheManager.setPortDefsInfo();
+            commObjCacheManager.setZoneCommandGroup();
             string shareMemoryInitClass = eqptCss.ShareMemoryInitClass;
             try
             {

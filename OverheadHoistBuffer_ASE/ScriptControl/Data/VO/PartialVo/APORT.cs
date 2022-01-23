@@ -36,6 +36,15 @@ namespace com.mirle.ibg3k0.sc
         {
             cassetteLoader.unloadCassette();
         }
+
+        public Data.PLC_Functions.PortPLCInfo GetPortPLCData(string portID)
+        {
+            portID = portID.Trim();
+            var portValueDefMapAction = getMapActionByIdentityKey(typeof(Data.ValueDefMapAction.PortValueDefMapAction).Name)
+                                                                      as Data.ValueDefMapAction.PortValueDefMapAction;
+
+            return portValueDefMapAction.GetPortValue();
+        }
         /// <summary>
         /// 開始執行初始化動作
         /// </summary>

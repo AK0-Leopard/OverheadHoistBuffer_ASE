@@ -10,8 +10,9 @@ namespace com.mirle.ibg3k0.sc.Data.PLC_Functions
     {
         public DateTime Timestamp;
         public int BoxCount //20210219 markchou 根據在席訊號推斷有多少Box
-        {  
-            get {
+        {
+            get
+            {
                 int count = 0;
                 if (LoadPosition1) count++;
                 if (LoadPosition2) count++;
@@ -20,8 +21,27 @@ namespace com.mirle.ibg3k0.sc.Data.PLC_Functions
                 if (LoadPosition5) count++;
                 if (LoadPosition6) count++;
                 if (LoadPosition7) count++;
-                return count; 
-            } 
+                return count;
+            }
+        }
+
+        public (bool hasBox, int closestPositionIndex) hasBoxInPosition()
+        {
+            if (LoadPosition1)
+                return (true, 1);
+            else if (LoadPosition2)
+                return (true, 2);
+            else if (LoadPosition3)
+                return (true, 3);
+            else if (LoadPosition4)
+                return (true, 4);
+            else if (LoadPosition5)
+                return (true, 5);
+            else if (LoadPosition6)
+                return (true, 6);
+            else if (LoadPosition7)
+                return (true, 7);
+            return (false, 0);
         }
 
         [PLCElement(ValueName = "OP_RUN")]
@@ -37,7 +57,7 @@ namespace com.mirle.ibg3k0.sc.Data.PLC_Functions
         public bool IsOutputMode;       //D6401.4
         [PLCElement(ValueName = "MODE_CHANGEABLE")]
         public bool IsModeChangable;    //D6401.5
-        
+
         [PLCElement(ValueName = "IS_AGV_MODE")]
         public bool IsAGVMode;
         [PLCElement(ValueName = "IS_MGV_MODE")]
@@ -76,7 +96,7 @@ namespace com.mirle.ibg3k0.sc.Data.PLC_Functions
         [PLCElement(ValueName = "AGV_PORT_READY")]
         public bool AGVPortReady;       //D6402.6
         [PLCElement(ValueName = "CAN_OPEN_BOX")]
-        public bool CanOpenBox;        
+        public bool CanOpenBox;
         [PLCElement(ValueName = "IS_BOX_OPEN")]
         public bool IsBoxOpen;
 
