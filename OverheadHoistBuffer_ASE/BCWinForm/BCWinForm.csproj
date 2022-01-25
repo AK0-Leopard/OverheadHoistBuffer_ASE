@@ -631,6 +631,9 @@
     <None Include="Config\ASE_LINE3\CSV\ZONECOMMANDINFO.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Config\ASE_LOOP\CSV\ZONECOMMANDINFO.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Config\ASE_TEST\AddressBaseDefs_simple.config">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

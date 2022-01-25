@@ -4221,7 +4221,8 @@ namespace com.mirle.ibg3k0.sc.Service
                 {
                     if (vh.isTcpIpConnect &&
                         (vh.MODE_STATUS != VHModeStatus.Manual) &&
-                        vh.IsObstacle
+                        vh.IsObstacle &&
+                        vh.ACT_STATUS == VHActionStatus.Commanding
                         )
                     {
                         LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
@@ -4274,13 +4275,15 @@ namespace com.mirle.ibg3k0.sc.Service
                                 var vh_from = scApp.VehicleBLL.cache.getVhByAddressID(sec.FROM_ADR_ID);
                                 if (vh_from != null)
                                 {
-                                    Task.Run(() => tryDriveOutTheVh(vh.VEHICLE_ID, vh_from.VEHICLE_ID));
+                                    if (vh_from != vh)
+                                        Task.Run(() => tryDriveOutTheVh(vh.VEHICLE_ID, vh_from.VEHICLE_ID));
                                     return;
                                 }
                                 var vh_to = scApp.VehicleBLL.cache.getVhByAddressID(sec.TO_ADR_ID);
                                 if (vh_to != null)
                                 {
-                                    Task.Run(() => tryDriveOutTheVh(vh.VEHICLE_ID, vh_to.VEHICLE_ID));
+                                    if (vh_to != vh)
+                                        Task.Run(() => tryDriveOutTheVh(vh.VEHICLE_ID, vh_to.VEHICLE_ID));
                                     return;
                                 }
                             }

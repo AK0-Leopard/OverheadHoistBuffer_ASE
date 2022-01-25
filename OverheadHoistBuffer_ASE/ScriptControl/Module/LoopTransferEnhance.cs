@@ -76,6 +76,7 @@ namespace com.mirle.ibg3k0.sc.Module
                         return (false, "", null);
                     }
                     check_dis += pre_section.SEC_DIS;
+                    ask_vh_sec_from_adr = pre_section.FROM_ADR_ID;
                 }
                 while (check_dis < MAX_CLOSE_DIS_MM);
                 return (true, cmd_mcs.HOSTSOURCE, cmd_mcs);
