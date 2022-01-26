@@ -53,7 +53,7 @@ message Timestamp {
 	SYSTEMOUT = 11;
 	SYSTEMIN = 12;
 	TECHINGMOVE = 13;
-	ROUND=99;
+	CYCLEMOVE=31;
   }
    enum EventType {
     LoadArrivals = 0;
@@ -76,6 +76,7 @@ message Timestamp {
 	Scan = 17;
 	BlockRelease = 21;
 	HIDRelease = 22;
+	ZoneCommandReq = 31;
 	BlockHIDRelease = 23;
 	CommandComplete = 99;
   }
@@ -99,6 +100,7 @@ message Timestamp {
 	CmpStatusIDMisMatch = 23;
 	CmpStatusIDReadFailed = 24;
 	CmpStatusIDReadDuplicate = 25;
+	CmpStatusCycleMove = 31;
 	CmpStatusInterlockError = 64;
 
 	CmpStatusLongTimeInaction = 98;
@@ -129,6 +131,7 @@ message Timestamp {
 	PauseType_ManualBlock = 7;
 	PauseType_ManualHID = 8;
 	PauseType_All = 9;
+	PauseType_SyncStartUp = 11;
   }
    enum VhGuideStatus{
     Unlock = 0;
@@ -461,6 +464,7 @@ message Timestamp {
 	string CurrentSecID = 13;
 	uint32 Sec_Distance = 14;
 	BCRReadResult BCRReadResult =15;
+	string ZoneCommandID =16;
   }
 
   message ID_36_TRANS_EVENT_RESPONSE {
@@ -473,6 +477,7 @@ message Timestamp {
 	string RenameLOTID = 7;
 	CMDCancelType ReplyActiveType = 8;
 	int32 ReplyCode = 9;				  
+	string ZoneCommandPortID = 10;				  
   }
 
   message ID_37_TRANS_CANCEL_REQUEST {
