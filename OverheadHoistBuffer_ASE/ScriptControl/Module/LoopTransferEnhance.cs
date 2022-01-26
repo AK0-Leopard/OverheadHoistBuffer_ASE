@@ -14,16 +14,22 @@ namespace com.mirle.ibg3k0.sc.Module
         IZoneCommandBLL zoneCommandBLL = null;
         IVehicleBLL vehicleBLL = null;
         ISectionBLL sectionBLL = null;
+        IPortDefBLL portDefBLL = null;
+        IReserveBLL reserveBLL = null;
 
         public void Start(IPortBLL portBLL,
                           IZoneCommandBLL zoneCommandBLL,
                           IVehicleBLL vehicleBLL,
-                          ISectionBLL sectionBLL)
+                          ISectionBLL sectionBLL,
+                          IPortDefBLL portDefBLL,
+                          IReserveBLL reserveBLL)
         {
             this.portBLL = portBLL;
             this.zoneCommandBLL = zoneCommandBLL;
             this.vehicleBLL = vehicleBLL;
             this.sectionBLL = sectionBLL;
+            this.portDefBLL = portDefBLL;
+            this.reserveBLL = reserveBLL;
         }
 
         const double MAX_CLOSE_DIS_MM = 10_000;
@@ -32,7 +38,9 @@ namespace com.mirle.ibg3k0.sc.Module
             //沒命令就不需要等待
             if (mcsCMDs == null || mcsCMDs.Count == 0) return (false, "", null);
             var zone_group = zoneCommandBLL.getZoneCommandGroup(zoneCommandID);
-
+            List<ACMD_MCS> zone_mcs_cmds = mcsCMDs.Where(cmd => zone_group.PortIDs.Contains(sc.Common.SCUtility.Trim(cmd.HOSTSOURCE, true))).
+                                                   ToList();
+            if (zone_mcs_cmds == null || zone_mcs_cmds.Count == 0) return (false, "", null);
             //確認是否有CV貨物準備要Wait 
             //var checkBoxWillWaitIn = tryGetWillWaitInPort(zone_group);
             //if (checkBoxWillWaitIn.has)
@@ -40,7 +48,7 @@ namespace com.mirle.ibg3k0.sc.Module
 
             //}
             //
-            if (mcsCMDs.Count == 1)
+            if (zone_mcs_cmds.Count == 1)
             {
                 //1筆
                 //	判斷後面是否有空車在距離內
@@ -53,7 +61,7 @@ namespace com.mirle.ibg3k0.sc.Module
                 var ask_vh_sec_obj = sectionBLL.getSection(ask_vh_sec_id);
                 //a.確認同一段Section是否有在後面的車子，有的話代表已經靠近中了
                 List<AVEHICLE> cycling_vhs = vehicleBLL.loadCyclingVhs();
-                ACMD_MCS cmd_mcs = mcsCMDs.FirstOrDefault();
+                ACMD_MCS cmd_mcs = zone_mcs_cmds.FirstOrDefault();
                 foreach (var v in cycling_vhs)
                 {
                     if (sc.Common.SCUtility.isMatche(vh.CUR_SEC_ID, v.CUR_SEC_ID))
@@ -83,10 +91,28 @@ namespace com.mirle.ibg3k0.sc.Module
             }
             else
             {
-                throw new NotImplementedException();
+                //如果有多筆命令在這個Zone，則需要找出最遠的一筆命令
+                //讓後面車子來的時候，可以接另外一筆
+                var cmd_mcs = getZoneCommandFarthestCommand(zone_group.zoneDir, zone_mcs_cmds);
+                return (true, cmd_mcs.HOSTSOURCE, cmd_mcs);
             }
-            throw new NotImplementedException();
         }
+
+        private ACMD_MCS getZoneCommandFarthestCommand(ZoneCommandGroup.ZoneDir zoneDir, List<ACMD_MCS> zone_mcs_cmds)
+        {
+            if (zoneDir == ZoneCommandGroup.ZoneDir.DIR_1_0)
+            {
+                //要找出X最大，即為該Zone最遠的Port
+                zone_mcs_cmds = zone_mcs_cmds.OrderBy(cmd => cmd.getHostSourceAxis_X(portDefBLL, reserveBLL)).ToList();
+            }
+            else if (zoneDir == ZoneCommandGroup.ZoneDir.DIR_N1_0)
+            {
+                //要找出X最小，即為該Zone最遠的Port
+                zone_mcs_cmds = zone_mcs_cmds.OrderByDescending(cmd => cmd.getHostSourceAxis_X(portDefBLL, reserveBLL)).ToList();
+            }
+            return zone_mcs_cmds.Last();
+        }
+
         private (bool has, List<string> portIDs) tryGetWillWaitInPort(ZoneCommandGroup zoneGroup)
         {
             var cv_port_ids = zoneGroup.PortIDs.Where(id => portBLL.isUnitType(id, Service.UnitType.OHCV)).ToList();

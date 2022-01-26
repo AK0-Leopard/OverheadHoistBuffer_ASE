@@ -380,7 +380,7 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
                         int target_port_num = is_even_num ? port_num - 1 : port_num + 1;
                         string target_port_id = $"B7_OHBLOOP_T{Convert.ToString(target_port_num, 16).PadLeft(2, '0')}";
 
-                        PortDef target_port = scApp.PortDefBLL.cache.getCVPortDef(target_port_id);
+                        PortDef target_port = scApp.PortDefBLL.cache.getPortDef(target_port_id);
                         string box_id = SCUtility.isEmpty(source_port_info.BoxID) ? "BOX01" : SCUtility.Trim(source_port_info.BoxID);
                         string cst_id = source_port_info.CassetteID.ToUpper().Contains("NO") ? "" : SCUtility.Trim(source_port_info.CassetteID);
                         bool is_success = scApp.CMDBLL.doCreatTransferCommand(vh.VEHICLE_ID, "", cst_id,

@@ -462,8 +462,10 @@
       <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="BLL\191204Test\CassetteDataBLL.cs" />
+    <Compile Include="BLL\Interface\IPortDefBLL.cs" />
     <Compile Include="BLL\191204Test\ShelfDefBLL.cs" />
     <Compile Include="BLL\191204Test\ZoneDefBLL.cs" />
+    <Compile Include="BLL\Interface\IReserveBLL.cs" />
     <Compile Include="BLL\Interface\IVehicleBLL.cs" />
     <Compile Include="BLL\Interface\ISectionBLL.cs" />
     <Compile Include="BLL\Interface\IZoneCommandBLL.cs" />

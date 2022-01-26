@@ -21,6 +21,6 @@ namespace com.mirle.ibg3k0.sc.Data.VO
 {
     public class ZoneCommandInfo
     {
-        public String ZoneCommandID, PortID;
+        public String ZoneCommandID, PortID, Dir;
     }
 }

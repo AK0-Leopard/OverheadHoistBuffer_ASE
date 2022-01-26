@@ -21,10 +21,11 @@ using com.mirle.ibg3k0.bcf.App;
 using com.mirle.ibg3k0.sc.Data;
 using com.mirle.ibg3k0.sc.App;
 using com.mirle.ibg3k0.sc.Common;
+using com.mirle.ibg3k0.sc.BLL.Interface;
 
 namespace com.mirle.ibg3k0.sc.BLL
 {
-    public class PortDefBLL
+    public class PortDefBLL : IPortDefBLL
     {
         SCApplication scApp = null;
         PortDefDao portdefDao = null;
@@ -376,7 +377,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                                  FirstOrDefault();
                 return (port_def != null, port_def);
             }
-            public PortDef getCVPortDef(string portID)
+            public PortDef getPortDef(string portID)
             {
                 var port_defs = objCacheManager.getPortDefs();
                 return port_defs.Where(port => SCUtility.isMatche(port.PLCPortID, portID)).
@@ -447,6 +448,11 @@ namespace com.mirle.ibg3k0.sc.BLL
                 return false;
             }
             return true;
+        }
+
+        public PortDef getPortDef(string portID)
+        {
+            return cache.getPortDef(portID);
         }
     }
 }

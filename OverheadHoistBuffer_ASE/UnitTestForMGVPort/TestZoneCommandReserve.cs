@@ -19,14 +19,23 @@ namespace UnitTestForLoopEnhance
         {
             return new StubObjectCollection();
         }
-        private List<PortPLCInfo> loadFackPortObj()
+
+        private void setAddressData(StubObjectCollection stub)
         {
-            return new List<PortPLCInfo>()
-            {
-                new PortPLCInfo(){ EQ_ID = "B7_OHBLINE3_A01",PortWaitIn = false},
-                new PortPLCInfo(){ EQ_ID = "B7_OHBLINE3_A02",PortWaitIn = false},
-                new PortPLCInfo(){ EQ_ID = "B7_OHBLINE3_A03",PortWaitIn = false},
-            };
+            stub.reserveBLL.GetHltMapAddress("12269").Returns((true, 6794, 0, false));
+            stub.reserveBLL.GetHltMapAddress("12270").Returns((true, 7155, 0, false));
+            stub.reserveBLL.GetHltMapAddress("12271").Returns((true, 7515, 0, false));
+            stub.reserveBLL.GetHltMapAddress("12272").Returns((true, 8037, 0, false));
+            stub.reserveBLL.GetHltMapAddress("12273").Returns((true, 8391, 0, false));
+            stub.reserveBLL.GetHltMapAddress("12274").Returns((true, 8753, 0, false));
+            stub.reserveBLL.GetHltMapAddress("12275").Returns((true, 9110, 0, false));
+            stub.reserveBLL.GetHltMapAddress("12276").Returns((true, 9633, 0, false));
+            stub.reserveBLL.GetHltMapAddress("13277").Returns((true, 9862, 0, false));
+            stub.reserveBLL.GetHltMapAddress("12278").Returns((true, 9992, 0, false));
+            stub.reserveBLL.GetHltMapAddress("12279").Returns((true, 10352, 0, false));
+            stub.reserveBLL.GetHltMapAddress("13280").Returns((true, 10280, 0, false));
+            stub.reserveBLL.GetHltMapAddress("12281").Returns((true, 10710, 0, false));
+            stub.reserveBLL.GetHltMapAddress("13282").Returns((true, 10697, 0, false));
         }
 
         private void setSectionData(StubObjectCollection stub)
@@ -81,12 +90,32 @@ namespace UnitTestForLoopEnhance
         private void setZoneCommandData(StubObjectCollection stub)
         {
             stub.zoneCommandBLL.getZoneCommandGroup("ZC01").
-                Returns(new ZoneCommandGroup("ZC01", new List<string>()
+                Returns(new ZoneCommandGroup("ZC01",
+                new List<string>()
                 { "B7_OHBLINE3_A01", "B7_OHBLINE3_A02", "B7_OHBLINE3_A03",
                   "108701","108801","108901","109001",
                   "109101","109201","109301","109401",
                   "109501","109601","109701"
-                }));
+                },
+                "(1,0)"));
+        }
+
+        private void setPortDefData(StubObjectCollection stub)
+        {
+            stub.portDefBLL.getPortDef("108701").Returns(new PortDef() { PLCPortID = "108701", ADR_ID = "12269" });
+            stub.portDefBLL.getPortDef("108801").Returns(new PortDef() { PLCPortID = "108801", ADR_ID = "12270" });
+            stub.portDefBLL.getPortDef("108901").Returns(new PortDef() { PLCPortID = "108901", ADR_ID = "12271" });
+            stub.portDefBLL.getPortDef("109001").Returns(new PortDef() { PLCPortID = "109001", ADR_ID = "12272" });
+            stub.portDefBLL.getPortDef("109101").Returns(new PortDef() { PLCPortID = "109101", ADR_ID = "12273" });
+            stub.portDefBLL.getPortDef("109201").Returns(new PortDef() { PLCPortID = "109201", ADR_ID = "12274" });
+            stub.portDefBLL.getPortDef("109301").Returns(new PortDef() { PLCPortID = "109301", ADR_ID = "12275" });
+            stub.portDefBLL.getPortDef("109401").Returns(new PortDef() { PLCPortID = "109401", ADR_ID = "12276" });
+            stub.portDefBLL.getPortDef("109501").Returns(new PortDef() { PLCPortID = "109501", ADR_ID = "12278" });
+            stub.portDefBLL.getPortDef("109601").Returns(new PortDef() { PLCPortID = "109601", ADR_ID = "12279" });
+            stub.portDefBLL.getPortDef("109701").Returns(new PortDef() { PLCPortID = "109701", ADR_ID = "12281" });
+            stub.portDefBLL.getPortDef("B7_OHBLINE3_A01").Returns(new PortDef() { PLCPortID = "B7_OHBLINE3_A01", ADR_ID = "13277" });
+            stub.portDefBLL.getPortDef("B7_OHBLINE3_A02").Returns(new PortDef() { PLCPortID = "B7_OHBLINE3_A02", ADR_ID = "13280" });
+            stub.portDefBLL.getPortDef("B7_OHBLINE3_A03").Returns(new PortDef() { PLCPortID = "B7_OHBLINE3_A03", ADR_ID = "13282" });
         }
 
         private ACMD_MCS bulidFackCMD_MCS(string cmdID, string fromPort, string toPort)
@@ -104,10 +133,18 @@ namespace UnitTestForLoopEnhance
         public void 車子上報ZoneCommandRequest_該Zone命令0筆_Pass()
         {
             //Arrange
-            string vhID = "";
-            string zoneCommandID = "";
+            string vhID = "B7_OHBLINE3_CR1";
+            string zoneCommandID = "ZC01";
             List<ACMD_MCS> mcs_cmds = new List<ACMD_MCS>();
+            mcs_cmds.Add(bulidFackCMD_MCS("1", "B7_OHBLINE3_A04", "B7_OHBLINE3-ZONE2"));
+            var stub = GetStubObject();
+            setSectionData(stub);
+            setVehicleData(stub);
+            setZoneCommandData(stub);
+
             LoopTransferEnhance loopTransferEnhance = new LoopTransferEnhance();
+            loopTransferEnhance.Start
+                (stub.portBLL, stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL);
 
             //Act
             var result = loopTransferEnhance.tryGetZoneCommand(mcs_cmds, vhID, zoneCommandID);
@@ -133,17 +170,12 @@ namespace UnitTestForLoopEnhance
             var assert_result = (true, "B7_OHBLINE3_A01", default(ACMD_MCS));
             result.Should().BeEquivalentTo(assert_result);
         }
-
-        public ZoneCommandGroup getFackZoneCommmandGroup()
-        {
-            return new ZoneCommandGroup("ZONE1", new List<string>() { "B7_OHBLINE3_A01", "B7_OHBLINE3_A02", "B7_OHBLINE3_A03" });
-        }
         [Test]
         public void 車子上報ZoneCommandRequest_該Zone命令1筆_有空車在距離內_要Pass讓給他搬()
         {
             //Arrange
             string vhID = "B7_OHBLINE3_CR1";
-            string zoneCommandID = "ZONE1";
+            string zoneCommandID = "ZC01";
             List<ACMD_MCS> mcs_cmds = new List<ACMD_MCS>();
             mcs_cmds.Add(bulidFackCMD_MCS("1", "B7_OHBLINE3_A01", "B7_OHBLINE3-ZONE2"));
 
@@ -152,21 +184,9 @@ namespace UnitTestForLoopEnhance
             setVehicleData(stub);
             setZoneCommandData(stub);
 
-            //stub.zoneCommandBLL.getZoneCommandGroup(zoneCommandID).Returns(getFackZoneCommmandGroup());
-            //stub.vehicleBLL.loadCyclingVhs().Returns(getFackVehicleFor_有空車在距離內_要Pass讓給他搬());
-            //stub.vehicleBLL.getVehicle(vhID).
-            //     Returns(new AVEHICLE() { VEHICLE_ID = "B7_OHBLINE3_CR1", CUR_SEC_ID = "30140", ACC_SEC_DIST = 2000 });
-
-            //stub.portBLL.loadPortPLCInfoByZoneCommnadID(zoneCommandID).Returns(loadFackPortObj());
-            //stub.sectionBLL.getSectionByToAdr("12269").Returns(new ASECTION() { SEC_ID = "30140", FROM_ADR_ID = "12268", TO_ADR_ID = "12269", SEC_DIS = 4000 });
-            //stub.sectionBLL.getSectionByToAdr("12268").Returns(new ASECTION() { SEC_ID = "30139", FROM_ADR_ID = "12267", TO_ADR_ID = "12268", SEC_DIS = 4000 });
-            //stub.sectionBLL.getSectionByToAdr("12267").Returns(new ASECTION() { SEC_ID = "30138", FROM_ADR_ID = "12266", TO_ADR_ID = "12267", SEC_DIS = 4000 });
-            //stub.sectionBLL.getSection("30140").Returns(new ASECTION() { SEC_ID = "30140", FROM_ADR_ID = "12268", TO_ADR_ID = "12269", SEC_DIS = 4000 });
-            //stub.sectionBLL.getSection("30139").Returns(new ASECTION() { SEC_ID = "30139", FROM_ADR_ID = "12267", TO_ADR_ID = "12268", SEC_DIS = 4000 });
-            //stub.sectionBLL.getSection("30138").Returns(new ASECTION() { SEC_ID = "30138", FROM_ADR_ID = "12266", TO_ADR_ID = "12267", SEC_DIS = 4000 });
-
             LoopTransferEnhance loopTransferEnhance = new LoopTransferEnhance();
-            loopTransferEnhance.Start(stub.portBLL, stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL);
+            loopTransferEnhance.Start
+                (stub.portBLL, stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL);
             //Act
             var result = loopTransferEnhance.tryGetZoneCommand(mcs_cmds, vhID, zoneCommandID);
 
@@ -174,16 +194,6 @@ namespace UnitTestForLoopEnhance
             var assert_result = (false, "", default(ACMD_MCS));
             result.Should().BeEquivalentTo(assert_result);
         }
-        private List<AVEHICLE> getFackVehicleFor_有空車在距離內_要Pass讓給他搬()
-        {
-            return new List<AVEHICLE>()
-            {
-                new AVEHICLE(){VEHICLE_ID = "B7_OHBLINE3_CR1", CUR_SEC_ID = "30140",ACC_SEC_DIST = 2100},
-                new AVEHICLE(){VEHICLE_ID = "B7_OHBLINE3_CR2", CUR_SEC_ID = "30139",ACC_SEC_DIST = 2000},
-                new AVEHICLE(){VEHICLE_ID = "B7_OHBLINE3_CR3", CUR_SEC_ID = ""}
-            };
-        }
-
 
 
         [Test]
@@ -191,13 +201,12 @@ namespace UnitTestForLoopEnhance
         {
             //Arrange
             string vhID = "B7_OHBLINE3_CR1";
-            string zoneCommandID = "ZONE1";
+            string zoneCommandID = "ZC01";
             List<ACMD_MCS> mcs_cmds = new List<ACMD_MCS>();
             mcs_cmds.Add(bulidFackCMD_MCS("1", "B7_OHBLINE3_A01", "B7_OHBLINE3-ZONE2"));
 
             var stub = GetStubObject();
             setSectionData(stub);
-
             setVehicleData(stub);
             //變更車子的位置
             stub.vehicleBLL.loadCyclingVhs().
@@ -206,7 +215,8 @@ namespace UnitTestForLoopEnhance
             setZoneCommandData(stub);
 
             LoopTransferEnhance loopTransferEnhance = new LoopTransferEnhance();
-            loopTransferEnhance.Start(stub.portBLL, stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL);
+            loopTransferEnhance.Start
+                (stub.portBLL, stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL);
             //Act
             var result = loopTransferEnhance.tryGetZoneCommand(mcs_cmds, vhID, zoneCommandID);
 
@@ -216,24 +226,34 @@ namespace UnitTestForLoopEnhance
         }
 
 
-        [Ignore("尚未寫測試")]
+        [Test]
         public void 車子上報ZoneCommandRequest_該Zone命令多筆_要找出最遠的一筆給他()
         {
             //Arrange
-            string vhID = "";
-            string zoneCommandID = "";
+            string vhID = "B7_OHBLINE3_CR1";
+            string zoneCommandID = "ZC01";
             List<ACMD_MCS> mcs_cmds = new List<ACMD_MCS>();
-            mcs_cmds.Add(bulidFackCMD_MCS("1", "B7_OHBLINE3_A01", "B7_OHBLINE3-ZONE2"));
-            mcs_cmds.Add(bulidFackCMD_MCS("2", "B7_OHBLINE3_A02", "B7_OHBLINE3-ZONE2"));
+            var cmd_mcs1 = bulidFackCMD_MCS("1", "B7_OHBLINE3_A01", "B7_OHBLINE3-ZONE2");
+            var cmd_mcs2 = bulidFackCMD_MCS("2", "B7_OHBLINE3_A03", "B7_OHBLINE3-ZONE2");
+            mcs_cmds.Add(cmd_mcs1);
+            mcs_cmds.Add(cmd_mcs2);
 
+            var stub = GetStubObject();
+            setSectionData(stub);
+            setAddressData(stub);
+            setVehicleData(stub);
+            setZoneCommandData(stub);
+            setPortDefData(stub);
             LoopTransferEnhance loopTransferEnhance = new LoopTransferEnhance();
-
+            loopTransferEnhance.Start
+                (stub.portBLL, stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL);
             //Act
             var result = loopTransferEnhance.tryGetZoneCommand(mcs_cmds, vhID, zoneCommandID);
 
             //Assert
-            var assert_result = (false, default(ACMD_MCS));
+            var assert_result = (true, "B7_OHBLINE3_A03", cmd_mcs2);
             result.Should().BeEquivalentTo(assert_result);
+
         }
     }
 }

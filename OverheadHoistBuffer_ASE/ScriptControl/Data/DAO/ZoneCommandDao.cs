@@ -47,6 +47,7 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                             {
                                 ZoneCommandID = c.Field<string>("ZONE_COMMAND_ID"),
                                 PortID = c.Field<string>("PORT_ID"),
+                                Dir = c.Field<string>("DIR"),
                             };
                 return query.ToList();
             }

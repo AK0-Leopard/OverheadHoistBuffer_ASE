@@ -107,6 +107,22 @@ namespace com.mirle.ibg3k0.sc
             }
             return "";
         }
+        public double getHostSourceAxis_X(BLL.Interface.IPortDefBLL portDefBLL, BLL.Interface.IReserveBLL reserveBLL)
+        {
+            var port_def = portDefBLL.getPortDef(HOSTSOURCE);
+            if (port_def == null)
+            {
+                NLog.LogManager.GetCurrentClassLogger().Warn($"port id:{HOSTSOURCE},obj [PortDef] no define");
+                return double.MaxValue;
+            }
+            var adr_axis = reserveBLL.GetHltMapAddress(port_def.ADR_ID);
+            if (!adr_axis.isExist)
+            {
+                NLog.LogManager.GetCurrentClassLogger().Warn($"port id:{HOSTSOURCE} adr id:{port_def.ADR_ID},obj [HltMapAddress] no define");
+                return double.MaxValue;
+            }
+            return double.MaxValue;
+        }
         //**********************************************************************************
         //A20.05.22 設定與shelfDef相同之clone
         public ACMD_MCS Clone()

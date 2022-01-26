@@ -98,15 +98,24 @@ namespace com.mirle.ibg3k0.sc.Common
             var zone_command_infos = scApp.ZoneCommandDao.loadZoneCommandInfos(scApp);
 
             var zone_command_groups = zone_command_infos.GroupBy(info => info.ZoneCommandID)
-                                                        .ToDictionary(grp => grp.Key, grp => grp.Select(v => v.PortID).ToArray());
+                                                        .ToDictionary(grp => grp.Key,
+                                                                      grp => getZoneCommandInfoValue(grp));
             List<ZoneCommandGroup> zone_command_groups_obj = new List<ZoneCommandGroup>();
+
             foreach (var group in zone_command_groups)
             {
                 string zone_id = group.Key;
-                string[] port_ids = group.Value;
-                zone_command_groups_obj.Add(new ZoneCommandGroup(zone_id, port_ids.ToList()));
+                string[] port_ids = group.Value.portIDs;
+                string dir = group.Value.dir;
+                zone_command_groups_obj.Add(new ZoneCommandGroup(zone_id, port_ids.ToList(), dir));
             }
             ZoneCommandGroups = zone_command_groups_obj;
+        }
+        public (string[] portIDs, string dir) getZoneCommandInfoValue(IGrouping<string, ZoneCommandInfo> zoneCommands)
+        {
+            string dir = zoneCommands.FirstOrDefault().Dir;
+            string[] port_ids = zoneCommands.Select(v => v.PortID).ToArray();
+            return (port_ids, dir);
         }
 
         public void setPortDefsInfo()
