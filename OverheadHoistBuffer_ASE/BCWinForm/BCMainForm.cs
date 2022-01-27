@@ -954,7 +954,7 @@ namespace com.mirle.ibg3k0.bc.winform
 
         private void debugToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            openForm(typeof(DebugFormNew).Name, true, false);
+            openForm(typeof(DebugForm).Name, true, false);
         }
 
         private void engineeringModeToolStripMenuItem_Click(object sender, EventArgs e)

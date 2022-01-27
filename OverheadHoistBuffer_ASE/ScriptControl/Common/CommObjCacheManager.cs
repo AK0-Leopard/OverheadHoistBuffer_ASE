@@ -120,7 +120,8 @@ namespace com.mirle.ibg3k0.sc.Common
 
         public void setPortDefsInfo()
         {
-            PortDefs = scApp.PortDefBLL.GetOHB_CVPortData(scApp.getEQObjCacheManager().getLine().LINE_ID);
+            //PortDefs = scApp.PortDefBLL.GetOHB_CVPortData(scApp.getEQObjCacheManager().getLine().LINE_ID);
+            PortDefs = scApp.PortDefBLL.GetOHB_PortData(scApp.getEQObjCacheManager().getLine().LINE_ID);
         }
 
 

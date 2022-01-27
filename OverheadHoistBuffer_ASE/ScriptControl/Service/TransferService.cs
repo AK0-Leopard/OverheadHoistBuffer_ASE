@@ -902,7 +902,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                     scApp.LineService.TSCStateToPause("");
                                 }
                             }
-                            return;
+                            //return;
                         }
 
                         if (cmdData.Count != 0)
