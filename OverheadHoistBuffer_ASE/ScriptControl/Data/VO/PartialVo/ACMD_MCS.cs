@@ -84,6 +84,77 @@ namespace com.mirle.ibg3k0.sc
             CSTReadFail_BoxIsOK = 5,
         }
 
+        public ACMD_OHTC convertToACMD_OHTC(
+            AVEHICLE assignVehicle,
+            BLL.Interface.IPortDefBLL portDefBLL,
+            BLL.Interface.ISequenceBLL sequenceBLL,
+            Service.Interface.ITransferService transferService)
+        {
+            if (IsScan())
+            {
+                var port_def = portDefBLL.getPortDef(HOSTSOURCE);
+                return new ACMD_OHTC()
+                {
+                    CMD_ID = sequenceBLL.getCommandID(App.SCAppConstants.GenOHxCCommandType.Auto),
+                    CARRIER_ID = this.CARRIER_ID,
+                    BOX_ID = this.BOX_ID,
+                    VH_ID = assignVehicle.VEHICLE_ID.Trim(),
+                    CMD_ID_MCS = this.CMD_ID,
+                    CMD_TPYE = E_CMD_TYPE.Scan,
+                    PRIORITY = 50,
+                    SOURCE = this.HOSTSOURCE,
+                    DESTINATION = this.HOSTDESTINATION,
+                    CMD_STAUS = 0,
+                    CMD_PROGRESS = 0,
+                    ESTIMATED_EXCESS_TIME = 0,
+                    REAL_CMP_TIME = 0,
+                    ESTIMATED_TIME = 50,
+                    SOURCE_ADR = port_def.ADR_ID,
+                    DESTINATION_ADR = port_def.ADR_ID
+                };
+            }
+            else
+            {
+                E_CMD_TYPE cmd_type = default(E_CMD_TYPE);
+                bool is_source_vh = transferService.isUnitType(HOSTSOURCE, Service.UnitType.CRANE);
+                string _source_address = string.Empty;
+                string _source = string.Empty;
+                var dest_port_def = portDefBLL.getPortDef(HOSTDESTINATION);
+
+                if (is_source_vh)
+                {
+                    cmd_type = E_CMD_TYPE.Unload;
+                }
+                else
+                {
+                    cmd_type = E_CMD_TYPE.LoadUnload;
+                    var port_def = portDefBLL.getPortDef(HOSTSOURCE);
+                    _source_address = port_def.ADR_ID;
+                    _source = HOSTSOURCE;
+                }
+
+                return new ACMD_OHTC
+                {
+                    CMD_ID = sequenceBLL.getCommandID(App.SCAppConstants.GenOHxCCommandType.Auto),
+                    VH_ID = assignVehicle.VEHICLE_ID.Trim(),
+                    CARRIER_ID = this.CARRIER_ID,
+                    CMD_ID_MCS = this.CMD_ID,
+                    CMD_TPYE = cmd_type,
+                    SOURCE = _source,
+                    DESTINATION = this.HOSTDESTINATION,
+                    PRIORITY = this.PRIORITY,
+                    CMD_STAUS = E_CMD_STATUS.Queue,
+                    CMD_PROGRESS = 0,
+                    ESTIMATED_TIME = 0,
+                    ESTIMATED_EXCESS_TIME = 0,
+                    SOURCE_ADR = _source_address,
+                    DESTINATION_ADR = dest_port_def.ADR_ID,
+                    BOX_ID = this.BOX_ID,
+                    LOT_ID = this.LOT_ID
+                };
+            }
+        }
+
         public static string COMMAND_STATUS_BIT_To_String(int commandStatus)
         {
             switch (commandStatus)
@@ -106,6 +177,48 @@ namespace com.mirle.ibg3k0.sc
                     return "Command finish";
             }
             return "";
+        }
+
+        public bool IsReadyTransfer;
+
+        public bool IsScan()
+        {
+            return CMD_ID.Contains("SCAN");
+        }
+        public bool IsRelayHappend()
+        {
+            return !sc.Common.SCUtility.isEmpty(HOSTSOURCE);
+        }
+        public bool IsSource_ShelfPort(Service.Interface.ITransferService transferService)
+        {
+            return transferService.isUnitType(HOSTSOURCE, Service.UnitType.SHELF); ;
+        }
+
+        public bool IsSource_CRANE(Service.Interface.ITransferService transferService)
+        {
+            return transferService.isUnitType(HOSTSOURCE, Service.UnitType.CRANE); ;
+        }
+
+        public bool IsDestination_ShelfZone(Service.Interface.ITransferService transferService)
+        {
+            return transferService.isUnitType(HOSTDESTINATION, Service.UnitType.ZONE); ;
+        }
+        public bool IsDestination_ShelfPort(Service.Interface.ITransferService transferService)
+        {
+            return transferService.isUnitType(HOSTDESTINATION, Service.UnitType.SHELF); ;
+        }
+        public bool IsDestination_AGVZone(Service.Interface.ITransferService transferService)
+        {
+            return transferService.isUnitType(HOSTDESTINATION, Service.UnitType.AGVZONE); ;
+        }
+        public bool IsDestination_CVPort(Service.Interface.ITransferService transferService)
+        {
+            return transferService.isCVPort(HOSTDESTINATION);
+        }
+        public bool IsTimeOutToAlternate()
+        {
+            TimeSpan timeSpan = DateTime.Now - this.CMD_INSER_TIME;
+            return timeSpan.TotalSeconds > App.SystemParameter.cmdTimeOutToAlternate;
         }
         public double getHostSourceAxis_X(BLL.Interface.IPortDefBLL portDefBLL, BLL.Interface.IReserveBLL reserveBLL)
         {

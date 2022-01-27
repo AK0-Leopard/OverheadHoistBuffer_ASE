@@ -462,14 +462,18 @@
       <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="BLL\191204Test\CassetteDataBLL.cs" />
+    <Compile Include="BLL\Interface\IPortBLL.cs" />
+    <Compile Include="BLL\Interface\ISequenceBLL.cs" />
+    <Compile Include="BLL\Interface\IShelfDefBLL.cs" />
     <Compile Include="BLL\Interface\IPortDefBLL.cs" />
     <Compile Include="BLL\191204Test\ShelfDefBLL.cs" />
     <Compile Include="BLL\191204Test\ZoneDefBLL.cs" />
     <Compile Include="BLL\Interface\IReserveBLL.cs" />
     <Compile Include="BLL\Interface\IVehicleBLL.cs" />
     <Compile Include="BLL\Interface\ISectionBLL.cs" />
+    <Compile Include="BLL\Interface\ICassetteDataBLL.cs" />
     <Compile Include="BLL\Interface\IZoneCommandBLL.cs" />
-    <Compile Include="BLL\Interface\IPortBLL.cs" />
+    <Compile Include="BLL\Interface\ICMDBLL.cs" />
     <Compile Include="BLL\ZoneCommandBLL.cs" />
     <Compile Include="BLL\VAlarmBLL.cs" />
     <Compile Include="BLL\AlarmBLL.cs" />
@@ -1000,6 +1004,7 @@
     <Compile Include="Service\BlockControlService.cs" />
     <Compile Include="Service\EmptyBoxHandlerService.cs" />
     <Compile Include="Service\FailOverService.cs" />
+    <Compile Include="Service\Interface\ITransferService.cs" />
     <Compile Include="Service\LineService.cs" />
     <Compile Include="Service\OHCVService.cs" />
     <Compile Include="Service\MTLService.cs" />

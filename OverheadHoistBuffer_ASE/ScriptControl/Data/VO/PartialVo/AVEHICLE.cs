@@ -810,6 +810,52 @@ namespace com.mirle.ibg3k0.sc
             return IsListening;
         }
 
+        public bool TransferReady(BLL.Interface.ICMDBLL cmdBLL, bool isUnload = false)
+        {
+            if (!isTcpIpConnect)
+            {
+                return false;
+            }
+            if (!IS_INSTALLED)
+            {
+                return false;
+            }
+            if (isSynchronizing)
+            {
+                return false;
+            }
+            if (MODE_STATUS != VHModeStatus.AutoRemote)
+            {
+                return false;
+            }
+            if (IsError)
+            {
+                return false;
+            }
+            if (!SCUtility.isEmpty(MCS_CMD))
+            {
+                return false;
+            }
+            if (!isUnload && HAS_CST == 1)
+            {
+                return false;
+            }
+            if (SCUtility.isEmpty(CUR_ADR_ID))
+            {
+                return false;
+            }
+            if (!SCUtility.isEmpty(OHTC_CMD))
+            {
+                return false;
+            }
+            if (cmdBLL.isCMD_OHTCWillSending(VEHICLE_ID))
+            {
+                return false;
+            }
+            return true;
+        }
+
+
 
         public int getPortNum(BCFApplication bcfApp)
         {

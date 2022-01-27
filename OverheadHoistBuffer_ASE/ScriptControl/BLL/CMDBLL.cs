@@ -742,6 +742,17 @@ namespace com.mirle.ibg3k0.sc.BLL
 
             return isSuccess;
         }
+
+        public bool isCMD_OHTCWillSending(string vhID)
+        {
+            int count = 0;
+            using (DBConnection_EF con = DBConnection_EF.GetUContext())
+            {
+                count = cmd_ohtcDAO.getVhWillSendingCMDConut(con, vhID);
+            }
+            return count != 0;
+        }
+
         //*************************************************
         //A20.05.15 此目的為得出一個以source到各shelf的距離大小的升冪list，讓原邏輯可以直接接續使用。
         //  doSortShelfDataByDistanceFromHostSource()

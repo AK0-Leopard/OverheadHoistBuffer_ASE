@@ -123,6 +123,9 @@ namespace UnitTestForLoopEnhance
             return new ACMD_MCS()
             {
                 CMD_ID = cmdID,
+                BOX_ID = "BOXID",
+                CARRIER_ID = "CARRIERID",
+                LOT_ID = "LOTID",
                 HOSTSOURCE = fromPort,
                 HOSTDESTINATION = toPort
             };
@@ -144,7 +147,8 @@ namespace UnitTestForLoopEnhance
 
             LoopTransferEnhance loopTransferEnhance = new LoopTransferEnhance();
             loopTransferEnhance.Start
-                (stub.portBLL, stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL);
+                (stub.portBLL, stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL,
+                 stub.transferService, stub.shelfDefBLL, stub.cassetteDataBLL, stub.cmdBLL);
 
             //Act
             var result = loopTransferEnhance.tryGetZoneCommand(mcs_cmds, vhID, zoneCommandID);
@@ -186,7 +190,8 @@ namespace UnitTestForLoopEnhance
 
             LoopTransferEnhance loopTransferEnhance = new LoopTransferEnhance();
             loopTransferEnhance.Start
-                (stub.portBLL, stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL);
+                (stub.portBLL, stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL,
+                 stub.transferService, stub.shelfDefBLL, stub.cassetteDataBLL, stub.cmdBLL);
             //Act
             var result = loopTransferEnhance.tryGetZoneCommand(mcs_cmds, vhID, zoneCommandID);
 
@@ -216,7 +221,8 @@ namespace UnitTestForLoopEnhance
 
             LoopTransferEnhance loopTransferEnhance = new LoopTransferEnhance();
             loopTransferEnhance.Start
-                (stub.portBLL, stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL);
+                (stub.portBLL, stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL,
+                 stub.transferService, stub.shelfDefBLL, stub.cassetteDataBLL, stub.cmdBLL);
             //Act
             var result = loopTransferEnhance.tryGetZoneCommand(mcs_cmds, vhID, zoneCommandID);
 
@@ -246,7 +252,8 @@ namespace UnitTestForLoopEnhance
             setPortDefData(stub);
             LoopTransferEnhance loopTransferEnhance = new LoopTransferEnhance();
             loopTransferEnhance.Start
-                (stub.portBLL, stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL);
+                (stub.portBLL, stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL,
+                 stub.transferService, stub.shelfDefBLL, stub.cassetteDataBLL, stub.cmdBLL);
             //Act
             var result = loopTransferEnhance.tryGetZoneCommand(mcs_cmds, vhID, zoneCommandID);
 
@@ -255,5 +262,34 @@ namespace UnitTestForLoopEnhance
             result.Should().BeEquivalentTo(assert_result);
 
         }
+
+        [Ignore("尚未準備好")]
+        public void 再找出對應的車子_並且回復車子有搬送命令後_將該命令改為PreInitial_命產生小命令()
+        {
+            //Arrange
+            var cmd_mcs1 = bulidFackCMD_MCS("1", "B7_OHBLINE3_A01", "B7_OHBLINE3-ZONE2");
+
+            var stub = GetStubObject();
+            setSectionData(stub);
+            setAddressData(stub);
+            setVehicleData(stub);
+            setZoneCommandData(stub);
+            setPortDefData(stub);
+            stub.sequenceBLL.
+                getCommandID(com.mirle.ibg3k0.sc.App.SCAppConstants.GenOHxCCommandType.Auto).
+                Returns("111");
+            LoopTransferEnhance loopTransferEnhance = new LoopTransferEnhance();
+            loopTransferEnhance.Start
+                (stub.portBLL, stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL,
+                 stub.transferService, stub.shelfDefBLL, stub.cassetteDataBLL, stub.cmdBLL);
+
+            var vh = stub.vehicleBLL.getVehicle("B7_OHBLINE3_CR1");
+            //Act
+            var result = loopTransferEnhance.preAssignMCSCommand(stub.sequenceBLL, vh, cmd_mcs1);
+
+            //Assert
+            result.Should().BeTrue();
+        }
+
     }
 }
