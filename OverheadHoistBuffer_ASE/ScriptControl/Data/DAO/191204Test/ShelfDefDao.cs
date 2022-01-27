@@ -262,6 +262,24 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                 throw;
             }
         }
+        public int getEnableShelfCountByZone(DBConnection_EF conn, string zoneID)
+        {
+            try
+            {
+                var result = conn.ShelfDef
+                    .Where(x => x.ZoneID.Trim() == zoneID.Trim() &&
+                                x.ShelfState == ShelfDef.E_ShelfState.EmptyShelf &&
+                                x.Enable == "Y")
+                    .Count();
+                //.FirstOrDefault();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex);
+                throw;
+            }
+        }
 
     }
 }

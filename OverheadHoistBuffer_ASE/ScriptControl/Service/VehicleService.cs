@@ -4663,15 +4663,22 @@ namespace com.mirle.ibg3k0.sc.Service
                 VehicleID: eqpt.VEHICLE_ID,
                 CarrierID: eqpt.CST_ID);
 
+                var ready_transfer_cmd_mcs = ACMD_MCS.loadReadyTransferCMD_MCS();
                 var get_command_zone_result = scApp.LoopTransferEnhance.tryGetZoneCommand
-                    (ACMD_MCS.ReadyToTransferCMD_MCSs, eqpt.VEHICLE_ID, zondCommandID);
+                    (ready_transfer_cmd_mcs, eqpt.VEHICLE_ID, zondCommandID);
                 string zome_command_port_id = "";
                 if (get_command_zone_result.hasCommand)
                 {
-                    zome_command_port_id = get_command_zone_result.waitPort;
-                    scApp.LoopTransferEnhance.preAssignMCSCommand(scApp.SequenceBLL, eqpt, get_command_zone_result.cmdMCS);
+                    bool is_success_pre_assign = scApp.LoopTransferEnhance.preAssignMCSCommand(scApp.SequenceBLL, eqpt, get_command_zone_result.cmdMCS);
+                    if (is_success_pre_assign)
+                    {
+                        zome_command_port_id = get_command_zone_result.waitPort;
+                    }
+                    else
+                    {
+                        scApp.TransferService.TransferServiceLogger.Info($"OHB >> OHB zone id:{zondCommandID},cmd id:{get_command_zone_result.cmdMCS.CMD_ID} 預先下命令失敗");
+                    }
                 }
-
                 replyTranEventReport(bcfApp, eventType, eqpt, seqNum, zoneCommandPortID: zome_command_port_id);
             }
             catch (Exception ex)

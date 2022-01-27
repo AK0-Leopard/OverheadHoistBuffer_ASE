@@ -360,5 +360,21 @@ namespace com.mirle.ibg3k0.sc.BLL
             ShelfDef targetShelf = loadShelfDataByID(shelfID);
             return scApp.GuideBLL.GetDistance(targetShelf.ADR_ID, targetAddress);
         }
+
+        public int GetEmptyAndEnableShelfCountByZone(string zoneID)
+        {
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    return shelfdefDao.getEnableShelfCountByZone(con, zoneID);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return 0;
+            }
+        }
     }
 }

@@ -946,75 +946,70 @@ namespace com.mirle.ibg3k0.sc.Service
                             }
                             #endregion
 
-                            queueCmdData = scApp.CMDBLL.doSortMCSCmdDataByDistanceFromHostSourceToVehicle(queueCmdData, vehicleData);
-
-                            if (queueCmdData.Count != 0)
+                            bool isLoopTransferEnhance = true;
+                            if (isLoopTransferEnhance)
                             {
-                                cmdFail = true;
+                                scApp.LoopTransferEnhance.judgeCommandTransferReadyStatus(queueCmdData);
+                                ACMD_MCS.ACMD_MCS_List = queueCmdData.ToList();
+                                AllInQueueCMDMCSpriorityUpdate(queueCmdData);
                             }
-
-                            ACMD_MCS.ReadyToTransferCMD_MCSs = queueCmdData.ToList();
-
-                            foreach (var v in queueCmdData)
+                            else
                             {
-                                #region 每分鐘權限 + 1
-                                if (string.IsNullOrWhiteSpace(v.TIME_PRIORITY.ToString()))
+                                queueCmdData = scApp.CMDBLL.doSortMCSCmdDataByDistanceFromHostSourceToVehicle(queueCmdData, vehicleData);
+
+                                if (queueCmdData.Count != 0)
                                 {
-                                    cmdBLL.updateCMD_MCS_TimePriority(v.CMD_ID, 0);
+                                    cmdFail = true;
                                 }
-                                else
+                                foreach (var v in queueCmdData)
                                 {
-                                    //DateTime nowTime = DateTime.Now;
-
-                                    //int addtime = v.TIME_PRIORITY / SystemParameter.cmdPriorityAdd;
-
-                                    //DateTime cmdTime = v.CMD_INSER_TIME.AddMinutes(addtime);
-
-                                    //TimeSpan span = nowTime - cmdTime;
-                                    //if (span.Minutes >= 1)
-                                    //{
-                                    //    TimeSpan span1 = nowTime - v.CMD_INSER_TIME;
-                                    //    cmdBLL.updateCMD_MCS_TimePriority(v.CMD_ID, span1.Minutes * SystemParameter.cmdPriorityAdd);
-                                    //    //cmdBLL.updateCMD_MCS_sumPriority(v.CMD_ID);
-                                    //}
-
-                                    double AccumulateTime_minute = SystemParameter.cmdPriorityAdd;
-                                    int current_time_priority = (int)((DateTime.Now - v.CMD_INSER_TIME).TotalMinutes * AccumulateTime_minute);
-                                    if (current_time_priority > v.TIME_PRIORITY)
+                                    #region 每分鐘權限 + 1
+                                    if (string.IsNullOrWhiteSpace(v.TIME_PRIORITY.ToString()))
                                     {
-                                        cmdBLL.updateCMD_MCS_TimePriority(v.CMD_ID, current_time_priority);
+                                        cmdBLL.updateCMD_MCS_TimePriority(v.CMD_ID, 0);
                                     }
-
-                                }
-                                #endregion
-                                #region 搬送命令
-                                //if (TransferCommandHandler(v))
-                                //{
-                                //    cmdFail = false;
-                                //    OHBC_OHT_QueueCmdTimeOutCmdIDCleared(v.CMD_ID);
-                                //    break;
-                                //}
-                                //else
-                                {
-                                    if (isUnitType(v.HOSTDESTINATION, UnitType.AGV) && agvHasCmdsAccess)
+                                    else
                                     {
-                                        cmdFail = false;
-                                    }
-
-                                    TimeSpan timeSpan = DateTime.Now - v.CMD_INSER_TIME;
-
-                                    if (timeSpan.TotalSeconds >= queueCmdTimeOut)
-                                    {
-                                        if (queueCmdTimeOutCmdID.Contains(v.CMD_ID.Trim()) == false)
+                                        double AccumulateTime_minute = SystemParameter.cmdPriorityAdd;
+                                        int current_time_priority = (int)((DateTime.Now - v.CMD_INSER_TIME).TotalMinutes * AccumulateTime_minute);
+                                        if (current_time_priority > v.TIME_PRIORITY)
                                         {
-                                            queueCmdTimeOutCmdID.Add(v.CMD_ID.Trim());
-
-                                            OHBC_AlarmSet(line.LINE_ID, ((int)AlarmLst.OHT_QueueCmdTimeOut).ToString());
+                                            cmdBLL.updateCMD_MCS_TimePriority(v.CMD_ID, current_time_priority);
                                         }
                                     }
+                                    #endregion
+                                    #region 搬送命令
+
+                                    if (TransferCommandHandler(v))
+                                    {
+                                        cmdFail = false;
+                                        OHBC_OHT_QueueCmdTimeOutCmdIDCleared(v.CMD_ID);
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        if (isUnitType(v.HOSTDESTINATION, UnitType.AGV) && agvHasCmdsAccess)
+                                        {
+                                            cmdFail = false;
+                                        }
+
+                                        TimeSpan timeSpan = DateTime.Now - v.CMD_INSER_TIME;
+
+                                        if (timeSpan.TotalSeconds >= queueCmdTimeOut)
+                                        {
+                                            if (queueCmdTimeOutCmdID.Contains(v.CMD_ID.Trim()) == false)
+                                            {
+                                                queueCmdTimeOutCmdID.Add(v.CMD_ID.Trim());
+
+                                                OHBC_AlarmSet(line.LINE_ID, ((int)AlarmLst.OHT_QueueCmdTimeOut).ToString());
+                                            }
+                                        }
+                                    }
+                                    #endregion
                                 }
-                                #endregion
                             }
+
+
 
 
                             foreach (var v in portTypeChangeCmdData)
@@ -1129,6 +1124,29 @@ namespace com.mirle.ibg3k0.sc.Service
                 }
             }
         }
+
+        private void AllInQueueCMDMCSpriorityUpdate(List<ACMD_MCS> queueCmdData)
+        {
+            foreach (var v in queueCmdData)
+            {
+                #region 每分鐘權限 + 1
+                if (string.IsNullOrWhiteSpace(v.TIME_PRIORITY.ToString()))
+                {
+                    cmdBLL.updateCMD_MCS_TimePriority(v.CMD_ID, 0);
+                }
+                else
+                {
+                    double AccumulateTime_minute = SystemParameter.cmdPriorityAdd;
+                    int current_time_priority = (int)((DateTime.Now - v.CMD_INSER_TIME).TotalMinutes * AccumulateTime_minute);
+                    if (current_time_priority > v.TIME_PRIORITY)
+                    {
+                        cmdBLL.updateCMD_MCS_TimePriority(v.CMD_ID, current_time_priority);
+                    }
+                }
+                #endregion
+            }
+        }
+
         /// <summary>
         /// 判斷目前的狀態是否可以將指定Port上的Box退回
         /// </summary>

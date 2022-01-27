@@ -14,5 +14,6 @@ namespace com.mirle.ibg3k0.sc.BLL.Interface
         bool isCMD_OHTCWillSending(string vhID);
         bool updateCMD_MCS_TranStatus(string cMD_ID, E_TRAN_STATUS transferring);
         bool creatCommand_OHTC(ACMD_OHTC cmd_ohtc);
+        bool updateCMD_MCS_Dest(string cMD_ID, string hOSTDESTINATION);
     }
 }

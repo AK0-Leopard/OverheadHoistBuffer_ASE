@@ -1,5 +1,6 @@
 ﻿using com.mirle.ibg3k0.sc.BLL.Interface;
 using com.mirle.ibg3k0.sc.Common;
+using com.mirle.ibg3k0.sc.Data;
 using com.mirle.ibg3k0.sc.Data.PLC_Functions;
 using com.mirle.ibg3k0.sc.Data.VO;
 using com.mirle.ibg3k0.sc.Service.Interface;
@@ -9,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace com.mirle.ibg3k0.sc.Module
 {
@@ -60,90 +62,98 @@ namespace com.mirle.ibg3k0.sc.Module
 
         private bool isReadyToTransfer(ACMD_MCS cmd_mcs)
         {
-            //若不是Scna命令的話，需確認是否有帳
-            bool is_agv_port_to_station_cmd = transferService.checkAndProcessIsAgvPortToStation(cmd_mcs);
-            if (is_agv_port_to_station_cmd) return false;
+            try
+            {
+                //確認是否為AGV Port > Station的特殊命令，是的話就走特別處理流程
+                bool is_agv_port_to_station_cmd = transferService.checkAndProcessIsAgvPortToStation(cmd_mcs);
+                if (is_agv_port_to_station_cmd) return false;
 
-            //確認來源是否是可以搬送狀態
-            string source = cmd_mcs.HOSTSOURCE;
-            if (cmd_mcs.IsRelayHappend())
-            {
-                source = cmd_mcs.RelayStation;
-            }
-            if (!cmd_mcs.IsScan())
-            {
-                CassetteData sourceCstData = cassetteDataBLL.loadCassetteDataByLoc(source);
-                if (sourceCstData == null)
+                //確認來源是否是可以搬送狀態
+                string source = cmd_mcs.HOSTSOURCE;
+                if (cmd_mcs.IsRelayHappend())
                 {
-                    logger.Info($"OHB >> OHB| 命令:{cmd_mcs.CMD_ID} 來源: {source} 找不到帳，刪除命令 ");
-                    transferService.Manual_DeleteCmd(cmd_mcs.CMD_ID, "命令來源找不到帳");
-                    return false;
+                    source = cmd_mcs.RelayStation;
                 }
-            }
-            if (!transferService.AreSourceEnable(source))
-            {
-                logger.Info($"OHB >> OHB| 命令來源: {source} Port狀態不正確，不繼續往下執行。");
-                return false;
-            }
-
-            //確認目的地是否是可以搬送狀態
-            if (cmd_mcs.IsDestination_ShelfZone(transferService))
-            {
-                List<ShelfDef> shelfData = shelfDefBLL.GetEmptyAndEnableShelfByZone(cmd_mcs.HOSTDESTINATION);//Modify by Kevin
-                if (shelfData == null || shelfData.Count() == 0)
+                if (!cmd_mcs.IsScan())//因為如果是Scan命令的話，可能會找不到來源的帳
                 {
-                    logger.Info("OHB >> OHB|TransferCommandHandler 目的 Zone: " + cmd_mcs.HOSTDESTINATION + " 沒有位置");
-                    transferService.MCSCommandFinishByShelfNotEnough(cmd_mcs);
-                    return false;
-                }
-                //else
-                //{   //todo:
-                //    //改到真的要下命令時，再去取得目前可以放置的儲位位置
-                //    //若沒有的話再改判NotReady
-                //    logger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|TransferCommandHandler 目的 Zone: " + mcsCmd.HOSTDESTINATION + " 可用儲位數量: " + shelfData.Count);
-
-                //    string shelfID = transferService.GetShelfRecentLocation(shelfData, cmd_mcs.HOSTSOURCE);
-
-                //    if (string.IsNullOrWhiteSpace(shelfID) == false)
-                //    {
-                //        logger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|TransferCommandHandler: 目的 Zone: " + mcsCmd.HOSTDESTINATION + " 找到 " + shelfID);
-                //        cmd_mcs.HOSTDESTINATION = shelfID;
-                //    }
-                //    else
-                //    {
-                //        logger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|TransferCommandHandler: 目的 Zone: " + mcsCmd.HOSTDESTINATION + " 找不到可用儲位。");
-                //        transferService.MCSCommandFinishByShelfNotEnough(cmd_mcs);
-                //        continue;
-                //    }
-                //}
-            }
-            else if (cmd_mcs.IsDestination_AGVZone(transferService))
-            {
-                string agvPortName = transferService.GetAGV_OutModeInServicePortName(cmd_mcs.HOSTDESTINATION);
-                if (SCUtility.isEmpty(agvPortName))
-                {
-                    logger.Info("OHB >> OHB|TransferCommandHandler 目的 AGV St: " + cmd_mcs.HOSTDESTINATION + " 沒有準備好可放置的位置");
-                    return false;
-                }
-            }
-            else
-            {
-                bool is_dest_ready = transferService.AreDestEnable(cmd_mcs.HOSTDESTINATION, out bool dest_cv_port_is_full);
-                if (!is_dest_ready)
-                {
-                    bool is_need_excute_relay_command = IsNeedRealyCommand(cmd_mcs, dest_cv_port_is_full);
-                    if (is_need_excute_relay_command)
+                    CassetteData sourceCstData = cassetteDataBLL.loadCassetteDataByLoc(source);
+                    if (sourceCstData == null)
                     {
-                        logger.Info($"OHB >> OHB|TransferCommandHandler 目的 port: { cmd_mcs.HOSTDESTINATION }狀態尚未正確,準備執行中繼站流程搬送");
-                    }
-                    else
-                    {
-                        logger.Info($"OHB >> OHB|TransferCommandHandler 目的 port: { cmd_mcs.HOSTDESTINATION }狀態尚未正確");
+                        logger.Info($"OHB >> OHB| 命令:{cmd_mcs.CMD_ID} 來源: {source} 找不到帳，刪除命令 ");
+                        transferService.Manual_DeleteCmd(cmd_mcs.CMD_ID, "命令來源找不到帳");
                         return false;
                     }
                 }
+                if (!transferService.AreSourceEnable(source))
+                {
+                    logger.Info($"OHB >> OHB| 命令來源: {source} Port狀態不正確，不繼續往下執行。");
+                    return false;
+                }
+
+                //確認目的地是否是可以搬送狀態
+                if (cmd_mcs.IsDestination_ShelfZone(transferService))
+                {
+                    int shelf_count = shelfDefBLL.GetEmptyAndEnableShelfCountByZone(cmd_mcs.HOSTDESTINATION);//Modify by Kevin
+                    if (shelf_count == 0)
+                    {
+                        logger.Info("OHB >> OHB|TransferCommandHandler 目的 Zone: " + cmd_mcs.HOSTDESTINATION + " 沒有位置");
+                        transferService.MCSCommandFinishByShelfNotEnough(cmd_mcs);
+                        return false;
+                    }
+                    //else
+                    //{   //todo:
+                    //    //改到真的要下命令時，再去取得目前可以放置的儲位位置
+                    //    //若沒有的話再改判NotReady
+                    //    logger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|TransferCommandHandler 目的 Zone: " + mcsCmd.HOSTDESTINATION + " 可用儲位數量: " + shelfData.Count);
+
+                    //    string shelfID = transferService.GetShelfRecentLocation(shelfData, cmd_mcs.HOSTSOURCE);
+
+                    //    if (string.IsNullOrWhiteSpace(shelfID) == false)
+                    //    {
+                    //        logger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|TransferCommandHandler: 目的 Zone: " + mcsCmd.HOSTDESTINATION + " 找到 " + shelfID);
+                    //        cmd_mcs.HOSTDESTINATION = shelfID;
+                    //    }
+                    //    else
+                    //    {
+                    //        logger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "MCS >> OHB|TransferCommandHandler: 目的 Zone: " + mcsCmd.HOSTDESTINATION + " 找不到可用儲位。");
+                    //        transferService.MCSCommandFinishByShelfNotEnough(cmd_mcs);
+                    //        continue;
+                    //    }
+                    //}
+                }
+                else if (cmd_mcs.IsDestination_AGVZone(transferService))
+                {
+                    string agvPortName = transferService.GetAGV_OutModeInServicePortName(cmd_mcs.HOSTDESTINATION);
+                    if (SCUtility.isEmpty(agvPortName))
+                    {
+                        logger.Info("OHB >> OHB|TransferCommandHandler 目的 AGV St: " + cmd_mcs.HOSTDESTINATION + " 沒有準備好可放置的位置");
+                        return false;
+                    }
+                }
+                else
+                {
+                    bool is_dest_ready = transferService.AreDestEnable(cmd_mcs.HOSTDESTINATION, out bool dest_cv_port_is_full);
+                    if (!is_dest_ready)
+                    {
+                        bool is_need_excute_relay_command = IsNeedRealyCommand(cmd_mcs, dest_cv_port_is_full);
+                        if (is_need_excute_relay_command)
+                        {
+                            logger.Info($"OHB >> OHB|TransferCommandHandler 目的 port: { cmd_mcs.HOSTDESTINATION }狀態尚未正確,準備執行中繼站流程搬送");
+                        }
+                        else
+                        {
+                            logger.Info($"OHB >> OHB|TransferCommandHandler 目的 port: { cmd_mcs.HOSTDESTINATION }狀態尚未正確");
+                            return false;
+                        }
+                    }
+                }
+                return true;
             }
-            return true;
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception:");
+                return false;
+            }
         }
         /// <summary>
         /// 當來源狀態是好的但目的地狀態還沒有準備好時，可以用該Funtion判斷是否需要進行中繼站的搬送
@@ -211,8 +221,8 @@ namespace com.mirle.ibg3k0.sc.Module
             List<ACMD_MCS> zone_mcs_cmds = mcsCMDs.Where(cmd => zone_group.PortIDs.Contains(sc.Common.SCUtility.Trim(cmd.HOSTSOURCE, true))).
                                                    ToList();
             if (zone_mcs_cmds == null || zone_mcs_cmds.Count == 0) return (false, "", null);
-            var first_cmd = zone_mcs_cmds.FirstOrDefault();
-            return (true, first_cmd.HOSTSOURCE, first_cmd);
+            //var first_cmd = zone_mcs_cmds.FirstOrDefault();
+            //return (true, first_cmd.HOSTSOURCE, first_cmd);
             //確認是否有CV貨物準備要Wait 
             //var checkBoxWillWaitIn = tryGetWillWaitInPort(zone_group);
             //if (checkBoxWillWaitIn.has)
@@ -287,15 +297,84 @@ namespace com.mirle.ibg3k0.sc.Module
 
         public bool preAssignMCSCommand(ISequenceBLL sequenceBLL, AVEHICLE vh, ACMD_MCS cmdMCS)
         {
-            bool is_success = false;
-            //1.變更該命令的狀態
-            is_success = cmdBLL.updateCMD_MCS_TranStatus(cmdMCS.CMD_ID, E_TRAN_STATUS.Transferring);
+            try
+            {
+                bool is_success = false;
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    using (TransactionScope tx = SCUtility.getTransactionScope())
+                    {
 
-            //2.產生該命令的小命令到Queue
-            var cmd_ohtc = cmdMCS.convertToACMD_OHTC(vh, portDefBLL, sequenceBLL, transferService);
-            is_success = cmdBLL.creatCommand_OHTC(cmd_ohtc);
+                        //1.變更該命令的狀態
+                        is_success = cmdBLL.updateCMD_MCS_TranStatus(cmdMCS.CMD_ID, E_TRAN_STATUS.Transferring);
+                        if (!is_success)
+                        {
+                            logger.Info($"OHB >> OHB|cmd id:{cmdMCS.CMD_ID} 更新至Tranferring失敗");
+                            return false;
+                        }
+                        //1.a-若目的地為儲位或是Station，則需要重新判斷目的地哪個位子可以放置
+                        string original_host_source = SCUtility.Trim(cmdMCS.HOSTSOURCE, true);
+                        if (cmdMCS.IsDestination_AGVZone(transferService))
+                        {
+                            List<ShelfDef> shelfData = shelfDefBLL.GetEmptyAndEnableShelfByZone(cmdMCS.HOSTDESTINATION);
 
-            return false;
+                            if (shelfData == null || shelfData.Count() == 0)
+                            {
+                                logger.Info($"OHB >> OHB|TransferCommandHandler 目的 Zone:{ cmdMCS.HOSTDESTINATION } 沒有位置");
+                                return false;
+                            }
+                            else
+                            {
+                                logger.Info($"OHB >> OHB|TransferCommandHandler 目的 Zone: { cmdMCS.HOSTDESTINATION } 可用儲位數量: { shelfData.Count}");
+
+                                string shelfID = transferService.GetShelfRecentLocation(shelfData, cmdMCS.HOSTSOURCE);
+                                bool is_find_shelf = !SCUtility.isEmpty(shelfID);
+                                if (is_find_shelf)
+                                {
+                                    logger.Info($"OHB >> OHB|TransferCommandHandler: 目的 Zone: {cmdMCS.HOSTDESTINATION }找到 { shelfID}");
+                                    cmdMCS.HOSTDESTINATION = shelfID;
+                                }
+                                else
+                                {
+                                    logger.Info($"OHB >> OHB|TransferCommandHandler: 目的 Zone: { cmdMCS.HOSTDESTINATION } 找不到可用儲位。");
+                                    return false;
+                                }
+                            }
+                        }
+                        else if (cmdMCS.IsDestination_AGVZone(transferService))
+                        {
+                            string agvPortName = transferService.GetAGV_OutModeInServicePortName(cmdMCS.HOSTDESTINATION);
+                            if (string.IsNullOrWhiteSpace(agvPortName))
+                            {
+                                logger.Info($"OHB >> OHB|TransferCommandHandler: 目的AGV Zone: { cmdMCS.HOSTDESTINATION } 找不到放置的Port。");
+                                return false;
+                            }
+                            else
+                            {
+                                cmdMCS.HOSTDESTINATION = agvPortName;
+                            }
+                        }
+
+                        //2.產生該命令的小命令到Queue
+                        var cmd_ohtc = cmdMCS.convertToACMD_OHTC(vh, portDefBLL, sequenceBLL, transferService);
+                        is_success = is_success && cmdBLL.creatCommand_OHTC(cmd_ohtc);
+                        if (SCUtility.isMatche(original_host_source, cmdMCS.HOSTDESTINATION))
+                        {
+                            is_success = is_success && cmdBLL.updateCMD_MCS_Dest(cmdMCS.CMD_ID, cmdMCS.HOSTDESTINATION);
+                        }
+                        if(is_success)
+                        {
+                            tx.Complete();
+                        }
+                    }
+                }
+                return is_success;
+            }
+            catch (Exception e)
+            {
+                logger.Error(e, "Exception");
+                return false;
+            }
         }
     }
 }

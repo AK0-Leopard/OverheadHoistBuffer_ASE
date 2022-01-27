@@ -15,7 +15,7 @@ namespace com.mirle.ibg3k0.sc
 {
     public partial class ACMD_MCS
     {
-        public static List<ACMD_MCS> ReadyToTransferCMD_MCSs = new List<ACMD_MCS>();
+        public static List<ACMD_MCS> ACMD_MCS_List = new List<ACMD_MCS>();
         //**********************************************************************************
         //A20.05.22 給定一個私有變數去儲存2點間距離
         private int _distanceFromVehicleToHostSource;
@@ -82,6 +82,15 @@ namespace com.mirle.ibg3k0.sc
             mismatch = 3,
             BoxReadFail_CstIsOK = 4,
             CSTReadFail_BoxIsOK = 5,
+        }
+        public static List<ACMD_MCS> loadReadyTransferCMD_MCS()
+        {
+            if (ACMD_MCS_List == null)
+            {
+                return new List<ACMD_MCS>();
+            }
+            var ready_transfer_cmd_mcs = ACMD_MCS_List.Where(cmd => cmd.IsReadyTransfer).ToList();
+            return ready_transfer_cmd_mcs;
         }
 
         public ACMD_OHTC convertToACMD_OHTC(
@@ -187,7 +196,7 @@ namespace com.mirle.ibg3k0.sc
         }
         public bool IsRelayHappend()
         {
-            return !sc.Common.SCUtility.isEmpty(HOSTSOURCE);
+            return !sc.Common.SCUtility.isEmpty(RelayStation);
         }
         public bool IsSource_ShelfPort(Service.Interface.ITransferService transferService)
         {
