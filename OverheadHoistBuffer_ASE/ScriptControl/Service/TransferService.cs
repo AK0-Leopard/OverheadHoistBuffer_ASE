@@ -42,6 +42,7 @@ using com.mirle.ibg3k0.sc.Data.SECS.ASE;
 using com.mirle.ibg3k0.sc.Data.ValueDefMapAction;
 using com.mirle.ibg3k0.sc.Data.VO;
 using com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage;
+using com.mirle.ibg3k0.sc.Service.Interface;
 using Mirle.Hlts.Utils;
 using NLog;
 using System;
@@ -161,7 +162,7 @@ namespace com.mirle.ibg3k0.sc.Service
         Abort = 1,
         Transfer = 2,
     }
-    public class TransferService
+    public class TransferService : ITransferService
     {
         #region 屬性
 
@@ -952,6 +953,8 @@ namespace com.mirle.ibg3k0.sc.Service
                                 cmdFail = true;
                             }
 
+                            ACMD_MCS.ReadyToTransferCMD_MCSs = queueCmdData.ToList();
+
                             foreach (var v in queueCmdData)
                             {
                                 #region 每分鐘權限 + 1
@@ -985,13 +988,13 @@ namespace com.mirle.ibg3k0.sc.Service
                                 }
                                 #endregion
                                 #region 搬送命令
-                                if (TransferCommandHandler(v))
-                                {
-                                    cmdFail = false;
-                                    OHBC_OHT_QueueCmdTimeOutCmdIDCleared(v.CMD_ID);
-                                    break;
-                                }
-                                else
+                                //if (TransferCommandHandler(v))
+                                //{
+                                //    cmdFail = false;
+                                //    OHBC_OHT_QueueCmdTimeOutCmdIDCleared(v.CMD_ID);
+                                //    break;
+                                //}
+                                //else
                                 {
                                     if (isUnitType(v.HOSTDESTINATION, UnitType.AGV) && agvHasCmdsAccess)
                                     {
@@ -1610,14 +1613,14 @@ namespace com.mirle.ibg3k0.sc.Service
             return TransferIng;
         }
 
-        private void MCSCommandFinishByShelfNotEnough(ACMD_MCS mcsCmd)
+        public void MCSCommandFinishByShelfNotEnough(ACMD_MCS mcsCmd)
         {
             cmdBLL.updateCMD_MCS_TranStatus(mcsCmd.CMD_ID, E_TRAN_STATUS.TransferCompleted);
             reportBLL.ReportTransferInitiated(mcsCmd.CMD_ID.Trim());
             reportBLL.ReportTransferCompleted(mcsCmd, null, ResultCode.ZoneIsfull);
         }
 
-        private bool checkAndProcessIsAgvPortToStation(ACMD_MCS mcsCmd)
+        public bool checkAndProcessIsAgvPortToStation(ACMD_MCS mcsCmd)
         {
             try
             {

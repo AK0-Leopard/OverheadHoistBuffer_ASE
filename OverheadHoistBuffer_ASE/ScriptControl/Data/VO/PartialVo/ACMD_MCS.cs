@@ -15,7 +15,7 @@ namespace com.mirle.ibg3k0.sc
 {
     public partial class ACMD_MCS
     {
-
+        public static List<ACMD_MCS> ReadyToTransferCMD_MCSs = new List<ACMD_MCS>();
         //**********************************************************************************
         //A20.05.22 給定一個私有變數去儲存2點間距離
         private int _distanceFromVehicleToHostSource;

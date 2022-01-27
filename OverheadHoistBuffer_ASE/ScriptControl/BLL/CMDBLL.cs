@@ -11,6 +11,7 @@
 //**********************************************************************************
 using com.mirle.ibg3k0.bcf.App;
 using com.mirle.ibg3k0.sc.App;
+using com.mirle.ibg3k0.sc.BLL.Interface;
 using com.mirle.ibg3k0.sc.Common;
 using com.mirle.ibg3k0.sc.Data;
 using com.mirle.ibg3k0.sc.Data.DAO;
@@ -34,7 +35,7 @@ using static com.mirle.ibg3k0.sc.ShelfDef; //A20.05.15
 
 namespace com.mirle.ibg3k0.sc.BLL
 {
-    public class CMDBLL
+    public class CMDBLL : ICMDBLL
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
         CMD_OHTCDao cmd_ohtcDAO = null;
@@ -2981,7 +2982,8 @@ namespace com.mirle.ibg3k0.sc.BLL
                     if (cmd_type == E_CMD_TYPE.MTLHome ||
                        cmd_type == E_CMD_TYPE.MoveToMTL ||
                        cmd_type == E_CMD_TYPE.SystemOut ||
-                       cmd_type == E_CMD_TYPE.SystemIn)
+                       cmd_type == E_CMD_TYPE.SystemIn ||
+                       cmd_type == E_CMD_TYPE.Round)
                     {
                         //not thing...
                     }
@@ -3053,13 +3055,19 @@ namespace com.mirle.ibg3k0.sc.BLL
                     }
                     else
                     {
-                        string result = "";
-                        if (!IsCommandWalkable(vh_id, cmd_type, vh_current_adr, source_address, destination_address, out result))
+                        if (cmd_type == E_CMD_TYPE.Round)
                         {
-                            check_result.Result.AppendLine(result);
-                            check_result.Result.AppendLine($" please check the segment is enable.");
-                            check_result.Result.AppendLine("");
-                            check_result.IsSuccess &= false;
+                            //not thing...
+                        }
+                        else
+                        {
+                            if (!IsCommandWalkable(vh_id, cmd_type, vh_current_adr, source_address, destination_address, out string result))
+                            {
+                                check_result.Result.AppendLine(result);
+                                check_result.Result.AppendLine($" please check the segment is enable.");
+                                check_result.Result.AppendLine("");
+                                check_result.IsSuccess &= false;
+                            }
                         }
                     }
                     //如果該筆Command是MCS Cmd，只需要檢查有沒有已經在Queue中的，有則不能Creat
@@ -5292,6 +5300,24 @@ namespace com.mirle.ibg3k0.sc.BLL
             using (DBConnection_EF con = DBConnection_EF.GetUContext())
             {
                 hcmd_ohtcDao.RemoteByBatch(con, hcmdOHTC);
+            }
+        }
+
+        public bool hasExcuteCMDMCSByDestPort(string portID)
+        {
+            int count = 0;
+            try
+            {
+                using (DBConnection_EF con = new DBConnection_EF())
+                {
+                    count = cmd_mcsDao.getExcuteCMD_MCSByDestPort(con, portID);
+                }
+                return count > 0;
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return false;
             }
         }
 

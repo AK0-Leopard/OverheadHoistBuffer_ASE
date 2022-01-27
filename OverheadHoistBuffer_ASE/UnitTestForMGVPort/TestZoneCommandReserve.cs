@@ -147,7 +147,7 @@ namespace UnitTestForLoopEnhance
 
             LoopTransferEnhance loopTransferEnhance = new LoopTransferEnhance();
             loopTransferEnhance.Start
-                (stub.portBLL, stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL,
+                (stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL,
                  stub.transferService, stub.shelfDefBLL, stub.cassetteDataBLL, stub.cmdBLL);
 
             //Act
@@ -190,7 +190,7 @@ namespace UnitTestForLoopEnhance
 
             LoopTransferEnhance loopTransferEnhance = new LoopTransferEnhance();
             loopTransferEnhance.Start
-                (stub.portBLL, stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL,
+                (stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL,
                  stub.transferService, stub.shelfDefBLL, stub.cassetteDataBLL, stub.cmdBLL);
             //Act
             var result = loopTransferEnhance.tryGetZoneCommand(mcs_cmds, vhID, zoneCommandID);
@@ -221,7 +221,7 @@ namespace UnitTestForLoopEnhance
 
             LoopTransferEnhance loopTransferEnhance = new LoopTransferEnhance();
             loopTransferEnhance.Start
-                (stub.portBLL, stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL,
+                (stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL,
                  stub.transferService, stub.shelfDefBLL, stub.cassetteDataBLL, stub.cmdBLL);
             //Act
             var result = loopTransferEnhance.tryGetZoneCommand(mcs_cmds, vhID, zoneCommandID);
@@ -252,7 +252,7 @@ namespace UnitTestForLoopEnhance
             setPortDefData(stub);
             LoopTransferEnhance loopTransferEnhance = new LoopTransferEnhance();
             loopTransferEnhance.Start
-                (stub.portBLL, stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL,
+                (stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL,
                  stub.transferService, stub.shelfDefBLL, stub.cassetteDataBLL, stub.cmdBLL);
             //Act
             var result = loopTransferEnhance.tryGetZoneCommand(mcs_cmds, vhID, zoneCommandID);
@@ -280,7 +280,7 @@ namespace UnitTestForLoopEnhance
                 Returns("111");
             LoopTransferEnhance loopTransferEnhance = new LoopTransferEnhance();
             loopTransferEnhance.Start
-                (stub.portBLL, stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL,
+                (stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL,
                  stub.transferService, stub.shelfDefBLL, stub.cassetteDataBLL, stub.cmdBLL);
 
             var vh = stub.vehicleBLL.getVehicle("B7_OHBLINE3_CR1");

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using com.mirle.ibg3k0.sc.Data.PLC_Functions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,5 +19,6 @@ namespace com.mirle.ibg3k0.sc.Service.Interface
         string GetAGV_OutModeInServicePortName(string agvZone);
         bool AreDestEnable(string destName, out bool isDestCvPortFull);
         List<PortINIData> GetAGVPort(string agvZoneName);
+        PortPLCInfo GetPLC_PortData(string hOSTSOURCE);
     }
 }

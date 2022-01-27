@@ -11,7 +11,6 @@ namespace UnitTestForLoopEnhance.StubObjects
 {
     public class StubObjectCollection
     {
-        public IPortBLL portBLL { get; private set; }
         public IVehicleBLL vehicleBLL { get; private set; }
         public IZoneCommandBLL zoneCommandBLL { get; private set; }
         public ISectionBLL sectionBLL { get; private set; }
@@ -24,7 +23,6 @@ namespace UnitTestForLoopEnhance.StubObjects
         public ISequenceBLL sequenceBLL { get; private set; }
         public StubObjectCollection()
         {
-            portBLL = Substitute.For<IPortBLL>();
             vehicleBLL = Substitute.For<IVehicleBLL>();
             zoneCommandBLL = Substitute.For<IZoneCommandBLL>();
             sectionBLL = Substitute.For<ISectionBLL>();

@@ -274,7 +274,7 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
             return query.ToList();
         }
 
-        public int getVhWillSendingCMDConut(DBConnection_EF con, object vhID)
+        public int getVhWillSendingCMDConut(DBConnection_EF con, string vhID)
         {
             var query = from cmd in con.ACMD_OHTC.AsNoTracking()
                         where cmd.VH_ID == vhID.Trim() &&

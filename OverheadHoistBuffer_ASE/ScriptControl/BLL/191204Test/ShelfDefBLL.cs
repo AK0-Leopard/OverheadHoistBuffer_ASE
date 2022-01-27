@@ -10,10 +10,11 @@ using com.mirle.ibg3k0.sc.Data;
 using com.mirle.ibg3k0.sc.App;
 using System.Transactions;
 using com.mirle.ibg3k0.sc.Service;
+using com.mirle.ibg3k0.sc.BLL.Interface;
 
 namespace com.mirle.ibg3k0.sc.BLL
 {
-    public class ShelfDefBLL
+    public class ShelfDefBLL : IShelfDefBLL
     {
         SCApplication scApp = null;
         ShelfDefDao shelfdefDao = null;

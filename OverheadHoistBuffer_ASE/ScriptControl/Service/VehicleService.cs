@@ -113,10 +113,25 @@ namespace com.mirle.ibg3k0.sc.Service
                 vh.ReserveStatusChange += Vh_ReserveStatusChange;
                 vh.HasBoxStatusChange += Vh_HasBoxStatusChange;
                 vh.HasImportantEventReportRetryOverTimes += Vh_HasImportantEventReportRetryOverTimes;
+                vh.IdleTimeIsEnough += Vh_IdleTimeIsEnough;
                 vh.TimerActionStart();
             }
 
             transferService = app.TransferService;
+        }
+
+        private void Vh_IdleTimeIsEnough(object sender, EventArgs e)
+        {
+            try
+            {
+                AVEHICLE vh = sender as AVEHICLE;
+                bool is_success = scApp.CMDBLL.doCreatTransferCommand(vh.VEHICLE_ID,
+                                                                     cmd_type: E_CMD_TYPE.Round);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception:");
+            }
         }
 
         private void Vh_HasImportantEventReportRetryOverTimes(object sender, EventType overRetryImportantEvent)
@@ -1043,7 +1058,17 @@ namespace com.mirle.ibg3k0.sc.Service
             string[] minRouteAdr_Vh2From = null;
             string[] minRouteAdr_From2To = null;
             bool isSuccess = false;
-
+            if (cmd.CMD_TPYE == E_CMD_TYPE.Round)
+            {
+                activeType = ActiveType.Cyclemove;
+                bool is_success =
+                    sendTransferCommandToVh(cmd, assignVH, activeType, minRouteSec_Vh2From, minRouteSec_From2To, minRouteAdr_Vh2From, minRouteAdr_From2To);
+                if (!is_success)
+                {
+                    scApp.CMDBLL.updateCommand_OHTC_StatusByCmdID(cmd.CMD_ID, E_CMD_STATUS.AbnormalEndByOHT);
+                }
+                return is_success;
+            }
             //嘗試規劃該筆ACMD_OHTC的搬送路徑
             if (scApp.CMDBLL.tryGenerateCmd_OHTC_Details(cmd, out activeType, out routeSections, out cycleRunSections
                                                                          , out minRouteSec_Vh2From, out minRouteSec_From2To
@@ -2379,6 +2404,7 @@ namespace com.mirle.ibg3k0.sc.Service
             string load_port_id = recive_str.LoadPortID;     //B0.01
             string unload_port_id = recive_str.UnloadPortID; //B0.01
             var reserveInfos = recive_str.ReserveInfos;
+            string zone_command_id = recive_str.ZoneCommandID;
 
             scApp.VehicleBLL.updateVehicleActionStatus(eqpt, eventType);
 
@@ -2429,6 +2455,9 @@ namespace com.mirle.ibg3k0.sc.Service
                 case EventType.ReserveReq:
                     //TranEventReportPathReserveReq(bcfApp, eqpt, seq_num, reserveInfos);
                     TranEventReportPathReserveReqNew(bcfApp, eqpt, seq_num, reserveInfos);
+                    break;
+                case EventType.ZoneCommandReq:
+                    PositionReport_ZoneCommaneReq(bcfApp, eqpt, seq_num, eventType, zone_command_id);
                     break;
             }
         }
@@ -3863,7 +3892,8 @@ namespace com.mirle.ibg3k0.sc.Service
         private bool replyTranEventReport(BCFApplication bcfApp, EventType eventType, AVEHICLE eqpt, int seq_num,
                                           bool canBlockPass = false, bool canHIDPass = false, bool canReservePass = false,
                                           string renameCarrierID = "", CMDCancelType cancelType = CMDCancelType.CmdNone,
-                                          RepeatedField<ReserveInfo> reserveInfos = null)
+                                          RepeatedField<ReserveInfo> reserveInfos = null,
+                                          string zoneCommandPortID = "")
         {
             ID_36_TRANS_EVENT_RESPONSE send_str = new ID_36_TRANS_EVENT_RESPONSE
             {
@@ -3873,6 +3903,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 ReplyCode = 0,
                 RenameBOXID = renameCarrierID,
                 ReplyActiveType = cancelType,
+                ZoneCommandPortID = zoneCommandPortID
             };
             if (reserveInfos != null)
             {
@@ -4613,6 +4644,35 @@ namespace com.mirle.ibg3k0.sc.Service
                     replyTranEventReport(bcfApp, eventType, eqpt, seqNum, true, true, true, "", CMDCancelType.CmdCancel);
                     //}
                 }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                   Data: ex,
+                   VehicleID: eqpt.VEHICLE_ID,
+                   CarrierID: eqpt.CST_ID);
+            }
+        }
+        private void PositionReport_ZoneCommaneReq(BCFApplication bcfApp, AVEHICLE eqpt, int seqNum
+                                            , EventType eventType, string zondCommandID)
+        {
+            try
+            {
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                Data: $"Process report {eventType}",
+                VehicleID: eqpt.VEHICLE_ID,
+                CarrierID: eqpt.CST_ID);
+
+                var get_command_zone_result = scApp.LoopTransferEnhance.tryGetZoneCommand
+                    (ACMD_MCS.ReadyToTransferCMD_MCSs, eqpt.VEHICLE_ID, zondCommandID);
+                string zome_command_port_id = "";
+                if (get_command_zone_result.hasCommand)
+                {
+                    zome_command_port_id = get_command_zone_result.waitPort;
+                    scApp.LoopTransferEnhance.preAssignMCSCommand(scApp.SequenceBLL, eqpt, get_command_zone_result.cmdMCS);
+                }
+
+                replyTranEventReport(bcfApp, eventType, eqpt, seqNum, zoneCommandPortID: zome_command_port_id);
             }
             catch (Exception ex)
             {

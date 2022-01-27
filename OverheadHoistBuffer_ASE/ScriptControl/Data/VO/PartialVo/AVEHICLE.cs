@@ -66,6 +66,7 @@ namespace com.mirle.ibg3k0.sc
         /// </summary>
         public static UInt16 MAX_ALLOW_ACTION_TIME_SECOND { get; private set; } = 300;
         public static UInt16 MAX_ALLOW_IMPORTANT_EVENT_RETRY_COUNT { get; private set; } = 5;
+        public static UInt16 MAX_ALLOW_VH_IDLE_TIME_MMILLI_SECOND { get; private set; } = 10_000;
 
         public event EventHandler<LocationChangeEventArgs> LocationChange;
         public event EventHandler<SegmentChangeEventArgs> SegmentChange;
@@ -78,10 +79,12 @@ namespace com.mirle.ibg3k0.sc
         public event EventHandler<VhStopSingle> ReserveStatusChange;
         public event EventHandler<int> HasBoxStatusChange;
         public event EventHandler<EventType> HasImportantEventReportRetryOverTimes;
+        public event EventHandler IdleTimeIsEnough;
 
 
         VehicleTimerAction vehicleTimer = null;
         private Stopwatch CurrentCommandExcuteTime;
+        private Stopwatch IdleTime;
 
         public void onCommandComplete(CompleteStatus cmpStatus)
         {
@@ -115,6 +118,10 @@ namespace com.mirle.ibg3k0.sc
         {
             HasBoxStatusChange?.Invoke(this, hasBoxStaus);
         }
+        public void onIdleTimeIsEnough()
+        {
+            IdleTimeIsEnough?.Invoke(this, EventArgs.Empty);
+        }
 
 
         public AVEHICLE()
@@ -126,7 +133,7 @@ namespace com.mirle.ibg3k0.sc
             vhStateMachine.OnUnhandledTrigger(UnhandledTriggerHandler);
 
             CurrentCommandExcuteTime = new Stopwatch();
-
+            IdleTime = new Stopwatch();
         }
 
         public void TimerActionStart()
@@ -1417,6 +1424,7 @@ namespace com.mirle.ibg3k0.sc
                         {
                             vh.onLongTimeNoCommuncation();
                         }
+
                         if (!vh.isTcpIpConnect) return;
                         double action_time = vh.CurrentCommandExcuteTime.Elapsed.TotalSeconds;
                         if (action_time > AVEHICLE.MAX_ALLOW_ACTION_TIME_SECOND)
@@ -1441,6 +1449,30 @@ namespace com.mirle.ibg3k0.sc
 
                             }
                             vh.isLongTimeInaction = false;
+                        }
+
+                        if (!vh.IsError &&
+                            vh.MODE_STATUS == VHModeStatus.AutoRemote &&
+                            vh.ACT_STATUS == VHActionStatus.NoCommand)
+                        {
+                            if (!vh.IdleTime.IsRunning)
+                                vh.IdleTime.Restart();
+                            else
+                            {
+                                if (vh.IdleTime.ElapsedMilliseconds > AVEHICLE.MAX_ALLOW_VH_IDLE_TIME_MMILLI_SECOND)
+                                {
+                                    vh.IdleTime.Restart();
+                                    vh.onIdleTimeIsEnough();
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (vh.IdleTime.IsRunning)
+                            {
+                                vh.IdleTime.Reset();
+                                vh.IdleTime.Stop();
+                            }
                         }
                     }
                     catch (Exception ex)

@@ -15,7 +15,6 @@ namespace com.mirle.ibg3k0.sc.Module
     public class LoopTransferEnhance
     {
         static Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        IPortBLL portBLL = null;
         IZoneCommandBLL zoneCommandBLL = null;
         IVehicleBLL vehicleBLL = null;
         ISectionBLL sectionBLL = null;
@@ -26,8 +25,7 @@ namespace com.mirle.ibg3k0.sc.Module
         ICassetteDataBLL cassetteDataBLL = null;
         ICMDBLL cmdBLL = null;
 
-        public void Start(IPortBLL portBLL,
-                          IZoneCommandBLL zoneCommandBLL,
+        public void Start(IZoneCommandBLL zoneCommandBLL,
                           IVehicleBLL vehicleBLL,
                           ISectionBLL sectionBLL,
                           IPortDefBLL portDefBLL,
@@ -38,7 +36,6 @@ namespace com.mirle.ibg3k0.sc.Module
                           ICMDBLL cmdBLL
                           )
         {
-            this.portBLL = portBLL;
             this.zoneCommandBLL = zoneCommandBLL;
             this.vehicleBLL = vehicleBLL;
             this.sectionBLL = sectionBLL;
@@ -179,7 +176,8 @@ namespace com.mirle.ibg3k0.sc.Module
             }
             else
             {
-                PortPLCInfo source_port_info = portBLL.getPortPLCInfo(cmd_mcs.HOSTSOURCE);
+                //PortPLCInfo source_port_info = portBLL.getPortPLCInfo(cmd_mcs.HOSTSOURCE);
+                PortPLCInfo source_port_info = transferService.GetPLC_PortData(cmd_mcs.HOSTSOURCE);
                 if (!source_port_info.OpAutoMode)
                 {
                     return false;
@@ -190,7 +188,7 @@ namespace com.mirle.ibg3k0.sc.Module
                 }
             }
             //確認目的地是否符合要進行中繼站搬送的條件
-            PortPLCInfo dest_port_info = portBLL.getPortPLCInfo(cmd_mcs.HOSTDESTINATION);
+            PortPLCInfo dest_port_info = transferService.GetPLC_PortData(cmd_mcs.HOSTDESTINATION);
             if (dest_port_info.OpAutoMode == false ||
                 dest_port_info.IsReadyToLoad == false ||
                 isDestCVPortIsFull)
@@ -213,6 +211,8 @@ namespace com.mirle.ibg3k0.sc.Module
             List<ACMD_MCS> zone_mcs_cmds = mcsCMDs.Where(cmd => zone_group.PortIDs.Contains(sc.Common.SCUtility.Trim(cmd.HOSTSOURCE, true))).
                                                    ToList();
             if (zone_mcs_cmds == null || zone_mcs_cmds.Count == 0) return (false, "", null);
+            var first_cmd = zone_mcs_cmds.FirstOrDefault();
+            return (true, first_cmd.HOSTSOURCE, first_cmd);
             //確認是否有CV貨物準備要Wait 
             //var checkBoxWillWaitIn = tryGetWillWaitInPort(zone_group);
             //if (checkBoxWillWaitIn.has)
@@ -283,26 +283,6 @@ namespace com.mirle.ibg3k0.sc.Module
                 zone_mcs_cmds = zone_mcs_cmds.OrderByDescending(cmd => cmd.getHostSourceAxis_X(portDefBLL, reserveBLL)).ToList();
             }
             return zone_mcs_cmds.Last();
-        }
-
-        private (bool has, List<string> portIDs) tryGetWillWaitInPort(ZoneCommandGroup zoneGroup)
-        {
-            var cv_port_ids = zoneGroup.PortIDs.Where(id => portBLL.isUnitType(id, Service.UnitType.OHCV)).ToList();
-            foreach (var cv_port_id in cv_port_ids.ToArray())
-            {
-                var port_plc_info = portBLL.getPortPLCInfo(cv_port_id);
-                if (port_plc_info.IsInputMode)
-                {
-                    var has_box_will_wait_in = port_plc_info.hasBoxInPosition();
-                    if (!has_box_will_wait_in.hasBox)
-                    {
-                        cv_port_ids.Remove(cv_port_id);
-                    }
-                }
-            }
-            bool has = cv_port_ids.Count > 0;
-
-            return (has, cv_port_ids);
         }
 
         public bool preAssignMCSCommand(ISequenceBLL sequenceBLL, AVEHICLE vh, ACMD_MCS cmdMCS)

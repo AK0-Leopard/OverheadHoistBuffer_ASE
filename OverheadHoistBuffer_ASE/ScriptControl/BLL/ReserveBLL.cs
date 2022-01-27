@@ -5,10 +5,11 @@ using System;
 using System.Text;
 using System.Linq;
 using System.Collections.Generic;
+using com.mirle.ibg3k0.sc.BLL.Interface;
 
 namespace com.mirle.ibg3k0.sc.BLL
 {
-    public class ReserveBLL
+    public class ReserveBLL : IReserveBLL
     {
         NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private Mirle.Hlts.ReserveSection.Map.ViewModels.HltMapViewModel mapAPI { get; set; }

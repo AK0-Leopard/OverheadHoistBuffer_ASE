@@ -14,6 +14,7 @@
 // 2020/05/27    Jason Wu       N/A            A0.03   修改filterVh部分，使其使用OHTC CMD去判斷是否有命令執行。
 //**********************************************************************************
 using com.mirle.ibg3k0.sc.App;
+using com.mirle.ibg3k0.sc.BLL.Interface;
 using com.mirle.ibg3k0.sc.Common;
 using com.mirle.ibg3k0.sc.Data;
 using com.mirle.ibg3k0.sc.Data.DAO;
@@ -34,7 +35,7 @@ using System.Threading.Tasks;
 
 namespace com.mirle.ibg3k0.sc.BLL
 {
-    public class VehicleBLL
+    public class VehicleBLL : IVehicleBLL
     {
         VehicleDao vehicleDAO = null;
         private SCApplication scApp = null;
@@ -2103,6 +2104,21 @@ namespace com.mirle.ibg3k0.sc.BLL
                 return default(T);
             Google.Protobuf.MessageParser<T> parser = new Google.Protobuf.MessageParser<T>(() => new T());
             return parser.ParseFrom(buf);
+        }
+
+        public AVEHICLE getVehicle(string vhID)
+        {
+            return cache.getVhByID(vhID);
+        }
+
+        public List<AVEHICLE> loadVehicleBySecID(string secID)
+        {
+            return cache.getVhBySections(secID);
+        }
+
+        public List<AVEHICLE> loadCyclingVhs()
+        {
+            return cache.loadVhs();
         }
         #endregion Vehicle Object Info
 

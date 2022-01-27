@@ -1,7 +1,9 @@
 ﻿using com.mirle.ibg3k0.sc.App;
+using com.mirle.ibg3k0.sc.BLL.Interface;
 using com.mirle.ibg3k0.sc.Common;
 using com.mirle.ibg3k0.sc.Data.PLC_Functions;
 using com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage;
+using com.mirle.ibg3k0.sc.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace com.mirle.ibg3k0.sc.BLL
 {
-    public class PortBLL
+    public class PortBLL 
     {
         SCApplication app = null;
         public DB OperateDB { private set; get; }
@@ -135,6 +137,11 @@ namespace com.mirle.ibg3k0.sc.BLL
                 return default(T);
             Google.Protobuf.MessageParser<T> parser = new Google.Protobuf.MessageParser<T>(() => new T());
             return parser.ParseFrom(buf);
+        }
+
+        public PortPLCInfo getPortPLCInfo(string portName)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -327,6 +327,16 @@ namespace com.mirle.ibg3k0.sc.Data.DAO.EntityFramework
             return query.Count();
         }
 
+        public int getExcuteCMD_MCSByDestPort(DBConnection_EF con, string destPort)
+        {
+            var query = from cmd in con.ACMD_MCS
+                        where cmd.HOSTDESTINATION.Trim() == destPort.Trim() &&
+                              cmd.TRANSFERSTATE > E_TRAN_STATUS.Queue &&
+                              cmd.TRANSFERSTATE < E_TRAN_STATUS.TransferCompleted
+                        select cmd;
+            return query.Count();
+        }
+
 
         public List<ACMD_MCS> LoadCmdData(DBConnection_EF conn)
         {

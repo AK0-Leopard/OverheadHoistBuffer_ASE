@@ -29,6 +29,7 @@ using com.mirle.ibg3k0.sc.Data.DAO.EntityFramework;
 using com.mirle.ibg3k0.sc.Data.PLC_Functions;
 using com.mirle.ibg3k0.sc.Data.SECS;
 using com.mirle.ibg3k0.sc.Data.VO;
+using com.mirle.ibg3k0.sc.Module;
 using com.mirle.ibg3k0.sc.MQTT;
 using com.mirle.ibg3k0.sc.RouteKit;
 using com.mirle.ibg3k0.sc.Scheduler;
@@ -560,6 +561,8 @@ namespace com.mirle.ibg3k0.sc.App
         public EquipmentBLL EquipmentBLL { get { return equipmentBLL; } }
         private GuideBLL guideBLL = null;
         public GuideBLL GuideBLL { get { return guideBLL; } }
+        private ZoneCommandBLL zoneCommandBLL = null;
+        public ZoneCommandBLL ZoneCommandBLL { get { return zoneCommandBLL; } }
 
         /// <summary>
         /// 在OHT尚未改成新格式前先保留
@@ -595,6 +598,10 @@ namespace com.mirle.ibg3k0.sc.App
 
         private EmptyBoxHandlerService emptyBoxHandlerService = null;
         public EmptyBoxHandlerService EmptyBoxHandlerService { get { return emptyBoxHandlerService; } }
+        private LoopTransferEnhance loopTransferEnhance = null;
+        public LoopTransferEnhance LoopTransferEnhance { get { return loopTransferEnhance; } }
+
+
 
         private DataSyncBLL datasynBLL = null;
         public DataSyncBLL DataSyncBLL { get { return datasynBLL; } }
@@ -801,6 +808,7 @@ namespace com.mirle.ibg3k0.sc.App
             initDao();      //Initial DAO
             initBLL();      //Initial BLL
             initServer();
+            initMoudule();
             initConfig();   //Initial Config
             initialTransferCommandPeriodicDataSet();
 
@@ -859,6 +867,11 @@ namespace com.mirle.ibg3k0.sc.App
             //bdTableWatcher = new DBTableWatcher(this);
 
 
+        }
+
+        private void initMoudule()
+        {
+            loopTransferEnhance = new LoopTransferEnhance();
         }
 
         //A0.01
@@ -1470,6 +1483,7 @@ namespace com.mirle.ibg3k0.sc.App
             sectinoBLL = new SectionBLL();
             segmentBLL = new SegmentBLL();
             equipmentBLL = new EquipmentBLL();
+            zoneCommandBLL = new ZoneCommandBLL();
             datasynBLL = new DataSyncBLL();
 
             guideBLL = new GuideBLL();
@@ -1542,6 +1556,7 @@ namespace com.mirle.ibg3k0.sc.App
             SectionBLL.start(this);
             SegmentBLL.start(this);
             equipmentBLL.start(this);
+            zoneCommandBLL.start(this);
             guideBLL.start(this);
             NodeBLL.start(this);
 
@@ -1957,9 +1972,26 @@ namespace com.mirle.ibg3k0.sc.App
         {
             initScriptForEquipment();
             startService();
+            startModule();
             Scheduler.Start();
 
             //Scheduler.Start();
+        }
+
+        private void startModule()
+        {
+            loopTransferEnhance.Start
+                (
+                ZoneCommandBLL,
+                vehicleBLL,
+                sectinoBLL,
+                PortDefBLL,
+                ReserveBLL,
+                transferService,
+                ShelfDefBLL,
+                CassetteDataBLL,
+                cmdBLL
+                );
         }
 
         /// <summary>
