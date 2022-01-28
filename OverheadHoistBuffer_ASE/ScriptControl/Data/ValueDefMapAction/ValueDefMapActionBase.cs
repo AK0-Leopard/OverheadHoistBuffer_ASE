@@ -114,7 +114,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
 
 
         public virtual bool sned_Str1(ID_1_HOST_BASIC_INFO_VERSION_REP sned_gpp, out ID_101_HOST_BASIC_INFO_VERSION_RESPONSE receive_gpp) { receive_gpp = null; return false; }
-        public virtual bool sned_Str11(ID_11_BASIC_INFO_REP sned_gpp, out ID_111_BASIC_INFO_RESPONSE receive_gpp) { receive_gpp = null; return true; }
+        public virtual bool sned_Str11(ID_11_ZONE_COMMAND_INFO_REP sned_gpp, out ID_111_ZONE_COMMAND_INFO_RESPONSE receive_gpp) { receive_gpp = null; return true; }
         public virtual bool sned_Str13(ID_13_TAVELLING_DATA_REP send_gpp, out ID_113_TAVELLING_DATA_RESPONSE receive_gpp) { receive_gpp = null; return true; }
         public virtual bool sned_Str15(ID_15_SECTION_DATA_REP send_gpp, out ID_115_SECTION_DATA_RESPONSE receive_gpp) { receive_gpp = null; return true; }
         public virtual bool sned_Str17(ID_17_ADDRESS_DATA_REP send_gpp, out ID_117_ADDRESS_DATA_RESPONSE receive_gpp) { receive_gpp = null; return true; }

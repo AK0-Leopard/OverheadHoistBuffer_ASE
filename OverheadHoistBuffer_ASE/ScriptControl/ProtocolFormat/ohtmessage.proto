@@ -179,15 +179,15 @@ message Timestamp {
 		int32 ReplyCode = 1;
   }
 
-   message ID_11_BASIC_INFO_REP {
-		int32 TravelBasicDataCount = 1;
-		int32 SectionDataCount = 2;
-		int32 AddressDataCount = 3;
-		int32 ScaleDataCount = 4;
-		int32 ContrlDataCount = 5;
-		int32 GuideDataCount = 6;
+
+  message ZoneCommandInfo {
+	string ZoneID = 1;
+	repeated string PortIDs = 2;
+   }
+   message ID_11_ZONE_COMMAND_INFO_REP {
+	repeated ZoneCommandInfo ZoneCommandInfos = 1;
   }
-   message ID_111_BASIC_INFO_RESPONSE {
+   message ID_111_ZONE_COMMAND_INFO_RESPONSE {
 		int32 ReplyCode = 1;
   }
 
@@ -1086,8 +1086,8 @@ message Timestamp {
 		ID_102_BASIC_INFO_VERSION_REP Basic_Info_Version_Rep = 102;
 		ID_2_BASIC_INFO_VERSION_RESPONSE Basic_Info_Version_Resp = 2;
 
-		ID_11_BASIC_INFO_REP Basic_Info_Rep = 11;
-		ID_111_BASIC_INFO_RESPONSE Basic_Info_Resp = 111;
+		ID_11_ZONE_COMMAND_INFO_REP Zone_Command_Info_Rep = 11;
+		ID_111_ZONE_COMMAND_INFO_RESPONSE Zone_Command_Info_Resp = 111;
 
 		ID_13_TAVELLING_DATA_REP Tavelling_Data_Rep = 13;
 		ID_113_TAVELLING_DATA_RESPONSE Tavelling_Data_Resp = 113;

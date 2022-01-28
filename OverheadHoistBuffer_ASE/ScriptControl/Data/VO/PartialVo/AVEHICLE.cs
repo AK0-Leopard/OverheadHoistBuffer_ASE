@@ -586,7 +586,7 @@ namespace com.mirle.ibg3k0.sc
             mapAction = getExcuteMapAction();
             return mapAction.sned_Str1(sned_gpp, out receive_gpp);
         }
-        public bool sned_S11(ID_11_BASIC_INFO_REP sned_gpp, out ID_111_BASIC_INFO_RESPONSE receive_gpp)
+        public bool sned_S11(ID_11_ZONE_COMMAND_INFO_REP sned_gpp, out ID_111_ZONE_COMMAND_INFO_RESPONSE receive_gpp)
         {
             ValueDefMapActionBase mapAction = null;
             mapAction = getExcuteMapAction();
