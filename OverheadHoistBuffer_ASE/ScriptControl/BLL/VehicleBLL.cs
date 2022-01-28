@@ -156,8 +156,10 @@ namespace com.mirle.ibg3k0.sc.BLL
             switch (vhPassEvent)
             {
                 case EventType.LoadArrivals:
+                case EventType.Vhloading:
                 case EventType.LoadComplete:
                 case EventType.UnloadArrivals:
+                case EventType.Vhunloading:
                 case EventType.UnloadComplete:
                 case EventType.Bcrread:
                 case EventType.CommandComplete:
@@ -167,6 +169,8 @@ namespace com.mirle.ibg3k0.sc.BLL
                            Data: $"vh:{vh.VEHICLE_ID} repeat report event:{vhPassEvent},current count:{vh.RepeatReceiveImportantEventCount}",
                            VehicleID: vh.VEHICLE_ID,
                            CarrierID: vh.CST_ID);
+
+                        scApp.TransferService.TransferServiceLogger.Info($"vh:{vh.VEHICLE_ID} repeat report event:{vhPassEvent},current count:{vh.RepeatReceiveImportantEventCount}");
                         vh.RepeatReceiveImportantEventCount++;
                     }
                     else

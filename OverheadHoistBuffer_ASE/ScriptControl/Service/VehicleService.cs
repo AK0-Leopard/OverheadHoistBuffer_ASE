@@ -146,6 +146,8 @@ namespace com.mirle.ibg3k0.sc.Service
                    Data: $"Over {AVEHICLE.MAX_ALLOW_IMPORTANT_EVENT_RETRY_COUNT} times report important:{overRetryImportantEvent}, begin force close tcpip section ...",
                    VehicleID: vh.VEHICLE_ID,
                    CarrierID: vh.CST_ID);
+                scApp.TransferService.TransferServiceLogger.
+                    Info($"Over {AVEHICLE.MAX_ALLOW_IMPORTANT_EVENT_RETRY_COUNT} times report important:{overRetryImportantEvent}, begin force close tcpip section ...");
 
                 vh.StopTcpIpConnection(scApp.getBCFApplication());
             }
@@ -332,7 +334,7 @@ namespace com.mirle.ibg3k0.sc.Service
         public void stopVehicleTcpIpSessionTest(string vhID)
         {
             AVEHICLE vh = scApp.VehicleBLL.cache.getVhByID(vhID);
-            vh.StopTcpIpConnection(scApp.getBCFApplication());
+            vh.StopTcpIpConnection(scApp.getBCFApplication());3+
         }
         public bool stopVehicleTcpIpServer(string vhID)
         {

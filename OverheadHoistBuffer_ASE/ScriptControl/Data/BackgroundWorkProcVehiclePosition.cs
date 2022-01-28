@@ -68,7 +68,7 @@ namespace com.mirle.ibg3k0.sc.Data
                 ID_134_TRANS_EVENT_REP recive_str = (ID_134_TRANS_EVENT_REP)e.objPacket;
 
                 scapp.VehicleBLL.setAndPublishPositionReportInfo2Redis(vh.VEHICLE_ID, recive_str);
-
+                System.Threading.SpinWait.SpinUntil(() => false, 0);
             }
             catch (Exception ex)
             {

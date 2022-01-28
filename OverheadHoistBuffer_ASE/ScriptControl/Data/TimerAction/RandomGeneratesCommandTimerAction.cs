@@ -14,6 +14,7 @@
 // ***********************************************************************
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -33,6 +34,14 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
     /// <seealso cref="com.mirle.ibg3k0.bcf.Data.TimerAction.ITimerAction" />
     public class RandomGeneratesCommandTimerAction : ITimerAction
     {
+        private static Logger BCMemoryLog = LogManager.GetLogger("BCMemoryLog");
+        PerformanceCounter pf1 = null;
+        PerformanceCounter pf2 = null;
+        PerformanceCounter cpu = null;
+        PerformanceCounter bc_cpu = null;
+        PerformanceCounter memory = null;
+        System.Diagnostics.Process ps = null;
+
         /// <summary>
         /// The logger
         /// </summary>
@@ -55,8 +64,19 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
         public RandomGeneratesCommandTimerAction(string name, long intervalMilliSec)
             : base(name, intervalMilliSec)
         {
-
+            iniPerformanceCounter();
         }
+        private void iniPerformanceCounter()
+        {
+            ps = System.Diagnostics.Process.GetCurrentProcess();
+            pf1 = new PerformanceCounter("Process", "Working Set - Private", ps.ProcessName);
+            pf2 = new PerformanceCounter("Process", "Working Set", ps.ProcessName);
+            bc_cpu = new PerformanceCounter("Process", "% Processor Time", ps.ProcessName, ".");
+
+            cpu = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+            memory = new PerformanceCounter("Memory", "% Committed Bytes in Use");
+        }
+
         /// <summary>
         /// Initializes the start.
         /// </summary>
@@ -77,6 +97,7 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
         private long syncPoint = 0;
         public override void doProcess(object obj)
         {
+            cpuMemoryMonitor();
 
             if (System.Threading.Interlocked.Exchange(ref syncPoint, 1) == 0)
             {
@@ -121,6 +142,31 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
                     System.Threading.Interlocked.Exchange(ref syncPoint, 0);
                 }
             }
+        }
+        private void cpuMemoryMonitor()
+        {
+            try
+            {
+                string 工作集_Process = $"{ ps.WorkingSet64 / 1024}";
+                string 工作集 = $"{ pf2.NextValue() / 1024}";
+                string 私有工作集 = $"{ pf1.NextValue() / 1024}";
+                //string BC_CPU = $"{bc_cpu.NextValue():n1}";
+                string BC_CPU = Math.Round(bc_cpu.NextValue(), 2).ToString();
+                string CPU = $"{cpu.NextValue():n1}";
+                string Memory = $"{memory.NextValue():n0}";
+
+                string record_message = $"{DateTime.Now.ToString(SCAppConstants.DateTimeFormat_19)},{工作集_Process},{工作集},{私有工作集},{BC_CPU},{CPU},{Memory}";
+                BCMemoryLog.Info(record_message);
+
+                //BCMemoryLog.Debug("{0}:{1}  {2:N}KB", ps.ProcessName, "工作集(Process)", ps.WorkingSet64 / 1024);
+                //BCMemoryLog.Debug("{0}:{1}  {2:N}KB", ps.ProcessName, "工作集        ", pf2.NextValue() / 1024);
+                //BCMemoryLog.Debug("{0}:{1}  {2:N}KB", ps.ProcessName, "私有工作集     ", pf1.NextValue() / 1024);
+                //BCMemoryLog.Debug("{0}:{1}  {2:n1}%", ps.ProcessName, "BC CPU       ", bc_cpu.NextValue());
+
+                //BCMemoryLog.Debug("CPU: {0:n1}%", cpu.NextValue());
+                //BCMemoryLog.Debug("Memory: {0:n0}%", memory.NextValue());
+            }
+            catch (Exception ex) { }
         }
 
 
