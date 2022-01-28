@@ -34,6 +34,11 @@ namespace com.mirle.ibg3k0.sc.BLL
             return OperateCatch.getZoneCommandGroup(zoneCommnadID);
         }
 
+        public (bool hasFind, ZoneCommandGroup zoneCommandGroup) tryGetZoneCommandGroupByPortID(string hOSTSOURCE)
+        {
+            var zone_command_group = OperateCatch.getZoneCommandGroupByPortID(hOSTSOURCE);
+            return (zone_command_group != null, zone_command_group);
+        }
 
         public class DB
         {
@@ -51,6 +56,12 @@ namespace com.mirle.ibg3k0.sc.BLL
             {
                 var zoneCommandGroups = CacheManager.getZoneCommandGroups();
                 return zoneCommandGroups.Where(group => SCUtility.isMatche(group.ZoneCommandID, zoneID))
+                                        .FirstOrDefault();
+            }
+            public ZoneCommandGroup getZoneCommandGroupByPortID(string portID)
+            {
+                var zoneCommandGroups = CacheManager.getZoneCommandGroups();
+                return zoneCommandGroups.Where(group => group.PortIDs.Contains(portID))
                                         .FirstOrDefault();
             }
 

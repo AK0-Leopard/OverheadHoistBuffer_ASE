@@ -69,11 +69,8 @@ namespace com.mirle.ibg3k0.sc.Module
                 if (is_agv_port_to_station_cmd) return false;
 
                 //確認來源是否是可以搬送狀態
-                string source = cmd_mcs.HOSTSOURCE;
-                if (cmd_mcs.IsRelayHappend())
-                {
-                    source = cmd_mcs.RelayStation;
-                }
+                string source = cmd_mcs.CURRENT_LOCATION;
+
                 if (!cmd_mcs.IsScan())//因為如果是Scan命令的話，可能會找不到來源的帳
                 {
                     CassetteData sourceCstData = cassetteDataBLL.loadCassetteDataByLoc(source);
@@ -218,7 +215,7 @@ namespace com.mirle.ibg3k0.sc.Module
             //沒命令就不需要等待
             if (mcsCMDs == null || mcsCMDs.Count == 0) return (false, "", null);
             var zone_group = zoneCommandBLL.getZoneCommandGroup(zoneCommandID);
-            List<ACMD_MCS> zone_mcs_cmds = mcsCMDs.Where(cmd => zone_group.PortIDs.Contains(sc.Common.SCUtility.Trim(cmd.HOSTSOURCE, true))).
+            List<ACMD_MCS> zone_mcs_cmds = mcsCMDs.Where(cmd => zone_group.PortIDs.Contains(sc.Common.SCUtility.Trim(cmd.CURRENT_LOCATION, true))).
                                                    ToList();
             if (zone_mcs_cmds == null || zone_mcs_cmds.Count == 0) return (false, "", null);
             //var first_cmd = zone_mcs_cmds.FirstOrDefault();
@@ -276,7 +273,7 @@ namespace com.mirle.ibg3k0.sc.Module
                 //如果有多筆命令在這個Zone，則需要找出最遠的一筆命令
                 //讓後面車子來的時候，可以接另外一筆
                 var cmd_mcs = getZoneCommandFarthestCommand(zone_group.zoneDir, zone_mcs_cmds);
-                return (true, cmd_mcs.HOSTSOURCE, cmd_mcs);
+                return (true, cmd_mcs.CURRENT_LOCATION, cmd_mcs);
             }
         }
 
@@ -313,7 +310,7 @@ namespace com.mirle.ibg3k0.sc.Module
                             return false;
                         }
                         //1.a-若目的地為儲位或是Station，則需要重新判斷目的地哪個位子可以放置
-                        string original_host_source = SCUtility.Trim(cmdMCS.HOSTSOURCE, true);
+                        string original_host_dest = SCUtility.Trim(cmdMCS.HOSTDESTINATION, true);
                         if (cmdMCS.IsDestination_AGVZone(transferService))
                         {
                             List<ShelfDef> shelfData = shelfDefBLL.GetEmptyAndEnableShelfByZone(cmdMCS.HOSTDESTINATION);
@@ -358,11 +355,11 @@ namespace com.mirle.ibg3k0.sc.Module
                         //2.產生該命令的小命令到Queue
                         var cmd_ohtc = cmdMCS.convertToACMD_OHTC(vh, portDefBLL, sequenceBLL, transferService);
                         is_success = is_success && cmdBLL.creatCommand_OHTC(cmd_ohtc);
-                        if (SCUtility.isMatche(original_host_source, cmdMCS.HOSTDESTINATION))
+                        if (SCUtility.isMatche(original_host_dest, cmdMCS.HOSTDESTINATION))
                         {
                             is_success = is_success && cmdBLL.updateCMD_MCS_Dest(cmdMCS.CMD_ID, cmdMCS.HOSTDESTINATION);
                         }
-                        if(is_success)
+                        if (is_success)
                         {
                             tx.Complete();
                         }
@@ -374,6 +371,38 @@ namespace com.mirle.ibg3k0.sc.Module
             {
                 logger.Error(e, "Exception");
                 return false;
+            }
+        }
+        public bool IsRunOver(AVEHICLE vh, string portID)
+        {
+            var get_result = zoneCommandBLL.tryGetZoneCommandGroupByPortID(portID);
+            if (!get_result.hasFind)
+            {
+                logger.Info($"OHB >> OHB|確認 vh:{vh.VEHICLE_ID} 是否跑過頭 port id:{portID},但沒有找到相應的Port Group.");
+                return false;
+            }
+            var port_def_info = portDefBLL.getPortDef(portID);
+            var port_adr_obj = reserveBLL.GetHltMapAddress(port_def_info.ADR_ID);
+            double port_x_axis = port_adr_obj.x;
+            double vh_x_axis = vh.X_Axis;
+            switch (get_result.zoneCommandGroup.zoneDir)
+            {
+                case ZoneCommandGroup.ZoneDir.DIR_1_0:
+                    if (port_x_axis > vh_x_axis) return false;
+                    else
+                    {
+                        logger.Info($"OHB >> OHB|確認 vh:{vh.VEHICLE_ID}(x:{vh_x_axis}) 相對於 port id:{portID}(x:{port_x_axis}) dir:{get_result.zoneCommandGroup.zoneDir},跑過頭了.");
+                        return true;
+                    }
+                case ZoneCommandGroup.ZoneDir.DIR_N1_0:
+                    if (port_x_axis < vh_x_axis) return false;
+                    else
+                    {
+                        logger.Info($"OHB >> OHB|確認 vh:{vh.VEHICLE_ID}(x:{vh_x_axis}) 相對於 port id:{portID}(x:{port_x_axis}) dir:{get_result.zoneCommandGroup.zoneDir},跑過頭了.");
+                        return true;
+                    }
+                default:
+                    return false;
             }
         }
     }

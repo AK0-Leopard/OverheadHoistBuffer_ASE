@@ -9,6 +9,11 @@ namespace com.mirle.ibg3k0.sc
     public partial class ACMD_OHTC
     {
 
+        public bool IsCMD_MCS()
+        {
+            return !sc.Common.SCUtility.isEmpty(CMD_ID_MCS);
+        }
+
 
         public HCMD_OHTC ToHCMD_OHTC()
         {
@@ -34,7 +39,7 @@ namespace com.mirle.ibg3k0.sc
                 DESTINATION_ADR = this.DESTINATION_ADR,
                 BOX_ID = this.BOX_ID,
                 LOT_ID = this.LOT_ID,
-                CMD_INSER_TIME = 
+                CMD_INSER_TIME =
                 this.CMD_INSER_TIME.HasValue ? this.CMD_INSER_TIME.Value : DateTime.Now,
             };
         }

@@ -50,6 +50,18 @@ namespace com.mirle.ibg3k0.sc
             get { return _distanceFromVehicleToHostSource; }
             set { _distanceFromVehicleToHostSource = value; }
         }
+        public string CURRENT_LOCATION
+        {
+            get
+            {
+                string current_location = HOSTSOURCE;
+                if (IsRelayHappend())
+                {
+                    current_location = RelayStation;
+                }
+                return current_location;
+            }
+        }
 
         public enum CmdType
         {
@@ -101,7 +113,7 @@ namespace com.mirle.ibg3k0.sc
         {
             if (IsScan())
             {
-                var port_def = portDefBLL.getPortDef(HOSTSOURCE);
+                var port_def = portDefBLL.getPortDef(CURRENT_LOCATION);
                 return new ACMD_OHTC()
                 {
                     CMD_ID = sequenceBLL.getCommandID(App.SCAppConstants.GenOHxCCommandType.Auto),
@@ -111,7 +123,7 @@ namespace com.mirle.ibg3k0.sc
                     CMD_ID_MCS = this.CMD_ID,
                     CMD_TPYE = E_CMD_TYPE.Scan,
                     PRIORITY = 50,
-                    SOURCE = this.HOSTSOURCE,
+                    SOURCE = this.CURRENT_LOCATION,
                     DESTINATION = this.HOSTDESTINATION,
                     CMD_STAUS = 0,
                     CMD_PROGRESS = 0,
@@ -125,7 +137,7 @@ namespace com.mirle.ibg3k0.sc
             else
             {
                 E_CMD_TYPE cmd_type = default(E_CMD_TYPE);
-                bool is_source_vh = transferService.isUnitType(HOSTSOURCE, Service.UnitType.CRANE);
+                bool is_source_vh = transferService.isUnitType(CURRENT_LOCATION, Service.UnitType.CRANE);
                 string _source_address = string.Empty;
                 string _source = string.Empty;
                 var dest_port_def = portDefBLL.getPortDef(HOSTDESTINATION);
@@ -137,9 +149,9 @@ namespace com.mirle.ibg3k0.sc
                 else
                 {
                     cmd_type = E_CMD_TYPE.LoadUnload;
-                    var port_def = portDefBLL.getPortDef(HOSTSOURCE);
+                    var port_def = portDefBLL.getPortDef(CURRENT_LOCATION);
                     _source_address = port_def.ADR_ID;
-                    _source = HOSTSOURCE;
+                    _source = CURRENT_LOCATION;
                 }
 
                 return new ACMD_OHTC
@@ -231,16 +243,16 @@ namespace com.mirle.ibg3k0.sc
         }
         public double getHostSourceAxis_X(BLL.Interface.IPortDefBLL portDefBLL, BLL.Interface.IReserveBLL reserveBLL)
         {
-            var port_def = portDefBLL.getPortDef(HOSTSOURCE);
+            var port_def = portDefBLL.getPortDef(CURRENT_LOCATION);
             if (port_def == null)
             {
-                NLog.LogManager.GetCurrentClassLogger().Warn($"port id:{HOSTSOURCE},obj [PortDef] no define");
+                NLog.LogManager.GetCurrentClassLogger().Warn($"port id:{CURRENT_LOCATION},obj [PortDef] no define");
                 return double.MaxValue;
             }
             var adr_axis = reserveBLL.GetHltMapAddress(port_def.ADR_ID);
             if (!adr_axis.isExist)
             {
-                NLog.LogManager.GetCurrentClassLogger().Warn($"port id:{HOSTSOURCE} adr id:{port_def.ADR_ID},obj [HltMapAddress] no define");
+                NLog.LogManager.GetCurrentClassLogger().Warn($"port id:{CURRENT_LOCATION} adr id:{port_def.ADR_ID},obj [HltMapAddress] no define");
                 return double.MaxValue;
             }
             return double.MaxValue;

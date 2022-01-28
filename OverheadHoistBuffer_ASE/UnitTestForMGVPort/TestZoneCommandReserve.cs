@@ -36,6 +36,9 @@ namespace UnitTestForLoopEnhance
             stub.reserveBLL.GetHltMapAddress("13280").Returns((true, 10280, 0, false));
             stub.reserveBLL.GetHltMapAddress("12281").Returns((true, 10710, 0, false));
             stub.reserveBLL.GetHltMapAddress("13282").Returns((true, 10697, 0, false));
+
+            //ZC06-T09的點位
+            stub.reserveBLL.GetHltMapAddress("15025").Returns((true, 15025, 2270, false));
         }
 
         private void setSectionData(StubObjectCollection stub)
@@ -89,15 +92,27 @@ namespace UnitTestForLoopEnhance
 
         private void setZoneCommandData(StubObjectCollection stub)
         {
-            stub.zoneCommandBLL.getZoneCommandGroup("ZC01").
-                Returns(new ZoneCommandGroup("ZC01",
+            var zone_command_group = new ZoneCommandGroup("ZC01",
                 new List<string>()
                 { "B7_OHBLINE3_A01", "B7_OHBLINE3_A02", "B7_OHBLINE3_A03",
                   "108701","108801","108901","109001",
                   "109101","109201","109301","109401",
                   "109501","109601","109701"
                 },
-                "(1,0)"));
+                "(1,0)");
+            stub.zoneCommandBLL.getZoneCommandGroup("ZC01").Returns(zone_command_group);
+            stub.zoneCommandBLL.tryGetZoneCommandGroupByPortID("B7_OHBLINE3_A01").
+                Returns((true, zone_command_group));
+
+            var zone_command_group_n = new ZoneCommandGroup("ZC06",
+                new List<string>()
+                { "B7_OHBlOOP_T09"
+                },
+                "(-1,0)");
+            stub.zoneCommandBLL.getZoneCommandGroup("ZC06").Returns(zone_command_group_n);
+            stub.zoneCommandBLL.tryGetZoneCommandGroupByPortID("B7_OHBlOOP_T09").
+                Returns((true, zone_command_group_n));
+
         }
 
         private void setPortDefData(StubObjectCollection stub)
@@ -116,6 +131,14 @@ namespace UnitTestForLoopEnhance
             stub.portDefBLL.getPortDef("B7_OHBLINE3_A01").Returns(new PortDef() { PLCPortID = "B7_OHBLINE3_A01", ADR_ID = "13277" });
             stub.portDefBLL.getPortDef("B7_OHBLINE3_A02").Returns(new PortDef() { PLCPortID = "B7_OHBLINE3_A02", ADR_ID = "13280" });
             stub.portDefBLL.getPortDef("B7_OHBLINE3_A03").Returns(new PortDef() { PLCPortID = "B7_OHBLINE3_A03", ADR_ID = "13282" });
+
+            stub.portDefBLL.getPortDef("B7_OHBlOOP_T09").Returns(new PortDef() { PLCPortID = "B7_OHBlOOP_T09", ADR_ID = "15025" });
+        }
+        private static void setSeqNum(StubObjectCollection stub)
+        {
+            stub.sequenceBLL.
+                getCommandID(com.mirle.ibg3k0.sc.App.SCAppConstants.GenOHxCCommandType.Auto).
+                Returns("111");
         }
 
         private ACMD_MCS bulidFackCMD_MCS(string cmdID, string fromPort, string toPort)
@@ -263,7 +286,7 @@ namespace UnitTestForLoopEnhance
 
         }
 
-        [Ignore("尚未準備好")]
+        [Ignore("尚未寫好測試條件準備好")]
         public void 再找出對應的車子_並且回復車子有搬送命令後_將該命令改為PreInitial_命產生小命令()
         {
             //Arrange
@@ -290,6 +313,121 @@ namespace UnitTestForLoopEnhance
             //Assert
             result.Should().BeTrue();
         }
+        [Test]
+        public void 針對準備預派給VH的命令_檢查是否有跑過頭_沒有跑過頭_Group方向1_0()
+        {
+            //Arrange
+            var cmd_mcs1 = bulidFackCMD_MCS("1", "B7_OHBLINE3_A01", "B7_OHBLINE3-ZONE2");
 
+            var stub = GetStubObject();
+            setSectionData(stub);
+            setAddressData(stub);
+            setVehicleData(stub);
+            setZoneCommandData(stub);
+            setPortDefData(stub);
+            setSeqNum(stub);
+            LoopTransferEnhance loopTransferEnhance = new LoopTransferEnhance();
+            loopTransferEnhance.Start
+                (stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL,
+                 stub.transferService, stub.shelfDefBLL, stub.cassetteDataBLL, stub.cmdBLL);
+            //變更車子的位置
+            var vh2 = stub.vehicleBLL.loadCyclingVhs().
+                 Where(v => v.VEHICLE_ID == "B7_OHBLINE3_CR2").FirstOrDefault();
+            vh2.X_Axis = 9000;
+
+
+            //Act
+            var result = loopTransferEnhance.IsRunOver(vh2, cmd_mcs1.HOSTSOURCE);
+
+            //Assert
+            result.Should().BeFalse();
+        }
+        [Test]
+        public void 針對準備預派給VH的命令_檢查是否有跑過頭_跑過頭_Group方向1_0()
+        {
+            //Arrange
+            var cmd_mcs1 = bulidFackCMD_MCS("1", "B7_OHBLINE3_A01", "B7_OHBLINE3-ZONE2");
+
+            var stub = GetStubObject();
+            setSectionData(stub);
+            setAddressData(stub);
+            setVehicleData(stub);
+            setZoneCommandData(stub);
+            setPortDefData(stub);
+            setSeqNum(stub);
+            LoopTransferEnhance loopTransferEnhance = new LoopTransferEnhance();
+            loopTransferEnhance.Start
+                (stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL,
+                 stub.transferService, stub.shelfDefBLL, stub.cassetteDataBLL, stub.cmdBLL);
+            //變更車子的位置
+            var vh2 = stub.vehicleBLL.loadCyclingVhs().
+                 Where(v => v.VEHICLE_ID == "B7_OHBLINE3_CR2").FirstOrDefault();
+            vh2.X_Axis = 10000;
+
+
+            //Act
+            var result = loopTransferEnhance.IsRunOver(vh2, cmd_mcs1.HOSTSOURCE);
+
+            //Assert
+            result.Should().BeTrue();
+        }
+        [Test]
+        public void 針對準備預派給VH的命令_檢查是否有跑過頭_沒有跑過頭_Group方向N1_0()
+        {
+            //Arrange
+            var cmd_mcs1 = bulidFackCMD_MCS("1", "B7_OHBlOOP_T09", "B7_OHBLINE3-ZONE2");
+
+            var stub = GetStubObject();
+            setSectionData(stub);
+            setAddressData(stub);
+            setVehicleData(stub);
+            setZoneCommandData(stub);
+            setPortDefData(stub);
+            setSeqNum(stub);
+            LoopTransferEnhance loopTransferEnhance = new LoopTransferEnhance();
+            loopTransferEnhance.Start
+                (stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL,
+                 stub.transferService, stub.shelfDefBLL, stub.cassetteDataBLL, stub.cmdBLL);
+            //變更車子的位置
+            var vh2 = stub.vehicleBLL.loadCyclingVhs().
+                 Where(v => v.VEHICLE_ID == "B7_OHBLINE3_CR2").FirstOrDefault();
+            vh2.X_Axis = 17000;
+
+
+            //Act
+            var result = loopTransferEnhance.IsRunOver(vh2, cmd_mcs1.HOSTSOURCE);
+
+            //Assert
+            result.Should().BeFalse();
+        }
+        [Test]
+        public void 針對準備預派給VH的命令_檢查是否有跑過頭_有跑過頭_Group方向N1_0()
+        {
+            //Arrange
+            var cmd_mcs1 = bulidFackCMD_MCS("1", "B7_OHBlOOP_T09", "B7_OHBLINE3-ZONE2");
+
+            var stub = GetStubObject();
+            setSectionData(stub);
+            setAddressData(stub);
+            setVehicleData(stub);
+            setZoneCommandData(stub);
+            setPortDefData(stub);
+            setSeqNum(stub);
+            LoopTransferEnhance loopTransferEnhance = new LoopTransferEnhance();
+            loopTransferEnhance.Start
+                (stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL,
+                 stub.transferService, stub.shelfDefBLL, stub.cassetteDataBLL, stub.cmdBLL);
+            //變更車子的位置
+            var vh2 = stub.vehicleBLL.loadCyclingVhs().
+                 Where(v => v.VEHICLE_ID == "B7_OHBLINE3_CR2").FirstOrDefault();
+            vh2.X_Axis = 13000;
+
+
+            //Act
+            var result = loopTransferEnhance.IsRunOver(vh2, cmd_mcs1.HOSTSOURCE);
+
+            //Assert
+            result.Should().BeTrue();
+        }
     }
 }

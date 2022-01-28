@@ -532,7 +532,7 @@ namespace com.mirle.ibg3k0.sc.Service
         public bool BasicInfoReport(string vh_id)
         {
             bool isSuccess = false;
-           
+
             return isSuccess;
         }
         public bool TavellingDataReport(string vh_id)
@@ -1136,35 +1136,37 @@ namespace com.mirle.ibg3k0.sc.Service
                     //  就發生了要車子從中繼站取起的問題，因此就會發生空取最後該筆命令就結束卡在Source Port
                     //  =>但也不能命令結束就直接清空中繼站，因為可能貨物真的是要從中繼站搬起來，所以要在判斷一次當命令被拒絕要改回去時，
                     //    確認CassetteData中的位置是否有到中繼站了
-                    if (!SCUtility.isEmpty(cmd.CMD_ID_MCS))
-                    {
-                        SpinWait.SpinUntil(() => false, 1000);
-                        ACMD_MCS cmd_mcs = scApp.CMDBLL.getCMD_MCSByID(cmd.CMD_ID_MCS);
-                        CassetteData cmdOHT_CSTdata = scApp.CassetteDataBLL.loadCassetteDataByBoxID(cmd.BOX_ID);
-                        if (cmd_mcs != null && cmdOHT_CSTdata != null)
-                        {
-                            bool is_box_at_relay_station = SCUtility.isMatche(cmdOHT_CSTdata.Carrier_LOC, cmd_mcs.RelayStation);
-                            scApp.CMDBLL.updateCMD_MCS_CRANE(cmd.CMD_ID, "");
-                            scApp.CMDBLL.updateCMD_MCS_TranStatus2Queue(cmd.CMD_ID_MCS, is_box_at_relay_station);
-                        }
-                        else
-                        {
-                            bool is_cmd_mcs_exist = cmd_mcs != null;
-                            bool is_cst_data_exist = cmdOHT_CSTdata != null;
-                            scApp.TransferService.TransferServiceLogger.Info
-                            (
-                                DateTime.Now.ToString("HH:mm:ss.fff ") + $"OHB >> OHT|發送命令失敗，準備將MCS命令:{SCUtility.Trim(cmd.CMD_ID_MCS)} 改回Queue，" +
-                                                                         $"但ACMD_MCS({is_cmd_mcs_exist})或Cassettedata({is_cst_data_exist})物件不存在"
-                            );
-                        }
-                        //scApp.CMDBLL.updateCMD_MCS_TranStatus2Queue(cmd.CMD_ID_MCS);
-                    }
-                    scApp.CMDBLL.updateCommand_OHTC_StatusByCmdID(cmd.CMD_ID, E_CMD_STATUS.AbnormalEndByOHT);
-
-
+                    SpinWait.SpinUntil(() => false, 1000);
+                    finishCommand(cmd);
                 }
             }
             return isSuccess;
+        }
+
+        public void finishCommand(ACMD_OHTC cmd)
+        {
+            if (!SCUtility.isEmpty(cmd.CMD_ID_MCS))
+            {
+                ACMD_MCS cmd_mcs = scApp.CMDBLL.getCMD_MCSByID(cmd.CMD_ID_MCS);
+                CassetteData cmdOHT_CSTdata = scApp.CassetteDataBLL.loadCassetteDataByBoxID(cmd.BOX_ID);
+                if (cmd_mcs != null && cmdOHT_CSTdata != null)
+                {
+                    bool is_box_at_relay_station = SCUtility.isMatche(cmdOHT_CSTdata.Carrier_LOC, cmd_mcs.RelayStation);
+                    scApp.CMDBLL.updateCMD_MCS_CRANE(cmd.CMD_ID, "");
+                    scApp.CMDBLL.updateCMD_MCS_TranStatus2Queue(cmd.CMD_ID_MCS, is_box_at_relay_station);
+                }
+                else
+                {
+                    bool is_cmd_mcs_exist = cmd_mcs != null;
+                    bool is_cst_data_exist = cmdOHT_CSTdata != null;
+                    scApp.TransferService.TransferServiceLogger.Info
+                    (
+                        DateTime.Now.ToString("HH:mm:ss.fff ") + $"OHB >> OHT|發送命令失敗，準備將MCS命令:{SCUtility.Trim(cmd.CMD_ID_MCS)} 改回Queue，" +
+                                                                 $"但ACMD_MCS({is_cmd_mcs_exist})或Cassettedata({is_cst_data_exist})物件不存在"
+                    );
+                }
+            }
+            scApp.CMDBLL.updateCommand_OHTC_StatusByCmdID(cmd.CMD_ID, E_CMD_STATUS.AbnormalEndByOHT);
         }
 
         public bool doSendOHxCOverrideCmdToVh(AVEHICLE assignVH, ACMD_OHTC cmd, bool isNeedPauseFirst)

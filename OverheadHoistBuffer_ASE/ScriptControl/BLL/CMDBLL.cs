@@ -3948,6 +3948,16 @@ namespace com.mirle.ibg3k0.sc.BLL
 
                         string vehicle_id = cmd.VH_ID.Trim();
                         AVEHICLE assignVH = scApp.VehicleBLL.getVehicleByID(vehicle_id);
+                        bool isLoopTransferEnhance = true;
+                        if (isLoopTransferEnhance && cmd.IsCMD_MCS())
+                        {
+                            if (scApp.LoopTransferEnhance.IsRunOver(assignVH, cmd.DESTINATION))
+                            {
+                                scApp.TransferService.TransferServiceLogger.Info($"命令 ID:{cmd.CMD_ID} ,cmd mcs id:{cmd.CMD_ID_MCS} 由於車子跑過頭，因此回復到Queue的狀態等待重派");
+                                scApp.VehicleService.finishCommand(cmd);
+                                continue;
+                            }
+                        }
                         //if (!assignVH.isTcpIpConnect || assignVH.IsError || !SCUtility.isEmpty(assignVH.OHTC_CMD) || (assignVH.ACT_STATUS == VHActionStatus.Commanding))
                         if (!assignVH.isTcpIpConnect || assignVH.MODE_STATUS == VHModeStatus.Manual || assignVH.IsError || !SCUtility.isEmpty(assignVH.OHTC_CMD) || (assignVH.ACT_STATUS == VHActionStatus.Commanding))
                         {
