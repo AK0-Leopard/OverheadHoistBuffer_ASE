@@ -319,7 +319,7 @@ namespace com.mirle.ibg3k0.sc.Service
         public void stopVehicleTcpIpSessionTest(string vhID)
         {
             AVEHICLE vh = scApp.VehicleBLL.cache.getVhByID(vhID);
-            vh.StopTcpIpConnection(scApp.getBCFApplication());3+
+            vh.StopTcpIpConnection(scApp.getBCFApplication());
         }
         public bool stopVehicleTcpIpServer(string vhID)
         {
