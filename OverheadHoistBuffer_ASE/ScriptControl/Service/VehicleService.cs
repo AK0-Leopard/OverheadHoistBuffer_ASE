@@ -5038,7 +5038,7 @@ namespace com.mirle.ibg3k0.sc.Service
 
             //回復結束後，若該筆命令是Mismatch、IDReadFail結束的話則要把原本車上的那顆CST Installed回來。
 
-
+            tryAssignCommandToVh(eqpt, completeStatus);
             if (DebugParameter.IsDebugMode && DebugParameter.IsCycleRun)
             {
                 SpinWait.SpinUntil(() => false, 3000);
@@ -5061,6 +5061,45 @@ namespace com.mirle.ibg3k0.sc.Service
             eqpt.onCommandComplete(completeStatus);
             scApp.VehicleBLL.updateVheicleTravelInfo(eqpt.VEHICLE_ID, travel_dis);
 
+        }
+
+        private void tryAssignCommandToVh(AVEHICLE vh, CompleteStatus completeStatus)
+        {
+            bool can_continue_service = IsCanContinueService(completeStatus);
+            if (can_continue_service)
+            {
+                var get_command_zone_result = scApp.LoopTransferEnhance.tryGetZoneCommandWhenCommandComplete(ACMD_MCS.loadReadyTransferCMD_MCS(), vh.VEHICLE_ID);
+                if (get_command_zone_result.hasCommand)
+                {
+                    bool is_success_pre_assign = scApp.LoopTransferEnhance.preAssignMCSCommand(scApp.SequenceBLL, vh, get_command_zone_result.cmdMCS);
+                    if (is_success_pre_assign)
+                    {
+                        scApp.TransferService.TransferServiceLogger.Info($"成功預下命令:{get_command_zone_result.cmdMCS.CMD_ID}，在車子完成命令時");
+                    }
+                    else
+                    {
+                        bool is_success = scApp.CMDBLL.doCreatTransferCommand(vh.VEHICLE_ID,
+                                                                             cmd_type: E_CMD_TYPE.Round);
+                    }
+                }
+            }
+        }
+
+        private bool IsCanContinueService(CompleteStatus completeStatus)
+        {
+            bool can_continue_service = false;
+            switch (completeStatus)
+            {
+                case CompleteStatus.CmpStatusLoadunload:
+                case CompleteStatus.CmpStatusUnload:
+                case CompleteStatus.CmpStatusCycleMove:
+                    can_continue_service = true;
+                    break;
+                default:
+                    break;
+            }
+
+            return can_continue_service;
         }
 
         private bool replyCommandComplete(AVEHICLE eqpt, int seq_num, string finish_ohxc_cmd, string finish_mcs_cmd)
