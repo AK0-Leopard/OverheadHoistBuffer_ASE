@@ -265,6 +265,7 @@ namespace com.mirle.ibg3k0.sc.Data.SECS.ASE
                 case ProtocolFormat.OHTMessage.CompleteStatus.CmpStatusSystemOut:
                 case ProtocolFormat.OHTMessage.CompleteStatus.CmpStatusSystemIn:
                 case ProtocolFormat.OHTMessage.CompleteStatus.CmpStatusTechingMove:
+                case ProtocolFormat.OHTMessage.CompleteStatus.CmpStatusCycleMove:
                     return CMD_Result_Successful;
                 case ProtocolFormat.OHTMessage.CompleteStatus.CmpStatusCancel:
                 case ProtocolFormat.OHTMessage.CompleteStatus.CmpStatusAbort:
