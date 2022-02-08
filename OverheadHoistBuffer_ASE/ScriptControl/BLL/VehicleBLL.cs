@@ -2122,7 +2122,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
         public List<AVEHICLE> loadCyclingVhs()
         {
-            return cache.loadVhs();
+            return cache.loadCyclingVhs();
         }
         #endregion Vehicle Object Info
 
@@ -2218,6 +2218,20 @@ namespace com.mirle.ibg3k0.sc.BLL
             public List<AVEHICLE> loadVhs()
             {
                 var vhs = eqObjCacheManager.getAllVehicle();
+                return vhs;
+            }
+            /// <summary>
+            /// 如果車子有命令但不是在進行MCS的搬送命令話
+            /// 應該就是再進行CycleRun
+            /// </summary>
+            /// <returns></returns>
+            public List<AVEHICLE> loadCyclingVhs()
+            {
+                var vhs = eqObjCacheManager.getAllVehicle();
+                vhs = vhs.Where(v => v.ACT_STATUS == VHActionStatus.Commanding &&
+                                     !SCUtility.isEmpty(v.OHTC_CMD) && 
+                                     SCUtility.isEmpty(v.MCS_CMD)).
+                          ToList();
                 return vhs;
             }
             public List<AVEHICLE> loadVhsBySegmentID(string segmentID)
