@@ -5082,6 +5082,11 @@ namespace com.mirle.ibg3k0.sc.Service
                                                                              cmd_type: E_CMD_TYPE.Round);
                     }
                 }
+                else
+                {
+                    bool is_success = scApp.CMDBLL.doCreatTransferCommand(vh.VEHICLE_ID,
+                                                     cmd_type: E_CMD_TYPE.Round);
+                }
             }
         }
 

@@ -257,7 +257,7 @@ namespace com.mirle.ibg3k0.sc.Module
                 do
                 {
                     ASECTION pre_section = sectionBLL.getSectionByToAdr(ask_vh_sec_from_adr);
-                    var on_sec_vhs = cycling_vhs.Where(v => sc.Common.SCUtility.isMatche(v.CUR_SEC_ID, pre_section.SEC_ID)).FirstOrDefault();
+                    var on_sec_vhs = cycling_vhs.Where(v => v != vh && sc.Common.SCUtility.isMatche(v.CUR_SEC_ID, pre_section.SEC_ID)).FirstOrDefault();
                     if (on_sec_vhs != null)
                     {
                         return (false, "", null);
