@@ -364,7 +364,7 @@ namespace com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage {
             "IAEoDjISLnR1dG9yaWFsLk1zZ0xldmVsEg8KB01lc3NhZ2UYAyABKAkSCwoD",
             "WElEGAQgASgJIk8KFlRJUF9NRVNTQUdFX0NPTExFQ1RJT04SNQoRVElQX01F",
             "U1NBR0VfSU5GT1MYASADKAsyGi50dXRvcmlhbC5USVBfTUVTU0FHRV9JTkZP",
-            "IucfCg5XcmFwcGVyTWVzc2FnZRILCgJJRBjoByABKAUSDwoGU2VxTnVtGOkH",
+            "IuIhCg5XcmFwcGVyTWVzc2FnZRILCgJJRBjoByABKAUSDwoGU2VxTnVtGOkH",
             "IAEoBRJJChNIb3N0X0Jhc2ljX0luZm9fUmVwGAEgASgLMioudHV0b3JpYWwu",
             "SURfMV9IT1NUX0JBU0lDX0lORk9fVkVSU0lPTl9SRVBIABJRChRIb3N0X0Jh",
             "c2ljX0luZm9fUmVzcBhlIAEoCzIxLnR1dG9yaWFsLklEXzEwMV9IT1NUX0JB",
@@ -439,138 +439,144 @@ namespace com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage {
             "SEFOR0VfUkVTUE9OU0VIABI2Cg1Qb3dlcl9PcGVfUmVxGC0gASgLMh0udHV0",
             "b3JpYWwuSURfNDVfUE9XRVJfT1BFX1JFUUgAEj4KDlBvd2VyX09wZV9SZXNw",
             "GJEBIAEoCzIjLnR1dG9yaWFsLklEXzE0NV9QT1dFUl9PUEVfUkVTUE9OU0VI",
-            "ABJEChJSYW5nZV9UZWFjaGluZ19SZXEYRyABKAsyJi50dXRvcmlhbC5JRF83",
-            "MV9SQU5HRV9URUFDSElOR19SRVFVRVNUSAASSAoTUmFuZ2VfVGVhY2hpbmdf",
-            "UmVzcBirASABKAsyKC50dXRvcmlhbC5JRF8xNzFfUkFOR0VfVEVBQ0hJTkdf",
-            "UkVTUE9OU0VIABJSChZSYW5nZV9UZWFjaGluZ19DbXBfUmVwGKwBIAEoCzIv",
-            "LnR1dG9yaWFsLklEXzE3Ml9SQU5HRV9URUFDSElOR19DT01QTEVURV9SRVBP",
-            "UlRIABJTChdSYW5nZV9UZWFjaGluZ19DbXBfUmVzcBhIIAEoCzIwLnR1dG9y",
-            "aWFsLklEXzcyX1JBTkdFX1RFQUNISU5HX0NPTVBMRVRFX1JFU1BPTlNFSAAS",
-            "QwoRQWRkcmVzc19UZWFjaF9SZXAYrgEgASgLMiUudHV0b3JpYWwuSURfMTc0",
-            "X0FERFJFU1NfVEVBQ0hfUkVQT1JUSAASRAoSQWRkcmVzc19UZWFjaF9SZXNw",
-            "GEogASgLMiYudHV0b3JpYWwuSURfNzRfQUREUkVTU19URUFDSF9SRVNQT05T",
-            "RUgAEj4KD0FsYXJtX1Jlc2V0X1JlcRhbIAEoCzIjLnR1dG9yaWFsLklEXzkx",
-            "X0FMQVJNX1JFU0VUX1JFUVVFU1RIABJCChBBbGFybV9SZXNldF9SZXNwGL8B",
-            "IAEoCzIlLnR1dG9yaWFsLklEXzE5MV9BTEFSTV9SRVNFVF9SRVNQT05TRUgA",
-            "EjMKCUFsYXJtX1JlcBjCASABKAsyHS50dXRvcmlhbC5JRF8xOTRfQUxBUk1f",
-            "UkVQT1JUSAASNAoKQWxhcm1fUmVzcBheIAEoCzIeLnR1dG9yaWFsLklEXzk0",
-            "X0FMQVJNX1JFU1BPTlNFSABCBQoDbXNnIpkCChJTWVNURU1QUk9DRVNTX0lO",
-            "Rk8SDAoEVElNRRgBIAEoCRILCgNTRVEYAiABKAQSEQoJTE9HX0xFVkVMGAMg",
-            "ASgJEg0KBUNMQVNTGAQgASgJEg4KBk1FVEhPRBgFIAEoCRIOCgZERVZJQ0UY",
-            "BiABKAkSDAoEREFUQRgHIAEoCRINCgVWSF9JRBgIIAEoCRIOCgZDUlJfSUQY",
-            "CSABKAkSDAoEVFlQRRgKIAEoCRIOCgZMT0dfSUQYCyABKAkSEQoJVEhSRUFE",
-            "X0lEGAwgASgJEgsKA0xPVBgNIAEoCRINCgVMRVZFTBgOIAEoCRILCgNYSUQY",
-            "DyABKAkSDgoGVFJYX0lEGBAgASgJEg8KB0RFVEFJTFMYESABKAkijAEKDEhP",
-            "U1RMT0dfSU5GTxIMCgRUSU1FGAEgASgJEg0KBUVRX0lEGAIgASgJEhQKDFNF",
-            "TkRfUkVDRUlWRRgDIAEoCRIKCgJTWBgEIAEoCRIKCgJGWRgFIAEoCRIOCgZE",
-            "RVZJQ0UYBiABKAkSEAoIRlVOX05BTUUYByABKAkSDwoHTUVTU0FHRRgIIAEo",
-            "CSLUAQoKRVFMT0dfSU5GTxIMCgRUSU1FGAEgASgJEhQKDFNFTkRfUkVDRUlW",
-            "RRgCIAEoCRIQCghGVU5fTkFNRRgDIAEoCRIOCgZTRVFfTk8YBCABKAUSDQoF",
-            "VkhfSUQYBSABKAkSEwoLT0hUQ19DTURfSUQYBiABKAkSEAoIQUNUX1RZUEUY",
-            "ByABKAkSEgoKTUNTX0NNRF9JRBgIIAEoCRISCgpFVkVOVF9UWVBFGAkgASgJ",
-            "EhEKCVZIX1NUQVRVUxgKIAEoCRIPCgdNRVNTQUdFGAsgASgJKrMBCgpBY3Rp",
-            "dmVUeXBlEggKBE1PVkUQABIICgRMT0FEEAESCgoGVU5MT0FEEAISDgoKTE9B",
-            "RFVOTE9BRBADEggKBEhPTUUQBBIMCghPVkVSUklERRAFEgsKB01UTEhPTUUQ",
-            "BxIICgRTQ0FOEAgSDQoJTU9WRVRPTVRMEAoSDQoJU1lTVEVNT1VUEAsSDAoI",
-            "U1lTVEVNSU4QDBIPCgtURUNISU5HTU9WRRANEgkKBVJPVU5EEGMqgAMKCUV2",
-            "ZW50VHlwZRIQCgxMb2FkQXJyaXZhbHMQABIQCgxMb2FkQ29tcGxldGUQARIS",
-            "Cg5VbmxvYWRBcnJpdmFscxACEhIKDlVubG9hZENvbXBsZXRlEAMSFQoRQWRy",
-            "T3JNb3ZlQXJyaXZhbHMQBBILCgdBZHJQYXNzEAUSDQoJTW92ZVBhdXNlEAYS",
-            "DwoLTW92ZVJlc3RhcnQQBxIOCgpSZXNlcnZlUmVxEAgSDAoIQmxvY2tSZXEQ",
-            "CRIKCgZISURSZXEQChIPCgtCbG9ja0hJRFJlcRALEg0KCVZITG9hZGluZxAM",
-            "Eg8KC1ZIVW5sb2FkaW5nEA0SCwoHQkNSUmVhZBAOEhEKDURvdWJsZVN0b3Jh",
-            "Z2UQDxISCg5FbXB0eVJldHJpZXZhbBAQEggKBFNjYW4QERIQCgxCbG9ja1Jl",
-            "bGVhc2UQFRIOCgpISURSZWxlYXNlEBYSEwoPQmxvY2tISURSZWxlYXNlEBcS",
-            "EwoPQ29tbWFuZENvbXBsZXRlEGMqogQKDkNvbXBsZXRlU3RhdHVzEhEKDUNt",
-            "cFN0YXR1c01vdmUQABIRCg1DbXBTdGF0dXNMb2FkEAESEwoPQ21wU3RhdHVz",
-            "VW5sb2FkEAISFwoTQ21wU3RhdHVzTG9hZHVubG9hZBADEhEKDUNtcFN0YXR1",
-            "c0hvbWUQBBIVChFDbXBTdGF0dXNPdmVycmlkZRAFEhgKFENtcFN0YXR1c0Nz",
-            "dElEUmVubWFlEAYSFAoQQ21wU3RhdHVzTVRMSG9tZRAHEhEKDUNtcFN0YXR1",
-            "c1NjYW4QCBIWChJDbXBTdGF0dXNNb3ZlVG9NVEwQChIWChJDbXBTdGF0dXNT",
-            "eXN0ZW1PdXQQCxIVChFDbXBTdGF0dXNTeXN0ZW1JbhAMEhgKFENtcFN0YXR1",
-            "c1RlY2hpbmdNb3ZlEA0SEwoPQ21wU3RhdHVzQ2FuY2VsEBQSEgoOQ21wU3Rh",
-            "dHVzQWJvcnQQFRIZChVDbXBTdGF0dXNWZWhpY2xlQWJvcnQQFhIXChNDbXBT",
-            "dGF0dXNJRE1pc01hdGNoEBcSGQoVQ21wU3RhdHVzSURSZWFkRmFpbGVkEBgS",
-            "HAoYQ21wU3RhdHVzSURSZWFkRHVwbGljYXRlEBkSGwoXQ21wU3RhdHVzSW50",
-            "ZXJsb2NrRXJyb3IQQBIdChlDbXBTdGF0dXNMb25nVGltZUluYWN0aW9uEGIS",
-            "HAoYQ21wU3RhdHVzRm9yY2VGaW5pc2hCeU9wEGMqzAEKDUNNRENhbmNlbFR5",
-            "cGUSDAoIQ01EX05vbmUQABINCglDTURfUmV0cnkQARIOCgpDTURfQ2FuY2Vs",
-            "EBQSDQoJQ01EX0Fib3J0EBUSGgoWQ01EX0NhbmNlbF9JRF9NaXNtYXRjaBAX",
-            "Eh0KGUNNRF9DYW5jZWxfSURfUmVhZF9GYWlsZWQQGBIgChxDTURfQ2FuY2Vs",
-            "X0lEX1JlYWRfRHVwbGljYXRlEBkSIgoeQ01EX0NhbmNlbF9JRF9SZWFkX0Zv",
-            "cmNlRmluaXNoEBoqJQoKUGF1c2VFdmVudBIMCghDb250aW51ZRAAEgkKBVBh",
-            "dXNlEAEq6QEKCVBhdXNlVHlwZRISCg5QYXVzZVR5cGVfTm9uZRAAEhIKDlBh",
-            "dXNlVHlwZV9PSHhDEAESEwoPUGF1c2VUeXBlX0Jsb2NrEAISEQoNUGF1c2VU",
-            "eXBlX0hJRBADEhgKFFBhdXNlVHlwZV9FYXJ0aFF1YWtlEAQSFAoQUGF1c2VU",
-            "eXBlX1NhZmV0eRAFEhUKEVBhdXNlVHlwZV9SZXNlcnZlEAYSGQoVUGF1c2VU",
-            "eXBlX01hbnVhbEJsb2NrEAcSFwoTUGF1c2VUeXBlX01hbnVhbEhJRBAIEhEK",
-            "DVBhdXNlVHlwZV9BbGwQCSolCg1WaEd1aWRlU3RhdHVzEgoKBlVubG9jaxAA",
-            "EggKBExvY2sQASofCghQYXNzVHlwZRIICgRQYXNzEAASCQoFQmxvY2sQASpM",
-            "Cg9FX0FyZWFTZW5zb3JEaXISFgoSQXJlYVNlbnNvckRpcl9Ob25lEAASDAoI",
-            "U3RyYWlnaHQQARIICgRMZWZ0EAISCQoFUmlnaHQQAyo7Cg9PcGVyYXRpbmdW",
-            "SE1vZGUSEgoOT3BlcmF0aW5nX0F1dG8QABIUChBPcGVyYXRpbmdfTWFudWFs",
-            "EAEqYAoLQ29udHJvbFR5cGUSCwoHTm90aGluZxAAEhUKEUNvbnRyb2xUeXBl",
-            "X0Jsb2NrEAQSEwoPQ29udHJvbFR5cGVfSElEEAUSGAoUQ29udHJvbFR5cGVf",
-            "UmVzZXJ2ZXIQBipOCg1Ecml2ZURpcmN0aW9uEhEKDURyaXZlRGlyX05vbmUQ",
-            "ABIUChBEcml2ZURpcl9Gb3J3YXJkEAESFAoQRHJpdmVEaXJfUmV2ZXJzZRAC",
-            "KkcKDVJlc2VydmVSZXN1bHQSGQoVUmVzZXJ2ZVJlc3VsdF9TdWNjZXNzEAAS",
-            "GwoXUmVzZXJ2ZVJlc3VsdF9VbnN1Y2Nlc3MQASpDCg1CQ1JSZWFkUmVzdWx0",
-            "Eg4KCkJDUl9Ob3JtYWwQABIQCgxCQ1JfUmVhZEZhaWwQARIQCgxCQ1JfTWlz",
-            "TWF0Y2gQAiqOAQoMVkhNb2RlU3RhdHVzEggKBE5vbmUQABIVChFJbml0aWFs",
-            "X1Bvd2VyX09GRhABEhQKEEluaXRpYWxfUG93ZXJfT04QAhIKCgZNYW51YWwQ",
-            "AxIPCgtBdXRvX1JlbW90ZRAEEg4KCkF1dG9fTG9jYWwQBRIMCghBdXRvX01U",
-            "UxAGEgwKCEF1dG9fTVRMEAcqYAoOVkhBY3Rpb25TdGF0dXMSDQoJTm9Db21t",
-            "YW5kEAASDgoKQ29tbWFuZGluZxABEgwKCFRlYWNoaW5nEAUSEwoPR3JpcHBl",
-            "clRlYWNoaW5nEAYSDAoIQ3ljbGVSdW4QByosCg1WaFBvd2VyU3RhdHVzEg0K",
-            "CVBvd2VyX09mZhAAEgwKCFBvd2VyX09uEAEqLgoTVmhMb2FkQ2FycmllclN0",
-            "YXR1cxIMCghOb3RFeGlzdBAAEgkKBUV4aXN0EAEqNQoMVmhTdG9wU2luZ2xl",
-            "EhIKDlN0b3BTaW5nbGVfT2ZmEAASEQoNU3RvcFNpbmdsZV9PbhABKkUKEk9w",
-            "ZXJhdGluZ1Bvd2VyTW9kZRIXChNPcGVyYXRpbmdfUG93ZXJfT2ZmEAASFgoS",
-            "T3BlcmF0aW5nX1Bvd2VyX09uEAEqKQoLRXJyb3JTdGF0dXMSDQoJRXJyX1Jl",
-            "c2V0EAASCwoHRXJyX1NldBABKkIKC1ZlaGljbGVUeXBlEg8KC1ZoVHlwZV9O",
-            "b25lEAASEAoMVmhUeXBlX0NsZWFuEAESEAoMVmhUeXBlX0RpcnR5EAIqyAEK",
-            "C0NvbW1hbmRUeXBlEgwKCENNRF9Nb3ZlEAASEQoNQ01EX01vdmVfUGFyaxAB",
-            "EhMKD0NNRF9Nb3ZlX01UUG9ydBACEgwKCENNRF9Mb2FkEAMSDgoKQ01EX1Vu",
-            "bG9hZBAEEhIKDkNNRF9Mb2FkVW5sb2FkEAUSEAoMQ01EX1RlYWNoaW5nEAYS",
-            "EAoMQ01EX0NvbnRpbnVlEAcSDQoJQ01EX1JvdW5kEAgSDAoIQ01EX0hvbWUQ",
-            "CRIQCgxDTURfT3ZlcnJpZGUQCir2AQoNQ29tbWFuZFN0YXR1cxIPCgtDTURT",
-            "dF9RdWV1ZRAAEhEKDUNNRFN0X1NlbmRpbmcQARITCg9DTURTdF9FeGVjdXRp",
-            "b24QAhISCg5DTURTdF9BYm9ydGluZxADEhMKD0NNRFN0X0NhbmNlbGluZxAE",
-            "EhMKD0NNRFN0X05vcm1hbEVuZBAFEhoKFkNNRFN0X0Fibm9ybWFsRW5kQnlP",
-            "SFQQBhIaChZDTURTdF9BYm5vcm1hbEVuZEJ5TUNTEAcSGwoXQ01EU3RfQWJu",
-            "b3JtYWxFbmRCeU9IVEMQCBIZChVDTURTdF9DYW5jZWxFbmRCeU9IVEMQCSoi",
-            "CgtTZWN0aW9uVHlwZRIKCgZOb3JtYWwQABIHCgNNVEwQASpGCghUU0NTdGF0",
-            "ZRILCgdUU0NOT05FEAASCgoGVFNDSU5UEAESCgoGUEFVU0VEEAISCAoEQVVU",
-            "TxADEgsKB1BBVVNJTkcQBCp3CghUU0NFdmVudBIOCgpUU0NJbml0aWFsEAAS",
-            "HwobU3lzdGVtU3RhcnRlZFVwU3VjY2Vzc2Z1bGx5EAESDgoKVFNDUmVzdW1l",
-            "ZBACEhcKE1RDU1JlcXVlc3RlZFRvUGF1c2UQAxIRCg1QYXVzZUNvbXBsZXRl",
-            "EAQq4wEKDFZlaGljbGVTdGF0ZRIVChFWZWhpY2xlU3RhdGVfTm9uZRAAEhcK",
-            "E1ZlaGljbGVTdGF0ZV9SZW1vdmUQARIcChhWZWhpY2xlU3RhdGVfTm90QXNz",
-            "aWduZWQQAhIYChRWZWhpY2xlU3RhdGVfRW5yb3V0ZRADEhcKE1ZlaGljbGVT",
-            "dGF0ZV9QYXJrZWQQBBIaChZWZWhpY2xlU3RhdGVfQWNxdWlyaW5nEAUSGwoX",
-            "VmVoaWNsZVN0YXRlX0RlcG9zaXRpbmcQBhIZChVWZWhpY2xlU3RhdGVfQXNz",
-            "aWduZWQQByomCgpMaW5rU3RhdHVzEgwKCExpbmtGYWlsEAASCgoGTGlua09L",
-            "EAEqOgoISG9zdE1vZGUSCwoHT2ZmbGluZRAAEhAKDE9ubGluZVJlbW90ZRAB",
-            "Eg8KC09ubGluZUxvY2FsEAIqbwoURGV2aWNlQ29ubmVjdGlvblR5cGUSHAoY",
-            "RGV2aWNlQ29ubmVjdGlvblR5cGVfTUNTEAASHAoYRGV2aWNlQ29ubmVjdGlv",
-            "blR5cGVfUExDEAESGwoXRGV2aWNlQ29ubmVjdGlvblR5cGVfQVAQAipQChBD",
-            "b25uZWN0aW9uU3RhdHVzEhwKGENvbm5lY3Rpb25TdGF0dXNfU3VjY2VzcxAA",
-            "Eh4KGkNvbm5lY3Rpb25TdGF0dXNfVW5zdWNjZXNzEAEqTQoYUG9ydFN0YXRp",
-            "b25TZXJ2aWNlU3RhdHVzEhAKDE5vRGVmaW5pdGlvbhAAEhAKDE91dE9mU2Vy",
-            "dmljZRABEg0KCUluU2VydmljZRACKlkKEVBvcnRTdGF0aW9uU3RhdHVzEggK",
-            "BERvd24QABIPCgtMb2FkUmVxdWVzdBABEhEKDVVubG9hZFJlcXVlc3QQAhII",
-            "CgRXYWl0EAMSDAoIRGlzYWJsZWQQBCpECghNc2dMZXZlbBIRCg1Nc2dMZXZl",
-            "bF9JbmZvEAASEQoNTXNnTGV2ZWxfV2FybhABEhIKDk1zZ0xldmVsX0Vycm9y",
-            "EAIqLwoHTVR4TW9kZRISCg5NVHhNb2RlX01hbnVhbBAAEhAKDE1UeE1vZGVf",
-            "QXV0bxABKlMKC01UTExvY2F0aW9uEhQKEE1UTExvY2F0aW9uX05vbmUQABIV",
-            "ChFNVExMb2NhdGlvbl9VcHBlchABEhcKE01UTExvY2F0aW9uX0JvdHRvcm4Q",
-            "AipHCg9NVExNb3ZpbmdTdGF0dXMSGAoUTVRMTW92aW5nU3RhdHVzX1N0b3AQ",
-            "ABIaChZNVExNb3ZpbmdTdGF0dXNfTW92aW5nEAEqRAoMVmhJblBvc2l0aW9u",
-            "EhgKFFZoSW5Qb3NpdGlvbl9Ob3RoaW5nEAASGgoWVmhJblBvc2l0aW9uX0lu",
-            "UG9zdGlvbhABQpEBChRjb20uZXhhbXBsZS50dXRvcmlhbEIRQWRkcmVzc0Jv",
-            "b2tQcm90b3NQAVorZ2l0aHViLmNvbS9nb2xhbmcvcHJvdG9idWYvcHR5cGVz",
-            "L3RpbWVzdGFtcPgBAaICA0dQQqoCLWNvbS5taXJsZS5pYmczazAuc2MuUHJv",
-            "dG9jb2xGb3JtYXQuT0hUTWVzc2FnZWIGcHJvdG8z"));
+            "ABIyCglBdm9pZF9SZXEYMyABKAsyHS50dXRvcmlhbC5JRF81MV9BVk9JRF9S",
+            "RVFVRVNUSAASNgoKQXZvaWRfUmVzcBiXASABKAsyHy50dXRvcmlhbC5JRF8x",
+            "NTFfQVZPSURfUkVTUE9OU0VIABJFChJBdm9pZF9Db21wbGV0ZV9SZXAYmAEg",
+            "ASgLMiYudHV0b3JpYWwuSURfMTUyX0FWT0lEX0NPTVBMRVRFX1JFUE9SVEgA",
+            "EkYKE0F2b2lkX0NvbXBsZXRlX1Jlc3AYNCABKAsyJy50dXRvcmlhbC5JRF81",
+            "Ml9BVk9JRF9DT01QTEVURV9SRVNQT05TRUgAEkQKElJhbmdlX1RlYWNoaW5n",
+            "X1JlcRhHIAEoCzImLnR1dG9yaWFsLklEXzcxX1JBTkdFX1RFQUNISU5HX1JF",
+            "UVVFU1RIABJIChNSYW5nZV9UZWFjaGluZ19SZXNwGKsBIAEoCzIoLnR1dG9y",
+            "aWFsLklEXzE3MV9SQU5HRV9URUFDSElOR19SRVNQT05TRUgAElIKFlJhbmdl",
+            "X1RlYWNoaW5nX0NtcF9SZXAYrAEgASgLMi8udHV0b3JpYWwuSURfMTcyX1JB",
+            "TkdFX1RFQUNISU5HX0NPTVBMRVRFX1JFUE9SVEgAElMKF1JhbmdlX1RlYWNo",
+            "aW5nX0NtcF9SZXNwGEggASgLMjAudHV0b3JpYWwuSURfNzJfUkFOR0VfVEVB",
+            "Q0hJTkdfQ09NUExFVEVfUkVTUE9OU0VIABJDChFBZGRyZXNzX1RlYWNoX1Jl",
+            "cBiuASABKAsyJS50dXRvcmlhbC5JRF8xNzRfQUREUkVTU19URUFDSF9SRVBP",
+            "UlRIABJEChJBZGRyZXNzX1RlYWNoX1Jlc3AYSiABKAsyJi50dXRvcmlhbC5J",
+            "RF83NF9BRERSRVNTX1RFQUNIX1JFU1BPTlNFSAASPgoPQWxhcm1fUmVzZXRf",
+            "UmVxGFsgASgLMiMudHV0b3JpYWwuSURfOTFfQUxBUk1fUkVTRVRfUkVRVUVT",
+            "VEgAEkIKEEFsYXJtX1Jlc2V0X1Jlc3AYvwEgASgLMiUudHV0b3JpYWwuSURf",
+            "MTkxX0FMQVJNX1JFU0VUX1JFU1BPTlNFSAASMwoJQWxhcm1fUmVwGMIBIAEo",
+            "CzIdLnR1dG9yaWFsLklEXzE5NF9BTEFSTV9SRVBPUlRIABI0CgpBbGFybV9S",
+            "ZXNwGF4gASgLMh4udHV0b3JpYWwuSURfOTRfQUxBUk1fUkVTUE9OU0VIAEIF",
+            "CgNtc2cimQIKElNZU1RFTVBST0NFU1NfSU5GTxIMCgRUSU1FGAEgASgJEgsK",
+            "A1NFURgCIAEoBBIRCglMT0dfTEVWRUwYAyABKAkSDQoFQ0xBU1MYBCABKAkS",
+            "DgoGTUVUSE9EGAUgASgJEg4KBkRFVklDRRgGIAEoCRIMCgREQVRBGAcgASgJ",
+            "Eg0KBVZIX0lEGAggASgJEg4KBkNSUl9JRBgJIAEoCRIMCgRUWVBFGAogASgJ",
+            "Eg4KBkxPR19JRBgLIAEoCRIRCglUSFJFQURfSUQYDCABKAkSCwoDTE9UGA0g",
+            "ASgJEg0KBUxFVkVMGA4gASgJEgsKA1hJRBgPIAEoCRIOCgZUUlhfSUQYECAB",
+            "KAkSDwoHREVUQUlMUxgRIAEoCSKMAQoMSE9TVExPR19JTkZPEgwKBFRJTUUY",
+            "ASABKAkSDQoFRVFfSUQYAiABKAkSFAoMU0VORF9SRUNFSVZFGAMgASgJEgoK",
+            "AlNYGAQgASgJEgoKAkZZGAUgASgJEg4KBkRFVklDRRgGIAEoCRIQCghGVU5f",
+            "TkFNRRgHIAEoCRIPCgdNRVNTQUdFGAggASgJItQBCgpFUUxPR19JTkZPEgwK",
+            "BFRJTUUYASABKAkSFAoMU0VORF9SRUNFSVZFGAIgASgJEhAKCEZVTl9OQU1F",
+            "GAMgASgJEg4KBlNFUV9OTxgEIAEoBRINCgVWSF9JRBgFIAEoCRITCgtPSFRD",
+            "X0NNRF9JRBgGIAEoCRIQCghBQ1RfVFlQRRgHIAEoCRISCgpNQ1NfQ01EX0lE",
+            "GAggASgJEhIKCkVWRU5UX1RZUEUYCSABKAkSEQoJVkhfU1RBVFVTGAogASgJ",
+            "Eg8KB01FU1NBR0UYCyABKAkqswEKCkFjdGl2ZVR5cGUSCAoETU9WRRAAEggK",
+            "BExPQUQQARIKCgZVTkxPQUQQAhIOCgpMT0FEVU5MT0FEEAMSCAoESE9NRRAE",
+            "EgwKCE9WRVJSSURFEAUSCwoHTVRMSE9NRRAHEggKBFNDQU4QCBINCglNT1ZF",
+            "VE9NVEwQChINCglTWVNURU1PVVQQCxIMCghTWVNURU1JThAMEg8KC1RFQ0hJ",
+            "TkdNT1ZFEA0SCQoFUk9VTkQQYyqAAwoJRXZlbnRUeXBlEhAKDExvYWRBcnJp",
+            "dmFscxAAEhAKDExvYWRDb21wbGV0ZRABEhIKDlVubG9hZEFycml2YWxzEAIS",
+            "EgoOVW5sb2FkQ29tcGxldGUQAxIVChFBZHJPck1vdmVBcnJpdmFscxAEEgsK",
+            "B0FkclBhc3MQBRINCglNb3ZlUGF1c2UQBhIPCgtNb3ZlUmVzdGFydBAHEg4K",
+            "ClJlc2VydmVSZXEQCBIMCghCbG9ja1JlcRAJEgoKBkhJRFJlcRAKEg8KC0Js",
+            "b2NrSElEUmVxEAsSDQoJVkhMb2FkaW5nEAwSDwoLVkhVbmxvYWRpbmcQDRIL",
+            "CgdCQ1JSZWFkEA4SEQoNRG91YmxlU3RvcmFnZRAPEhIKDkVtcHR5UmV0cmll",
+            "dmFsEBASCAoEU2NhbhAREhAKDEJsb2NrUmVsZWFzZRAVEg4KCkhJRFJlbGVh",
+            "c2UQFhITCg9CbG9ja0hJRFJlbGVhc2UQFxITCg9Db21tYW5kQ29tcGxldGUQ",
+            "YyqiBAoOQ29tcGxldGVTdGF0dXMSEQoNQ21wU3RhdHVzTW92ZRAAEhEKDUNt",
+            "cFN0YXR1c0xvYWQQARITCg9DbXBTdGF0dXNVbmxvYWQQAhIXChNDbXBTdGF0",
+            "dXNMb2FkdW5sb2FkEAMSEQoNQ21wU3RhdHVzSG9tZRAEEhUKEUNtcFN0YXR1",
+            "c092ZXJyaWRlEAUSGAoUQ21wU3RhdHVzQ3N0SURSZW5tYWUQBhIUChBDbXBT",
+            "dGF0dXNNVExIb21lEAcSEQoNQ21wU3RhdHVzU2NhbhAIEhYKEkNtcFN0YXR1",
+            "c01vdmVUb01UTBAKEhYKEkNtcFN0YXR1c1N5c3RlbU91dBALEhUKEUNtcFN0",
+            "YXR1c1N5c3RlbUluEAwSGAoUQ21wU3RhdHVzVGVjaGluZ01vdmUQDRITCg9D",
+            "bXBTdGF0dXNDYW5jZWwQFBISCg5DbXBTdGF0dXNBYm9ydBAVEhkKFUNtcFN0",
+            "YXR1c1ZlaGljbGVBYm9ydBAWEhcKE0NtcFN0YXR1c0lETWlzTWF0Y2gQFxIZ",
+            "ChVDbXBTdGF0dXNJRFJlYWRGYWlsZWQQGBIcChhDbXBTdGF0dXNJRFJlYWRE",
+            "dXBsaWNhdGUQGRIbChdDbXBTdGF0dXNJbnRlcmxvY2tFcnJvchBAEh0KGUNt",
+            "cFN0YXR1c0xvbmdUaW1lSW5hY3Rpb24QYhIcChhDbXBTdGF0dXNGb3JjZUZp",
+            "bmlzaEJ5T3AQYyrMAQoNQ01EQ2FuY2VsVHlwZRIMCghDTURfTm9uZRAAEg0K",
+            "CUNNRF9SZXRyeRABEg4KCkNNRF9DYW5jZWwQFBINCglDTURfQWJvcnQQFRIa",
+            "ChZDTURfQ2FuY2VsX0lEX01pc21hdGNoEBcSHQoZQ01EX0NhbmNlbF9JRF9S",
+            "ZWFkX0ZhaWxlZBAYEiAKHENNRF9DYW5jZWxfSURfUmVhZF9EdXBsaWNhdGUQ",
+            "GRIiCh5DTURfQ2FuY2VsX0lEX1JlYWRfRm9yY2VGaW5pc2gQGiolCgpQYXVz",
+            "ZUV2ZW50EgwKCENvbnRpbnVlEAASCQoFUGF1c2UQASrpAQoJUGF1c2VUeXBl",
+            "EhIKDlBhdXNlVHlwZV9Ob25lEAASEgoOUGF1c2VUeXBlX09IeEMQARITCg9Q",
+            "YXVzZVR5cGVfQmxvY2sQAhIRCg1QYXVzZVR5cGVfSElEEAMSGAoUUGF1c2VU",
+            "eXBlX0VhcnRoUXVha2UQBBIUChBQYXVzZVR5cGVfU2FmZXR5EAUSFQoRUGF1",
+            "c2VUeXBlX1Jlc2VydmUQBhIZChVQYXVzZVR5cGVfTWFudWFsQmxvY2sQBxIX",
+            "ChNQYXVzZVR5cGVfTWFudWFsSElEEAgSEQoNUGF1c2VUeXBlX0FsbBAJKiUK",
+            "DVZoR3VpZGVTdGF0dXMSCgoGVW5sb2NrEAASCAoETG9jaxABKh8KCFBhc3NU",
+            "eXBlEggKBFBhc3MQABIJCgVCbG9jaxABKkwKD0VfQXJlYVNlbnNvckRpchIW",
+            "ChJBcmVhU2Vuc29yRGlyX05vbmUQABIMCghTdHJhaWdodBABEggKBExlZnQQ",
+            "AhIJCgVSaWdodBADKjsKD09wZXJhdGluZ1ZITW9kZRISCg5PcGVyYXRpbmdf",
+            "QXV0bxAAEhQKEE9wZXJhdGluZ19NYW51YWwQASpgCgtDb250cm9sVHlwZRIL",
+            "CgdOb3RoaW5nEAASFQoRQ29udHJvbFR5cGVfQmxvY2sQBBITCg9Db250cm9s",
+            "VHlwZV9ISUQQBRIYChRDb250cm9sVHlwZV9SZXNlcnZlchAGKk4KDURyaXZl",
+            "RGlyY3Rpb24SEQoNRHJpdmVEaXJfTm9uZRAAEhQKEERyaXZlRGlyX0Zvcndh",
+            "cmQQARIUChBEcml2ZURpcl9SZXZlcnNlEAIqRwoNUmVzZXJ2ZVJlc3VsdBIZ",
+            "ChVSZXNlcnZlUmVzdWx0X1N1Y2Nlc3MQABIbChdSZXNlcnZlUmVzdWx0X1Vu",
+            "c3VjY2VzcxABKkMKDUJDUlJlYWRSZXN1bHQSDgoKQkNSX05vcm1hbBAAEhAK",
+            "DEJDUl9SZWFkRmFpbBABEhAKDEJDUl9NaXNNYXRjaBACKo4BCgxWSE1vZGVT",
+            "dGF0dXMSCAoETm9uZRAAEhUKEUluaXRpYWxfUG93ZXJfT0ZGEAESFAoQSW5p",
+            "dGlhbF9Qb3dlcl9PThACEgoKBk1hbnVhbBADEg8KC0F1dG9fUmVtb3RlEAQS",
+            "DgoKQXV0b19Mb2NhbBAFEgwKCEF1dG9fTVRTEAYSDAoIQXV0b19NVEwQBypg",
+            "Cg5WSEFjdGlvblN0YXR1cxINCglOb0NvbW1hbmQQABIOCgpDb21tYW5kaW5n",
+            "EAESDAoIVGVhY2hpbmcQBRITCg9HcmlwcGVyVGVhY2hpbmcQBhIMCghDeWNs",
+            "ZVJ1bhAHKiwKDVZoUG93ZXJTdGF0dXMSDQoJUG93ZXJfT2ZmEAASDAoIUG93",
+            "ZXJfT24QASouChNWaExvYWRDYXJyaWVyU3RhdHVzEgwKCE5vdEV4aXN0EAAS",
+            "CQoFRXhpc3QQASo1CgxWaFN0b3BTaW5nbGUSEgoOU3RvcFNpbmdsZV9PZmYQ",
+            "ABIRCg1TdG9wU2luZ2xlX09uEAEqRQoST3BlcmF0aW5nUG93ZXJNb2RlEhcK",
+            "E09wZXJhdGluZ19Qb3dlcl9PZmYQABIWChJPcGVyYXRpbmdfUG93ZXJfT24Q",
+            "ASopCgtFcnJvclN0YXR1cxINCglFcnJfUmVzZXQQABILCgdFcnJfU2V0EAEq",
+            "QgoLVmVoaWNsZVR5cGUSDwoLVmhUeXBlX05vbmUQABIQCgxWaFR5cGVfQ2xl",
+            "YW4QARIQCgxWaFR5cGVfRGlydHkQAirIAQoLQ29tbWFuZFR5cGUSDAoIQ01E",
+            "X01vdmUQABIRCg1DTURfTW92ZV9QYXJrEAESEwoPQ01EX01vdmVfTVRQb3J0",
+            "EAISDAoIQ01EX0xvYWQQAxIOCgpDTURfVW5sb2FkEAQSEgoOQ01EX0xvYWRV",
+            "bmxvYWQQBRIQCgxDTURfVGVhY2hpbmcQBhIQCgxDTURfQ29udGludWUQBxIN",
+            "CglDTURfUm91bmQQCBIMCghDTURfSG9tZRAJEhAKDENNRF9PdmVycmlkZRAK",
+            "KvYBCg1Db21tYW5kU3RhdHVzEg8KC0NNRFN0X1F1ZXVlEAASEQoNQ01EU3Rf",
+            "U2VuZGluZxABEhMKD0NNRFN0X0V4ZWN1dGlvbhACEhIKDkNNRFN0X0Fib3J0",
+            "aW5nEAMSEwoPQ01EU3RfQ2FuY2VsaW5nEAQSEwoPQ01EU3RfTm9ybWFsRW5k",
+            "EAUSGgoWQ01EU3RfQWJub3JtYWxFbmRCeU9IVBAGEhoKFkNNRFN0X0Fibm9y",
+            "bWFsRW5kQnlNQ1MQBxIbChdDTURTdF9BYm5vcm1hbEVuZEJ5T0hUQxAIEhkK",
+            "FUNNRFN0X0NhbmNlbEVuZEJ5T0hUQxAJKiIKC1NlY3Rpb25UeXBlEgoKBk5v",
+            "cm1hbBAAEgcKA01UTBABKkYKCFRTQ1N0YXRlEgsKB1RTQ05PTkUQABIKCgZU",
+            "U0NJTlQQARIKCgZQQVVTRUQQAhIICgRBVVRPEAMSCwoHUEFVU0lORxAEKncK",
+            "CFRTQ0V2ZW50Eg4KClRTQ0luaXRpYWwQABIfChtTeXN0ZW1TdGFydGVkVXBT",
+            "dWNjZXNzZnVsbHkQARIOCgpUU0NSZXN1bWVkEAISFwoTVENTUmVxdWVzdGVk",
+            "VG9QYXVzZRADEhEKDVBhdXNlQ29tcGxldGUQBCrjAQoMVmVoaWNsZVN0YXRl",
+            "EhUKEVZlaGljbGVTdGF0ZV9Ob25lEAASFwoTVmVoaWNsZVN0YXRlX1JlbW92",
+            "ZRABEhwKGFZlaGljbGVTdGF0ZV9Ob3RBc3NpZ25lZBACEhgKFFZlaGljbGVT",
+            "dGF0ZV9FbnJvdXRlEAMSFwoTVmVoaWNsZVN0YXRlX1BhcmtlZBAEEhoKFlZl",
+            "aGljbGVTdGF0ZV9BY3F1aXJpbmcQBRIbChdWZWhpY2xlU3RhdGVfRGVwb3Np",
+            "dGluZxAGEhkKFVZlaGljbGVTdGF0ZV9Bc3NpZ25lZBAHKiYKCkxpbmtTdGF0",
+            "dXMSDAoITGlua0ZhaWwQABIKCgZMaW5rT0sQASo6CghIb3N0TW9kZRILCgdP",
+            "ZmZsaW5lEAASEAoMT25saW5lUmVtb3RlEAESDwoLT25saW5lTG9jYWwQAipv",
+            "ChREZXZpY2VDb25uZWN0aW9uVHlwZRIcChhEZXZpY2VDb25uZWN0aW9uVHlw",
+            "ZV9NQ1MQABIcChhEZXZpY2VDb25uZWN0aW9uVHlwZV9QTEMQARIbChdEZXZp",
+            "Y2VDb25uZWN0aW9uVHlwZV9BUBACKlAKEENvbm5lY3Rpb25TdGF0dXMSHAoY",
+            "Q29ubmVjdGlvblN0YXR1c19TdWNjZXNzEAASHgoaQ29ubmVjdGlvblN0YXR1",
+            "c19VbnN1Y2Nlc3MQASpNChhQb3J0U3RhdGlvblNlcnZpY2VTdGF0dXMSEAoM",
+            "Tm9EZWZpbml0aW9uEAASEAoMT3V0T2ZTZXJ2aWNlEAESDQoJSW5TZXJ2aWNl",
+            "EAIqWQoRUG9ydFN0YXRpb25TdGF0dXMSCAoERG93bhAAEg8KC0xvYWRSZXF1",
+            "ZXN0EAESEQoNVW5sb2FkUmVxdWVzdBACEggKBFdhaXQQAxIMCghEaXNhYmxl",
+            "ZBAEKkQKCE1zZ0xldmVsEhEKDU1zZ0xldmVsX0luZm8QABIRCg1Nc2dMZXZl",
+            "bF9XYXJuEAESEgoOTXNnTGV2ZWxfRXJyb3IQAiovCgdNVHhNb2RlEhIKDk1U",
+            "eE1vZGVfTWFudWFsEAASEAoMTVR4TW9kZV9BdXRvEAEqUwoLTVRMTG9jYXRp",
+            "b24SFAoQTVRMTG9jYXRpb25fTm9uZRAAEhUKEU1UTExvY2F0aW9uX1VwcGVy",
+            "EAESFwoTTVRMTG9jYXRpb25fQm90dG9ybhACKkcKD01UTE1vdmluZ1N0YXR1",
+            "cxIYChRNVExNb3ZpbmdTdGF0dXNfU3RvcBAAEhoKFk1UTE1vdmluZ1N0YXR1",
+            "c19Nb3ZpbmcQASpECgxWaEluUG9zaXRpb24SGAoUVmhJblBvc2l0aW9uX05v",
+            "dGhpbmcQABIaChZWaEluUG9zaXRpb25fSW5Qb3N0aW9uEAFCkQEKFGNvbS5l",
+            "eGFtcGxlLnR1dG9yaWFsQhFBZGRyZXNzQm9va1Byb3Rvc1ABWitnaXRodWIu",
+            "Y29tL2dvbGFuZy9wcm90b2J1Zi9wdHlwZXMvdGltZXN0YW1w+AEBogIDR1BC",
+            "qgItY29tLm1pcmxlLmliZzNrMC5zYy5Qcm90b2NvbEZvcm1hdC5PSFRNZXNz",
+            "YWdlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.ActiveType), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.EventType), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.CompleteStatus), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.CMDCancelType), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.PauseEvent), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.PauseType), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.VhGuideStatus), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.PassType), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.E_AreaSensorDir), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.OperatingVHMode), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.ControlType), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.DriveDirction), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.ReserveResult), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.BCRReadResult), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.VHModeStatus), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.VHActionStatus), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.VhPowerStatus), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.VhLoadCarrierStatus), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.VhStopSingle), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.OperatingPowerMode), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.ErrorStatus), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.VehicleType), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.CommandType), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.CommandStatus), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.SectionType), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.TSCState), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.TSCEvent), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.VehicleState), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.LinkStatus), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.HostMode), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.DeviceConnectionType), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.ConnectionStatus), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.PortStationServiceStatus), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.PortStationStatus), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.MsgLevel), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.MTxMode), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.MTLLocation), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.MTLMovingStatus), typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.VhInPosition), }, new pbr::GeneratedClrTypeInfo[] {
@@ -650,7 +656,7 @@ namespace com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage {
             new pbr::GeneratedClrTypeInfo(typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.TRANSFER_INFO), global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.TRANSFER_INFO.Parser, new[]{ "MCSCommandAutoAssign" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.TIP_MESSAGE_INFO), global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.TIP_MESSAGE_INFO.Parser, new[]{ "Time", "MsgLevel", "Message", "XID" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.TIP_MESSAGE_COLLECTION), global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.TIP_MESSAGE_COLLECTION.Parser, new[]{ "TIPMESSAGEINFOS" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.WrapperMessage), global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.WrapperMessage.Parser, new[]{ "ID", "SeqNum", "HostBasicInfoRep", "HostBasicInfoResp", "BasicInfoVersionRep", "BasicInfoVersionResp", "BasicInfoRep", "BasicInfoResp", "TavellingDataRep", "TavellingDataResp", "SectionDataRep", "SectionDataResp", "AddressDataRep", "AddressDataResp", "ScaleDataRep", "ScaleDataResp", "ControlDataRep", "ControlDataResp", "GuideDataRep", "GuideDataResp", "IndividualUploadReq", "IndividualUploadResp", "GUIDEDataUploadReq", "GUIDEDataUploadResp", "IndividualChangeReq", "IndividualChangeResp", "ModeChangeReq", "ModeChangeResp", "TransReq", "TransResp", "TranCmpRep", "TranCmpResp", "ControlZoneReq", "ControlZoneResp", "CARRIERIDRenameReq", "CARRIERIDRenameResp", "TransCancelReq", "TransCancelResp", "TransCancelFailReq", "TransCancelFailResp", "PauseReq", "PauseResp", "TransEventRep", "ImpTransEventRep", "ImpTransEventResp", "StatusReq", "StatusReqResp", "StatueChangeRep", "StatusChangeResp", "PowerOpeReq", "PowerOpeResp", "RangeTeachingReq", "RangeTeachingResp", "RangeTeachingCmpRep", "RangeTeachingCmpResp", "AddressTeachRep", "AddressTeachResp", "AlarmResetReq", "AlarmResetResp", "AlarmRep", "AlarmResp" }, new[]{ "Msg" }, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.WrapperMessage), global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.WrapperMessage.Parser, new[]{ "ID", "SeqNum", "HostBasicInfoRep", "HostBasicInfoResp", "BasicInfoVersionRep", "BasicInfoVersionResp", "BasicInfoRep", "BasicInfoResp", "TavellingDataRep", "TavellingDataResp", "SectionDataRep", "SectionDataResp", "AddressDataRep", "AddressDataResp", "ScaleDataRep", "ScaleDataResp", "ControlDataRep", "ControlDataResp", "GuideDataRep", "GuideDataResp", "IndividualUploadReq", "IndividualUploadResp", "GUIDEDataUploadReq", "GUIDEDataUploadResp", "IndividualChangeReq", "IndividualChangeResp", "ModeChangeReq", "ModeChangeResp", "TransReq", "TransResp", "TranCmpRep", "TranCmpResp", "ControlZoneReq", "ControlZoneResp", "CARRIERIDRenameReq", "CARRIERIDRenameResp", "TransCancelReq", "TransCancelResp", "TransCancelFailReq", "TransCancelFailResp", "PauseReq", "PauseResp", "TransEventRep", "ImpTransEventRep", "ImpTransEventResp", "StatusReq", "StatusReqResp", "StatueChangeRep", "StatusChangeResp", "PowerOpeReq", "PowerOpeResp", "AvoidReq", "AvoidResp", "AvoidCompleteRep", "AvoidCompleteResp", "RangeTeachingReq", "RangeTeachingResp", "RangeTeachingCmpRep", "RangeTeachingCmpResp", "AddressTeachRep", "AddressTeachResp", "AlarmResetReq", "AlarmResetResp", "AlarmRep", "AlarmResp" }, new[]{ "Msg" }, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.SYSTEMPROCESS_INFO), global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.SYSTEMPROCESS_INFO.Parser, new[]{ "TIME", "SEQ", "LOGLEVEL", "CLASS", "METHOD", "DEVICE", "DATA", "VHID", "CRRID", "TYPE", "LOGID", "THREADID", "LOT", "LEVEL", "XID", "TRXID", "DETAILS" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.HOSTLOG_INFO), global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.HOSTLOG_INFO.Parser, new[]{ "TIME", "EQID", "SENDRECEIVE", "SX", "FY", "DEVICE", "FUNNAME", "MESSAGE" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.EQLOG_INFO), global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.EQLOG_INFO.Parser, new[]{ "TIME", "SENDRECEIVE", "FUNNAME", "SEQNO", "VHID", "OHTCCMDID", "ACTTYPE", "MCSCMDID", "EVENTTYPE", "VHSTATUS", "MESSAGE" }, null, null, null)
@@ -21843,6 +21849,18 @@ namespace com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage {
         case MsgOneofCase.PowerOpeResp:
           PowerOpeResp = other.PowerOpeResp.Clone();
           break;
+        case MsgOneofCase.AvoidReq:
+          AvoidReq = other.AvoidReq.Clone();
+          break;
+        case MsgOneofCase.AvoidResp:
+          AvoidResp = other.AvoidResp.Clone();
+          break;
+        case MsgOneofCase.AvoidCompleteRep:
+          AvoidCompleteRep = other.AvoidCompleteRep.Clone();
+          break;
+        case MsgOneofCase.AvoidCompleteResp:
+          AvoidCompleteResp = other.AvoidCompleteResp.Clone();
+          break;
         case MsgOneofCase.RangeTeachingReq:
           RangeTeachingReq = other.RangeTeachingReq.Clone();
           break;
@@ -22443,6 +22461,50 @@ namespace com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage {
       }
     }
 
+    /// <summary>Field number for the "Avoid_Req" field.</summary>
+    public const int AvoidReqFieldNumber = 51;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.ID_51_AVOID_REQUEST AvoidReq {
+      get { return msgCase_ == MsgOneofCase.AvoidReq ? (global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.ID_51_AVOID_REQUEST) msg_ : null; }
+      set {
+        msg_ = value;
+        msgCase_ = value == null ? MsgOneofCase.None : MsgOneofCase.AvoidReq;
+      }
+    }
+
+    /// <summary>Field number for the "Avoid_Resp" field.</summary>
+    public const int AvoidRespFieldNumber = 151;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.ID_151_AVOID_RESPONSE AvoidResp {
+      get { return msgCase_ == MsgOneofCase.AvoidResp ? (global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.ID_151_AVOID_RESPONSE) msg_ : null; }
+      set {
+        msg_ = value;
+        msgCase_ = value == null ? MsgOneofCase.None : MsgOneofCase.AvoidResp;
+      }
+    }
+
+    /// <summary>Field number for the "Avoid_Complete_Rep" field.</summary>
+    public const int AvoidCompleteRepFieldNumber = 152;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.ID_152_AVOID_COMPLETE_REPORT AvoidCompleteRep {
+      get { return msgCase_ == MsgOneofCase.AvoidCompleteRep ? (global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.ID_152_AVOID_COMPLETE_REPORT) msg_ : null; }
+      set {
+        msg_ = value;
+        msgCase_ = value == null ? MsgOneofCase.None : MsgOneofCase.AvoidCompleteRep;
+      }
+    }
+
+    /// <summary>Field number for the "Avoid_Complete_Resp" field.</summary>
+    public const int AvoidCompleteRespFieldNumber = 52;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.ID_52_AVOID_COMPLETE_RESPONSE AvoidCompleteResp {
+      get { return msgCase_ == MsgOneofCase.AvoidCompleteResp ? (global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.ID_52_AVOID_COMPLETE_RESPONSE) msg_ : null; }
+      set {
+        msg_ = value;
+        msgCase_ = value == null ? MsgOneofCase.None : MsgOneofCase.AvoidCompleteResp;
+      }
+    }
+
     /// <summary>Field number for the "Range_Teaching_Req" field.</summary>
     public const int RangeTeachingReqFieldNumber = 71;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -22606,6 +22668,10 @@ namespace com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage {
       StatusChangeResp = 44,
       PowerOpeReq = 45,
       PowerOpeResp = 145,
+      AvoidReq = 51,
+      AvoidResp = 151,
+      AvoidCompleteRep = 152,
+      AvoidCompleteResp = 52,
       RangeTeachingReq = 71,
       RangeTeachingResp = 171,
       RangeTeachingCmpRep = 172,
@@ -22693,6 +22759,10 @@ namespace com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage {
       if (!object.Equals(StatusChangeResp, other.StatusChangeResp)) return false;
       if (!object.Equals(PowerOpeReq, other.PowerOpeReq)) return false;
       if (!object.Equals(PowerOpeResp, other.PowerOpeResp)) return false;
+      if (!object.Equals(AvoidReq, other.AvoidReq)) return false;
+      if (!object.Equals(AvoidResp, other.AvoidResp)) return false;
+      if (!object.Equals(AvoidCompleteRep, other.AvoidCompleteRep)) return false;
+      if (!object.Equals(AvoidCompleteResp, other.AvoidCompleteResp)) return false;
       if (!object.Equals(RangeTeachingReq, other.RangeTeachingReq)) return false;
       if (!object.Equals(RangeTeachingResp, other.RangeTeachingResp)) return false;
       if (!object.Equals(RangeTeachingCmpRep, other.RangeTeachingCmpRep)) return false;
@@ -22761,6 +22831,10 @@ namespace com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage {
       if (msgCase_ == MsgOneofCase.StatusChangeResp) hash ^= StatusChangeResp.GetHashCode();
       if (msgCase_ == MsgOneofCase.PowerOpeReq) hash ^= PowerOpeReq.GetHashCode();
       if (msgCase_ == MsgOneofCase.PowerOpeResp) hash ^= PowerOpeResp.GetHashCode();
+      if (msgCase_ == MsgOneofCase.AvoidReq) hash ^= AvoidReq.GetHashCode();
+      if (msgCase_ == MsgOneofCase.AvoidResp) hash ^= AvoidResp.GetHashCode();
+      if (msgCase_ == MsgOneofCase.AvoidCompleteRep) hash ^= AvoidCompleteRep.GetHashCode();
+      if (msgCase_ == MsgOneofCase.AvoidCompleteResp) hash ^= AvoidCompleteResp.GetHashCode();
       if (msgCase_ == MsgOneofCase.RangeTeachingReq) hash ^= RangeTeachingReq.GetHashCode();
       if (msgCase_ == MsgOneofCase.RangeTeachingResp) hash ^= RangeTeachingResp.GetHashCode();
       if (msgCase_ == MsgOneofCase.RangeTeachingCmpRep) hash ^= RangeTeachingCmpRep.GetHashCode();
@@ -22865,6 +22939,14 @@ namespace com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage {
       if (msgCase_ == MsgOneofCase.PowerOpeReq) {
         output.WriteRawTag(234, 2);
         output.WriteMessage(PowerOpeReq);
+      }
+      if (msgCase_ == MsgOneofCase.AvoidReq) {
+        output.WriteRawTag(154, 3);
+        output.WriteMessage(AvoidReq);
+      }
+      if (msgCase_ == MsgOneofCase.AvoidCompleteResp) {
+        output.WriteRawTag(162, 3);
+        output.WriteMessage(AvoidCompleteResp);
       }
       if (msgCase_ == MsgOneofCase.IndividualUploadReq) {
         output.WriteRawTag(234, 3);
@@ -22985,6 +23067,14 @@ namespace com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage {
       if (msgCase_ == MsgOneofCase.PowerOpeResp) {
         output.WriteRawTag(138, 9);
         output.WriteMessage(PowerOpeResp);
+      }
+      if (msgCase_ == MsgOneofCase.AvoidResp) {
+        output.WriteRawTag(186, 9);
+        output.WriteMessage(AvoidResp);
+      }
+      if (msgCase_ == MsgOneofCase.AvoidCompleteRep) {
+        output.WriteRawTag(194, 9);
+        output.WriteMessage(AvoidCompleteRep);
       }
       if (msgCase_ == MsgOneofCase.IndividualUploadResp) {
         output.WriteRawTag(138, 10);
@@ -23184,6 +23274,18 @@ namespace com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage {
       if (msgCase_ == MsgOneofCase.PowerOpeResp) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(PowerOpeResp);
       }
+      if (msgCase_ == MsgOneofCase.AvoidReq) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(AvoidReq);
+      }
+      if (msgCase_ == MsgOneofCase.AvoidResp) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(AvoidResp);
+      }
+      if (msgCase_ == MsgOneofCase.AvoidCompleteRep) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(AvoidCompleteRep);
+      }
+      if (msgCase_ == MsgOneofCase.AvoidCompleteResp) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(AvoidCompleteResp);
+      }
       if (msgCase_ == MsgOneofCase.RangeTeachingReq) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(RangeTeachingReq);
       }
@@ -23375,6 +23477,18 @@ namespace com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage {
           break;
         case MsgOneofCase.PowerOpeResp:
           PowerOpeResp = other.PowerOpeResp;
+          break;
+        case MsgOneofCase.AvoidReq:
+          AvoidReq = other.AvoidReq;
+          break;
+        case MsgOneofCase.AvoidResp:
+          AvoidResp = other.AvoidResp;
+          break;
+        case MsgOneofCase.AvoidCompleteRep:
+          AvoidCompleteRep = other.AvoidCompleteRep;
+          break;
+        case MsgOneofCase.AvoidCompleteResp:
+          AvoidCompleteResp = other.AvoidCompleteResp;
           break;
         case MsgOneofCase.RangeTeachingReq:
           RangeTeachingReq = other.RangeTeachingReq;
@@ -23605,6 +23719,24 @@ namespace com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage {
             }
             input.ReadMessage(subBuilder);
             PowerOpeReq = subBuilder;
+            break;
+          }
+          case 410: {
+            global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.ID_51_AVOID_REQUEST subBuilder = new global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.ID_51_AVOID_REQUEST();
+            if (msgCase_ == MsgOneofCase.AvoidReq) {
+              subBuilder.MergeFrom(AvoidReq);
+            }
+            input.ReadMessage(subBuilder);
+            AvoidReq = subBuilder;
+            break;
+          }
+          case 418: {
+            global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.ID_52_AVOID_COMPLETE_RESPONSE subBuilder = new global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.ID_52_AVOID_COMPLETE_RESPONSE();
+            if (msgCase_ == MsgOneofCase.AvoidCompleteResp) {
+              subBuilder.MergeFrom(AvoidCompleteResp);
+            }
+            input.ReadMessage(subBuilder);
+            AvoidCompleteResp = subBuilder;
             break;
           }
           case 490: {
@@ -23875,6 +24007,24 @@ namespace com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage {
             }
             input.ReadMessage(subBuilder);
             PowerOpeResp = subBuilder;
+            break;
+          }
+          case 1210: {
+            global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.ID_151_AVOID_RESPONSE subBuilder = new global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.ID_151_AVOID_RESPONSE();
+            if (msgCase_ == MsgOneofCase.AvoidResp) {
+              subBuilder.MergeFrom(AvoidResp);
+            }
+            input.ReadMessage(subBuilder);
+            AvoidResp = subBuilder;
+            break;
+          }
+          case 1218: {
+            global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.ID_152_AVOID_COMPLETE_REPORT subBuilder = new global::com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.ID_152_AVOID_COMPLETE_REPORT();
+            if (msgCase_ == MsgOneofCase.AvoidCompleteRep) {
+              subBuilder.MergeFrom(AvoidCompleteRep);
+            }
+            input.ReadMessage(subBuilder);
+            AvoidCompleteRep = subBuilder;
             break;
           }
           case 1290: {
