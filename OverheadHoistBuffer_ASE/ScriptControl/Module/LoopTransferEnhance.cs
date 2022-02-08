@@ -210,7 +210,7 @@ namespace com.mirle.ibg3k0.sc.Module
 
 
         const double MAX_CLOSE_DIS_MM = 10_000;
-        public (bool hasCommand, string waitPort, ACMD_MCS cmdMCS) tryGetZoneCommand(List<ACMD_MCS> mcsCMDs, string vhID, string zoneCommandID)
+        public (bool hasCommand, string waitPort, ACMD_MCS cmdMCS) tryGetZoneCommand(List<ACMD_MCS> mcsCMDs, string vhID, string zoneCommandID, bool isNeedCheckHasVhClose = true)
         {
             //沒命令就不需要等待
             if (mcsCMDs == null || mcsCMDs.Count == 0) return (false, "", null);
@@ -227,7 +227,7 @@ namespace com.mirle.ibg3k0.sc.Module
 
             //}
             //
-            if (zone_mcs_cmds.Count == 1)
+            if (isNeedCheckHasVhClose && zone_mcs_cmds.Count == 1)
             {
                 //1筆
                 //	判斷後面是否有空車在距離內
@@ -404,6 +404,34 @@ namespace com.mirle.ibg3k0.sc.Module
                 default:
                     return false;
             }
+        }
+
+        public (bool hasCommand, string waitPort, ACMD_MCS cmdMCS) tryGetZoneCommandWhenCommandComplete(List<ACMD_MCS> mcsCMDs, string vhID)
+        {
+            var vh = vehicleBLL.getVehicle(vhID);
+            string current_adr_id = vh.CUR_ADR_ID;
+            var port = portDefBLL.getPortDefByAdrID(current_adr_id);
+            if (port == null)
+            {
+                return (false, "", null);
+            }
+            var get_result = zoneCommandBLL.tryGetZoneCommandGroupByPortID(port.PLCPortID);
+            if (!get_result.hasFind)
+            {
+                logger.Info($"OHB >> OHB|確認 vh:{vh.VEHICLE_ID}命令完成後是否有同Zone的命令可以搬送，但Port:{port.PLCPortID}並無對應的ZoneCommand.");
+                return (false, "", null);
+            }
+            var zone_mcs_cmds = mcsCMDs.Where(cmd => get_result.zoneCommandGroup.PortIDs.Contains(sc.Common.SCUtility.Trim(cmd.CURRENT_LOCATION, true)));
+            if (zone_mcs_cmds == null || zone_mcs_cmds.Count() == 0)
+            {
+                return (false, "", null);
+            }
+            bool is_need_check_has_vh_close = zone_mcs_cmds.Count() == 1;
+            //找出還沒跑過頭的命令
+            zone_mcs_cmds = zone_mcs_cmds.Where(mcs_cmd => !IsRunOver(vh, mcs_cmd.CURRENT_LOCATION));
+            var try_get_result = tryGetZoneCommand
+                (zone_mcs_cmds.ToList(), vh.VEHICLE_ID, get_result.zoneCommandGroup.ZoneCommandID, is_need_check_has_vh_close);
+            return try_get_result;
         }
     }
 }

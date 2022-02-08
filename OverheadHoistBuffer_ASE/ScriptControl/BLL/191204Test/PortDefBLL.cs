@@ -203,7 +203,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 return null;
             }
         }
-       
+
         //A20.06.12
         public List<PortDef> GetAGVPortGroupDataByStationID(string ohbName, string stationID)
         {
@@ -384,6 +384,12 @@ namespace com.mirle.ibg3k0.sc.BLL
                 return port_defs.Where(port => SCUtility.isMatche(port.PLCPortID, portID)).
                                  FirstOrDefault();
             }
+            public List<PortDef> getPortDefByAdr(string adrID)
+            {
+                var port_defs = objCacheManager.getPortDefs();
+                return port_defs.Where(port => SCUtility.isMatche(port.ADR_ID, adrID)).
+                                 ToList();
+            }
             public (bool isInThisStation, PortDef portDef) isInAGVStByPortID(string agvStationID, string checkPortID)
             {
                 var port_defs = objCacheManager.getPortDefs();
@@ -452,6 +458,11 @@ namespace com.mirle.ibg3k0.sc.BLL
         }
 
         public PortDef getPortDef(string portID)
+        {
+            return cache.getPortDef(portID);
+        }
+
+        PortDef IPortDefBLL.getPortDefByAdrID(string portID)
         {
             return cache.getPortDef(portID);
         }

@@ -38,11 +38,12 @@ namespace UnitTestForLoopEnhance
             stub.reserveBLL.GetHltMapAddress("13282").Returns((true, 10697, 0, false));
 
             //ZC06-T09的點位
-            stub.reserveBLL.GetHltMapAddress("15025").Returns((true, 15025, 2270, false));
+            stub.reserveBLL.GetHltMapAddress("15150").Returns((true, 15025, 2270, false));
         }
 
         private void setSectionData(StubObjectCollection stub)
         {
+            stub.sectionBLL.getSectionByToAdr("12269").Returns(new ASECTION() { SEC_ID = "30140", FROM_ADR_ID = "12268", TO_ADR_ID = "12269", SEC_DIS = 4000 });
             stub.sectionBLL.getSectionByToAdr("12270").Returns(new ASECTION() { SEC_ID = "30141", FROM_ADR_ID = "12269", TO_ADR_ID = "12270", SEC_DIS = 4000 });
             stub.sectionBLL.getSectionByToAdr("12271").Returns(new ASECTION() { SEC_ID = "30142", FROM_ADR_ID = "12270", TO_ADR_ID = "12271", SEC_DIS = 4000 });
             stub.sectionBLL.getSectionByToAdr("12272").Returns(new ASECTION() { SEC_ID = "30143", FROM_ADR_ID = "12271", TO_ADR_ID = "12272", SEC_DIS = 4000 });
@@ -57,6 +58,7 @@ namespace UnitTestForLoopEnhance
             stub.sectionBLL.getSectionByToAdr("12281").Returns(new ASECTION() { SEC_ID = "30152", FROM_ADR_ID = "12279", TO_ADR_ID = "12281", SEC_DIS = 4000 });
             stub.sectionBLL.getSectionByToAdr("13282").Returns(new ASECTION() { SEC_ID = "30153", FROM_ADR_ID = "12281", TO_ADR_ID = "13282", SEC_DIS = 4000 });
 
+            stub.sectionBLL.getSection("30140").Returns(new ASECTION() { SEC_ID = "30140", FROM_ADR_ID = "12268", TO_ADR_ID = "12269", SEC_DIS = 4000 });
             stub.sectionBLL.getSection("30141").Returns(new ASECTION() { SEC_ID = "30141", FROM_ADR_ID = "12269", TO_ADR_ID = "12270", SEC_DIS = 4000 });
             stub.sectionBLL.getSection("30142").Returns(new ASECTION() { SEC_ID = "30142", FROM_ADR_ID = "12270", TO_ADR_ID = "12271", SEC_DIS = 4000 });
             stub.sectionBLL.getSection("30143").Returns(new ASECTION() { SEC_ID = "30143", FROM_ADR_ID = "12271", TO_ADR_ID = "12272", SEC_DIS = 4000 });
@@ -103,6 +105,8 @@ namespace UnitTestForLoopEnhance
             stub.zoneCommandBLL.getZoneCommandGroup("ZC01").Returns(zone_command_group);
             stub.zoneCommandBLL.tryGetZoneCommandGroupByPortID("B7_OHBLINE3_A01").
                 Returns((true, zone_command_group));
+            stub.zoneCommandBLL.tryGetZoneCommandGroupByPortID("109001").
+                Returns((true, zone_command_group));
 
             var zone_command_group_n = new ZoneCommandGroup("ZC06",
                 new List<string>()
@@ -132,7 +136,23 @@ namespace UnitTestForLoopEnhance
             stub.portDefBLL.getPortDef("B7_OHBLINE3_A02").Returns(new PortDef() { PLCPortID = "B7_OHBLINE3_A02", ADR_ID = "13280" });
             stub.portDefBLL.getPortDef("B7_OHBLINE3_A03").Returns(new PortDef() { PLCPortID = "B7_OHBLINE3_A03", ADR_ID = "13282" });
 
-            stub.portDefBLL.getPortDef("B7_OHBlOOP_T09").Returns(new PortDef() { PLCPortID = "B7_OHBlOOP_T09", ADR_ID = "15025" });
+            stub.portDefBLL.getPortDef("B7_OHBlOOP_T09").Returns(new PortDef() { PLCPortID = "B7_OHBlOOP_T09", ADR_ID = "15150" });
+
+            stub.portDefBLL.getPortDefByAdrID("12269").Returns(new PortDef() { PLCPortID = "108701", ADR_ID = "12269" });
+            stub.portDefBLL.getPortDefByAdrID("12270").Returns(new PortDef() { PLCPortID = "108801", ADR_ID = "12270" });
+            stub.portDefBLL.getPortDefByAdrID("12271").Returns(new PortDef() { PLCPortID = "108901", ADR_ID = "12271" });
+            stub.portDefBLL.getPortDefByAdrID("12272").Returns(new PortDef() { PLCPortID = "109001", ADR_ID = "12272" });
+            stub.portDefBLL.getPortDefByAdrID("12273").Returns(new PortDef() { PLCPortID = "109101", ADR_ID = "12273" });
+            stub.portDefBLL.getPortDefByAdrID("12274").Returns(new PortDef() { PLCPortID = "109201", ADR_ID = "12274" });
+            stub.portDefBLL.getPortDefByAdrID("12275").Returns(new PortDef() { PLCPortID = "109301", ADR_ID = "12275" });
+            stub.portDefBLL.getPortDefByAdrID("12276").Returns(new PortDef() { PLCPortID = "109401", ADR_ID = "12276" });
+            stub.portDefBLL.getPortDefByAdrID("12278").Returns(new PortDef() { PLCPortID = "109501", ADR_ID = "12278" });
+            stub.portDefBLL.getPortDefByAdrID("12279").Returns(new PortDef() { PLCPortID = "109601", ADR_ID = "12279" });
+            stub.portDefBLL.getPortDefByAdrID("12281").Returns(new PortDef() { PLCPortID = "109701", ADR_ID = "12281" });
+            stub.portDefBLL.getPortDefByAdrID("13277").Returns(new PortDef() { PLCPortID = "B7_OHBLINE3_A01", ADR_ID = "13277" });
+            stub.portDefBLL.getPortDefByAdrID("13280").Returns(new PortDef() { PLCPortID = "B7_OHBLINE3_A02", ADR_ID = "13280" });
+            stub.portDefBLL.getPortDefByAdrID("13282").Returns(new PortDef() { PLCPortID = "B7_OHBLINE3_A03", ADR_ID = "13282" });
+
         }
         private static void setSeqNum(StubObjectCollection stub)
         {
@@ -428,6 +448,82 @@ namespace UnitTestForLoopEnhance
 
             //Assert
             result.Should().BeTrue();
+        }
+        [Test]
+        public void 車子上報Load_Unload完成後_確認該Zone有無可順途搬送的命令_該Zone有1筆後面沒車尚未超過()
+        {
+            //Arrange
+            string vhID = "B7_OHBLINE3_CR1";
+            string zoneCommandID = "ZC01";
+            List<ACMD_MCS> mcs_cmds = new List<ACMD_MCS>();
+            var cmd_mcs1 = bulidFackCMD_MCS("1", "B7_OHBLINE3_A01", "B7_OHBLINE3-ZONE2");
+            mcs_cmds.Add(cmd_mcs1);
+
+            var stub = GetStubObject();
+            setSectionData(stub);
+            setAddressData(stub);
+            setVehicleData(stub);
+            setZoneCommandData(stub);
+            setPortDefData(stub);
+            LoopTransferEnhance loopTransferEnhance = new LoopTransferEnhance();
+            loopTransferEnhance.Start
+                (stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL,
+                 stub.transferService, stub.shelfDefBLL, stub.cassetteDataBLL, stub.cmdBLL);
+
+            //變更車子的位置
+            var vh2 = stub.vehicleBLL.loadCyclingVhs().
+                 Where(v => v.VEHICLE_ID == "B7_OHBLINE3_CR2").FirstOrDefault();
+            vh2.CUR_SEC_ID = "30147";
+            var vh1 = stub.vehicleBLL.loadCyclingVhs().
+                 Where(v => v.VEHICLE_ID == "B7_OHBLINE3_CR1").FirstOrDefault();
+            vh1.X_Axis = 6794;
+            vh1.CUR_ADR_ID = "12272";
+            vh1.CUR_SEC_ID = "30143";
+
+            //Act
+            var result = loopTransferEnhance.tryGetZoneCommandWhenCommandComplete(mcs_cmds, vhID);
+
+            //Assert
+            var assert_result = (true, "B7_OHBLINE3_A01", cmd_mcs1);
+            result.Should().BeEquivalentTo(assert_result);
+        }
+        [Test]
+        public void 車子上報Load_Unload完成後_確認該Zone有無可順途搬送的命令_該Zone有1筆後面沒車但已經超過搬送的Port()
+        {
+            //Arrange
+            string vhID = "B7_OHBLINE3_CR1";
+            string zoneCommandID = "ZC01";
+            List<ACMD_MCS> mcs_cmds = new List<ACMD_MCS>();
+            var cmd_mcs1 = bulidFackCMD_MCS("1", "B7_OHBLINE3_A01", "B7_OHBLINE3-ZONE2");
+            mcs_cmds.Add(cmd_mcs1);
+
+            var stub = GetStubObject();
+            setSectionData(stub);
+            setAddressData(stub);
+            setVehicleData(stub);
+            setZoneCommandData(stub);
+            setPortDefData(stub);
+            LoopTransferEnhance loopTransferEnhance = new LoopTransferEnhance();
+            loopTransferEnhance.Start
+                (stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL,
+                 stub.transferService, stub.shelfDefBLL, stub.cassetteDataBLL, stub.cmdBLL);
+
+            //變更車子的位置
+            var vh2 = stub.vehicleBLL.loadCyclingVhs().
+                 Where(v => v.VEHICLE_ID == "B7_OHBLINE3_CR2").FirstOrDefault();
+            vh2.CUR_SEC_ID = "30139";
+            var vh1 = stub.vehicleBLL.loadCyclingVhs().
+                 Where(v => v.VEHICLE_ID == "B7_OHBLINE3_CR1").FirstOrDefault();
+            vh1.X_Axis = 10280;
+            vh1.CUR_ADR_ID = "13280";
+            vh1.CUR_SEC_ID = "30151";
+
+            //Act
+            var result = loopTransferEnhance.tryGetZoneCommandWhenCommandComplete(mcs_cmds, vhID);
+
+            //Assert
+            var assert_result = (false, "", default(ACMD_MCS));
+            result.Should().BeEquivalentTo(assert_result);
         }
     }
 }

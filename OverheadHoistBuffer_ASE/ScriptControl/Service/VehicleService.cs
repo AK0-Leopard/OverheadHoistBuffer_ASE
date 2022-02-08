@@ -5028,30 +5028,7 @@ namespace com.mirle.ibg3k0.sc.Service
             scApp.ReserveBLL.TryAddReservedSection(eqpt.VEHICLE_ID, eqpt.CUR_SEC_ID);
 
             //回復結束後，若該筆命令是Mismatch、IDReadFail結束的話則要把原本車上的那顆CST Installed回來。
-            if (vhLoadCSTStatus == VhLoadCarrierStatus.Exist)
-            {
-                scApp.VIDBLL.upDateVIDCarrierID(eqpt.VEHICLE_ID, car_cst_id);
-                scApp.VIDBLL.upDateVIDCarrierLocInfo(eqpt.VEHICLE_ID, eqpt.Real_ID);
-            }
-            List<AMCSREPORTQUEUE> reportqueues = new List<AMCSREPORTQUEUE>();
-            switch (completeStatus)
-            {
-                case CompleteStatus.CmpStatusIdmisMatch:
-                case CompleteStatus.CmpStatusIdreadFailed:
-                case CompleteStatus.CmpStatusIdreadDuplicate:
-                    if (!SCUtility.isEmpty(finish_mcs_cmd))
-                    {
-                        reportqueues.Clear();
-                        scApp.ReportBLL.newReportCarrierIDReadReport(eqpt.VEHICLE_ID, reportqueues);
-                        scApp.ReportBLL.insertMCSReport(reportqueues);
-                        scApp.ReportBLL.newSendMCSMessage(reportqueues);
-                    }
-                    break;
-                case CompleteStatus.CmpStatusUnload:
-                case CompleteStatus.CmpStatusLoadunload:
-                    //scApp.PortBLL.OperateCatch.updatePortStationCSTExistStatus(eqpt.CUR_ADR_ID, cst_id);
-                    break;
-            }
+
 
             if (DebugParameter.IsDebugMode && DebugParameter.IsCycleRun)
             {
@@ -5074,6 +5051,7 @@ namespace com.mirle.ibg3k0.sc.Service
             });
             eqpt.onCommandComplete(completeStatus);
             scApp.VehicleBLL.updateVheicleTravelInfo(eqpt.VEHICLE_ID, travel_dis);
+
         }
 
         private bool replyCommandComplete(AVEHICLE eqpt, int seq_num, string finish_ohxc_cmd, string finish_mcs_cmd)
