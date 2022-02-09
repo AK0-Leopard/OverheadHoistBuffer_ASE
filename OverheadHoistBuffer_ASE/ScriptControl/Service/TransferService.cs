@@ -876,7 +876,7 @@ namespace com.mirle.ibg3k0.sc.Service
 
                     int ohtIdle = vehicleData.Where(data => string.IsNullOrWhiteSpace(data.OHTC_CMD)).Count();
 
-                    if (ohtIdle != 0)    //有閒置的車輛在開始派命令
+                    if (true)    //有閒置的車輛在開始派命令
                     {
                         var cmdData = cmdBLL.LoadCmdData();
 

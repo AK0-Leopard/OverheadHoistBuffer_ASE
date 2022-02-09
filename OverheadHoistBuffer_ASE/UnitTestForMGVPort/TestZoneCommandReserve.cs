@@ -105,6 +105,8 @@ namespace UnitTestForLoopEnhance
             stub.zoneCommandBLL.getZoneCommandGroup("ZC01").Returns(zone_command_group);
             stub.zoneCommandBLL.tryGetZoneCommandGroupByPortID("B7_OHBLINE3_A01").
                 Returns((true, zone_command_group));
+            stub.zoneCommandBLL.tryGetZoneCommandGroupByPortID("B7_OHBLINE3_A02").
+                Returns((true, zone_command_group));
             stub.zoneCommandBLL.tryGetZoneCommandGroupByPortID("109001").
                 Returns((true, zone_command_group));
 

@@ -1154,6 +1154,12 @@ message Timestamp {
 		ID_45_POWER_OPE_REQ Power_Ope_Req = 45;
 		ID_145_POWER_OPE_RESPONSE Power_Ope_Resp = 145;
 
+  		ID_51_AVOID_REQUEST Avoid_Req = 51;
+		ID_151_AVOID_RESPONSE Avoid_Resp = 151;
+
+		ID_152_AVOID_COMPLETE_REPORT Avoid_Complete_Rep = 152;
+		ID_52_AVOID_COMPLETE_RESPONSE Avoid_Complete_Resp = 52;
+
 		ID_71_RANGE_TEACHING_REQUEST Range_Teaching_Req = 71;
 		ID_171_RANGE_TEACHING_RESPONSE Range_Teaching_Resp = 171;
 
