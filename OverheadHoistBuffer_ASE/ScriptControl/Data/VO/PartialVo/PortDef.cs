@@ -47,5 +47,15 @@ namespace com.mirle.ibg3k0.sc
         public string LoadPositionBOX5;
         public string CassetteID;
         public bool FireAlarm;
+
+        public string ToString(BLL.ZoneCommandBLL zoneCommandBLL)
+        {
+            var zone_info = zoneCommandBLL.tryGetZoneCommandGroupByPortID(PLCPortID);
+            if (zone_info.hasFind)
+            {
+                return $"{PLCPortID}-{zone_info.zoneCommandGroup.ZoneCommandID}({ADR_ID})";
+            }
+            return $"{PLCPortID}({ADR_ID})";
+        }
     }
 }

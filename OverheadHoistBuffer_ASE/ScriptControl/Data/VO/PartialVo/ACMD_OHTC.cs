@@ -8,6 +8,7 @@ namespace com.mirle.ibg3k0.sc
 {
     public partial class ACMD_OHTC
     {
+        public static List<ACMD_OHTC> ACMD_OHTC_List = new List<ACMD_OHTC>();
 
         public bool IsCMD_MCS()
         {

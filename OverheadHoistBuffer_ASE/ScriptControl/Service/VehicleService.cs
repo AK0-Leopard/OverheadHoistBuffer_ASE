@@ -4638,40 +4638,44 @@ namespace com.mirle.ibg3k0.sc.Service
                    CarrierID: eqpt.CST_ID);
             }
         }
+        object zoneCommandLockObj = new object();
         private void PositionReport_ZoneCommaneReq(BCFApplication bcfApp, AVEHICLE eqpt, int seqNum
                                             , EventType eventType, string zondCommandID)
         {
             try
             {
-                LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
-                Data: $"Process report {eventType}",
-                VehicleID: eqpt.VEHICLE_ID,
-                CarrierID: eqpt.CST_ID);
-
-                var ready_transfer_cmd_mcs = ACMD_MCS.loadReadyTransferCMD_MCS();
-                var get_command_zone_result = scApp.LoopTransferEnhance.tryGetZoneCommand
-                    (ready_transfer_cmd_mcs, eqpt.VEHICLE_ID, zondCommandID);
                 string zome_command_port_id = "";
                 string port_adr_id = "";
-                if (get_command_zone_result.hasCommand)
+                lock (zoneCommandLockObj)
                 {
-                    bool is_success_pre_assign = scApp.LoopTransferEnhance.preAssignMCSCommand(scApp.SequenceBLL, eqpt, get_command_zone_result.cmdMCS);
-                    if (is_success_pre_assign)
+                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                    Data: $"Process report {eventType}",
+                    VehicleID: eqpt.VEHICLE_ID,
+                    CarrierID: eqpt.CST_ID);
+
+                    var ready_transfer_cmd_mcs = ACMD_MCS.loadReadyTransferOfQueueCMD_MCS();
+                    var get_command_zone_result = scApp.LoopTransferEnhance.tryGetZoneCommand
+                        (ready_transfer_cmd_mcs, eqpt.VEHICLE_ID, zondCommandID);
+                    if (get_command_zone_result.hasCommand)
                     {
-                        zome_command_port_id = get_command_zone_result.waitPort;
-                        var port_def = scApp.PortDefBLL.getPortDef(zome_command_port_id);
-                        if (port_def != null)
-                            port_adr_id = port_def.ADR_ID;
-                    }
-                    else
-                    {
-                        scApp.TransferService.TransferServiceLogger.Info($"OHB >> OHB zone id:{zondCommandID},cmd id:{get_command_zone_result.cmdMCS.CMD_ID} 預先下命令失敗");
+                        bool is_success_pre_assign = scApp.LoopTransferEnhance.preAssignMCSCommand(scApp.SequenceBLL, eqpt, get_command_zone_result.cmdMCS);
+                        if (is_success_pre_assign)
+                        {
+                            zome_command_port_id = get_command_zone_result.waitPort;
+                            var port_def = scApp.PortDefBLL.getPortDef(zome_command_port_id);
+                            if (port_def != null)
+                                port_adr_id = port_def.ADR_ID;
+                        }
+                        else
+                        {
+                            scApp.TransferService.TransferServiceLogger.Info($"OHB >> OHB zone id:{zondCommandID},cmd id:{get_command_zone_result.cmdMCS.CMD_ID} 預先下命令失敗");
+                        }
                     }
                 }
 
                 replyTranEventReport(bcfApp, eventType, eqpt, seqNum,
-                                     zoneCommandPortID: zome_command_port_id,
-                                     zoneCommandPortAdrID: port_adr_id);
+                                         zoneCommandPortID: zome_command_port_id,
+                                         zoneCommandPortAdrID: port_adr_id);
             }
             catch (Exception ex)
             {
@@ -5068,24 +5072,27 @@ namespace com.mirle.ibg3k0.sc.Service
             bool can_continue_service = IsCanContinueService(completeStatus);
             if (can_continue_service)
             {
-                var get_command_zone_result = scApp.LoopTransferEnhance.tryGetZoneCommandWhenCommandComplete(ACMD_MCS.loadReadyTransferCMD_MCS(), vh.VEHICLE_ID);
-                if (get_command_zone_result.hasCommand)
+                lock (zoneCommandLockObj)
                 {
-                    bool is_success_pre_assign = scApp.LoopTransferEnhance.preAssignMCSCommand(scApp.SequenceBLL, vh, get_command_zone_result.cmdMCS);
-                    if (is_success_pre_assign)
+                    var get_command_zone_result = scApp.LoopTransferEnhance.tryGetZoneCommandWhenCommandComplete(ACMD_MCS.loadReadyTransferOfQueueCMD_MCS(), vh.VEHICLE_ID);
+                    if (get_command_zone_result.hasCommand)
                     {
-                        scApp.TransferService.TransferServiceLogger.Info($"成功預下命令:{get_command_zone_result.cmdMCS.CMD_ID}，在車子完成命令時");
+                        bool is_success_pre_assign = scApp.LoopTransferEnhance.preAssignMCSCommand(scApp.SequenceBLL, vh, get_command_zone_result.cmdMCS);
+                        if (is_success_pre_assign)
+                        {
+                            scApp.TransferService.TransferServiceLogger.Info($"成功預下命令:{get_command_zone_result.cmdMCS.CMD_ID}，在車子完成命令時");
+                        }
+                        else
+                        {
+                            bool is_success = scApp.CMDBLL.doCreatTransferCommand(vh.VEHICLE_ID,
+                                                                                 cmd_type: E_CMD_TYPE.Round);
+                        }
                     }
                     else
                     {
                         bool is_success = scApp.CMDBLL.doCreatTransferCommand(vh.VEHICLE_ID,
-                                                                             cmd_type: E_CMD_TYPE.Round);
+                                                         cmd_type: E_CMD_TYPE.Round);
                     }
-                }
-                else
-                {
-                    bool is_success = scApp.CMDBLL.doCreatTransferCommand(vh.VEHICLE_ID,
-                                                     cmd_type: E_CMD_TYPE.Round);
                 }
             }
         }

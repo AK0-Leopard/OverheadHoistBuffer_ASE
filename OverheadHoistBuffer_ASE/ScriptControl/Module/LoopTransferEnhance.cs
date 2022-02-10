@@ -208,7 +208,6 @@ namespace com.mirle.ibg3k0.sc.Module
             }
         }
 
-
         const double MAX_CLOSE_DIS_MM = 10_000;
         public (bool hasCommand, string waitPort, ACMD_MCS cmdMCS) tryGetZoneCommand(List<ACMD_MCS> mcsCMDs, string vhID, string zoneCommandID, bool isNeedCheckHasVhClose = true)
         {
@@ -311,7 +310,7 @@ namespace com.mirle.ibg3k0.sc.Module
                         }
                         //1.a-若目的地為儲位或是Station，則需要重新判斷目的地哪個位子可以放置
                         string original_host_dest = SCUtility.Trim(cmdMCS.HOSTDESTINATION, true);
-                        if (cmdMCS.IsDestination_AGVZone(transferService))
+                        if (cmdMCS.IsDestination_ShelfZone(transferService))
                         {
                             List<ShelfDef> shelfData = shelfDefBLL.GetEmptyAndEnableShelfByZone(cmdMCS.HOSTDESTINATION);
 
@@ -362,6 +361,7 @@ namespace com.mirle.ibg3k0.sc.Module
                         if (is_success)
                         {
                             tx.Complete();
+                            cmdMCS.TRANSFERSTATE = E_TRAN_STATUS.Transferring;
                         }
                     }
                 }

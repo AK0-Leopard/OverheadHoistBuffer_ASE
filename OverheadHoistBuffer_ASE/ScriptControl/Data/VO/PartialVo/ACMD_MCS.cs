@@ -95,13 +95,15 @@ namespace com.mirle.ibg3k0.sc
             BoxReadFail_CstIsOK = 4,
             CSTReadFail_BoxIsOK = 5,
         }
-        public static List<ACMD_MCS> loadReadyTransferCMD_MCS()
+        public static List<ACMD_MCS> loadReadyTransferOfQueueCMD_MCS()
         {
             if (ACMD_MCS_List == null)
             {
                 return new List<ACMD_MCS>();
             }
-            var ready_transfer_cmd_mcs = ACMD_MCS_List.Where(cmd => cmd.IsReadyTransfer).ToList();
+            var ready_transfer_cmd_mcs = ACMD_MCS_List.
+                                         Where(cmd => cmd.IsReadyTransfer &&
+                                                      cmd.TRANSFERSTATE == E_TRAN_STATUS.Queue).ToList();
             return ready_transfer_cmd_mcs;
         }
 
@@ -255,7 +257,7 @@ namespace com.mirle.ibg3k0.sc
                 NLog.LogManager.GetCurrentClassLogger().Warn($"port id:{CURRENT_LOCATION} adr id:{port_def.ADR_ID},obj [HltMapAddress] no define");
                 return double.MaxValue;
             }
-            return double.MaxValue;
+            return adr_axis.x;
         }
         //**********************************************************************************
         //A20.05.22 設定與shelfDef相同之clone

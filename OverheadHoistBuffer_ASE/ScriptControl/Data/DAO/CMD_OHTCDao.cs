@@ -88,6 +88,14 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                         select cmd;
             return query.ToList();
         }
+        public List<ACMD_OHTC> loadUnfinishCMD_OHT(DBConnection_EF con)
+        {
+            var query = from cmd in con.ACMD_OHTC
+                        where cmd.CMD_STAUS < E_CMD_STATUS.NormalEnd
+                        select cmd;
+            return query.ToList();
+        }
+
 
         public ACMD_OHTC getByID(DBConnection_EF con, String cmd_id)
         {

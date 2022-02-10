@@ -3495,6 +3495,13 @@ namespace com.mirle.ibg3k0.sc.BLL
                 return cmd_ohtcDAO.loadFinishCMD_OHT(con);
             }
         }
+        public List<ACMD_OHTC> loadUnfinishCMD_OHTC()
+        {
+            using (DBConnection_EF con = DBConnection_EF.GetUContext())
+            {
+                return cmd_ohtcDAO.loadUnfinishCMD_OHT(con);
+            }
+        }
         public void remoteCMD_OHTCByBatch(List<ACMD_OHTC> cmds)
         {
             using (DBConnection_EF con = DBConnection_EF.GetUContext())
@@ -3938,6 +3945,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                         != SCAppConstants.AppServiceMode.Active)
                         return;
                     //找出目前再Queue的ACMD_OHTC
+                    ACMD_OHTC.ACMD_OHTC_List = scApp.CMDBLL.loadUnfinishCMD_OHTC();
                     List<ACMD_OHTC> CMD_OHTC_Queues = scApp.CMDBLL.loadCMD_OHTCMDStatusIsQueue();
                     if (CMD_OHTC_Queues == null || CMD_OHTC_Queues.Count == 0)
                         return;

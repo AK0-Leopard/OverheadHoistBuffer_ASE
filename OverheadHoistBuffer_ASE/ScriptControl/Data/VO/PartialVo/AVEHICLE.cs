@@ -66,7 +66,7 @@ namespace com.mirle.ibg3k0.sc
         /// </summary>
         public static UInt16 MAX_ALLOW_ACTION_TIME_SECOND { get; private set; } = 300;
         public static UInt16 MAX_ALLOW_IMPORTANT_EVENT_RETRY_COUNT { get; private set; } = 5;
-        public static UInt16 MAX_ALLOW_VH_IDLE_TIME_MMILLI_SECOND { get; private set; } = 10_000;
+        public static UInt16 MAX_ALLOW_VH_IDLE_TIME_MMILLI_SECOND { get; private set; } = 5_000;
 
         public event EventHandler<LocationChangeEventArgs> LocationChange;
         public event EventHandler<SegmentChangeEventArgs> SegmentChange;

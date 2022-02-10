@@ -243,14 +243,67 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
         }
         private void ShelfTestByOrder()
         {
+            if (ACMD_MCS.ACMD_MCS_List != null && ACMD_MCS.ACMD_MCS_List.Count >= 8)
+                return;
+            List<CassetteData> cassetteDatas = scApp.CassetteDataBLL.loadCassetteData();
+            if (cassetteDatas == null || cassetteDatas.Count() == 0) return;
+            //找一份目前儲位的列表
+            shelfDefs = scApp.ShelfDefBLL.LoadEnableShelf();
+            //如果取完還是空的 就跳出去
+            if (shelfDefs == null || shelfDefs.Count == 0)
+                return;
+
+            //取得目前當前在線內的Carrier
+            //找出在儲位中的Cassette
+
+            cassetteDatas = cassetteDatas.
+                Where(cst => scApp.TransferService.isShelfPort(cst.Carrier_LOC)).ToList();
+            List<string> current_cst_at_shelf_id = cassetteDatas.
+                Select(cst => SCUtility.Trim(cst.Carrier_LOC, true)).
+                ToList();
+            //刪除目前cst所在的儲位，讓他排除在Cycle Run的列表中
+            foreach (var shelf in shelfDefs.ToList())
+            {
+                if (current_cst_at_shelf_id.Contains(SCUtility.Trim(shelf.ShelfID)))
+                {
+                    shelfDefs.Remove(shelf);
+                }
+            }
+            foreach (var cst in cassetteDatas.ToList())
+            {
+                //if (cst.hasCommandExcute(scApp.CMDBLL))
+                if (scApp.CMDBLL.getCMD_ByBoxID(cst.BOXID) != null)
+                {
+                    cassetteDatas.Remove(cst);
+                }
+            }
+            //隨機找出一個要放置的shelf
+            CassetteData process_cst = cassetteDatas[0];
+            int task_RandomIndex = rnd_Index.Next(shelfDefs.Count - 1);
+            ShelfDef target_shelf_def = shelfDefs[task_RandomIndex];
+            scApp.MapBLL.getAddressID(process_cst.Carrier_LOC, out string from_adr);
+            bool isSuccess = true;
+            isSuccess = scApp.TransferService.Manual_InsertCmd(process_cst.Carrier_LOC, target_shelf_def.ShelfID) == "OK";
+            //isSuccess &= scApp.CMDBLL.doCreatTransferCommand(vh.VEHICLE_ID, "", process_cst.CSTID.Trim(),
+            //                    E_CMD_TYPE.LoadUnload,
+            //                    process_cst.Carrier_LOC,
+            //                    target_shelf_def.ShelfID, 0, 0,
+            //                    process_cst.BOXID.Trim(), process_cst.LotID,
+            //                    from_adr, target_shelf_def.ADR_ID);
+            //shelfDefs.Remove(target_shelf_def);
+        }
+        private void ShelfTestByOrder_old()
+        {
+            if (ACMD_MCS.ACMD_MCS_List != null && ACMD_MCS.ACMD_MCS_List.Count >= 8)
+                return;
             List<AVEHICLE> vhs = scApp.VehicleBLL.cache.loadVhs();
             foreach (AVEHICLE vh in vhs)
             {
                 if (vh.isTcpIpConnect &&
                     vh.MODE_STATUS == ProtocolFormat.OHTMessage.VHModeStatus.AutoRemote &&
-                    vh.ACT_STATUS == ProtocolFormat.OHTMessage.VHActionStatus.NoCommand &&
-                    !SCUtility.isEmpty(vh.CUR_ADR_ID) &&
-                    !scApp.CMDBLL.isCMD_OHTCExcuteByVh(vh.VEHICLE_ID))
+                    //vh.ACT_STATUS == ProtocolFormat.OHTMessage.VHActionStatus.NoCommand &&
+                    SCUtility.isEmpty(vh.MCS_CMD) &&
+                    !SCUtility.isEmpty(vh.CUR_ADR_ID))
                 {
                     List<string> vh_has_been_excuted_shelf = cycleRunRecord_VhAndShelf[vh.VEHICLE_ID];
                     List<CassetteData> cassetteDatas = scApp.CassetteDataBLL.loadCassetteData();
@@ -290,16 +343,17 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
                     }
                     //隨機找出一個要放置的shelf
                     CassetteData process_cst = cassetteDatas[0];
-                    //int task_RandomIndex = rnd_Index.Next(shelfDefs.Count - 1);
-                    ShelfDef target_shelf_def = shelfDefs.First();
+                    int task_RandomIndex = rnd_Index.Next(shelfDefs.Count - 1);
+                    ShelfDef target_shelf_def = shelfDefs[task_RandomIndex];
                     scApp.MapBLL.getAddressID(process_cst.Carrier_LOC, out string from_adr);
                     bool isSuccess = true;
-                    isSuccess &= scApp.CMDBLL.doCreatTransferCommand(vh.VEHICLE_ID, "", process_cst.CSTID.Trim(),
-                                        E_CMD_TYPE.LoadUnload,
-                                        process_cst.Carrier_LOC,
-                                        target_shelf_def.ShelfID, 0, 0,
-                                        process_cst.BOXID.Trim(), process_cst.LotID,
-                                        from_adr, target_shelf_def.ADR_ID);
+                    isSuccess = scApp.TransferService.Manual_InsertCmd(process_cst.Carrier_LOC, target_shelf_def.ShelfID) == "OK";
+                    //isSuccess &= scApp.CMDBLL.doCreatTransferCommand(vh.VEHICLE_ID, "", process_cst.CSTID.Trim(),
+                    //                    E_CMD_TYPE.LoadUnload,
+                    //                    process_cst.Carrier_LOC,
+                    //                    target_shelf_def.ShelfID, 0, 0,
+                    //                    process_cst.BOXID.Trim(), process_cst.LotID,
+                    //                    from_adr, target_shelf_def.ADR_ID);
                     if (isSuccess)
                     {
                         cycleRunRecord_VhAndShelf[vh.VEHICLE_ID].Add(target_shelf_def.ShelfID);

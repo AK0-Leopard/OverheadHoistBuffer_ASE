@@ -26,13 +26,29 @@ namespace com.mirle.ibg3k0.sc.ObjectRelay
         {
             get
             {
-                if (VehicleBLL != null)
+                List<ACMD_OHTC> cmd_ohtc = ACMD_OHTC.ACMD_OHTC_List.ToList();
+                if (cmd_ohtc == null || cmd_ohtc.Count == 0)
                 {
-                    var vh = VehicleBLL.cache.getVehicleByMCSCmdID(CMD_ID);
-                    return vh == null ? "" : vh.VEHICLE_ID;
-                }
-                else
                     return "";
+                }
+                var cms_ohtc = cmd_ohtc.Where(cmd => sc.Common.SCUtility.isMatche(cmd.CMD_ID_MCS, CMD_ID)).FirstOrDefault();
+                if (cms_ohtc == null)
+                {
+                    return "";
+                }
+                if (cms_ohtc.CMD_STAUS == E_CMD_STATUS.Queue)
+                {
+                    return $"{Common.SCUtility.Trim(cms_ohtc.VH_ID)}(P)";
+                }
+                return Common.SCUtility.Trim(cms_ohtc.VH_ID);
+
+                //    if (VehicleBLL != null)
+                //{
+                //    var vh = VehicleBLL.cache.getVehicleByMCSCmdID(CMD_ID);
+                //    return vh == null ? "" : vh.VEHICLE_ID;
+                //}
+                //else
+                //    return "";
             }
         }
 
@@ -41,16 +57,16 @@ namespace com.mirle.ibg3k0.sc.ObjectRelay
         {
             get
             {
-                var portstation = app.PortStationBLL.OperateCatch.getPortStation(cmd_mcs.HOSTSOURCE);
-                return portstation == null ? cmd_mcs.HOSTSOURCE : portstation.ToString();
+                var portstation = app.PortDefBLL.getPortDef(cmd_mcs.HOSTSOURCE);
+                return portstation == null ? cmd_mcs.HOSTSOURCE : portstation.ToString(app.ZoneCommandBLL);
             }
         }
         public string HOSTDESTINATION
         {
             get
             {
-                var portstation = app.PortStationBLL.OperateCatch.getPortStation(cmd_mcs.HOSTDESTINATION);
-                return portstation == null ? cmd_mcs.HOSTDESTINATION : portstation.ToString();
+                var portstation = app.PortDefBLL.getPortDef(cmd_mcs.HOSTDESTINATION);
+                return portstation == null ? cmd_mcs.HOSTDESTINATION : portstation.ToString(app.ZoneCommandBLL);
             }
         }
         public string RelayStation { get { return cmd_mcs.RelayStation; } }
@@ -77,7 +93,7 @@ namespace com.mirle.ibg3k0.sc.ObjectRelay
         public string CMD_ID { get { return cmd_mcs.CMD_ID; } }
         public string CARRIER_ID { get { return cmd_mcs.CARRIER_ID; } }
         public E_TRAN_STATUS TRANSFERSTATE { get { return cmd_mcs.TRANSFERSTATE; } }
-        public CompleteStatus COMMANDSTATE { get { return  CompleteStatus.CmpStatusOverride; } }
+        public CompleteStatus COMMANDSTATE { get { return CompleteStatus.CmpStatusOverride; } }
 
         public string HOSTSOURCE
         {
