@@ -114,10 +114,37 @@ namespace com.mirle.ibg3k0.sc.Service
                 vh.HasBoxStatusChange += Vh_HasBoxStatusChange;
                 vh.HasImportantEventReportRetryOverTimes += Vh_HasImportantEventReportRetryOverTimes;
                 vh.IdleTimeIsEnough += Vh_IdleTimeIsEnough;
+                vh.BoxIdleOnVh += Vh_BoxIdleOnVh;
                 vh.TimerActionStart();
             }
 
             transferService = app.TransferService;
+        }
+
+        private void Vh_BoxIdleOnVh(object sender, string boxID)
+        {
+            try
+            {
+                AVEHICLE vh = sender as AVEHICLE;
+                var ready_tran_command = ACMD_MCS.loadReadyTransferOfQueueCMD_MCS();
+                var vh_transfer_command = ready_tran_command.
+                                          Where(cmd => SCUtility.isMatche(cmd.BOX_ID, boxID) &&
+                                                       SCUtility.isMatche(cmd.CMD_ID, vh.VEHICLE_ID)).
+                                          FirstOrDefault();
+                if (vh_transfer_command != null)
+                {
+                    bool is_assign_success = scApp.LoopTransferEnhance.preAssignMCSCommand(scApp.SequenceBLL, vh, vh_transfer_command);
+                    if (!is_assign_success)
+                    {
+                        vh_transfer_command.ReadyStatus = ACMD_MCS.CommandReadyStatus.NotReady;
+                        scApp.TransferService.TransferServiceLogger.Info($"vh:{vh.VEHICLE_ID}車上有idle的CST，但pre assign時失敗。");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception:");
+            }
         }
 
         private void Vh_IdleTimeIsEnough(object sender, EventArgs e)
@@ -5084,6 +5111,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         }
                         else
                         {
+                            get_command_zone_result.cmdMCS.ReadyStatus = ACMD_MCS.CommandReadyStatus.NotReady;
                             bool is_success = scApp.CMDBLL.doCreatTransferCommand(vh.VEHICLE_ID,
                                                                                  cmd_type: E_CMD_TYPE.Round);
                         }

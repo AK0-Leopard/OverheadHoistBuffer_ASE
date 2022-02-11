@@ -2256,6 +2256,8 @@ namespace com.mirle.ibg3k0.sc.App
         public static int cmdTimeOutToAlternate = 30;
         public static int cmdPriorityWatershed = 50;
         public static int BoxMovePriority = 99;
+        public static bool isLoopTransferEnhance = false;
+
         /// <summary>
         /// Sets the secs conversaction timeout.
         /// </summary>
@@ -2316,6 +2318,10 @@ namespace com.mirle.ibg3k0.sc.App
         public static void setBoxMovePriority(int _BoxMovePriority)
         {
             BoxMovePriority = _BoxMovePriority;
+        }
+        public static void setIsLoopTransferEnhanceFlag(bool _isLoopTransferEnhance)
+        {
+            isLoopTransferEnhance = _isLoopTransferEnhance;
         }
 
     }

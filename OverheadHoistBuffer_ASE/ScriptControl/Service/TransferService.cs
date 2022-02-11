@@ -875,8 +875,9 @@ namespace com.mirle.ibg3k0.sc.Service
                     var vehicleData = scApp.VehicleBLL.cache.loadVhs();
 
                     int ohtIdle = vehicleData.Where(data => string.IsNullOrWhiteSpace(data.OHTC_CMD)).Count();
+                    bool isLoopTransferEnhance = true;
 
-                    if (true)    //有閒置的車輛在開始派命令
+                    if (ohtIdle != 0 || isLoopTransferEnhance)    //有閒置的車輛在開始派命令
                     {
                         var cmdData = cmdBLL.LoadCmdData();
 
@@ -946,12 +947,12 @@ namespace com.mirle.ibg3k0.sc.Service
                             }
                             #endregion
 
-                            bool isLoopTransferEnhance = true;
                             if (isLoopTransferEnhance)
                             {
                                 scApp.LoopTransferEnhance.judgeCommandTransferReadyStatus(queueCmdData);
                                 ACMD_MCS.ACMD_MCS_List = queueCmdData.ToList();
                                 AllInQueueCMDMCSpriorityUpdate(queueCmdData);
+                                ProcessRemainCommand(queueCmdData);
                             }
                             else
                             {
@@ -1121,6 +1122,26 @@ namespace com.mirle.ibg3k0.sc.Service
                 finally
                 {
                     Interlocked.Exchange(ref syncTranCmdPoint, 0);
+                }
+            }
+        }
+
+        private void ProcessRemainCommand(List<ACMD_MCS> queueCmdData)
+        {
+            foreach (var mcsCmd in queueCmdData)
+            {
+                if (mcsCmd.TRANSFERSTATE == E_TRAN_STATUS.Transferring &&
+                    mcsCmd.COMMANDSTATE == COMMAND_STATUS_BIT_INDEX_COMMNAD_FINISH)
+                {
+                    #region Log
+                    TransferServiceLogger.Info
+                    (
+                        DateTime.Now.ToString("HH:mm:ss.fff ")
+                        + "OHT >> OHB|OHT_TransferProcess 發現殘存 COMMANDSTATE = COMMAND_STATUS_BIT_INDEX_COMMNAD_FINISH :\n"
+                        + GetCmdLog(mcsCmd)
+                    );
+                    #endregion
+                    cmdBLL.updateCMD_MCS_TranStatus(mcsCmd.CMD_ID, E_TRAN_STATUS.TransferCompleted);
                 }
             }
         }

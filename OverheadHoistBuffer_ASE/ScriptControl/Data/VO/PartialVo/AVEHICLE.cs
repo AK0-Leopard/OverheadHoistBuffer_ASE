@@ -80,6 +80,7 @@ namespace com.mirle.ibg3k0.sc
         public event EventHandler<int> HasBoxStatusChange;
         public event EventHandler<EventType> HasImportantEventReportRetryOverTimes;
         public event EventHandler IdleTimeIsEnough;
+        public event EventHandler<string> BoxIdleOnVh;
 
 
         VehicleTimerAction vehicleTimer = null;
@@ -121,6 +122,10 @@ namespace com.mirle.ibg3k0.sc
         public void onIdleTimeIsEnough()
         {
             IdleTimeIsEnough?.Invoke(this, EventArgs.Empty);
+        }
+        public void onBoxIdleOnVh(string boxID)
+        {
+            BoxIdleOnVh?.Invoke(this, boxID);
         }
 
 
@@ -1426,54 +1431,9 @@ namespace com.mirle.ibg3k0.sc
                         }
 
                         if (!vh.isTcpIpConnect) return;
-                        double action_time = vh.CurrentCommandExcuteTime.Elapsed.TotalSeconds;
-                        if (action_time > AVEHICLE.MAX_ALLOW_ACTION_TIME_SECOND)
-                        {
-                            if (!vh.isLongTimeInaction)
-                            {
-                                vh.isLongTimeInaction = true;
-                                vh.isLongTimeInactionCMDID = vh.OHTC_CMD;
-                                vh.onLongTimeInaction(vh.OHTC_CMD);
-                            }
-                            else
-                            {
-                                //do nothing
-                            }
-                        }
-                        else
-                        {
-                            if (vh.isLongTimeInaction)
-                            {
-                                //clear
-                                scApp.TransferService.OHBC_AlarmCleared(scApp.getEQObjCacheManager().getLine().LINE_ID, ((int)Service.AlarmLst.OHT_CommandNotFinishedInTime).ToString());
-
-                            }
-                            vh.isLongTimeInaction = false;
-                        }
-
-                        if (!vh.IsError &&
-                            vh.MODE_STATUS == VHModeStatus.AutoRemote &&
-                            vh.ACT_STATUS == VHActionStatus.NoCommand)
-                        {
-                            if (!vh.IdleTime.IsRunning)
-                                vh.IdleTime.Restart();
-                            else
-                            {
-                                if (vh.IdleTime.ElapsedMilliseconds > AVEHICLE.MAX_ALLOW_VH_IDLE_TIME_MMILLI_SECOND)
-                                {
-                                    vh.IdleTime.Restart();
-                                    vh.onIdleTimeIsEnough();
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (vh.IdleTime.IsRunning)
-                            {
-                                vh.IdleTime.Reset();
-                                vh.IdleTime.Stop();
-                            }
-                        }
+                        checkHasCommandNotFinishedInTime();
+                        checkIsIdleEnough();
+                        checkHasBoxOnVhWhenNoCommand();
                     }
                     catch (Exception ex)
                     {
@@ -1490,6 +1450,80 @@ namespace com.mirle.ibg3k0.sc
                 }
             }
 
+            private void checkHasBoxOnVhWhenNoCommand()
+            {
+                if (!sc.Common.SCUtility.isEmpty(vh.OHTC_CMD))
+                {
+                    return;
+                }
+                if (vh.ACT_STATUS == VHActionStatus.Commanding)
+                {
+                    return;
+                }
+                if (vh.HAS_BOX == 1)
+                {
+                    vh.onBoxIdleOnVh(vh.BOX_ID);
+                }
+                else
+                {
+                    return;
+                }
+            }
+
+            private void checkHasCommandNotFinishedInTime()
+            {
+                double action_time = vh.CurrentCommandExcuteTime.Elapsed.TotalSeconds;
+                if (action_time > AVEHICLE.MAX_ALLOW_ACTION_TIME_SECOND)
+                {
+                    if (!vh.isLongTimeInaction)
+                    {
+                        vh.isLongTimeInaction = true;
+                        vh.isLongTimeInactionCMDID = vh.OHTC_CMD;
+                        vh.onLongTimeInaction(vh.OHTC_CMD);
+                    }
+                    else
+                    {
+                        //do nothing
+                    }
+                }
+                else
+                {
+                    if (vh.isLongTimeInaction)
+                    {
+                        //clear
+                        scApp.TransferService.OHBC_AlarmCleared(scApp.getEQObjCacheManager().getLine().LINE_ID, ((int)Service.AlarmLst.OHT_CommandNotFinishedInTime).ToString());
+
+                    }
+                    vh.isLongTimeInaction = false;
+                }
+            }
+
+            private void checkIsIdleEnough()
+            {
+                if (!vh.IsError &&
+                    vh.MODE_STATUS == VHModeStatus.AutoRemote &&
+                    vh.ACT_STATUS == VHActionStatus.NoCommand)
+                {
+                    if (!vh.IdleTime.IsRunning)
+                        vh.IdleTime.Restart();
+                    else
+                    {
+                        if (vh.IdleTime.ElapsedMilliseconds > AVEHICLE.MAX_ALLOW_VH_IDLE_TIME_MMILLI_SECOND)
+                        {
+                            vh.IdleTime.Restart();
+                            vh.onIdleTimeIsEnough();
+                        }
+                    }
+                }
+                else
+                {
+                    if (vh.IdleTime.IsRunning)
+                    {
+                        vh.IdleTime.Reset();
+                        vh.IdleTime.Stop();
+                    }
+                }
+            }
         }
 
     }

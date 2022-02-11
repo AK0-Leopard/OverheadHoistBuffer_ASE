@@ -63,6 +63,12 @@ namespace com.mirle.ibg3k0.sc
             }
         }
 
+        public enum CommandReadyStatus
+        {
+            NotReady,
+            Ready,
+            Realy
+        }
         public enum CmdType
         {
             MCS,
@@ -102,8 +108,8 @@ namespace com.mirle.ibg3k0.sc
                 return new List<ACMD_MCS>();
             }
             var ready_transfer_cmd_mcs = ACMD_MCS_List.
-                                         Where(cmd => cmd.IsReadyTransfer &&
-                                                      cmd.TRANSFERSTATE == E_TRAN_STATUS.Queue).ToList();
+                                         Where(cmd => (cmd.ReadyStatus == CommandReadyStatus.Ready || cmd.ReadyStatus == CommandReadyStatus.Realy) &&
+                                                       cmd.TRANSFERSTATE == E_TRAN_STATUS.Queue).ToList();
             return ready_transfer_cmd_mcs;
         }
 
@@ -142,7 +148,7 @@ namespace com.mirle.ibg3k0.sc
                 bool is_source_vh = transferService.isUnitType(CURRENT_LOCATION, Service.UnitType.CRANE);
                 string _source_address = string.Empty;
                 string _source = string.Empty;
-                var dest_port_def = portDefBLL.getPortDef(HOSTDESTINATION);
+
 
                 if (is_source_vh)
                 {
@@ -156,6 +162,14 @@ namespace com.mirle.ibg3k0.sc
                     _source = CURRENT_LOCATION;
                 }
 
+                string real_dest_port = HOSTDESTINATION;
+                if (ReadyStatus == CommandReadyStatus.Realy)
+                {
+                    real_dest_port = RelayStation;
+                }
+                var dest_port_def = portDefBLL.getPortDef(real_dest_port);
+
+
                 return new ACMD_OHTC
                 {
                     CMD_ID = sequenceBLL.getCommandID(App.SCAppConstants.GenOHxCCommandType.Auto),
@@ -164,7 +178,7 @@ namespace com.mirle.ibg3k0.sc
                     CMD_ID_MCS = this.CMD_ID,
                     CMD_TPYE = cmd_type,
                     SOURCE = _source,
-                    DESTINATION = this.HOSTDESTINATION,
+                    DESTINATION = real_dest_port,
                     PRIORITY = this.PRIORITY,
                     CMD_STAUS = E_CMD_STATUS.Queue,
                     CMD_PROGRESS = 0,
@@ -202,7 +216,8 @@ namespace com.mirle.ibg3k0.sc
             return "";
         }
 
-        public bool IsReadyTransfer;
+        //public bool IsReadyTransfer;
+        public CommandReadyStatus ReadyStatus;
 
         public bool IsScan()
         {
