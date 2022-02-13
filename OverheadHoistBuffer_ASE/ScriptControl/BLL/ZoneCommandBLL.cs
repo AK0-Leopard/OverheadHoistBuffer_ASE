@@ -61,7 +61,7 @@ namespace com.mirle.ibg3k0.sc.BLL
             public ZoneCommandGroup getZoneCommandGroupByPortID(string portID)
             {
                 var zoneCommandGroups = CacheManager.getZoneCommandGroups();
-                return zoneCommandGroups.Where(group => group.PortIDs.Contains(portID))
+                return zoneCommandGroups.Where(group => group.PortIDs.Contains(sc.Common.SCUtility.Trim(portID,true)))
                                         .FirstOrDefault();
             }
 

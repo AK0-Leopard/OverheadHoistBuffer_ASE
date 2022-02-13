@@ -72,6 +72,8 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Test
             {
                 comboBox4.Items.Add(v.ZoneID.Trim());
                 comboBox4.SelectedIndex = 0;
+
+                comboBox2.Items.Add(v.ZoneID.Trim());
             }
 
             dateTimePicker1.Value = DateTime.Now.AddHours(-1);

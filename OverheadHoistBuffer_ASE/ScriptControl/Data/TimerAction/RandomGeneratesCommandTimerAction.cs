@@ -277,13 +277,29 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
                     cassetteDatas.Remove(cst);
                 }
             }
-            //隨機找出一個要放置的shelf
+            //隨機找出一個要放置的Zone
             CassetteData process_cst = cassetteDatas[0];
-            int task_RandomIndex = rnd_Index.Next(shelfDefs.Count - 1);
-            ShelfDef target_shelf_def = shelfDefs[task_RandomIndex];
-            scApp.MapBLL.getAddressID(process_cst.Carrier_LOC, out string from_adr);
+            string cst_zone_id = process_cst.getZoneID(scApp.TransferService);
+
+            shelfDefs = shelfDefs.Where(shelf => !SCUtility.isMatche(shelf.ZoneID, cst_zone_id)).ToList();
+            List<string> orther_zone_ids = shelfDefs.Select(shelf => shelf.ZoneID).Distinct().ToList();
+            bool is_creat_zone_id = true;
+            string desc_name = "";
+            if (is_creat_zone_id)
+            {
+                int task_RandomIndex = rnd_Index.Next(orther_zone_ids.Count - 1);
+                desc_name = orther_zone_ids[task_RandomIndex];
+            }
+            else
+            {
+                int task_RandomIndex = rnd_Index.Next(shelfDefs.Count - 1);
+                ShelfDef target_shelf_def = shelfDefs[task_RandomIndex];
+                scApp.MapBLL.getAddressID(process_cst.Carrier_LOC, out string from_adr);
+                desc_name = from_adr;
+            }
+
             bool isSuccess = true;
-            isSuccess = scApp.TransferService.Manual_InsertCmd(process_cst.Carrier_LOC, target_shelf_def.ShelfID) == "OK";
+            isSuccess = scApp.TransferService.Manual_InsertCmd(process_cst.Carrier_LOC, desc_name) == "OK";
             //isSuccess &= scApp.CMDBLL.doCreatTransferCommand(vh.VEHICLE_ID, "", process_cst.CSTID.Trim(),
             //                    E_CMD_TYPE.LoadUnload,
             //                    process_cst.Carrier_LOC,

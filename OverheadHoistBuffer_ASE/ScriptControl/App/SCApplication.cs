@@ -804,6 +804,7 @@ namespace com.mirle.ibg3k0.sc.App
             SystemParameter.SECSConversactionTimeout = getInt("SECSConversactionTimeout", 60);
 
             SystemParameter.setIsEnableIDReadFailScenarioFlag(getBoolean("IsEnableIDReadFailScenario", false));
+            SystemParameter.setIsLoopTransferEnhanceFlag(getBoolean("IsLoopTransferEnhance", false));
 
             initDao();      //Initial DAO
             initBLL();      //Initial BLL

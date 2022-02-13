@@ -386,6 +386,10 @@ namespace com.mirle.ibg3k0.sc.Module
                         {
                             tx.Complete();
                             cmdMCS.TRANSFERSTATE = E_TRAN_STATUS.Transferring;
+                            if (transferService.isCVPort(cmdMCS.HOSTDESTINATION))
+                            {
+                                transferService.PortCommanding(cmdMCS.HOSTDESTINATION, true);
+                            }
                         }
                     }
                 }
@@ -397,6 +401,7 @@ namespace com.mirle.ibg3k0.sc.Module
                 return false;
             }
         }
+        const double IGNORE_RUN_OVER_DISTANCE_mm = 1000;
         public bool IsRunOver(AVEHICLE vh, string portID)
         {
             var get_result = zoneCommandBLL.tryGetZoneCommandGroupByPortID(portID);
@@ -408,21 +413,33 @@ namespace com.mirle.ibg3k0.sc.Module
             var port_def_info = portDefBLL.getPortDef(portID);
             var port_adr_obj = reserveBLL.GetHltMapAddress(port_def_info.ADR_ID);
             double port_x_axis = port_adr_obj.x;
+            double port_y_axis = port_adr_obj.y;
             double vh_x_axis = vh.X_Axis;
+            double vh_y_axis = vh.Y_Axis;
             switch (get_result.zoneCommandGroup.zoneDir)
             {
                 case ZoneCommandGroup.ZoneDir.DIR_1_0:
-                    if (port_x_axis > vh_x_axis) return false;
+                    if (port_y_axis != vh_y_axis)
+                    {
+                        return false;
+                    }
+
+
+                    if (port_x_axis + IGNORE_RUN_OVER_DISTANCE_mm > vh_x_axis) return false;
                     else
                     {
-                        logger.Info($"OHB >> OHB|確認 vh:{vh.VEHICLE_ID}(x:{vh_x_axis}) 相對於 port id:{portID}(x:{port_x_axis}) dir:{get_result.zoneCommandGroup.zoneDir},跑過頭了.");
+                        logger.Info($"OHB >> OHB|確認 vh:{vh.VEHICLE_ID}(x:{vh_x_axis}) 相對於 port id:{portID}(x:{port_x_axis})(包含容許範圍:{IGNORE_RUN_OVER_DISTANCE_mm})  dir:{get_result.zoneCommandGroup.zoneDir},跑過頭了.");
                         return true;
                     }
                 case ZoneCommandGroup.ZoneDir.DIR_N1_0:
-                    if (port_x_axis < vh_x_axis) return false;
+                    if (port_y_axis != vh_y_axis)
+                    {
+                        return false;
+                    }
+                    if (port_x_axis - IGNORE_RUN_OVER_DISTANCE_mm < vh_x_axis) return false;
                     else
                     {
-                        logger.Info($"OHB >> OHB|確認 vh:{vh.VEHICLE_ID}(x:{vh_x_axis}) 相對於 port id:{portID}(x:{port_x_axis}) dir:{get_result.zoneCommandGroup.zoneDir},跑過頭了.");
+                        logger.Info($"OHB >> OHB|確認 vh:{vh.VEHICLE_ID}(x:{vh_x_axis}) 相對於 port id:{portID}(x:{port_x_axis})(包含容許範圍:{IGNORE_RUN_OVER_DISTANCE_mm}) dir:{get_result.zoneCommandGroup.zoneDir},跑過頭了.");
                         return true;
                     }
                 default:

@@ -30,5 +30,15 @@ namespace com.mirle.ibg3k0.sc
             bool has_cmd_excute = cmdBLL.hasExcuteCMDByBoxID(BOXID);
             return has_cmd_excute;
         }
+
+        public string  getZoneID(sc.Service.TransferService transferService)
+        {
+            if (!transferService.isShelfPort(Carrier_LOC))
+            {
+                return "";
+            }
+            string zone_id = transferService.getShelfZoneID(Carrier_LOC);
+            return zone_id;
+        }
     }
 }

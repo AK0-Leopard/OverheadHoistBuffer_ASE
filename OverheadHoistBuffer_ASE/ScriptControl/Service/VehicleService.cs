@@ -125,6 +125,11 @@ namespace com.mirle.ibg3k0.sc.Service
         {
             try
             {
+                if (!SystemParameter.isLoopTransferEnhance)
+                {
+                    return;
+                }
+
                 AVEHICLE vh = sender as AVEHICLE;
                 var ready_tran_command = ACMD_MCS.loadReadyTransferOfQueueCMD_MCS();
                 var vh_transfer_command = ready_tran_command.
@@ -151,6 +156,10 @@ namespace com.mirle.ibg3k0.sc.Service
         {
             try
             {
+                if (!SystemParameter.isLoopTransferEnhance)
+                {
+                    return;
+                }
                 AVEHICLE vh = sender as AVEHICLE;
                 bool is_success = scApp.CMDBLL.doCreatTransferCommand(vh.VEHICLE_ID,
                                                                      cmd_type: E_CMD_TYPE.Round);
@@ -2132,6 +2141,11 @@ namespace com.mirle.ibg3k0.sc.Service
             {
                 try
                 {
+                    if (!SystemParameter.isLoopTransferEnhance)
+                    {
+                        return;
+                    }
+
                     findTheVhOfAvoidAddress(willPassVhID, inTheWayVhID);
                 }
                 catch (Exception ex)

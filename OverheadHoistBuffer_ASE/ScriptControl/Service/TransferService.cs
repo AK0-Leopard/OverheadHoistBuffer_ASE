@@ -875,9 +875,8 @@ namespace com.mirle.ibg3k0.sc.Service
                     var vehicleData = scApp.VehicleBLL.cache.loadVhs();
 
                     int ohtIdle = vehicleData.Where(data => string.IsNullOrWhiteSpace(data.OHTC_CMD)).Count();
-                    bool isLoopTransferEnhance = true;
 
-                    if (ohtIdle != 0 || isLoopTransferEnhance)    //有閒置的車輛在開始派命令
+                    if (ohtIdle != 0 || SystemParameter.isLoopTransferEnhance)    //有閒置的車輛在開始派命令
                     {
                         var cmdData = cmdBLL.LoadCmdData();
 
@@ -947,7 +946,7 @@ namespace com.mirle.ibg3k0.sc.Service
                             }
                             #endregion
 
-                            if (isLoopTransferEnhance)
+                            if (SystemParameter.isLoopTransferEnhance)
                             {
                                 scApp.LoopTransferEnhance.judgeCommandTransferReadyStatus(queueCmdData);
                                 ACMD_MCS.ACMD_MCS_List = queueCmdData.ToList();
@@ -8338,7 +8337,21 @@ namespace com.mirle.ibg3k0.sc.Service
                                                  && data.UnitType == UnitType.AGV.ToString()
                                            ).OrderBy(loc => loc.PortName).ToList();
         }
+        public string getShelfZoneID(string shelfID)
+        {
+            bool is_ger_success = portINIData.TryGetValue(shelfID, out PortINIData data);
 
+            if (is_ger_success)
+            {
+                return data.ZoneName;
+            }
+            else
+            {
+                return "";
+
+            }
+
+        }
         public List<PortINIData> GetAGVZone()
         {
             return portINIData.Values.Where(data => data.UnitType == UnitType.AGVZONE.ToString()).ToList();
