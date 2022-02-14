@@ -53,7 +53,9 @@ namespace com.mirle.ibg3k0.sc.Module
         {
             foreach (var cmd_mcs in cmdMCSs)
             {
-                cmd_mcs.ReadyStatus = checkReadyToTransfer(cmd_mcs);
+                var check_result = checkReadyToTransfer(cmd_mcs);
+                cmd_mcs.ReadyStatus = check_result.readyStatus;
+                cmd_mcs.ReadyReason = check_result.notReadyReason;
 
                 //if (isReadyToTransfer(cmd_mcs))
                 //{
@@ -62,13 +64,13 @@ namespace com.mirle.ibg3k0.sc.Module
             }
         }
 
-        private ACMD_MCS.CommandReadyStatus checkReadyToTransfer(ACMD_MCS cmd_mcs)
+        private (ACMD_MCS.CommandReadyStatus readyStatus, ACMD_MCS.NotReadyReason notReadyReason) checkReadyToTransfer(ACMD_MCS cmd_mcs)
         {
             try
             {
                 //確認是否為AGV Port > Station的特殊命令，是的話就走特別處理流程
                 bool is_agv_port_to_station_cmd = transferService.checkAndProcessIsAgvPortToStation(cmd_mcs);
-                if (is_agv_port_to_station_cmd) return ACMD_MCS.CommandReadyStatus.NotReady;
+                if (is_agv_port_to_station_cmd) return (ACMD_MCS.CommandReadyStatus.NotReady, ACMD_MCS.NotReadyReason.SpeciallyProcess);
 
                 //確認來源是否是可以搬送狀態
                 string source = cmd_mcs.CURRENT_LOCATION;
@@ -80,13 +82,13 @@ namespace com.mirle.ibg3k0.sc.Module
                     {
                         logger.Info($"OHB >> OHB| 命令:{cmd_mcs.CMD_ID} 來源: {source} 找不到帳，刪除命令 ");
                         transferService.Manual_DeleteCmd(cmd_mcs.CMD_ID, "命令來源找不到帳");
-                        return ACMD_MCS.CommandReadyStatus.NotReady;
+                        return (ACMD_MCS.CommandReadyStatus.NotReady, ACMD_MCS.NotReadyReason.NoCSTData);
                     }
                 }
                 if (!transferService.AreSourceEnable(source))
                 {
                     logger.Info($"OHB >> OHB| 命令來源: {source} Port狀態不正確，不繼續往下執行。");
-                    return ACMD_MCS.CommandReadyStatus.NotReady;
+                    return (ACMD_MCS.CommandReadyStatus.NotReady, ACMD_MCS.NotReadyReason.SourceNotReady);
                 }
 
                 //確認目的地是否是可以搬送狀態
@@ -97,7 +99,7 @@ namespace com.mirle.ibg3k0.sc.Module
                     {
                         logger.Info("OHB >> OHB|TransferCommandHandler 目的 Zone: " + cmd_mcs.HOSTDESTINATION + " 沒有位置");
                         transferService.MCSCommandFinishByShelfNotEnough(cmd_mcs);
-                        return ACMD_MCS.CommandReadyStatus.NotReady;
+                        return (ACMD_MCS.CommandReadyStatus.NotReady, ACMD_MCS.NotReadyReason.DestZoneIsFull);
                     }
                 }
                 else if (cmd_mcs.IsDestination_AGVZone(transferService))
@@ -108,11 +110,11 @@ namespace com.mirle.ibg3k0.sc.Module
                         logger.Info("OHB >> OHB|TransferCommandHandler 目的 AGV St: " + cmd_mcs.HOSTDESTINATION + " 沒有準備好可放置的位置");
                         if (IsNeedRealyCommand(cmd_mcs))
                         {
-                            return ACMD_MCS.CommandReadyStatus.Realy;
+                            return (ACMD_MCS.CommandReadyStatus.Realy, ACMD_MCS.NotReadyReason.DestAGVZoneNotReadyWillRealy);
                         }
                         else
                         {
-                            return ACMD_MCS.CommandReadyStatus.NotReady;
+                            return (ACMD_MCS.CommandReadyStatus.NotReady, ACMD_MCS.NotReadyReason.DestAGVZoneNotReady);
                         }
                     }
                     else
@@ -129,21 +131,21 @@ namespace com.mirle.ibg3k0.sc.Module
                         if (is_need_excute_relay_command)
                         {
                             logger.Info($"OHB >> OHB|TransferCommandHandler 目的 port: { cmd_mcs.HOSTDESTINATION }狀態尚未正確,準備執行中繼站流程搬送");
-                            return ACMD_MCS.CommandReadyStatus.Realy;
+                            return (ACMD_MCS.CommandReadyStatus.Realy, ACMD_MCS.NotReadyReason.DestPoerNotReadyWillRealy);
                         }
                         else
                         {
                             logger.Info($"OHB >> OHB|TransferCommandHandler 目的 port: { cmd_mcs.HOSTDESTINATION }狀態尚未正確");
-                            return ACMD_MCS.CommandReadyStatus.NotReady;
+                            return (ACMD_MCS.CommandReadyStatus.NotReady, ACMD_MCS.NotReadyReason.DestPortNotReady);
                         }
                     }
                 }
-                return ACMD_MCS.CommandReadyStatus.Ready;
+                return (ACMD_MCS.CommandReadyStatus.Ready, ACMD_MCS.NotReadyReason.Ready);
             }
             catch (Exception ex)
             {
                 logger.Error(ex, "Exception:");
-                return ACMD_MCS.CommandReadyStatus.NotReady;
+                return (ACMD_MCS.CommandReadyStatus.NotReady, ACMD_MCS.NotReadyReason.ExceptionHappend);
             }
         }
         /// <summary>

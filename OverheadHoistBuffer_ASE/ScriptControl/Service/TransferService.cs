@@ -876,6 +876,8 @@ namespace com.mirle.ibg3k0.sc.Service
 
                     int ohtIdle = vehicleData.Where(data => string.IsNullOrWhiteSpace(data.OHTC_CMD)).Count();
 
+
+
                     if (ohtIdle != 0 || SystemParameter.isLoopTransferEnhance)    //有閒置的車輛在開始派命令
                     {
                         var cmdData = cmdBLL.LoadCmdData();
@@ -949,7 +951,7 @@ namespace com.mirle.ibg3k0.sc.Service
                             if (SystemParameter.isLoopTransferEnhance)
                             {
                                 scApp.LoopTransferEnhance.judgeCommandTransferReadyStatus(queueCmdData);
-                                ACMD_MCS.ACMD_MCS_List = queueCmdData.ToList();
+                                refreshACMD_MCSInfoList(queueCmdData);
                                 AllInQueueCMDMCSpriorityUpdate(queueCmdData);
                                 ProcessRemainCommand(queueCmdData);
                             }
@@ -1092,6 +1094,13 @@ namespace com.mirle.ibg3k0.sc.Service
                             #endregion
 
                             OHBC_OHT_IDLE_HasCMD_TimeOutCleared();
+
+                            if (SystemParameter.isLoopTransferEnhance)
+                            {
+                                //在MCS搬送命令時，經過30秒後 就讓車子先暫停下來
+
+                            }
+
                         }
                         ohtTimeout = DateTime.Now;
                         ohtIdleTimeOut = 0;
@@ -1124,6 +1133,55 @@ namespace com.mirle.ibg3k0.sc.Service
                 }
             }
         }
+
+        private void refreshACMD_MCSInfoList(List<ACMD_MCS> currentExcuteMCSCmd)
+        {
+            try
+            {
+                bool has_change = false;
+                List<string> new_current_excute_mcs_cmd = currentExcuteMCSCmd.Select(cmd => SCUtility.Trim(cmd.CMD_ID, true)).ToList();
+                List<string> old_current_excute_mcs_cmd = ACMD_MCS.MCS_CMD_InfoList.Keys.ToList();
+
+                List<string> new_add_mcs_cmds = new_current_excute_mcs_cmd.Except(old_current_excute_mcs_cmd).ToList();
+                //1.新增多出來的命令
+                foreach (string new_cmd in new_add_mcs_cmds)
+                {
+                    ACMD_MCS new_cmd_obj = new ACMD_MCS();
+                    var current_cmd = currentExcuteMCSCmd.Where(cmd => SCUtility.isMatche(cmd.CMD_ID, new_cmd)).FirstOrDefault();
+                    if (current_cmd == null) continue;
+                    new_cmd_obj.put(current_cmd);
+                    ACMD_MCS.MCS_CMD_InfoList.TryAdd(new_cmd, new_cmd_obj);
+                    has_change = true;
+                }
+                //2.刪除以結束的命令
+                List<string> will_del_mcs_cmds = old_current_excute_mcs_cmd.Except(new_current_excute_mcs_cmd).ToList();
+                foreach (string old_cmd in will_del_mcs_cmds)
+                {
+                    ACMD_MCS.MCS_CMD_InfoList.TryRemove(old_cmd, out ACMD_MCS cmd_mcs);
+                    has_change = true;
+                }
+                //3.更新現有命令
+                foreach (var mcs_cmd_item in ACMD_MCS.MCS_CMD_InfoList)
+                {
+                    string cmd_mcs_id = mcs_cmd_item.Key;
+                    ACMD_MCS cmd_mcs = currentExcuteMCSCmd.Where(cmd => SCUtility.isMatche(cmd.CMD_ID, cmd_mcs_id)).FirstOrDefault();
+                    if (cmd_mcs == null)
+                    {
+                        continue;
+                    }
+                    if (mcs_cmd_item.Value.put(cmd_mcs))
+                    {
+                        has_change = true;
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                NLog.LogManager.GetCurrentClassLogger().Error(ex, "Exception");
+            }
+        }
+
 
         private void ProcessRemainCommand(List<ACMD_MCS> queueCmdData)
         {

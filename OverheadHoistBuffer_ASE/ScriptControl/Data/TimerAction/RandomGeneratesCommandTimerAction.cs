@@ -243,7 +243,7 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
         }
         private void ShelfTestByOrder()
         {
-            if (ACMD_MCS.ACMD_MCS_List != null && ACMD_MCS.ACMD_MCS_List.Count >= 8)
+            if (ACMD_MCS.MCS_CMD_InfoList != null && ACMD_MCS.MCS_CMD_InfoList.Count >= 8)
                 return;
             List<CassetteData> cassetteDatas = scApp.CassetteDataBLL.loadCassetteData();
             if (cassetteDatas == null || cassetteDatas.Count() == 0) return;
@@ -310,7 +310,7 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
         }
         private void ShelfTestByOrder_old()
         {
-            if (ACMD_MCS.ACMD_MCS_List != null && ACMD_MCS.ACMD_MCS_List.Count >= 8)
+            if (ACMD_MCS.MCS_CMD_InfoList != null && ACMD_MCS.MCS_CMD_InfoList.Count >= 8)
                 return;
             List<AVEHICLE> vhs = scApp.VehicleBLL.cache.loadVhs();
             foreach (AVEHICLE vh in vhs)

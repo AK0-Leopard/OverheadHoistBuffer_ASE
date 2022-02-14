@@ -20,8 +20,13 @@ namespace com.mirle.ibg3k0.sc.ObjectRelay
             cmd_mcs = cmdMcs;
             VehicleBLL = vehicleBLL;
         }
+        public void put(ACMD_MCS cmdMcs)
+        {
+            cmd_mcs = cmdMcs;
+        }
         public string CMD_ID { get { return cmd_mcs.CMD_ID; } }
         public string CARRIER_ID { get { return cmd_mcs.CARRIER_ID; } }
+        public string BOX_ID { get { return cmd_mcs.BOX_ID; } }
         public string VEHICLE_ID
         {
             get
@@ -76,6 +81,37 @@ namespace com.mirle.ibg3k0.sc.ObjectRelay
         public Nullable<System.DateTime> CMD_START_TIME { get { return cmd_mcs.CMD_START_TIME; } }
         public Nullable<System.DateTime> CMD_FINISH_TIME { get { return cmd_mcs.CMD_FINISH_TIME; } }
         public int REPLACE { get { return cmd_mcs.REPLACE; } }
+
+        public string ReadyReason
+        {
+            get
+            {
+                bool is_exist = NgReasonConvert.TryGetValue(cmd_mcs.ReadyReason, out string reason);
+                if (is_exist)
+                {
+                    return reason;
+                }
+                else
+                {
+                    return "";
+                }
+            }
+        }
+        Dictionary<ACMD_MCS.NotReadyReason, string> NgReasonConvert = new Dictionary<ACMD_MCS.NotReadyReason, string>()
+        {
+            { ACMD_MCS.NotReadyReason.None,"" },
+            { ACMD_MCS.NotReadyReason.Ready,"預備搬送中" },
+            { ACMD_MCS.NotReadyReason.SpeciallyProcess,"特別命令，處理中" },
+            { ACMD_MCS.NotReadyReason.NoCSTData,"無對應的帳" },
+            { ACMD_MCS.NotReadyReason.SourceNotReady,"來源尚未準備好" },
+            { ACMD_MCS.NotReadyReason.DestZoneIsFull,"目的地-Zone已滿" },
+            { ACMD_MCS.NotReadyReason.DestAGVZoneNotReady,"目的地-AGV Zone尚未準備好" },
+            { ACMD_MCS.NotReadyReason.DestAGVZoneNotReadyWillRealy,"目的地-AGV Zone尚未準備好，準備到中繼站" },
+            { ACMD_MCS.NotReadyReason.DestPortNotReady,"目的地-Port尚未準備好" },
+            { ACMD_MCS.NotReadyReason.DestPoerNotReadyWillRealy,"目的地-Port尚未準備好，準備到中繼站" },
+            { ACMD_MCS.NotReadyReason.ExceptionHappend,"例外發生" },
+
+        };
 
     }
 

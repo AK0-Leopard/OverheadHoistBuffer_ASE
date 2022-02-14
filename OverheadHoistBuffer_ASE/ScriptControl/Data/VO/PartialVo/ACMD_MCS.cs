@@ -6,6 +6,7 @@
 // 2020/06/09    Jason Wu       N/A            A20.06.09.0 修改判定部分(新增判定來源目的地是非shelf的優先)   
 //**********************************************************************************
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,7 +16,9 @@ namespace com.mirle.ibg3k0.sc
 {
     public partial class ACMD_MCS
     {
-        public static List<ACMD_MCS> ACMD_MCS_List = new List<ACMD_MCS>();
+        //public static List<ACMD_MCS> ACMD_MCS_List = new List<ACMD_MCS>();
+        public static ConcurrentDictionary<string, ACMD_MCS> MCS_CMD_InfoList { get; private set; } = new ConcurrentDictionary<string, ACMD_MCS>();
+
         //**********************************************************************************
         //A20.05.22 給定一個私有變數去儲存2點間距離
         private int _distanceFromVehicleToHostSource;
@@ -69,6 +72,20 @@ namespace com.mirle.ibg3k0.sc
             Ready,
             Realy
         }
+        public enum NotReadyReason
+        {
+            None,
+            Ready,
+            SpeciallyProcess,
+            NoCSTData,
+            SourceNotReady,
+            DestZoneIsFull,
+            DestAGVZoneNotReady,
+            DestAGVZoneNotReadyWillRealy,
+            DestPortNotReady,
+            DestPoerNotReadyWillRealy,
+            ExceptionHappend
+        }
         public enum CmdType
         {
             MCS,
@@ -103,14 +120,23 @@ namespace com.mirle.ibg3k0.sc
         }
         public static List<ACMD_MCS> loadReadyTransferOfQueueCMD_MCS()
         {
-            if (ACMD_MCS_List == null)
+            if (MCS_CMD_InfoList == null )
             {
                 return new List<ACMD_MCS>();
             }
-            var ready_transfer_cmd_mcs = ACMD_MCS_List.
+            var ready_transfer_cmd_mcs = MCS_CMD_InfoList.Values.
                                          Where(cmd => (cmd.ReadyStatus == CommandReadyStatus.Ready || cmd.ReadyStatus == CommandReadyStatus.Realy) &&
                                                        cmd.TRANSFERSTATE == E_TRAN_STATUS.Queue).ToList();
             return ready_transfer_cmd_mcs;
+        }
+
+        public static List<ACMD_MCS> loadCurrentExcuteCMD_MCS()
+        {
+            if (MCS_CMD_InfoList == null)
+            {
+                return new List<ACMD_MCS>();
+            }
+            return MCS_CMD_InfoList.Values.ToList();
         }
 
         public ACMD_OHTC convertToACMD_OHTC(
@@ -218,6 +244,7 @@ namespace com.mirle.ibg3k0.sc
 
         //public bool IsReadyTransfer;
         public CommandReadyStatus ReadyStatus;
+        public NotReadyReason ReadyReason = NotReadyReason.None;
 
         public bool IsScan()
         {
@@ -479,6 +506,141 @@ namespace com.mirle.ibg3k0.sc
                 CRANE = this.CRANE,
                 RelayStation = this.RelayStation,
             };
+        }
+
+        internal bool put(ACMD_MCS ortherObj)
+        {
+            bool has_change = false;
+            if (!sc.Common.SCUtility.isMatche(CMD_ID, ortherObj.CMD_ID))
+            {
+                CMD_ID = ortherObj.CMD_ID;
+                has_change = true;
+            }
+            if (!sc.Common.SCUtility.isMatche(CARRIER_ID, ortherObj.CARRIER_ID))
+            {
+                BOX_ID = ortherObj.CARRIER_ID;
+                has_change = true;
+            }
+            if (TRANSFERSTATE != ortherObj.TRANSFERSTATE)
+            {
+                TRANSFERSTATE = ortherObj.TRANSFERSTATE;
+                has_change = true;
+            }
+            if (COMMANDSTATE != ortherObj.COMMANDSTATE)
+            {
+                COMMANDSTATE = ortherObj.COMMANDSTATE;
+                has_change = true;
+            }
+            if (!sc.Common.SCUtility.isMatche(HOSTSOURCE, ortherObj.HOSTSOURCE))
+            {
+                HOSTSOURCE = ortherObj.HOSTSOURCE;
+                has_change = true;
+            }
+            if (!sc.Common.SCUtility.isMatche(HOSTDESTINATION, ortherObj.HOSTDESTINATION))
+            {
+                HOSTDESTINATION = ortherObj.HOSTDESTINATION;
+                has_change = true;
+            }
+            if (PRIORITY != ortherObj.PRIORITY)
+            {
+                PRIORITY = ortherObj.PRIORITY;
+                has_change = true;
+            }
+            if (!sc.Common.SCUtility.isMatche(CHECKCODE, ortherObj.CHECKCODE))
+            {
+                CHECKCODE = ortherObj.CHECKCODE;
+                has_change = true;
+            }
+            if (!sc.Common.SCUtility.isMatche(PAUSEFLAG, ortherObj.PAUSEFLAG))
+            {
+                PAUSEFLAG = ortherObj.PAUSEFLAG;
+                has_change = true;
+            }
+            if (CMD_INSER_TIME != ortherObj.CMD_INSER_TIME)
+            {
+                CMD_INSER_TIME = ortherObj.CMD_INSER_TIME;
+                has_change = true;
+            }
+            if (CMD_START_TIME != ortherObj.CMD_START_TIME)
+            {
+                CMD_START_TIME = ortherObj.CMD_START_TIME;
+                has_change = true;
+            }
+            if (CMD_FINISH_TIME != ortherObj.CMD_FINISH_TIME)
+            {
+                CMD_FINISH_TIME = ortherObj.CMD_FINISH_TIME;
+                has_change = true;
+            }
+            if (TIME_PRIORITY != ortherObj.TIME_PRIORITY)
+            {
+                TIME_PRIORITY = ortherObj.TIME_PRIORITY;
+                has_change = true;
+            }
+            if (PORT_PRIORITY != ortherObj.PORT_PRIORITY)
+            {
+                PORT_PRIORITY = ortherObj.PORT_PRIORITY;
+                has_change = true;
+            }
+            if (REPLACE != ortherObj.REPLACE)
+            {
+                REPLACE = ortherObj.REPLACE;
+                has_change = true;
+            }
+
+            if (PRIORITY_SUM != ortherObj.PRIORITY_SUM)
+            {
+                PRIORITY_SUM = ortherObj.PRIORITY_SUM;
+                has_change = true;
+            }
+
+            if (!sc.Common.SCUtility.isMatche(BOX_ID, ortherObj.BOX_ID))
+            {
+                BOX_ID = ortherObj.BOX_ID;
+                has_change = true;
+            }
+            if (!sc.Common.SCUtility.isMatche(CARRIER_LOC, ortherObj.CARRIER_LOC))
+            {
+                CARRIER_LOC = ortherObj.CARRIER_LOC;
+                has_change = true;
+            }
+            if (!sc.Common.SCUtility.isMatche(LOT_ID, ortherObj.LOT_ID))
+            {
+                LOT_ID = ortherObj.LOT_ID;
+                has_change = true;
+            }
+            if (!sc.Common.SCUtility.isMatche(CARRIER_ID_ON_CRANE, ortherObj.CARRIER_ID_ON_CRANE))
+            {
+                CARRIER_ID_ON_CRANE = ortherObj.CARRIER_ID_ON_CRANE;
+                has_change = true;
+            }
+            if (!sc.Common.SCUtility.isMatche(CMDTYPE, ortherObj.CMDTYPE))
+            {
+                CMDTYPE = ortherObj.CMDTYPE;
+                has_change = true;
+            }
+            if (!sc.Common.SCUtility.isMatche(CRANE, ortherObj.CRANE))
+            {
+                CRANE = ortherObj.CRANE;
+                has_change = true;
+            }
+            if (!sc.Common.SCUtility.isMatche(RelayStation, ortherObj.RelayStation))
+            {
+                RelayStation = ortherObj.RelayStation;
+                has_change = true;
+            }
+            if (ReadyStatus != ortherObj.ReadyStatus)
+            {
+                ReadyStatus = ortherObj.ReadyStatus;
+                has_change = true;
+            }
+
+            if (ReadyReason != ortherObj.ReadyReason)
+            {
+                ReadyReason = ortherObj.ReadyReason;
+                has_change = true;
+            }
+
+            return has_change;
         }
     }
 }
