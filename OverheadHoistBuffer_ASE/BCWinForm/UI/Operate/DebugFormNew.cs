@@ -42,8 +42,11 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             cb_FroceReserveReject.Checked = DebugParameter.isForcedRejectBlockControl;
             cb_IsHandleBoxPassOff.Checked = DebugParameter.isHandleBoxAbnormalPassOff;
             cb_id_136_retry_test.Checked = DebugParameter.Is_136_retry_test;
+            cb_testZoneCommandReqNoReply.Checked = DebugParameter.Is_136_ZoneCommandReq_retry_test;
+
             num_priorityWatershed.Value = sc.App.SystemParameter.cmdPriorityWatershed;
             num_priorityForBoxMove.Value = sc.App.SystemParameter.BoxMovePriority;
+            cb_LoopEnhance.Checked = sc.App.SystemParameter.isLoopTransferEnhance;
             List<string> lstVh = new List<string>();
             lstVh.Add(string.Empty);
             lstVh.AddRange(bcApp.SCApplication.getEQObjCacheManager().getAllVehicle().Select(vh => vh.VEHICLE_ID).ToList());
@@ -473,6 +476,25 @@ namespace com.mirle.ibg3k0.bc.winform.UI
         {
             DebugParameter.Is_136_retry_test = cb_id_136_retry_test.Checked;
         }
+
+        private void cb_LoopEnhance_CheckedChanged(object sender, EventArgs e)
+        {
+            sc.App.SystemParameter.setIsLoopTransferEnhanceFlag(cb_LoopEnhance.Checked);
+        }
+
+        private void cb_testZoneCommandReqNoReply_CheckedChanged(object sender, EventArgs e)
+        {
+            DebugParameter.Is_136_ZoneCommandReq_retry_test = cb_testZoneCommandReqNoReply.Checked;
+        }
+
+        private void label7_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left && (ModifierKeys & Keys.Control) == Keys.Control)
+            {
+                grb_testAear.Visible = true;
+            }
+        }
+
         //*************************************
         //A0.01
 

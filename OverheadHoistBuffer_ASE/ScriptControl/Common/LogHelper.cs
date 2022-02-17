@@ -3,6 +3,7 @@ using com.mirle.ibg3k0.sc.Data.VO;
 using com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage;
 using com.mirle.ibg3k0.stc.Data.SecsData;
 using Google.Protobuf;
+using Newtonsoft.Json.Linq;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -172,7 +173,6 @@ namespace com.mirle.ibg3k0.sc.Common
                 LogObjPool.PutObject(logObj);
             }
         }
-
 
         public static void LogBCRReadInfo(string VehicleID, string portID, string mcsCmdID, string ohtcCmdID, string carrierID, string readCarrierID, ProtocolFormat.OHTMessage.BCRReadResult bCRReadResult,
                                           bool IsEnableIDReadFailScenario, [CallerMemberName] string Method = "")

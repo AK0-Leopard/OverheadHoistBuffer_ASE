@@ -29,7 +29,10 @@
         private void InitializeComponent()
         {
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.grb_testAear = new System.Windows.Forms.GroupBox();
+            this.cb_testZoneCommandReqNoReply = new System.Windows.Forms.CheckBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.cb_LoopEnhance = new System.Windows.Forms.CheckBox();
             this.num_priorityForBoxMove = new System.Windows.Forms.NumericUpDown();
             this.label8 = new System.Windows.Forms.Label();
             this.num_priorityWatershed = new System.Windows.Forms.NumericUpDown();
@@ -43,6 +46,7 @@
             this.cb_FroceReserveReject = new System.Windows.Forms.CheckBox();
             this.cb_FroceReservePass = new System.Windows.Forms.CheckBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.cb_id_136_retry_test = new System.Windows.Forms.CheckBox();
             this.btn_closeSession = new com.mirle.ibg3k0.bc.winform.UI.Components.uctlButton();
             this.btn_resetODO = new System.Windows.Forms.Button();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
@@ -82,8 +86,8 @@
             this.cb_OperMode = new System.Windows.Forms.ComboBox();
             this.button3 = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.cb_id_136_retry_test = new System.Windows.Forms.CheckBox();
             this.tabPage1.SuspendLayout();
+            this.grb_testAear.SuspendLayout();
             this.groupBox6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.num_priorityForBoxMove)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.num_priorityWatershed)).BeginInit();
@@ -103,6 +107,7 @@
             // tabPage1
             // 
             this.tabPage1.AutoScroll = true;
+            this.tabPage1.Controls.Add(this.grb_testAear);
             this.tabPage1.Controls.Add(this.groupBox6);
             this.tabPage1.Controls.Add(this.cb_IsHandleBoxPassOff);
             this.tabPage1.Controls.Add(this.group_cycleRun);
@@ -116,8 +121,31 @@
             this.tabPage1.Text = "TcpIp Control";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // grb_testAear
+            // 
+            this.grb_testAear.Controls.Add(this.cb_testZoneCommandReqNoReply);
+            this.grb_testAear.Location = new System.Drawing.Point(774, 610);
+            this.grb_testAear.Name = "grb_testAear";
+            this.grb_testAear.Size = new System.Drawing.Size(416, 157);
+            this.grb_testAear.TabIndex = 60;
+            this.grb_testAear.TabStop = false;
+            this.grb_testAear.Text = "Test Area";
+            this.grb_testAear.Visible = false;
+            // 
+            // cb_testZoneCommandReqNoReply
+            // 
+            this.cb_testZoneCommandReqNoReply.AutoSize = true;
+            this.cb_testZoneCommandReqNoReply.Location = new System.Drawing.Point(28, 29);
+            this.cb_testZoneCommandReqNoReply.Name = "cb_testZoneCommandReqNoReply";
+            this.cb_testZoneCommandReqNoReply.Size = new System.Drawing.Size(339, 26);
+            this.cb_testZoneCommandReqNoReply.TabIndex = 62;
+            this.cb_testZoneCommandReqNoReply.Text = "Test Zone Command Req Not Reply";
+            this.cb_testZoneCommandReqNoReply.UseVisualStyleBackColor = true;
+            this.cb_testZoneCommandReqNoReply.CheckedChanged += new System.EventHandler(this.cb_testZoneCommandReqNoReply_CheckedChanged);
+            // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.cb_LoopEnhance);
             this.groupBox6.Controls.Add(this.num_priorityForBoxMove);
             this.groupBox6.Controls.Add(this.label8);
             this.groupBox6.Controls.Add(this.num_priorityWatershed);
@@ -125,10 +153,21 @@
             this.groupBox6.Enabled = false;
             this.groupBox6.Location = new System.Drawing.Point(774, 335);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(428, 102);
+            this.groupBox6.Size = new System.Drawing.Size(416, 152);
             this.groupBox6.TabIndex = 59;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Parameter Setting";
+            // 
+            // cb_LoopEnhance
+            // 
+            this.cb_LoopEnhance.AutoSize = true;
+            this.cb_LoopEnhance.Location = new System.Drawing.Point(28, 110);
+            this.cb_LoopEnhance.Name = "cb_LoopEnhance";
+            this.cb_LoopEnhance.Size = new System.Drawing.Size(229, 26);
+            this.cb_LoopEnhance.TabIndex = 60;
+            this.cb_LoopEnhance.Text = "Is Open Loop Enhance";
+            this.cb_LoopEnhance.UseVisualStyleBackColor = true;
+            this.cb_LoopEnhance.CheckedChanged += new System.EventHandler(this.cb_LoopEnhance_CheckedChanged);
             // 
             // num_priorityForBoxMove
             // 
@@ -175,6 +214,7 @@
             this.label7.Size = new System.Drawing.Size(173, 22);
             this.label7.TabIndex = 58;
             this.label7.Text = "Priority 分水嶺:";
+            this.label7.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.label7_MouseDoubleClick);
             // 
             // cb_IsHandleBoxPassOff
             // 
@@ -295,6 +335,18 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Specify Vehicle Action";
             this.groupBox4.Enter += new System.EventHandler(this.groupBox4_Enter);
+            // 
+            // cb_id_136_retry_test
+            // 
+            this.cb_id_136_retry_test.AutoSize = true;
+            this.cb_id_136_retry_test.Location = new System.Drawing.Point(352, 722);
+            this.cb_id_136_retry_test.Name = "cb_id_136_retry_test";
+            this.cb_id_136_retry_test.Size = new System.Drawing.Size(199, 26);
+            this.cb_id_136_retry_test.TabIndex = 61;
+            this.cb_id_136_retry_test.Text = "ID_136_Retry_test";
+            this.cb_id_136_retry_test.UseVisualStyleBackColor = true;
+            this.cb_id_136_retry_test.Visible = false;
+            this.cb_id_136_retry_test.CheckedChanged += new System.EventHandler(this.cb_id_136_retry_test_CheckedChanged);
             // 
             // btn_closeSession
             // 
@@ -708,18 +760,6 @@
             this.tabControl1.Size = new System.Drawing.Size(1206, 865);
             this.tabControl1.TabIndex = 23;
             // 
-            // cb_id_136_retry_test
-            // 
-            this.cb_id_136_retry_test.AutoSize = true;
-            this.cb_id_136_retry_test.Location = new System.Drawing.Point(352, 722);
-            this.cb_id_136_retry_test.Name = "cb_id_136_retry_test";
-            this.cb_id_136_retry_test.Size = new System.Drawing.Size(199, 26);
-            this.cb_id_136_retry_test.TabIndex = 61;
-            this.cb_id_136_retry_test.Text = "ID_136_Retry_test";
-            this.cb_id_136_retry_test.UseVisualStyleBackColor = true;
-            this.cb_id_136_retry_test.Visible = false;
-            this.cb_id_136_retry_test.CheckedChanged += new System.EventHandler(this.cb_id_136_retry_test_CheckedChanged);
-            // 
             // DebugFormNew
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 22F);
@@ -734,6 +774,8 @@
             this.Load += new System.EventHandler(this.DebugForm_Load);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            this.grb_testAear.ResumeLayout(false);
+            this.grb_testAear.PerformLayout();
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.num_priorityForBoxMove)).EndInit();
@@ -816,5 +858,8 @@
         private System.Windows.Forms.NumericUpDown num_priorityForBoxMove;
         private Components.uctlButton btn_closeSession;
         private System.Windows.Forms.CheckBox cb_id_136_retry_test;
+        private System.Windows.Forms.CheckBox cb_LoopEnhance;
+        private System.Windows.Forms.GroupBox grb_testAear;
+        private System.Windows.Forms.CheckBox cb_testZoneCommandReqNoReply;
     }
 }

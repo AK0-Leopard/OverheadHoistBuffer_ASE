@@ -887,12 +887,15 @@ namespace com.mirle.ibg3k0.sc.Service
                                                    ToList();
                         var transferCmdData = cmdData.Where(data => data.CMDTYPE != CmdType.PortTypeChange.ToString() && data.TRANSFERSTATE != E_TRAN_STATUS.Queue).ToList();
 
-                        if (line.SCStats == ALINE.TSCState.AUTO)
+                        if (line.SCStats == ALINE.TSCState.AUTO || line.SCStats == ALINE.TSCState.NONE)
                         {
                             //not thing...
                         }
                         else
                         {
+                            scApp.LoopTransferEnhance.judgeCommandTransferReadyStatus(queueCmdData);
+                            refreshACMD_MCSInfoList(cmdData);
+
                             TransferServiceLogger.Info
                             (
                                 $"{DateTime.Now.ToString("HH:mm:ss.fff ")} current line scstats:{line.SCStats} ,can't excute transfer command"
@@ -904,10 +907,13 @@ namespace com.mirle.ibg3k0.sc.Service
                                     scApp.LineService.TSCStateToPause("");
                                 }
                             }
-                            //return;
+                            return;
                         }
+                        int cmd_data_count = cmdData.Count;
+                        checkLineIsIdleOverNSecend(line, cmd_data_count);
 
-                        if (cmdData.Count != 0)
+                        //if (cmdData.Count != 0)
+                        if (cmd_data_count > 0)
                         {
                             #region 說明
                             // A20.05.21
@@ -951,12 +957,14 @@ namespace com.mirle.ibg3k0.sc.Service
                             if (SystemParameter.isLoopTransferEnhance)
                             {
                                 scApp.LoopTransferEnhance.judgeCommandTransferReadyStatus(queueCmdData);
-                                refreshACMD_MCSInfoList(queueCmdData);
+                                refreshACMD_MCSInfoList(cmdData);
+
                                 AllInQueueCMDMCSpriorityUpdate(queueCmdData);
                                 ProcessRemainCommand(queueCmdData);
                             }
                             else
                             {
+                                refreshACMD_MCSInfoList(cmdData);
                                 queueCmdData = scApp.CMDBLL.doSortMCSCmdDataByDistanceFromHostSourceToVehicle(queueCmdData, vehicleData);
 
                                 if (queueCmdData.Count != 0)
@@ -1077,6 +1085,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         }
                         else
                         {
+                            refreshACMD_MCSInfoList(cmdData);
                             //若沒有命令時，產生救回Unknown CST 的命令
                             if (autoRemarkBOXCSTData == true)
                             {
@@ -1100,8 +1109,8 @@ namespace com.mirle.ibg3k0.sc.Service
                                 //在MCS搬送命令時，經過30秒後 就讓車子先暫停下來
 
                             }
-
                         }
+
                         ohtTimeout = DateTime.Now;
                         ohtIdleTimeOut = 0;
                     }
@@ -1130,6 +1139,31 @@ namespace com.mirle.ibg3k0.sc.Service
                 finally
                 {
                     Interlocked.Exchange(ref syncTranCmdPoint, 0);
+                }
+            }
+        }
+
+        private void checkLineIsIdleOverNSecend(ALINE line, int currentCmdMcsCount)
+        {
+            if ((line.SCStats == ALINE.TSCState.NONE || line.SCStats == ALINE.TSCState.AUTO) &&
+                currentCmdMcsCount == 0)
+            {
+                if (!line.IdleTime.IsRunning)
+                    line.IdleTime.Restart();
+                else
+                {
+                    if (line.IdleTime.ElapsedMilliseconds > ALINE.MAX_LINE_IDLE_TIME_MMILLI_SECOND)
+                    {
+
+                    }
+                }
+            }
+            else
+            {
+                if (line.IdleTime.IsRunning)
+                {
+                    line.IdleTime.Reset();
+                    line.IdleTime.Stop();
                 }
             }
         }

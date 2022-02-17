@@ -31,7 +31,7 @@ namespace com.mirle.ibg3k0.sc.ObjectRelay
         {
             get
             {
-                List<ACMD_OHTC> cmd_ohtc = ACMD_OHTC.ACMD_OHTC_List.ToList();
+                List<ACMD_OHTC> cmd_ohtc = ACMD_OHTC.CMD_OHTC_InfoList.Values.ToList();
                 if (cmd_ohtc == null || cmd_ohtc.Count == 0)
                 {
                     return "";
@@ -110,6 +110,7 @@ namespace com.mirle.ibg3k0.sc.ObjectRelay
             { ACMD_MCS.NotReadyReason.DestPortNotReady,"目的地-Port尚未準備好" },
             { ACMD_MCS.NotReadyReason.DestPoerNotReadyWillRealy,"目的地-Port尚未準備好，準備到中繼站" },
             { ACMD_MCS.NotReadyReason.ExceptionHappend,"例外發生" },
+            { ACMD_MCS.NotReadyReason.HosStateNotAuto,"目前MCS 非在Auto狀態" },
 
         };
 

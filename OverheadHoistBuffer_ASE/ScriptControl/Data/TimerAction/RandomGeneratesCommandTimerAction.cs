@@ -257,7 +257,8 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
             //找出在儲位中的Cassette
 
             cassetteDatas = cassetteDatas.
-                Where(cst => scApp.TransferService.isShelfPort(cst.Carrier_LOC)).ToList();
+                Where(cst => scApp.TransferService.isShelfPort(cst.Carrier_LOC) &&
+                             SCUtility.isEmpty(cst.CSTID)).ToList();
             List<string> current_cst_at_shelf_id = cassetteDatas.
                 Select(cst => SCUtility.Trim(cst.Carrier_LOC, true)).
                 ToList();

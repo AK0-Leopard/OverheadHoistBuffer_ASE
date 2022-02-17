@@ -115,10 +115,35 @@ namespace com.mirle.ibg3k0.sc.Service
                 vh.HasImportantEventReportRetryOverTimes += Vh_HasImportantEventReportRetryOverTimes;
                 vh.IdleTimeIsEnough += Vh_IdleTimeIsEnough;
                 vh.BoxIdleOnVh += Vh_BoxIdleOnVh;
+                vh.CycleMovePausing += Vh_CycleMovePausing;
                 vh.TimerActionStart();
             }
 
             transferService = app.TransferService;
+        }
+
+        private void Vh_CycleMovePausing(object sender, EventArgs e)
+        {
+            try
+            {
+                AVEHICLE vh = sender as AVEHICLE;
+                if (!SystemParameter.isLoopTransferEnhance)
+                {
+                    return;
+                }
+
+                ALINE line = scApp.getEQObjCacheManager().getLine();
+                if (line.IsLineIdling)
+                {
+                    return;
+                }
+
+                PauseRequest(vh.VEHICLE_ID, PauseEvent.Continue, OHxCPauseType.Normal);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception:");
+            }
         }
 
         private void Vh_BoxIdleOnVh(object sender, string boxID)
@@ -138,11 +163,14 @@ namespace com.mirle.ibg3k0.sc.Service
                                           FirstOrDefault();
                 if (vh_transfer_command != null)
                 {
-                    bool is_assign_success = scApp.LoopTransferEnhance.preAssignMCSCommand(scApp.SequenceBLL, vh, vh_transfer_command);
-                    if (!is_assign_success)
+                    lock (zoneCommandLockObj)
                     {
-                        vh_transfer_command.ReadyStatus = ACMD_MCS.CommandReadyStatus.NotReady;
-                        scApp.TransferService.TransferServiceLogger.Info($"vh:{vh.VEHICLE_ID}車上有idle的CST，但pre assign時失敗。");
+                        bool is_assign_success = scApp.LoopTransferEnhance.preAssignMCSCommand(scApp.SequenceBLL, vh, vh_transfer_command);
+                        if (!is_assign_success)
+                        {
+                            vh_transfer_command.ReadyStatus = ACMD_MCS.CommandReadyStatus.NotReady;
+                            scApp.TransferService.TransferServiceLogger.Info($"vh:{vh.VEHICLE_ID}車上有idle的CST，但pre assign時失敗。");
+                        }
                     }
                 }
             }
@@ -160,7 +188,31 @@ namespace com.mirle.ibg3k0.sc.Service
                 {
                     return;
                 }
+
+                ALINE line = scApp.getEQObjCacheManager().getLine();
+                if (line.SCStats == ALINE.TSCState.NONE)
+                {
+                    //not thing...
+
+                }
+                else if (line.SCStats != ALINE.TSCState.AUTO)
+                {
+                    return;
+                }
+
                 AVEHICLE vh = sender as AVEHICLE;
+                if (vh.HAS_CST == 1)
+                {
+                    scApp.TransferService.TransferServiceLogger.Info($"vh:{vh.VEHICLE_ID},身上有BOX:{vh.BOX_ID},不進行cycle run命令");
+                    return;
+                }
+                if (!vh.IS_INSTALLED)
+                {
+                    scApp.TransferService.TransferServiceLogger.Info($"vh:{vh.VEHICLE_ID},非Installed 狀態，不進行cycle run");
+                    return;
+                }
+
+
                 bool is_success = scApp.CMDBLL.doCreatTransferCommand(vh.VEHICLE_ID,
                                                                      cmd_type: E_CMD_TYPE.Round);
             }
@@ -2141,11 +2193,6 @@ namespace com.mirle.ibg3k0.sc.Service
             {
                 try
                 {
-                    if (!SystemParameter.isLoopTransferEnhance)
-                    {
-                        return;
-                    }
-
                     findTheVhOfAvoidAddress(willPassVhID, inTheWayVhID);
                 }
                 catch (Exception ex)
@@ -2481,6 +2528,12 @@ namespace com.mirle.ibg3k0.sc.Service
                     TranEventReportPathReserveReqNew(bcfApp, eqpt, seq_num, reserveInfos);
                     break;
                 case EventType.ZoneCommandReq:
+                    if (DebugParameter.Is_136_ZoneCommandReq_retry_test)
+                    {
+                        scApp.TransferService.TransferServiceLogger.Info
+                            ($"ID 136 zone command req retry test flag is open,DebugParameter.Is_136_retry_test:{DebugParameter.Is_136_ZoneCommandReq_retry_test}");
+                        return;
+                    }
                     PositionReport_ZoneCommaneReq(bcfApp, eqpt, seq_num, eventType, zone_command_id);
                     break;
             }
@@ -4687,33 +4740,38 @@ namespace com.mirle.ibg3k0.sc.Service
             {
                 string zome_command_port_id = "";
                 string port_adr_id = "";
-                lock (zoneCommandLockObj)
-                {
-                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
-                    Data: $"Process report {eventType}",
-                    VehicleID: eqpt.VEHICLE_ID,
-                    CarrierID: eqpt.CST_ID);
+                bool is_continue_process_zone_command_req =
+                    checkAndPrcessIsContinueProcessZoneCommandReq(eqpt);
 
-                    var ready_transfer_cmd_mcs = ACMD_MCS.loadReadyTransferOfQueueCMD_MCS();
-                    var get_command_zone_result = scApp.LoopTransferEnhance.tryGetZoneCommand
-                        (ready_transfer_cmd_mcs, eqpt.VEHICLE_ID, zondCommandID);
-                    if (get_command_zone_result.hasCommand)
+                if (is_continue_process_zone_command_req)
+                {
+                    lock (zoneCommandLockObj)
                     {
-                        bool is_success_pre_assign = scApp.LoopTransferEnhance.preAssignMCSCommand(scApp.SequenceBLL, eqpt, get_command_zone_result.cmdMCS);
-                        if (is_success_pre_assign)
+                        LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                        Data: $"Process report {eventType}",
+                        VehicleID: eqpt.VEHICLE_ID,
+                        CarrierID: eqpt.CST_ID);
+
+                        var ready_transfer_cmd_mcs = ACMD_MCS.loadReadyTransferOfQueueCMD_MCS();
+                        var get_command_zone_result = scApp.LoopTransferEnhance.tryGetZoneCommand
+                            (ready_transfer_cmd_mcs, eqpt.VEHICLE_ID, zondCommandID);
+                        if (get_command_zone_result.hasCommand)
                         {
-                            zome_command_port_id = get_command_zone_result.waitPort;
-                            var port_def = scApp.PortDefBLL.getPortDef(zome_command_port_id);
-                            if (port_def != null)
-                                port_adr_id = port_def.ADR_ID;
-                        }
-                        else
-                        {
-                            scApp.TransferService.TransferServiceLogger.Info($"OHB >> OHB zone id:{zondCommandID},cmd id:{get_command_zone_result.cmdMCS.CMD_ID} 預先下命令失敗");
+                            bool is_success_pre_assign = scApp.LoopTransferEnhance.preAssignMCSCommand(scApp.SequenceBLL, eqpt, get_command_zone_result.cmdMCS);
+                            if (is_success_pre_assign)
+                            {
+                                zome_command_port_id = get_command_zone_result.waitPort;
+                                var port_def = scApp.PortDefBLL.getPortDef(zome_command_port_id);
+                                if (port_def != null)
+                                    port_adr_id = port_def.ADR_ID;
+                            }
+                            else
+                            {
+                                scApp.TransferService.TransferServiceLogger.Info($"OHB >> OHB zone id:{zondCommandID},cmd id:{get_command_zone_result.cmdMCS.CMD_ID} 預先下命令失敗");
+                            }
                         }
                     }
                 }
-
                 replyTranEventReport(bcfApp, eventType, eqpt, seqNum,
                                          zoneCommandPortID: zome_command_port_id,
                                          zoneCommandPortAdrID: port_adr_id);
@@ -4725,6 +4783,31 @@ namespace com.mirle.ibg3k0.sc.Service
                    VehicleID: eqpt.VEHICLE_ID,
                    CarrierID: eqpt.CST_ID);
             }
+        }
+
+        private bool checkAndPrcessIsContinueProcessZoneCommandReq(AVEHICLE eqpt)
+        {
+            bool is_continue_process_zone_command_req = true;
+            ALINE line = scApp.getEQObjCacheManager().getLine();
+            if (line.SCStats == ALINE.TSCState.PAUSED || !SystemParameter.isLoopTransferEnhance)
+            {
+                if (eqpt.IsCycleMove(ACMD_OHTC.CMD_OHTC_InfoList))
+                {
+                    doAbortCommand(eqpt, eqpt.OHTC_CMD, CMDCancelType.CmdCancel);
+                }
+                is_continue_process_zone_command_req = false;
+            }
+            else if (line.IsLineIdling)
+            {
+                if (eqpt.IsCycleMove(ACMD_OHTC.CMD_OHTC_InfoList) &&
+                    !eqpt.IsPause)
+                {
+                    PauseRequest(eqpt.VEHICLE_ID, PauseEvent.Pause, OHxCPauseType.Normal);
+                }
+                is_continue_process_zone_command_req = false;
+            }
+
+            return is_continue_process_zone_command_req;
         }
         #endregion Position Report
 
@@ -5083,7 +5166,7 @@ namespace com.mirle.ibg3k0.sc.Service
 
             //回復結束後，若該筆命令是Mismatch、IDReadFail結束的話則要把原本車上的那顆CST Installed回來。
 
-            tryAssignCommandToVh(eqpt, completeStatus);
+            tryAssignCommandToVhWhenCommandComplete(eqpt, completeStatus);
             if (DebugParameter.IsDebugMode && DebugParameter.IsCycleRun)
             {
                 SpinWait.SpinUntil(() => false, 3000);
@@ -5108,9 +5191,23 @@ namespace com.mirle.ibg3k0.sc.Service
 
         }
 
-        private void tryAssignCommandToVh(AVEHICLE vh, CompleteStatus completeStatus)
+        private void tryAssignCommandToVhWhenCommandComplete(AVEHICLE vh, CompleteStatus completeStatus)
         {
-            bool can_continue_service = IsCanContinueService(completeStatus);
+            if (!SystemParameter.isLoopTransferEnhance)
+            {
+                return;
+            }
+            if (vh.HAS_CST == 1)
+            {
+                scApp.TransferService.TransferServiceLogger.Info($"vh:{vh.VEHICLE_ID},身上有BOX:{vh.BOX_ID},不進行命令結束後的cycle run 檢查流程命令");
+                return;
+            }
+            if (!vh.IS_INSTALLED)
+            {
+                scApp.TransferService.TransferServiceLogger.Info($"vh:{vh.VEHICLE_ID},非Installed 狀態，不進行cycle run");
+                return;
+            }
+            bool can_continue_service = IsCanContinueService(vh, completeStatus);
             if (can_continue_service)
             {
                 lock (zoneCommandLockObj)
@@ -5139,7 +5236,7 @@ namespace com.mirle.ibg3k0.sc.Service
             }
         }
 
-        private bool IsCanContinueService(CompleteStatus completeStatus)
+        private bool IsCanContinueService(AVEHICLE vh, CompleteStatus completeStatus)
         {
             bool can_continue_service = false;
             switch (completeStatus)
@@ -5147,6 +5244,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 case CompleteStatus.CmpStatusLoadunload:
                 case CompleteStatus.CmpStatusUnload:
                 case CompleteStatus.CmpStatusCycleMove:
+
                     can_continue_service = true;
                     break;
                 default:

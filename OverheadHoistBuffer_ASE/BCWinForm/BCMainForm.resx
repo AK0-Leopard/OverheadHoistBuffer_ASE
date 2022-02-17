@@ -531,11 +531,29 @@
   <data name="tipMessageToolStripMenuItem.Text" xml:space="preserve">
     <value>Tip Message</value>
   </data>
+  <data name="debugToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>235, 26</value>
+  </data>
+  <data name="debugToolStripMenuItem1.Text" xml:space="preserve">
+    <value>Debug Mode</value>
+  </data>
+  <data name="engineeringModeToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>235, 26</value>
+  </data>
+  <data name="engineeringModeToolStripMenuItem.Text" xml:space="preserve">
+    <value>Engineering mode</value>
+  </data>
+  <data name="engineerToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>98, 26</value>
+  </data>
+  <data name="engineerToolStripMenuItem1.Text" xml:space="preserve">
+    <value>Engineer</value>
+  </data>
   <data name="搬送模擬ToolStripMenuItem.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft JhengHei UI, 14.25pt</value>
   </data>
   <data name="搬送模擬ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>156, 28</value>
+    <value>180, 28</value>
   </data>
   <data name="搬送模擬ToolStripMenuItem.Text" xml:space="preserve">
     <value>搬送模擬</value>
@@ -560,24 +578,6 @@
   </data>
   <data name="monitorToolStripMenuItem.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
-  </data>
-  <data name="debugToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>235, 26</value>
-  </data>
-  <data name="debugToolStripMenuItem1.Text" xml:space="preserve">
-    <value>Debug Mode</value>
-  </data>
-  <data name="engineeringModeToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>235, 26</value>
-  </data>
-  <data name="engineeringModeToolStripMenuItem.Text" xml:space="preserve">
-    <value>Engineering mode</value>
-  </data>
-  <data name="engineerToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>98, 26</value>
-  </data>
-  <data name="engineerToolStripMenuItem1.Text" xml:space="preserve">
-    <value>Engineer</value>
   </data>
   <data name="menuStrip1.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
@@ -1409,6 +1409,12 @@
   <data name="&gt;&gt;alarmHistoryQueryToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;transferHistoryQueryToolStripMenuItem.Name" xml:space="preserve">
+    <value>transferHistoryQueryToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;transferHistoryQueryToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;mataToolStripMenuItem.Name" xml:space="preserve">
     <value>mataToolStripMenuItem</value>
   </data>
@@ -1545,12 +1551,6 @@
     <value>engineeringModeToolStripMenuItem</value>
   </data>
   <data name="&gt;&gt;engineeringModeToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;transferHistoryQueryToolStripMenuItem.Name" xml:space="preserve">
-    <value>transferHistoryQueryToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;transferHistoryQueryToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">

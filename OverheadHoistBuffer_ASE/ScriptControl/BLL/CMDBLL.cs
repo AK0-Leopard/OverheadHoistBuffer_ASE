@@ -3109,6 +3109,17 @@ namespace com.mirle.ibg3k0.sc.BLL
                                       Data: check_result.Result.ToString(),
                                       XID: check_result.Num);
                     }
+                    else
+                    {
+                        try
+                        {
+                            ACMD_OHTC.CMD_OHTC_InfoList.TryAdd(cmd_obj.CMD_ID, cmd_obj);
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.Error(ex, "Exception");
+                        }
+                    }
                     setCallContext(CALL_CONTEXT_KEY_WORD_OHTC_CMD_CHECK_RESULT, check_result);
                 }
                 return check_result.IsSuccess;
@@ -3945,8 +3956,10 @@ namespace com.mirle.ibg3k0.sc.BLL
                         != SCAppConstants.AppServiceMode.Active)
                         return;
                     //找出目前再Queue的ACMD_OHTC
-                    ACMD_OHTC.ACMD_OHTC_List = scApp.CMDBLL.loadUnfinishCMD_OHTC();
-                    List<ACMD_OHTC> CMD_OHTC_Queues = scApp.CMDBLL.loadCMD_OHTCMDStatusIsQueue();
+                    var unfinish_cmd_ohtc = scApp.CMDBLL.loadUnfinishCMD_OHTC();
+                    refreshACMD_OHTCInfoList(unfinish_cmd_ohtc);
+                    //List<ACMD_OHTC> CMD_OHTC_Queues = scApp.CMDBLL.loadCMD_OHTCMDStatusIsQueue();
+                    List<ACMD_OHTC> CMD_OHTC_Queues = unfinish_cmd_ohtc.Where(cmd => cmd.CMD_STAUS == E_CMD_STATUS.Queue).ToList();
                     if (CMD_OHTC_Queues == null || CMD_OHTC_Queues.Count == 0)
                         return;
                     foreach (ACMD_OHTC cmd in CMD_OHTC_Queues)
@@ -3959,7 +3972,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                         bool isLoopTransferEnhance = true;
                         if (isLoopTransferEnhance && cmd.IsCMD_MCS())
                         {
-                            if (scApp.LoopTransferEnhance.IsRunOver(assignVH, cmd.DESTINATION))
+                            if (scApp.LoopTransferEnhance.IsRunOver(assignVH, cmd.SOURCE))
                             {
                                 scApp.TransferService.TransferServiceLogger.Info($"命令 ID:{cmd.CMD_ID} ,cmd mcs id:{cmd.CMD_ID_MCS} 由於車子跑過頭，因此回復到Queue的狀態等待重派");
                                 scApp.VehicleService.finishCommand(cmd);
@@ -4008,6 +4021,48 @@ namespace com.mirle.ibg3k0.sc.BLL
                     System.Threading.Interlocked.Exchange(ref ohxc_cmd_SyncPoint, 0);
                 }
             }
+        }
+
+
+        private void refreshACMD_OHTCInfoList(List<ACMD_OHTC> currentExcuteCmdOhtc)
+        {
+            bool has_change = false;
+            List<string> new_current_excute_cmd_ohtc = currentExcuteCmdOhtc.Select(cmd => SCUtility.Trim(cmd.CMD_ID, true)).ToList();
+            List<string> old_current_excute_cmd_ohtc = ACMD_OHTC.CMD_OHTC_InfoList.Keys.ToList();
+
+            List<string> new_add_cmds_ohtc = new_current_excute_cmd_ohtc.Except(old_current_excute_cmd_ohtc).ToList();
+            //1.新增多出來的命令
+            foreach (string new_cmd in new_add_cmds_ohtc)
+            {
+                ACMD_OHTC new_cmd_obj = new ACMD_OHTC();
+                var current_cmd = currentExcuteCmdOhtc.Where(cmd => SCUtility.isMatche(cmd.CMD_ID, new_cmd)).FirstOrDefault();
+                if (current_cmd == null) continue;
+                new_cmd_obj.put(current_cmd);
+                ACMD_OHTC.CMD_OHTC_InfoList.TryAdd(new_cmd, new_cmd_obj);
+                has_change = true;
+            }
+            //2.刪除以結束的命令
+            List<string> will_del_mcs_cmds = old_current_excute_cmd_ohtc.Except(new_current_excute_cmd_ohtc).ToList();
+            foreach (string old_cmd in will_del_mcs_cmds)
+            {
+                ACMD_OHTC.CMD_OHTC_InfoList.TryRemove(old_cmd, out ACMD_OHTC cmd_ohtc);
+                has_change = true;
+            }
+            //3.更新現有命令
+            foreach (var cmd_ohtc_item in ACMD_OHTC.CMD_OHTC_InfoList)
+            {
+                string cmd_ohtc_id = cmd_ohtc_item.Key;
+                ACMD_OHTC cmd_ohtc = currentExcuteCmdOhtc.Where(cmd => SCUtility.isMatche(cmd.CMD_ID, cmd_ohtc_id)).FirstOrDefault();
+                if (cmd_ohtc == null)
+                {
+                    continue;
+                }
+                if (cmd_ohtc_item.Value.put(cmd_ohtc))
+                {
+                    has_change = true;
+                }
+            }
+
         }
 
         public static T getOrSetCallContext<T>(string key)

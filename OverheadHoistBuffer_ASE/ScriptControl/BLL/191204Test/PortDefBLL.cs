@@ -464,7 +464,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
         PortDef IPortDefBLL.getPortDefByAdrID(string portID)
         {
-            return cache.getPortDef(portID);
+            return cache.getPortDefByAdr(portID).FirstOrDefault();
         }
     }
 }

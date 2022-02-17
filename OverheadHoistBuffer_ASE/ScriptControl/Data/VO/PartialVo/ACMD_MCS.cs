@@ -84,7 +84,8 @@ namespace com.mirle.ibg3k0.sc
             DestAGVZoneNotReadyWillRealy,
             DestPortNotReady,
             DestPoerNotReadyWillRealy,
-            ExceptionHappend
+            ExceptionHappend,
+            HosStateNotAuto
         }
         public enum CmdType
         {

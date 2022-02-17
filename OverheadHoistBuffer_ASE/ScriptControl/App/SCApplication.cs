@@ -2411,6 +2411,7 @@ namespace com.mirle.ibg3k0.sc.App
 
         public static Boolean Is_136_empty_double_retry = false;
         public static Boolean Is_136_retry_test = false;
+        public static Boolean Is_136_ZoneCommandReq_retry_test = false;
 
         public static CycleRunType cycleRunType;
 

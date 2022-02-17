@@ -43,6 +43,11 @@ namespace com.mirle.ibg3k0.sc.BLL
             return cache.GetSectionsByAddress(adrID).FirstOrDefault();
         }
 
+        public ASECTION getSectionByFromAdr(string adrID)
+        {
+            return cache.GetSectionsByFromAddress(adrID).FirstOrDefault();
+        }
+
         public class Database
         {
             SectionDao SectionDao = null;

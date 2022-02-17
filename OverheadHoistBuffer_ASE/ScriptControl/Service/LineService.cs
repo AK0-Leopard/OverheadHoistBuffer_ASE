@@ -46,7 +46,6 @@ namespace com.mirle.ibg3k0.sc.Service
             line.addEventHandler(nameof(LineService), nameof(line.IsEarthquakeHappend), PublishLineInfo);
             line.addEventHandler(nameof(LineService), nameof(line.IsAlarmHappened), PublishLineInfo);
             line.LineStatusChange += Line_LineStatusChange;
-
         }
 
         public void startHostCommunication()

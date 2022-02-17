@@ -13,5 +13,6 @@ namespace com.mirle.ibg3k0.sc.BLL.Interface
         List<ASECTION> loadSections();
         ASECTION getSection(string secID);
         ASECTION getSectionByToAdr(string adrID);
+        ASECTION getSectionByFromAdr(string adrID);
     }
 }

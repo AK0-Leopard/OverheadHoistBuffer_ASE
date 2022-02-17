@@ -81,6 +81,7 @@ namespace com.mirle.ibg3k0.sc
         public event EventHandler<EventType> HasImportantEventReportRetryOverTimes;
         public event EventHandler IdleTimeIsEnough;
         public event EventHandler<string> BoxIdleOnVh;
+        public event EventHandler CycleMovePausing;
 
 
         VehicleTimerAction vehicleTimer = null;
@@ -126,6 +127,10 @@ namespace com.mirle.ibg3k0.sc
         public void onBoxIdleOnVh(string boxID)
         {
             BoxIdleOnVh?.Invoke(this, boxID);
+        }
+        public void onCycleMovePausing()
+        {
+            CycleMovePausing?.Invoke(this, EventArgs.Empty);
         }
 
 
@@ -545,6 +550,23 @@ namespace com.mirle.ibg3k0.sc
             get { return HID_PAUSE == VhStopSingle.StopSingleOn; }
             set { }
         }
+        public bool IsCycleMove(ConcurrentDictionary<string, ACMD_OHTC> currentExCmdOhtc)
+        {
+            if (ACT_STATUS != VHActionStatus.Commanding)
+            {
+                return false;
+            }
+            if (SCUtility.isEmpty(OHTC_CMD))
+            {
+                return false;
+            }
+            bool is_exist = currentExCmdOhtc.TryGetValue(sc.Common.SCUtility.Trim(OHTC_CMD, true), out ACMD_OHTC cmd_ohtc);
+            if (!is_exist) return false;
+            if (cmd_ohtc.CMD_TPYE == E_CMD_TYPE.Round)
+                return true;
+            else
+                return false;
+        }
         public virtual string NODE_ID { get; set; }
 
         //public ACMD_OHTC currentExcuteCmd = null;
@@ -856,10 +878,7 @@ namespace com.mirle.ibg3k0.sc
             {
                 return false;
             }
-            if (!SCUtility.isEmpty(OHTC_CMD))
-            {
-                return false;
-            }
+
             if (cmdBLL.isCMD_OHTCWillSending(VEHICLE_ID))
             {
                 return false;
@@ -1434,6 +1453,7 @@ namespace com.mirle.ibg3k0.sc
                         checkHasCommandNotFinishedInTime();
                         checkIsIdleEnough();
                         checkHasBoxOnVhWhenNoCommand();
+                        checkIsCycleMovePausing();
                     }
                     catch (Exception ex)
                     {
@@ -1447,6 +1467,15 @@ namespace com.mirle.ibg3k0.sc
                         System.Threading.Interlocked.Exchange(ref syncPoint, 0);
                     }
 
+                }
+            }
+
+            private void checkIsCycleMovePausing()
+            {
+                if (vh.IsCycleMove(ACMD_OHTC.CMD_OHTC_InfoList) &&
+                   vh.IsPause)
+                {
+                    vh.onCycleMovePausing();
                 }
             }
 

@@ -17,6 +17,8 @@ namespace com.mirle.ibg3k0.sc
 {
     public partial class ALINE : BaseEQObject, IAlarmHisList
     {
+        public static UInt32 MAX_LINE_IDLE_TIME_MMILLI_SECOND { get; private set; } = 99999999;
+
         public ALINE()
         {
             //StopWatch_mcsConnectionTime = new Stopwatch();
@@ -37,6 +39,7 @@ namespace com.mirle.ibg3k0.sc
         public event EventHandler<EventArgs> LineStatusChange;
         public event EventHandler<EventArgs> OnLocalDisconnection;
         public event EventHandler<EventArgs> OnLocalConnection;
+        public event EventHandler IdleTimeIsEnough;
 
         #region MCS Online Check Item
         private bool alarmSetChecked = false;
@@ -1138,6 +1141,7 @@ namespace com.mirle.ibg3k0.sc
                 }
             }
         }
+        public Stopwatch IdleTime = new Stopwatch();
         public TSCState SCStats { private set; get; } = TSCState.NONE;
         //public TSCState SCStats = TSCState.PAUSED;
         void TransitionedHandler(Stateless.StateMachine<TSCState, TSCTrigger>.Transition transition)
@@ -1393,6 +1397,18 @@ namespace com.mirle.ibg3k0.sc
                     isAlarmHappened = value;
                     OnPropertyChanged(BCFUtility.getPropertyName(() => this.IsAlarmHappened));
                 }
+            }
+        }
+        public void onIdleTimeIsEnough()
+        {
+            IdleTimeIsEnough?.Invoke(this, EventArgs.Empty);
+        }
+
+        public bool IsLineIdling
+        {
+            get
+            {
+                return IdleTime.ElapsedMilliseconds > MAX_LINE_IDLE_TIME_MMILLI_SECOND;
             }
         }
 

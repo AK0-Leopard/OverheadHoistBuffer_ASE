@@ -64,10 +64,25 @@ namespace com.mirle.ibg3k0.sc.Module
             }
         }
 
+        public void setCommandTransferReadyStatusToNoReadyWhenSCStateNotAuto(List<ACMD_MCS> cmdMCSs)
+        {
+            foreach (var cmd_mcs in cmdMCSs)
+            {
+                cmd_mcs.ReadyStatus = ACMD_MCS.CommandReadyStatus.NotReady;
+                cmd_mcs.ReadyReason = ACMD_MCS.NotReadyReason.HosStateNotAuto;
+
+                //if (isReadyToTransfer(cmd_mcs))
+                //{
+                //    cmd_mcs.IsReadyTransfer = true;
+                //}
+            }
+        }
+
         private (ACMD_MCS.CommandReadyStatus readyStatus, ACMD_MCS.NotReadyReason notReadyReason) checkReadyToTransfer(ACMD_MCS cmd_mcs)
         {
             try
             {
+                logger.Info($"OHB >> OHB| 進行命令:{cmd_mcs.CMD_ID}的檢查，L:{cmd_mcs.HOSTSOURCE} U:{cmd_mcs.HOSTDESTINATION} ");
                 //確認是否為AGV Port > Station的特殊命令，是的話就走特別處理流程
                 bool is_agv_port_to_station_cmd = transferService.checkAndProcessIsAgvPortToStation(cmd_mcs);
                 if (is_agv_port_to_station_cmd) return (ACMD_MCS.CommandReadyStatus.NotReady, ACMD_MCS.NotReadyReason.SpeciallyProcess);
@@ -107,13 +122,14 @@ namespace com.mirle.ibg3k0.sc.Module
                     string agvPortName = transferService.GetAGV_OutModeInServicePortName(cmd_mcs.HOSTDESTINATION);
                     if (SCUtility.isEmpty(agvPortName))
                     {
-                        logger.Info("OHB >> OHB|TransferCommandHandler 目的 AGV St: " + cmd_mcs.HOSTDESTINATION + " 沒有準備好可放置的位置");
                         if (IsNeedRealyCommand(cmd_mcs))
                         {
+                            logger.Info("OHB >> OHB|TransferCommandHandler 目的 AGV St: " + cmd_mcs.HOSTDESTINATION + " 沒有準備好可放置的位置,準備進行中繼站流程");
                             return (ACMD_MCS.CommandReadyStatus.Realy, ACMD_MCS.NotReadyReason.DestAGVZoneNotReadyWillRealy);
                         }
                         else
                         {
+                            logger.Info("OHB >> OHB|TransferCommandHandler 目的 AGV St: " + cmd_mcs.HOSTDESTINATION + " 沒有準備好可放置的位置");
                             return (ACMD_MCS.CommandReadyStatus.NotReady, ACMD_MCS.NotReadyReason.DestAGVZoneNotReady);
                         }
                     }
@@ -140,6 +156,7 @@ namespace com.mirle.ibg3k0.sc.Module
                         }
                     }
                 }
+                logger.Info($"OHB >> OHB| 進行命令:{cmd_mcs.CMD_ID}，已準備好搬送。");
                 return (ACMD_MCS.CommandReadyStatus.Ready, ACMD_MCS.NotReadyReason.Ready);
             }
             catch (Exception ex)
@@ -155,6 +172,7 @@ namespace com.mirle.ibg3k0.sc.Module
         /// <returns></returns>
         private bool IsNeedRealyCommand(ACMD_MCS cmd_mcs, bool isDestCVPortIsFull = false)
         {
+
             if (cmd_mcs.IsSource_ShelfPort(transferService))
             {
                 return false;
@@ -215,68 +233,87 @@ namespace com.mirle.ibg3k0.sc.Module
         const double MAX_CLOSE_DIS_MM = 10_000;
         public (bool hasCommand, string waitPort, ACMD_MCS cmdMCS) tryGetZoneCommand(List<ACMD_MCS> mcsCMDs, string vhID, string zoneCommandID, bool isNeedCheckHasVhClose = true)
         {
-            //沒命令就不需要等待
-            if (mcsCMDs == null || mcsCMDs.Count == 0) return (false, "", null);
-            var zone_group = zoneCommandBLL.getZoneCommandGroup(zoneCommandID);
-            List<ACMD_MCS> zone_mcs_cmds = mcsCMDs.Where(cmd => zone_group.PortIDs.Contains(sc.Common.SCUtility.Trim(cmd.CURRENT_LOCATION, true))).
-                                                   ToList();
-            if (zone_mcs_cmds == null || zone_mcs_cmds.Count == 0) return (false, "", null);
-            //var first_cmd = zone_mcs_cmds.FirstOrDefault();
-            //return (true, first_cmd.HOSTSOURCE, first_cmd);
-            //確認是否有CV貨物準備要Wait 
-            //var checkBoxWillWaitIn = tryGetWillWaitInPort(zone_group);
-            //if (checkBoxWillWaitIn.has)
-            //{
-
-            //}
-            //
-            if (isNeedCheckHasVhClose && zone_mcs_cmds.Count == 1)
+            try
             {
-                //1筆
-                //	判斷後面是否有空車在距離內
-                //		在10m以內
-                //			bypass此筆命令
-                //		在10m以外
-                //			36回有命令
                 AVEHICLE vh = vehicleBLL.getVehicle(vhID);
-                string ask_vh_sec_id = vh.CUR_SEC_ID;
-                var ask_vh_sec_obj = sectionBLL.getSection(ask_vh_sec_id);
-                //a.確認同一段Section是否有在後面的車子，有的話代表已經靠近中了
-                List<AVEHICLE> cycling_vhs = vehicleBLL.loadCyclingVhs();
-                ACMD_MCS cmd_mcs = zone_mcs_cmds.FirstOrDefault();
-                foreach (var v in cycling_vhs)
+                if (!vh.TransferReady(cmdBLL))
                 {
-                    if (sc.Common.SCUtility.isMatche(vh.CUR_SEC_ID, v.CUR_SEC_ID))
+                    logger.Info($"OHB >> OHB| fun:tryGetZoneCommand vh:{vh.VEHICLE_ID}，並未準備好進行新的搬送.");
+                    return (false, "", null);
+                }
+
+                //沒命令就不需要等待
+                if (mcsCMDs == null || mcsCMDs.Count == 0) return (false, "", null);
+                var zone_group = zoneCommandBLL.getZoneCommandGroup(zoneCommandID);
+                List<ACMD_MCS> zone_mcs_cmds = mcsCMDs.Where(cmd => zone_group.PortIDs.Contains(sc.Common.SCUtility.Trim(cmd.CURRENT_LOCATION, true))).
+                                                       ToList();
+                if (zone_mcs_cmds == null || zone_mcs_cmds.Count == 0) return (false, "", null);
+                //var first_cmd = zone_mcs_cmds.FirstOrDefault();
+                //return (true, first_cmd.HOSTSOURCE, first_cmd);
+                //確認是否有CV貨物準備要Wait 
+                //var checkBoxWillWaitIn = tryGetWillWaitInPort(zone_group);
+                //if (checkBoxWillWaitIn.has)
+                //{
+
+                //}
+                //
+                if (isNeedCheckHasVhClose && zone_mcs_cmds.Count == 1)
+                {
+                    //1筆
+                    //	判斷後面是否有空車在距離內
+                    //		在10m以內
+                    //			bypass此筆命令
+                    //		在10m以外
+                    //			36回有命令
+                    string ask_vh_sec_id = vh.CUR_SEC_ID;
+                    var ask_vh_sec_obj = sectionBLL.getSection(ask_vh_sec_id);
+                    //a.確認同一段Section是否有在後面的車子，有的話代表已經靠近中了
+                    List<AVEHICLE> cycling_vhs = vehicleBLL.loadCyclingVhs();
+                    ACMD_MCS cmd_mcs = zone_mcs_cmds.FirstOrDefault();
+                    foreach (var v in cycling_vhs)
                     {
-                        if (vh.ACC_SEC_DIST > v.ACC_SEC_DIST)
+                        if (vh == v) continue;
+                        if (sc.Common.SCUtility.isMatche(vh.CUR_SEC_ID, v.CUR_SEC_ID))
                         {
-                            return (false, "", null);
+                            if (vh.ACC_SEC_DIST > v.ACC_SEC_DIST)
+                            {
+                                logger.Info($"OHB >> OHB|vh:{vhID}詢問zone command:{zoneCommandID}，有一筆搬送命令:{cmd_mcs.CMD_ID}但有後車:{v.VEHICLE_ID}接近因此Pass該次詢問");
+                                return (false, "", null);
+                            }
                         }
                     }
-                }
-                //b.確認往後找10m內有沒有車是在單純移動中
-                string ask_vh_sec_from_adr = ask_vh_sec_obj.FROM_ADR_ID;
-                double check_dis = 0;
-                do
-                {
-                    ASECTION pre_section = sectionBLL.getSectionByToAdr(ask_vh_sec_from_adr);
-                    var on_sec_vhs = cycling_vhs.Where(v => v != vh && sc.Common.SCUtility.isMatche(v.CUR_SEC_ID, pre_section.SEC_ID)).FirstOrDefault();
-                    if (on_sec_vhs != null)
+                    //b.確認往後找10m內有沒有車是在單純移動中
+                    string ask_vh_sec_from_adr = ask_vh_sec_obj.FROM_ADR_ID;
+                    double check_dis = 0;
+                    do
                     {
-                        return (false, "", null);
+                        ASECTION pre_section = sectionBLL.getSectionByToAdr(ask_vh_sec_from_adr);
+                        var on_sec_vhs = cycling_vhs.Where(v => v != vh && sc.Common.SCUtility.isMatche(v.CUR_SEC_ID, pre_section.SEC_ID)).FirstOrDefault();
+                        if (on_sec_vhs != null)
+                        {
+                            logger.Info($"OHB >> OHB|vh:{vhID}詢問zone command:{zoneCommandID}，有一筆搬送命令:{cmd_mcs.CMD_ID}但有後車:{on_sec_vhs.VEHICLE_ID}接近因此Pass該次詢問");
+                            return (false, "", null);
+                        }
+                        check_dis += pre_section.SEC_DIS;
+                        ask_vh_sec_from_adr = pre_section.FROM_ADR_ID;
                     }
-                    check_dis += pre_section.SEC_DIS;
-                    ask_vh_sec_from_adr = pre_section.FROM_ADR_ID;
+                    while (check_dis < MAX_CLOSE_DIS_MM);
+                    logger.Info($"OHB >> OHB|vh:{vhID}詢問zone command:{zoneCommandID}，有一筆搬送命令:{cmd_mcs.CMD_ID} L:{cmd_mcs.HOSTSOURCE} U:{cmd_mcs.HOSTDESTINATION}，回復該筆命令可搬送");
+                    return (true, cmd_mcs.HOSTSOURCE, cmd_mcs);
                 }
-                while (check_dis < MAX_CLOSE_DIS_MM);
-                return (true, cmd_mcs.HOSTSOURCE, cmd_mcs);
+                else
+                {
+                    //如果有多筆命令在這個Zone，則需要找出最遠的一筆命令
+                    //讓後面車子來的時候，可以接另外一筆
+                    var cmd_mcs = getZoneCommandFarthestCommand(zone_group.zoneDir, zone_mcs_cmds);
+                    logger.Info($"OHB >> OHB|vh:{vhID}詢問zone command:{zoneCommandID}，有多筆搬送命令，選出最遠一筆:{cmd_mcs.CMD_ID} L:{cmd_mcs.HOSTSOURCE} U:{cmd_mcs.HOSTDESTINATION} loc:{cmd_mcs.CURRENT_LOCATION}，回復該筆命令可搬送");
+                    return (true, cmd_mcs.CURRENT_LOCATION, cmd_mcs);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                //如果有多筆命令在這個Zone，則需要找出最遠的一筆命令
-                //讓後面車子來的時候，可以接另外一筆
-                var cmd_mcs = getZoneCommandFarthestCommand(zone_group.zoneDir, zone_mcs_cmds);
-                return (true, cmd_mcs.CURRENT_LOCATION, cmd_mcs);
+                logger.Error(ex, "Exception:");
+                return (false, "", null);
             }
         }
 
@@ -299,6 +336,7 @@ namespace com.mirle.ibg3k0.sc.Module
         {
             try
             {
+                logger.Info($"OHB >> OHB|cmd id:{cmdMCS.CMD_ID}，L:{cmdMCS.HOSTSOURCE} U:{cmdMCS.HOSTDESTINATION} 準備進行預派");
                 bool is_success = false;
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
@@ -373,6 +411,7 @@ namespace com.mirle.ibg3k0.sc.Module
                                 }
                                 else
                                 {
+                                    logger.Info($"OHB >> OHB|TransferCommandHandler: 目的AGV Zone: { cmdMCS.HOSTDESTINATION } 。找到可放置的Port:{agvPortName}");
                                     cmdMCS.HOSTDESTINATION = agvPortName;
                                 }
                             }
@@ -380,9 +419,12 @@ namespace com.mirle.ibg3k0.sc.Module
                         //2.產生該命令的小命令到Queue
                         var cmd_ohtc = cmdMCS.convertToACMD_OHTC(vh, portDefBLL, sequenceBLL, transferService);
                         is_success = is_success && cmdBLL.creatCommand_OHTC(cmd_ohtc);
+                        logger.Info($"OHB >> OHB|cmd id:{cmdMCS.CMD_ID}，產生cmd_ohtc結果:{is_success}");
+
                         if (!SCUtility.isMatche(original_host_dest, cmdMCS.HOSTDESTINATION))
                         {
                             is_success = is_success && cmdBLL.updateCMD_MCS_Dest(cmdMCS.CMD_ID, cmdMCS.HOSTDESTINATION);
+                            logger.Info($"OHB >> OHB|cmd id:{cmdMCS.CMD_ID}，更新目的地:{cmdMCS.HOSTDESTINATION}，結果:{is_success}");
                         }
                         if (is_success)
                         {
@@ -406,75 +448,147 @@ namespace com.mirle.ibg3k0.sc.Module
         const double IGNORE_RUN_OVER_DISTANCE_mm = 1000;
         public bool IsRunOver(AVEHICLE vh, string portID)
         {
-            var get_result = zoneCommandBLL.tryGetZoneCommandGroupByPortID(portID);
-            if (!get_result.hasFind)
+            try
             {
-                logger.Info($"OHB >> OHB|確認 vh:{vh.VEHICLE_ID} 是否跑過頭 port id:{portID},但沒有找到相應的Port Group.");
-                return false;
-            }
-            var port_def_info = portDefBLL.getPortDef(portID);
-            var port_adr_obj = reserveBLL.GetHltMapAddress(port_def_info.ADR_ID);
-            double port_x_axis = port_adr_obj.x;
-            double port_y_axis = port_adr_obj.y;
-            double vh_x_axis = vh.X_Axis;
-            double vh_y_axis = vh.Y_Axis;
-            switch (get_result.zoneCommandGroup.zoneDir)
-            {
-                case ZoneCommandGroup.ZoneDir.DIR_1_0:
-                    if (port_y_axis != vh_y_axis)
-                    {
-                        return false;
-                    }
-
-
-                    if (port_x_axis + IGNORE_RUN_OVER_DISTANCE_mm > vh_x_axis) return false;
-                    else
-                    {
-                        logger.Info($"OHB >> OHB|確認 vh:{vh.VEHICLE_ID}(x:{vh_x_axis}) 相對於 port id:{portID}(x:{port_x_axis})(包含容許範圍:{IGNORE_RUN_OVER_DISTANCE_mm})  dir:{get_result.zoneCommandGroup.zoneDir},跑過頭了.");
-                        return true;
-                    }
-                case ZoneCommandGroup.ZoneDir.DIR_N1_0:
-                    if (port_y_axis != vh_y_axis)
-                    {
-                        return false;
-                    }
-                    if (port_x_axis - IGNORE_RUN_OVER_DISTANCE_mm < vh_x_axis) return false;
-                    else
-                    {
-                        logger.Info($"OHB >> OHB|確認 vh:{vh.VEHICLE_ID}(x:{vh_x_axis}) 相對於 port id:{portID}(x:{port_x_axis})(包含容許範圍:{IGNORE_RUN_OVER_DISTANCE_mm}) dir:{get_result.zoneCommandGroup.zoneDir},跑過頭了.");
-                        return true;
-                    }
-                default:
+                var get_result = zoneCommandBLL.tryGetZoneCommandGroupByPortID(portID);
+                if (!get_result.hasFind)
+                {
+                    logger.Info($"OHB >> OHB|確認 vh:{vh.VEHICLE_ID} 是否跑過頭 port id:{portID},但沒有找到相應的Port Group.");
                     return false;
+                }
+                var port_def_info = portDefBLL.getPortDef(portID);
+                var port_adr_obj = reserveBLL.GetHltMapAddress(port_def_info.ADR_ID);
+                double port_x_axis = port_adr_obj.x;
+                double port_y_axis = port_adr_obj.y;
+                double vh_x_axis = vh.X_Axis;
+                double vh_y_axis = vh.Y_Axis;
+                switch (get_result.zoneCommandGroup.zoneDir)
+                {
+                    case ZoneCommandGroup.ZoneDir.DIR_1_0:
+                        if (port_y_axis != vh_y_axis)
+                        {
+                            return false;
+                        }
+
+
+                        if (port_x_axis + IGNORE_RUN_OVER_DISTANCE_mm > vh_x_axis) return false;
+                        else
+                        {
+                            logger.Info($"OHB >> OHB|確認 vh:{vh.VEHICLE_ID}(x:{vh_x_axis}) 相對於 port id:{portID}(x:{port_x_axis})(包含容許範圍:{IGNORE_RUN_OVER_DISTANCE_mm})  dir:{get_result.zoneCommandGroup.zoneDir},跑過頭了.");
+                            return true;
+                        }
+                    case ZoneCommandGroup.ZoneDir.DIR_N1_0:
+                        if (port_y_axis != vh_y_axis)
+                        {
+                            return false;
+                        }
+                        //11879 - 1000 = 10879 < 11879
+                        if (port_x_axis - IGNORE_RUN_OVER_DISTANCE_mm < vh_x_axis) return false;
+                        else
+                        {
+                            logger.Info($"OHB >> OHB|確認 vh:{vh.VEHICLE_ID}(x:{vh_x_axis}) 相對於 port id:{portID}(x:{port_x_axis})(包含容許範圍:{IGNORE_RUN_OVER_DISTANCE_mm}) dir:{get_result.zoneCommandGroup.zoneDir},跑過頭了.");
+                            return true;
+                        }
+                    default:
+                        return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return false;
             }
         }
 
         public (bool hasCommand, string waitPort, ACMD_MCS cmdMCS) tryGetZoneCommandWhenCommandComplete(List<ACMD_MCS> mcsCMDs, string vhID)
         {
-            var vh = vehicleBLL.getVehicle(vhID);
-            string current_adr_id = vh.CUR_ADR_ID;
-            var port = portDefBLL.getPortDefByAdrID(current_adr_id);
+            try
+            {
+                var vh = vehicleBLL.getVehicle(vhID);
+                if (!vh.TransferReady(cmdBLL))
+                {
+                    logger.Info($"OHB >> OHB| fun:tryGetZoneCommandWhenCommandComplete vh:{vh.VEHICLE_ID}，並未準備好進行新的搬送.");
+                    return (false, "", null);
+                }
+                string current_adr_id = vh.CUR_ADR_ID;
+                var port = portDefBLL.getPortDefByAdrID(current_adr_id);
+                if (port == null)
+                {
+                    return (false, "", null);
+                }
+                var get_result = zoneCommandBLL.tryGetZoneCommandGroupByPortID(port.PLCPortID);
+                if (!get_result.hasFind)
+                {
+                    logger.Info($"OHB >> OHB|確認 vh:{vh.VEHICLE_ID}命令完成後是否有同Zone的命令可以搬送，但Port:{port.PLCPortID}並無對應的ZoneCommand.");
+                    return (false, "", null);
+                }
+                var zone_mcs_cmds = mcsCMDs.Where(cmd => get_result.zoneCommandGroup.PortIDs.Contains(sc.Common.SCUtility.Trim(cmd.CURRENT_LOCATION, true)));
+                bool is_need_check_has_vh_close = zone_mcs_cmds.Count() == 1;
+                //找出還沒跑過頭的命令
+                zone_mcs_cmds = zone_mcs_cmds.Where(mcs_cmd => !IsRunOver(vh, mcs_cmd.CURRENT_LOCATION));
+                var try_get_result = tryGetZoneCommand
+                    (zone_mcs_cmds.ToList(), vh.VEHICLE_ID, get_result.zoneCommandGroup.ZoneCommandID, is_need_check_has_vh_close);
+                //如果沒有命令的話，再往前找8m Zone，有的話就直接在下給車子
+                if (!try_get_result.hasCommand)
+                {
+                    var get_next_zone_command_result = tryGetNextZoneCommandInXm(get_result.zoneCommandGroup.ZoneCommandID, vh);
+                    if (!get_next_zone_command_result.isFind)
+                    {
+                        return (false, "", null);
+                    }
+
+                    try_get_result = tryGetZoneCommand
+                    (mcsCMDs, vh.VEHICLE_ID, get_next_zone_command_result.nextZoneCommandID);
+                }
+                return try_get_result;
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return (false, "", null);
+            }
+        }
+        const double MAX_PRE_ASSIGN_ZONE_COMMAND_MM = 10_000;
+        private (bool isFind, string nextZoneCommandID) tryGetNextZoneCommandInXm(string currentZoneCommandID, AVEHICLE vh)
+        {
+            string adr_id = SCUtility.Trim(vh.CUR_ADR_ID, true);
+            ASECTION sec = sectionBLL.getSectionByFromAdr(adr_id);
+            if (sec == null)
+            {
+                return (false, "");
+            }
+            double dis = sec.SEC_DIS;
+            do
+            {
+                adr_id = sec.TO_ADR_ID;
+                var get_result = tryGetZoneCommandIDByAdr(adr_id);
+                if (get_result.isExist)
+                {
+                    if (!SCUtility.isMatche(currentZoneCommandID, get_result.zoneConnamdID))
+                    {
+                        return (true, get_result.zoneConnamdID);
+                    }
+                }
+                sec = sectionBLL.getSectionByFromAdr(adr_id);
+                dis += sec.SEC_DIS;
+            }
+            while (dis < MAX_PRE_ASSIGN_ZONE_COMMAND_MM);
+            return (false, "");
+
+        }
+        private (bool isExist, string zoneConnamdID) tryGetZoneCommandIDByAdr(string adrID)
+        {
+            var port = portDefBLL.getPortDefByAdrID(adrID);
             if (port == null)
             {
-                return (false, "", null);
+                return (false, "");
             }
             var get_result = zoneCommandBLL.tryGetZoneCommandGroupByPortID(port.PLCPortID);
             if (!get_result.hasFind)
             {
-                logger.Info($"OHB >> OHB|確認 vh:{vh.VEHICLE_ID}命令完成後是否有同Zone的命令可以搬送，但Port:{port.PLCPortID}並無對應的ZoneCommand.");
-                return (false, "", null);
+                return (false, "");
             }
-            var zone_mcs_cmds = mcsCMDs.Where(cmd => get_result.zoneCommandGroup.PortIDs.Contains(sc.Common.SCUtility.Trim(cmd.CURRENT_LOCATION, true)));
-            if (zone_mcs_cmds == null || zone_mcs_cmds.Count() == 0)
-            {
-                return (false, "", null);
-            }
-            bool is_need_check_has_vh_close = zone_mcs_cmds.Count() == 1;
-            //找出還沒跑過頭的命令
-            zone_mcs_cmds = zone_mcs_cmds.Where(mcs_cmd => !IsRunOver(vh, mcs_cmd.CURRENT_LOCATION));
-            var try_get_result = tryGetZoneCommand
-                (zone_mcs_cmds.ToList(), vh.VEHICLE_ID, get_result.zoneCommandGroup.ZoneCommandID, is_need_check_has_vh_close);
-            return try_get_result;
+            return (true, get_result.zoneCommandGroup.ZoneCommandID);
         }
     }
 }
