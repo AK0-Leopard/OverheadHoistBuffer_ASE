@@ -22,6 +22,7 @@ using com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage;
 using com.mirle.iibg3k0.ttc;
 using com.mirle.iibg3k0.ttc.Common;
 using com.mirle.iibg3k0.ttc.Common.TCPIP;
+using Google.Protobuf;
 using KingAOP;
 using NLog;
 using System;
@@ -164,6 +165,8 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
         protected void str132_ReceiveProcess(object sender, TcpIpEventArgs e)
         {
             ID_132_TRANS_COMPLETE_REPORT recive_str = (ID_132_TRANS_COMPLETE_REPORT)e.objPacket;
+            LogHelper.RecordReportInfoNew(eqpt, recive_str, e.iSeqNum);
+
             scApp.VehicleBLL.setAndPublishPositionReportInfo2Redis(eqpt.VEHICLE_ID, recive_str);
 
             dynamic service = scApp.VehicleService;
@@ -179,6 +182,9 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             try
             {
                 connectionCheck(eqpt);
+
+                LogHelper.RecordReportInfoNew(eqpt, e.objPacket as Google.Protobuf.IMessage, e.iSeqNum);
+
                 str134_ReceiveProcess(sender, e);
             }
             catch (Exception ex)
@@ -207,6 +213,8 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
 
             if (scApp.getEQObjCacheManager().getLine().ServerPreStop)
                 return;
+
+            LogHelper.RecordReportInfoNew(eqpt, e.objPacket as Google.Protobuf.IMessage, e.iSeqNum);
             connectionCheck(eqpt);
             int threadID = System.Threading.Thread.CurrentThread.ManagedThreadId;
             Stopwatch sw = scApp.StopwatchPool.GetObject();
@@ -258,6 +266,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
 
             if (scApp.getEQObjCacheManager().getLine().ServerPreStop)
                 return;
+            LogHelper.RecordReportInfoNew(eqpt, e.objPacket as Google.Protobuf.IMessage, e.iSeqNum);
 
             int threadID = System.Threading.Thread.CurrentThread.ManagedThreadId;
             Stopwatch sw = scApp.StopwatchPool.GetObject();
@@ -303,7 +312,9 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
         //todo 需掛上實際資料
         protected void str194_Receive(object sender, TcpIpEventArgs e)
         {
+
             ID_194_ALARM_REPORT recive_gpp = (ID_194_ALARM_REPORT)e.objPacket;
+            LogHelper.RecordReportInfoNew(eqpt, recive_gpp, e.iSeqNum);
 
             dynamic service = scApp.VehicleService;
             service.AlarmReport(bcfApp, eqpt, recive_gpp, e.iSeqNum);
@@ -391,13 +402,15 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             bool isSuccess = false;
             try
             {
-
+                LogHelper.RecordReportInfoNew(eqpt, send_gpp, 0);
                 WrapperMessage wrapper = new WrapperMessage
                 {
                     ID = VHMSGIF.ID_TRANS_REQUEST,
                     TransReq = send_gpp
                 };
                 com.mirle.iibg3k0.ttc.Common.TrxTcpIp.ReturnCode result = snedRecv(wrapper, out receive_gpp, out reason);
+                LogHelper.RecordReportInfoNew(eqpt, receive_gpp, wrapper.SeqNum);
+
                 isSuccess = result == TrxTcpIp.ReturnCode.Normal;
                 reason = receive_gpp.NgReason;
                 if (isSuccess)
@@ -438,7 +451,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                     CmdID = cmd_id,
                     ActType = actType
                 };
-
+                LogHelper.RecordReportInfoNew(eqpt, stSend, 0);
                 WrapperMessage wrapper = new WrapperMessage
                 {
                     ID = VHMSGIF.ID_TRANS_CANCEL_REQUEST,
@@ -447,6 +460,8 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
 
                 SCUtility.RecodeReportInfo(eqpt.VEHICLE_ID, 0, stSend);
                 com.mirle.iibg3k0.ttc.Common.TrxTcpIp.ReturnCode result = snedRecv(wrapper, out stRecv, out rtnMsg);
+                LogHelper.RecordReportInfoNew(eqpt, stRecv, wrapper.SeqNum);
+
                 SCUtility.RecodeReportInfo(eqpt.VEHICLE_ID, 0, stRecv, result.ToString());
                 if (result == TrxTcpIp.ReturnCode.Normal)
                 {
@@ -476,6 +491,8 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             bool isScuess = false;
             try
             {
+
+                LogHelper.RecordReportInfoNew(eqpt, send_gpp, 0);
                 string rtnMsg = string.Empty;
                 WrapperMessage wrapper = new WrapperMessage
                 {
@@ -483,6 +500,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                     PauseReq = send_gpp
                 };
                 com.mirle.iibg3k0.ttc.Common.TrxTcpIp.ReturnCode result = snedRecv(wrapper, out receive_gpp, out rtnMsg);
+                LogHelper.RecordReportInfoNew(eqpt, send_gpp, wrapper.SeqNum);
                 isScuess = result == TrxTcpIp.ReturnCode.Normal &&
                            receive_gpp.ReplyCode == 0;
 
@@ -502,6 +520,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             bool isScuess = false;
             try
             {
+                LogHelper.RecordReportInfoNew(eqpt, send_gpp, 0);
                 string rtnMsg = string.Empty;
                 WrapperMessage wrapper = new WrapperMessage
                 {
@@ -509,6 +528,8 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                     StatusReq = send_gpp
                 };
                 com.mirle.iibg3k0.ttc.Common.TrxTcpIp.ReturnCode result = snedRecv(wrapper, out receive_gpp, out rtnMsg);
+                LogHelper.RecordReportInfoNew(eqpt, receive_gpp, wrapper.SeqNum);
+
                 isScuess = result == TrxTcpIp.ReturnCode.Normal;
             }
             catch (Exception ex)
@@ -525,6 +546,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             bool isScuess = false;
             try
             {
+                LogHelper.RecordReportInfoNew(eqpt, send_gpp, 0);
                 string rtnMsg = string.Empty;
                 WrapperMessage wrapper = new WrapperMessage
                 {
@@ -532,6 +554,8 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                     RangeTeachingReq = send_gpp
                 };
                 com.mirle.iibg3k0.ttc.Common.TrxTcpIp.ReturnCode result = snedRecv(wrapper, out receive_gpp, out rtnMsg);
+                LogHelper.RecordReportInfoNew(eqpt, receive_gpp, wrapper.SeqNum);
+
                 isScuess = result == TrxTcpIp.ReturnCode.Normal;
             }
             catch (Exception ex)
@@ -547,6 +571,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             bool isScuess = false;
             try
             {
+                LogHelper.RecordReportInfoNew(eqpt, send_gpp, 0);
                 string rtnMsg = string.Empty;
                 WrapperMessage wrapper = new WrapperMessage
                 {
@@ -554,6 +579,8 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                     ModeChangeReq = send_gpp
                 };
                 com.mirle.iibg3k0.ttc.Common.TrxTcpIp.ReturnCode result = snedRecv(wrapper, out receive_gpp, out rtnMsg);
+                LogHelper.RecordReportInfoNew(eqpt, receive_gpp, wrapper.SeqNum);
+
                 isScuess = result == TrxTcpIp.ReturnCode.Normal;
             }
             catch (Exception ex)
@@ -570,12 +597,14 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             try
             {
                 string rtnMsg = string.Empty;
+                LogHelper.RecordReportInfoNew(eqpt, send_gpp, 0);
                 WrapperMessage wrapper = new WrapperMessage
                 {
                     ID = VHMSGIF.ID_PAUSE_REQUEST,
                     AlarmResetReq = send_gpp
                 };
                 com.mirle.iibg3k0.ttc.Common.TrxTcpIp.ReturnCode result = snedRecv(wrapper, out receive_gpp, out rtnMsg);
+                LogHelper.RecordReportInfoNew(eqpt, send_gpp, wrapper.SeqNum);
                 isScuess = result == TrxTcpIp.ReturnCode.Normal;
             }
             catch (Exception ex)
@@ -589,8 +618,25 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
 
         public override bool snedMessage(WrapperMessage wrapper, bool isReply = false)
         {
+            LogHelper.RecordReportInfoNew(eqpt, getGoogleBeSetToOneOf(wrapper), wrapper.SeqNum);
             Boolean resp_cmp = ITcpIpControl.sendGoogleMsg(bcfApp, tcpipAgentName, wrapper, true);
             return resp_cmp;
+        }
+        private static IMessage getGoogleBeSetToOneOf(IMessage PackWrapperMsg)
+        {
+            try
+            {
+                var descriptor = PackWrapperMsg.Descriptor;
+                var oneof = descriptor.Oneofs[0];
+                var value = oneof.Accessor.GetCaseFieldDescriptor(PackWrapperMsg);
+                IMessage entityMsg = value.Accessor.GetValue(PackWrapperMsg) as IMessage;
+                return entityMsg;
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return null;
+            }
         }
         object sendRecv_LockObj = new object();
         public override com.mirle.iibg3k0.ttc.Common.TrxTcpIp.ReturnCode snedRecv<TSource2>(WrapperMessage wrapper, out TSource2 stRecv, out string rtnMsg)

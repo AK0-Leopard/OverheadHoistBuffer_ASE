@@ -248,6 +248,13 @@ namespace com.mirle.ibg3k0.sc.Module
                 List<ACMD_MCS> zone_mcs_cmds = mcsCMDs.Where(cmd => zone_group.PortIDs.Contains(sc.Common.SCUtility.Trim(cmd.CURRENT_LOCATION, true))).
                                                        ToList();
                 if (zone_mcs_cmds == null || zone_mcs_cmds.Count == 0) return (false, "", null);
+
+                if (isAskSameZoneCommandWithVhZone(vh, zoneCommandID))
+                {
+                    logger.Info($"OHB >> OHB| fun:tryGetZoneCommand 車子目前位置Zone相同:{zoneCommandID}，開始確認是否有過頭...");
+                    zone_mcs_cmds = zone_mcs_cmds.Where(mcs_cmd => !IsRunOver(vh, mcs_cmd.CURRENT_LOCATION, false)).ToList();
+                }
+
                 //var first_cmd = zone_mcs_cmds.FirstOrDefault();
                 //return (true, first_cmd.HOSTSOURCE, first_cmd);
                 //確認是否有CV貨物準備要Wait 
@@ -314,6 +321,24 @@ namespace com.mirle.ibg3k0.sc.Module
             {
                 logger.Error(ex, "Exception:");
                 return (false, "", null);
+            }
+        }
+        private bool isAskSameZoneCommandWithVhZone(AVEHICLE vh, string zoneID)
+        {
+            try
+            {
+                string vh_current_adr = sc.Common.SCUtility.Trim(vh.CUR_ADR_ID);
+                var get_current_zone_id_result = getZoneCommandIDByAddress(vh_current_adr);
+                if (!get_current_zone_id_result.isFind)
+                {
+                    return false;
+                }
+                return sc.Common.SCUtility.isMatche(get_current_zone_id_result.zoneID, zoneID);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return false;
             }
         }
 
@@ -446,10 +471,12 @@ namespace com.mirle.ibg3k0.sc.Module
             }
         }
         const double IGNORE_RUN_OVER_DISTANCE_mm = 1000;
-        public bool IsRunOver(AVEHICLE vh, string portID)
+        public bool IsRunOver(AVEHICLE vh, string portID, bool isAddIgnoreDistance = true)
         {
             try
             {
+                double ignore_run_over_distance_mm = isAddIgnoreDistance ?
+                    IGNORE_RUN_OVER_DISTANCE_mm : 0;
                 var get_result = zoneCommandBLL.tryGetZoneCommandGroupByPortID(portID);
                 if (!get_result.hasFind)
                 {
@@ -471,10 +498,10 @@ namespace com.mirle.ibg3k0.sc.Module
                         }
 
 
-                        if (port_x_axis + IGNORE_RUN_OVER_DISTANCE_mm > vh_x_axis) return false;
+                        if (port_x_axis + ignore_run_over_distance_mm > vh_x_axis) return false;
                         else
                         {
-                            logger.Info($"OHB >> OHB|確認 vh:{vh.VEHICLE_ID}(x:{vh_x_axis}) 相對於 port id:{portID}(x:{port_x_axis})(包含容許範圍:{IGNORE_RUN_OVER_DISTANCE_mm})  dir:{get_result.zoneCommandGroup.zoneDir},跑過頭了.");
+                            logger.Info($"OHB >> OHB|確認 vh:{vh.VEHICLE_ID}(x:{vh_x_axis}) 相對於 port id:{portID}(x:{port_x_axis})(包含容許範圍:{ignore_run_over_distance_mm})  dir:{get_result.zoneCommandGroup.zoneDir},跑過頭了.");
                             return true;
                         }
                     case ZoneCommandGroup.ZoneDir.DIR_N1_0:
@@ -483,10 +510,10 @@ namespace com.mirle.ibg3k0.sc.Module
                             return false;
                         }
                         //11879 - 1000 = 10879 < 11879
-                        if (port_x_axis - IGNORE_RUN_OVER_DISTANCE_mm < vh_x_axis) return false;
+                        if (port_x_axis - ignore_run_over_distance_mm < vh_x_axis) return false;
                         else
                         {
-                            logger.Info($"OHB >> OHB|確認 vh:{vh.VEHICLE_ID}(x:{vh_x_axis}) 相對於 port id:{portID}(x:{port_x_axis})(包含容許範圍:{IGNORE_RUN_OVER_DISTANCE_mm}) dir:{get_result.zoneCommandGroup.zoneDir},跑過頭了.");
+                            logger.Info($"OHB >> OHB|確認 vh:{vh.VEHICLE_ID}(x:{vh_x_axis}) 相對於 port id:{portID}(x:{port_x_axis})(包含容許範圍:{ignore_run_over_distance_mm}) dir:{get_result.zoneCommandGroup.zoneDir},跑過頭了.");
                             return true;
                         }
                     default:
@@ -525,7 +552,7 @@ namespace com.mirle.ibg3k0.sc.Module
                 var zone_mcs_cmds = mcsCMDs.Where(cmd => get_result.zoneCommandGroup.PortIDs.Contains(sc.Common.SCUtility.Trim(cmd.CURRENT_LOCATION, true)));
                 bool is_need_check_has_vh_close = zone_mcs_cmds.Count() == 1;
                 //找出還沒跑過頭的命令
-                zone_mcs_cmds = zone_mcs_cmds.Where(mcs_cmd => !IsRunOver(vh, mcs_cmd.CURRENT_LOCATION));
+                zone_mcs_cmds = zone_mcs_cmds.Where(mcs_cmd => !IsRunOver(vh, mcs_cmd.CURRENT_LOCATION, false));
                 var try_get_result = tryGetZoneCommand
                     (zone_mcs_cmds.ToList(), vh.VEHICLE_ID, get_result.zoneCommandGroup.ZoneCommandID, is_need_check_has_vh_close);
                 //如果沒有命令的話，再往前找8m Zone，有的話就直接在下給車子
@@ -577,6 +604,20 @@ namespace com.mirle.ibg3k0.sc.Module
 
         }
         private (bool isExist, string zoneConnamdID) tryGetZoneCommandIDByAdr(string adrID)
+        {
+            var port = portDefBLL.getPortDefByAdrID(adrID);
+            if (port == null)
+            {
+                return (false, "");
+            }
+            var get_result = zoneCommandBLL.tryGetZoneCommandGroupByPortID(port.PLCPortID);
+            if (!get_result.hasFind)
+            {
+                return (false, "");
+            }
+            return (true, get_result.zoneCommandGroup.ZoneCommandID);
+        }
+        private (bool isFind, string zoneID) getZoneCommandIDByAddress(string adrID)
         {
             var port = portDefBLL.getPortDefByAdrID(adrID);
             if (port == null)

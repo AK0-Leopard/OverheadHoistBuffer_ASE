@@ -478,6 +478,7 @@ message Timestamp {
 	CMDCancelType ReplyActiveType = 8;
 	int32 ReplyCode = 9;				  
 	string ZoneCommandPortID = 10;				  
+    EventType EventType = 99;
   }
 
   message ID_37_TRANS_CANCEL_REQUEST {

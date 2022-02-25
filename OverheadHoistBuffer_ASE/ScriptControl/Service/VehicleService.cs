@@ -924,9 +924,11 @@ namespace com.mirle.ibg3k0.sc.Service
                 {
                     SystemTime = DateTime.Now.ToString(SCAppConstants.TimestampFormat_16)
                 };
-                SCUtility.RecodeReportInfo(vh.VEHICLE_ID, 0, send_gpp);
+
+                //SCUtility.RecodeReportInfo(vh.VEHICLE_ID, 0, send_gpp);
                 isSuccess = vh.send_S43(send_gpp, out receive_gpp);
-                SCUtility.RecodeReportInfo(vh.VEHICLE_ID, 0, receive_gpp, isSuccess.ToString());
+                //SCUtility.RecodeReportInfo(vh.VEHICLE_ID, 0, receive_gpp, isSuccess.ToString());
+
                 if (isSync && isSuccess)
                 {
                     string current_adr_id = receive_gpp.CurrentAdrID;
@@ -1749,9 +1751,9 @@ namespace com.mirle.ibg3k0.sc.Service
                     send_gpb.GuideAddressStartToLoad.AddRange(minRouteAdr_Vh2From);
                 if (minRouteAdr_From2To != null)
                     send_gpb.GuideAddressToDestination.AddRange(minRouteAdr_From2To);
-                SCUtility.RecodeReportInfo(vh.VEHICLE_ID, 0, send_gpb);
+                //SCUtility.RecodeReportInfo(vh.VEHICLE_ID, 0, send_gpb);
                 isSuccess = vh.sned_Str31(send_gpb, out receive_gpp, out reason);
-                SCUtility.RecodeReportInfo(vh.VEHICLE_ID, 0, receive_gpp, isSuccess.ToString());
+                //SCUtility.RecodeReportInfo(vh.VEHICLE_ID, 0, receive_gpp, isSuccess.ToString());
             }
             if (isSuccess)
             {
@@ -1922,7 +1924,8 @@ namespace com.mirle.ibg3k0.sc.Service
             //   Data: recive_str,
             //   VehicleID: eqpt.VEHICLE_ID,
             //   CarrierID: eqpt.CST_ID);
-            SCUtility.RecodeReportInfo(eqpt.VEHICLE_ID, 0, recive_str);
+            //SCUtility.RecodeReportInfo(eqpt.VEHICLE_ID, 0, recive_str);
+
             EventType eventType = recive_str.EventType;
             string current_adr_id = SCUtility.isEmpty(recive_str.CurrentAdrID) ? string.Empty : recive_str.CurrentAdrID;
             string current_sec_id = SCUtility.isEmpty(recive_str.CurrentSecID) ? string.Empty : recive_str.CurrentSecID;
@@ -2456,13 +2459,14 @@ namespace com.mirle.ibg3k0.sc.Service
             if (scApp.getEQObjCacheManager().getLine().ServerPreStop)
                 return;
 
-            LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
-               seq_num: seq_num,
-               Data: recive_str,
-               VehicleID: eqpt.VEHICLE_ID,
-               CarrierID: eqpt.CST_ID);
+            //LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+            //   seq_num: seq_num,
+            //   Data: recive_str,
+            //   VehicleID: eqpt.VEHICLE_ID,
+            //   CarrierID: eqpt.CST_ID);
 
-            SCUtility.RecodeReportInfo(eqpt.VEHICLE_ID, seq_num, recive_str);
+            //SCUtility.RecodeReportInfo(eqpt.VEHICLE_ID, seq_num, recive_str);
+
             EventType eventType = recive_str.EventType;
             string current_adr_id = recive_str.CurrentAdrID;
             string current_sec_id = recive_str.CurrentSecID;
@@ -3982,7 +3986,8 @@ namespace com.mirle.ibg3k0.sc.Service
                 RenameBOXID = renameCarrierID,
                 ReplyActiveType = cancelType,
                 ZoneCommandPortID = zoneCommandPortID,
-                RenameLOTID = zoneCommandPortAdrID
+                RenameLOTID = zoneCommandPortAdrID,
+                EventType = eventType
             };
             if (reserveInfos != null)
             {
@@ -3995,12 +4000,13 @@ namespace com.mirle.ibg3k0.sc.Service
             };
             //Boolean resp_cmp = ITcpIpControl.sendGoogleMsg(bcfApp, eqpt.TcpIpAgentName, wrapper, true);
 
-            LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
-              seq_num: seq_num, Data: send_str,
-              VehicleID: eqpt.VEHICLE_ID,
-              CarrierID: eqpt.CST_ID);
+            //LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+            //  seq_num: seq_num, Data: send_str,
+            //  VehicleID: eqpt.VEHICLE_ID,
+            //  CarrierID: eqpt.CST_ID);
             Boolean resp_cmp = eqpt.sendMessage(wrapper, true);
-            SCUtility.RecodeReportInfo(eqpt.VEHICLE_ID, seq_num, send_str, resp_cmp.ToString());
+            //SCUtility.RecodeReportInfo(eqpt.VEHICLE_ID, seq_num, send_str, resp_cmp.ToString());
+
             return resp_cmp;
         }
         private bool checkHasOrtherBolckZoneQueueNonRelease(AVEHICLE eqpt, out List<BLOCKZONEQUEUE> blockZoneQueues)
@@ -4818,13 +4824,14 @@ namespace com.mirle.ibg3k0.sc.Service
         {
             if (scApp.getEQObjCacheManager().getLine().ServerPreStop)
                 return;
-            LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
-               seq_num: seq_num,
-               Data: recive_str,
-               VehicleID: eqpt.VEHICLE_ID,
-               CarrierID: eqpt.CST_ID);
+            //LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+            //   seq_num: seq_num,
+            //   Data: recive_str,
+            //   VehicleID: eqpt.VEHICLE_ID,
+            //   CarrierID: eqpt.CST_ID);
 
-            SCUtility.RecodeReportInfo(eqpt.VEHICLE_ID, seq_num, recive_str);
+            //SCUtility.RecodeReportInfo(eqpt.VEHICLE_ID, seq_num, recive_str);
+
 
             string current_adr = recive_str.CurrentAdrID;
             VHModeStatus modeStat = DecideVhModeStatus(eqpt.VEHICLE_ID, current_adr, recive_str.ModeStatus);

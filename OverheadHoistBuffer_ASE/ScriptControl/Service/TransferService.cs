@@ -893,7 +893,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         }
                         else
                         {
-                            scApp.LoopTransferEnhance.judgeCommandTransferReadyStatus(queueCmdData);
+                            scApp.LoopTransferEnhance.setCommandTransferReadyStatusToNoReadyWhenSCStateNotAuto(queueCmdData);
                             refreshACMD_MCSInfoList(cmdData);
 
                             TransferServiceLogger.Info
