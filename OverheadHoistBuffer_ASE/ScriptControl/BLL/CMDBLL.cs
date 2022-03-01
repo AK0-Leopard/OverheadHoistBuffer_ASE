@@ -3969,15 +3969,22 @@ namespace com.mirle.ibg3k0.sc.BLL
 
                         string vehicle_id = cmd.VH_ID.Trim();
                         AVEHICLE assignVH = scApp.VehicleBLL.getVehicleByID(vehicle_id);
-                        bool isLoopTransferEnhance = true;
-                        if (isLoopTransferEnhance && cmd.IsCMD_MCS())
+                        //bool isLoopTransferEnhance = true;
+                        //if (isLoopTransferEnhance && cmd.IsCMD_MCS())
+                        //{
+                        //    if (scApp.LoopTransferEnhance.IsRunOver(assignVH, cmd.SOURCE))
+                        //    {
+                        //        scApp.TransferService.TransferServiceLogger.Info($"命令 ID:{cmd.CMD_ID} ,cmd mcs id:{cmd.CMD_ID_MCS} 由於車子跑過頭，因此回復到Queue的狀態等待重派");
+                        //        scApp.VehicleService.finishCommand(cmd);
+                        //        continue;
+                        //    }
+                        //}
+                        var check_force_finish_result = IsForceFinishQueueCMD_OHTC(assignVH, cmd);
+                        if (check_force_finish_result.isForceFinish)
                         {
-                            if (scApp.LoopTransferEnhance.IsRunOver(assignVH, cmd.SOURCE))
-                            {
-                                scApp.TransferService.TransferServiceLogger.Info($"命令 ID:{cmd.CMD_ID} ,cmd mcs id:{cmd.CMD_ID_MCS} 由於車子跑過頭，因此回復到Queue的狀態等待重派");
-                                scApp.VehicleService.finishCommand(cmd);
-                                continue;
-                            }
+                            scApp.TransferService.TransferServiceLogger.Info($"命令 ID:{cmd.CMD_ID} ,cmd mcs id:{cmd.CMD_ID_MCS}，強制結束命令。Reason:{check_force_finish_result.reason}");
+                            scApp.VehicleService.finishCommand(cmd);
+                            continue;
                         }
                         //if (!assignVH.isTcpIpConnect || assignVH.IsError || !SCUtility.isEmpty(assignVH.OHTC_CMD) || (assignVH.ACT_STATUS == VHActionStatus.Commanding))
                         if (!assignVH.isTcpIpConnect || assignVH.MODE_STATUS == VHModeStatus.Manual || assignVH.IsError || !SCUtility.isEmpty(assignVH.OHTC_CMD) || (assignVH.ACT_STATUS == VHActionStatus.Commanding))
@@ -4021,6 +4028,24 @@ namespace com.mirle.ibg3k0.sc.BLL
                     System.Threading.Interlocked.Exchange(ref ohxc_cmd_SyncPoint, 0);
                 }
             }
+        }
+        private (bool isForceFinish, string reason) IsForceFinishQueueCMD_OHTC(AVEHICLE vh, ACMD_OHTC cmdOhtc)
+        {
+            if (!vh.isTcpIpConnect)
+            {
+                return (true, $"vh:{vh.VEHICLE_ID} 目前已經斷線，強制結束Queue的命令:{cmdOhtc.CMD_ID}。");
+            }
+            if (vh.IsError)
+            {
+                return (true, $"vh:{vh.VEHICLE_ID} 目前已經異常，強制結束Queue的命令:{cmdOhtc.CMD_ID}。");
+            }
+            if (SystemParameter.isLoopTransferEnhance &&
+                cmdOhtc.IsCMD_MCS() &&
+                scApp.LoopTransferEnhance.IsRunOver(vh, cmdOhtc.SOURCE))
+            {
+                return (true, $"vh:{vh.VEHICLE_ID} 相對於:{cmdOhtc.SOURCE} 已經過頭，強制結束Queue的命令:{cmdOhtc.CMD_ID}。");
+            }
+            return (false, "");
         }
 
 

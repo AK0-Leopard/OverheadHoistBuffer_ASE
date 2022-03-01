@@ -964,6 +964,7 @@
     </Compile>
     <Compile Include="Module\LoopTransferEnhance.cs" />
     <Compile Include="MQTTControl\MQTTControl.cs" />
+    <Compile Include="ObjectRelay\CassetteDataToShow.cs" />
     <Compile Include="ObjectRelay\ALARMObjToShow.cs" />
     <Compile Include="ObjectRelay\CMD_MCSObjToShow.cs" />
     <Compile Include="ObjectRelay\IDataGridUpdateNotify.cs" />
@@ -1092,6 +1093,7 @@
     <Content Include="DLL\BlockControlFramework.pdb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="DLL\Cowboy.Sockets.pdb" />
     <Content Include="DLL\Mirle.Hlts.ReserveSection.Map.dll" />
     <Content Include="DLL\Mirle.Hlts.ReserveSection.Map.pdb" />
     <Content Include="DLL\Mirle.Hlts.ReserveSection.Vision.dll" />

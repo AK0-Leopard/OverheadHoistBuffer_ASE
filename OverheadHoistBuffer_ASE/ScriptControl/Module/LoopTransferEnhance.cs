@@ -230,6 +230,7 @@ namespace com.mirle.ibg3k0.sc.Module
             }
         }
 
+        const int MAX_FIND_CLOSE_VH_COUNT = 50;
         const double MAX_CLOSE_DIS_MM = 10_000;
         public (bool hasCommand, string waitPort, ACMD_MCS cmdMCS) tryGetZoneCommand(List<ACMD_MCS> mcsCMDs, string vhID, string zoneCommandID, bool isNeedCheckHasVhClose = true)
         {
@@ -292,6 +293,7 @@ namespace com.mirle.ibg3k0.sc.Module
                     //b.確認往後找10m內有沒有車是在單純移動中
                     string ask_vh_sec_from_adr = ask_vh_sec_obj.FROM_ADR_ID;
                     double check_dis = 0;
+                    int find_count = 0;
                     do
                     {
                         ASECTION pre_section = sectionBLL.getSectionByToAdr(ask_vh_sec_from_adr);
@@ -303,6 +305,15 @@ namespace com.mirle.ibg3k0.sc.Module
                         }
                         check_dis += pre_section.SEC_DIS;
                         ask_vh_sec_from_adr = pre_section.FROM_ADR_ID;
+
+                        if (find_count > MAX_FIND_CLOSE_VH_COUNT)
+                        {
+                            logger.Info($"OHB >> OHB|vh:{vhID}詢問zone command:{zoneCommandID}，" +
+                                        $"找尋是否有後車靠近 超過找尋次數:{MAX_FIND_CLOSE_VH_COUNT}，強制離開迴圈");
+                            break;
+                        }
+                        System.Threading.SpinWait.SpinUntil(() => false, 1);
+                        find_count++;
                     }
                     while (check_dis < MAX_CLOSE_DIS_MM);
                     logger.Info($"OHB >> OHB|vh:{vhID}詢問zone command:{zoneCommandID}，有一筆搬送命令:{cmd_mcs.CMD_ID} L:{cmd_mcs.HOSTSOURCE} U:{cmd_mcs.HOSTDESTINATION}，回復該筆命令可搬送");
@@ -459,6 +470,7 @@ namespace com.mirle.ibg3k0.sc.Module
                             {
                                 transferService.PortCommanding(cmdMCS.HOSTDESTINATION, true);
                             }
+                            logger.Info($"OHB >> OHB|cmd id:{cmdMCS.CMD_ID}，L:{cmdMCS.HOSTSOURCE} U:{cmdMCS.HOSTDESTINATION}預派完成");
                         }
                     }
                 }

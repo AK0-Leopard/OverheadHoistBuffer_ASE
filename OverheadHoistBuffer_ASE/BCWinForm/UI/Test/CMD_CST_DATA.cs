@@ -200,7 +200,14 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Test
         #region 卡匣操作
         public void UpDate_CstData()
         {
-            dataGridView2.DataSource = BCApp.SCApplication.CassetteDataBLL.loadCassetteData().OrderBy(data => data.Carrier_LOC).ToList();
+            //dataGridView2.DataSource = BCApp.SCApplication.CassetteDataBLL.loadCassetteData().OrderBy(data => data.Carrier_LOC).ToList();
+            var cst_datas =  BCApp.SCApplication.CassetteDataBLL.loadCassetteData();
+            var cst_datas_show_obj = cst_datas.Select(cst_data => new sc.ObjectRelay.CassetteDataToShow
+                                                                  (cst_data, BCApp.SCApplication.ZoneCommandBLL, BCApp.SCApplication.TransferService))
+                                              .OrderBy(data => data.ZCID)
+                                              .ThenBy(data=>data.Carrier_LOC)
+                                              .ToList();
+            dataGridView2.DataSource = cst_datas_show_obj;
             dataGridView2.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dataGridView2.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
         }

@@ -21,5 +21,6 @@ namespace com.mirle.ibg3k0.sc.Service.Interface
         List<PortINIData> GetAGVPort(string agvZoneName);
         PortPLCInfo GetPLC_PortData(string hOSTSOURCE);
         bool PortCommanding(string portID, bool Commanding);
+        (bool isExist, string zoneName) tryGetShelfZoneName(string shelfID);
     }
 }

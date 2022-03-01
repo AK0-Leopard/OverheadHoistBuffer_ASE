@@ -10634,6 +10634,13 @@ namespace com.mirle.ibg3k0.sc.Service
             OHBC_AlarmCleared(ohtName, SCAppConstants.SystemAlarmCode.PLC_Issue.MasterDisconnedted);
         }
 
+        public (bool isExist, string zoneName) tryGetShelfZoneName(string shelfID)
+        {
+            if (!isShelfPort(shelfID))
+                return (false, "");
+            return (true, portINIData[shelfID].ZoneName);
+        }
+
         #endregion
     }
 }
