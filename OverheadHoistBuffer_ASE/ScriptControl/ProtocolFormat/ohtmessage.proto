@@ -737,6 +737,7 @@ message Timestamp {
    {
         Normal = 0;
         MTL = 1;
+        Curve = 2;
    }
 
    enum TSCState

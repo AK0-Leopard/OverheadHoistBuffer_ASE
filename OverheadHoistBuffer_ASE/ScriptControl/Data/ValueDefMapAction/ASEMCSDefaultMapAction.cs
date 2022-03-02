@@ -531,6 +531,8 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                         //    }
                         //    break;
                 }
+                ShowThreadPoolInfo();
+
             }
             catch (Exception ex)
             {
@@ -541,6 +543,23 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             }
         }
 
+        public void ShowThreadPoolInfo()
+        {
+            int workThreads, completionPortThreads;
+            System.Threading.ThreadPool.GetAvailableThreads(out workThreads, out completionPortThreads);
+            //Console.WriteLine($"GetAvailableThreads => workThreads:{workThreads};completionPortThreads:{completionPortThreads}");
+            scApp.TransferService.TransferServiceLogger.Info($"GetAvailableThreads => workThreads:{workThreads};completionPortThreads:{completionPortThreads}");
+
+            System.Threading.ThreadPool.GetMaxThreads(out workThreads, out completionPortThreads);
+            //Console.WriteLine($"GetMaxThreads => workThreads:{workThreads};completionPortThreads:{completionPortThreads}");
+            scApp.TransferService.TransferServiceLogger.Info($"GetMaxThreads => workThreads:{workThreads};completionPortThreads:{completionPortThreads}");
+            
+            System.Threading.ThreadPool.GetMinThreads(out workThreads, out completionPortThreads);
+            //Console.WriteLine($"GetMinThreads => workThreads:{workThreads};completionPortThreads:{completionPortThreads}");
+            scApp.TransferService.TransferServiceLogger.Info($"GetMinThreads => workThreads:{workThreads};completionPortThreads:{completionPortThreads}");
+
+            Console.WriteLine();
+        }
 
         protected override void S2F41ReceiveHostCommand(object sender, SECSEventArgs e)
         {

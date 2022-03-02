@@ -86,6 +86,7 @@
             this.cb_OperMode = new System.Windows.Forms.ComboBox();
             this.button3 = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.cb_isByPassStraightReserve = new System.Windows.Forms.CheckBox();
             this.tabPage1.SuspendLayout();
             this.grb_testAear.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -145,6 +146,7 @@
             // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.cb_isByPassStraightReserve);
             this.groupBox6.Controls.Add(this.cb_LoopEnhance);
             this.groupBox6.Controls.Add(this.num_priorityForBoxMove);
             this.groupBox6.Controls.Add(this.label8);
@@ -153,7 +155,7 @@
             this.groupBox6.Enabled = false;
             this.groupBox6.Location = new System.Drawing.Point(774, 335);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(416, 152);
+            this.groupBox6.Size = new System.Drawing.Size(416, 215);
             this.groupBox6.TabIndex = 59;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Parameter Setting";
@@ -760,6 +762,17 @@
             this.tabControl1.Size = new System.Drawing.Size(1206, 865);
             this.tabControl1.TabIndex = 23;
             // 
+            // cb_isByPassStraightReserve
+            // 
+            this.cb_isByPassStraightReserve.AutoSize = true;
+            this.cb_isByPassStraightReserve.Location = new System.Drawing.Point(28, 142);
+            this.cb_isByPassStraightReserve.Name = "cb_isByPassStraightReserve";
+            this.cb_isByPassStraightReserve.Size = new System.Drawing.Size(239, 26);
+            this.cb_isByPassStraightReserve.TabIndex = 62;
+            this.cb_isByPassStraightReserve.Text = "關閉直線路段預約控制";
+            this.cb_isByPassStraightReserve.UseVisualStyleBackColor = true;
+            this.cb_isByPassStraightReserve.CheckedChanged += new System.EventHandler(this.cb_isByPassStraightReserve_CheckedChanged);
+            // 
             // DebugFormNew
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 22F);
@@ -861,5 +874,6 @@
         private System.Windows.Forms.CheckBox cb_LoopEnhance;
         private System.Windows.Forms.GroupBox grb_testAear;
         private System.Windows.Forms.CheckBox cb_testZoneCommandReqNoReply;
+        private System.Windows.Forms.CheckBox cb_isByPassStraightReserve;
     }
 }

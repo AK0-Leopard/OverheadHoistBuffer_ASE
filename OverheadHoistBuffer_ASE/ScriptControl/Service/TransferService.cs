@@ -877,17 +877,17 @@ namespace com.mirle.ibg3k0.sc.Service
                     int ohtIdle = vehicleData.Where(data => string.IsNullOrWhiteSpace(data.OHTC_CMD)).Count();
 
 
-
+                    var cmdData = cmdBLL.LoadCmdData();
                     if (ohtIdle != 0 || SystemParameter.isLoopTransferEnhance)    //有閒置的車輛在開始派命令
                     {
-                        var cmdData = cmdBLL.LoadCmdData();
 
                         var queueCmdData = cmdData.Where(data => data.CMDTYPE != CmdType.PortTypeChange.ToString() && data.TRANSFERSTATE == E_TRAN_STATUS.Queue).
                                                    OrderByDescending(d => d.PRIORITY_SUM).
                                                    ToList();
                         var transferCmdData = cmdData.Where(data => data.CMDTYPE != CmdType.PortTypeChange.ToString() && data.TRANSFERSTATE != E_TRAN_STATUS.Queue).ToList();
 
-                        if (line.SCStats == ALINE.TSCState.AUTO || line.SCStats == ALINE.TSCState.NONE)
+                        //if (line.SCStats == ALINE.TSCState.AUTO || line.SCStats == ALINE.TSCState.NONE)
+                        if (line.SCStats == ALINE.TSCState.AUTO)
                         {
                             //not thing...
                         }
@@ -1116,6 +1116,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     }
                     else
                     {
+                        refreshACMD_MCSInfoList(cmdData);
                         TimeSpan timeSpan = DateTime.Now - ohtTimeout;
 
                         if (timeSpan.Minutes >= ohtIdleTimeOut)
@@ -1145,7 +1146,8 @@ namespace com.mirle.ibg3k0.sc.Service
 
         private void checkLineIsIdleOverNSecend(ALINE line, int currentCmdMcsCount)
         {
-            if ((line.SCStats == ALINE.TSCState.NONE || line.SCStats == ALINE.TSCState.AUTO) &&
+            //if ((line.SCStats == ALINE.TSCState.NONE || line.SCStats == ALINE.TSCState.AUTO) &&
+            if (line.SCStats == ALINE.TSCState.AUTO &&
                 currentCmdMcsCount == 0)
             {
                 if (!line.IdleTime.IsRunning)

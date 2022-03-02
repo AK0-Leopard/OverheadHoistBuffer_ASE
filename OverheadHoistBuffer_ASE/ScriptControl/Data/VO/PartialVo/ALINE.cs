@@ -17,7 +17,7 @@ namespace com.mirle.ibg3k0.sc
 {
     public partial class ALINE : BaseEQObject, IAlarmHisList
     {
-        public static UInt32 MAX_LINE_IDLE_TIME_MMILLI_SECOND { get; private set; } = 99999999;
+        public static UInt32 MAX_LINE_IDLE_TIME_MMILLI_SECOND { get; private set; } = 30_000;
 
         public ALINE()
         {

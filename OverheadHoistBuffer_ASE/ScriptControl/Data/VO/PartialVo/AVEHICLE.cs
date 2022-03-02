@@ -214,6 +214,8 @@ namespace com.mirle.ibg3k0.sc
         public virtual double X_Axis { get; set; }
         [JsonIgnore]
         public virtual double Y_Axis { get; set; }
+        [JsonIgnore]
+        public virtual string CurrentExcuteCmdID { get; set; }
 
         [JsonIgnore]
         public virtual List<string> WillPassSectionID { get; set; }
@@ -558,14 +560,22 @@ namespace com.mirle.ibg3k0.sc
             }
             if (SCUtility.isEmpty(OHTC_CMD))
             {
-                return false;
+                bool is_exist = currentExCmdOhtc.TryGetValue(sc.Common.SCUtility.Trim(CurrentExcuteCmdID, true), out ACMD_OHTC cmd_ohtc);
+                if (!is_exist) return false;
+                if (cmd_ohtc.CMD_TPYE == E_CMD_TYPE.Round)
+                    return true;
+                else
+                    return false;
             }
-            bool is_exist = currentExCmdOhtc.TryGetValue(sc.Common.SCUtility.Trim(OHTC_CMD, true), out ACMD_OHTC cmd_ohtc);
-            if (!is_exist) return false;
-            if (cmd_ohtc.CMD_TPYE == E_CMD_TYPE.Round)
-                return true;
             else
-                return false;
+            {
+                bool is_exist = currentExCmdOhtc.TryGetValue(sc.Common.SCUtility.Trim(OHTC_CMD, true), out ACMD_OHTC cmd_ohtc);
+                if (!is_exist) return false;
+                if (cmd_ohtc.CMD_TPYE == E_CMD_TYPE.Round)
+                    return true;
+                else
+                    return false;
+            }
         }
         public virtual string NODE_ID { get; set; }
 

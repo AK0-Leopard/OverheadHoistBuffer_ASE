@@ -159,7 +159,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 var ready_tran_command = ACMD_MCS.loadReadyTransferOfQueueCMD_MCS();
                 var vh_transfer_command = ready_tran_command.
                                           Where(cmd => SCUtility.isMatche(cmd.BOX_ID, boxID) &&
-                                                       SCUtility.isMatche(cmd.CMD_ID, vh.VEHICLE_ID)).
+                                                       SCUtility.isMatche(cmd.HOSTSOURCE, vh.VEHICLE_ID)).
                                           FirstOrDefault();
                 if (vh_transfer_command != null)
                 {
@@ -172,6 +172,10 @@ namespace com.mirle.ibg3k0.sc.Service
                             scApp.TransferService.TransferServiceLogger.Info($"vh:{vh.VEHICLE_ID}車上有idle的CST，但pre assign時失敗。");
                         }
                     }
+                }
+                else
+                {
+                    scApp.TransferService.TransferServiceLogger.Info($"vh:{vh.VEHICLE_ID}車上有idle的CST，尚無命令產生要進行搬送。");
                 }
             }
             catch (Exception ex)
@@ -190,12 +194,13 @@ namespace com.mirle.ibg3k0.sc.Service
                 }
 
                 ALINE line = scApp.getEQObjCacheManager().getLine();
-                if (line.SCStats == ALINE.TSCState.NONE)
-                {
-                    //not thing...
+                //if (line.SCStats == ALINE.TSCState.NONE)
+                //{
+                //    //not thing...
 
-                }
-                else if (line.SCStats != ALINE.TSCState.AUTO)
+                //}
+                //else if (line.SCStats != ALINE.TSCState.AUTO)
+                if (line.SCStats != ALINE.TSCState.AUTO)
                 {
                     return;
                 }
@@ -944,6 +949,8 @@ namespace com.mirle.ibg3k0.sc.Service
                     VhStopSingle errorStat = receive_gpp.ErrorStatus;
                     VhLoadCarrierStatus loadCSTStatus = receive_gpp.HasCst;
                     VhLoadCarrierStatus loadBOXStatus = receive_gpp.HasBox;
+                    string current_excute_cmd_id = receive_gpp.CmdID;
+                    vh.CurrentExcuteCmdID = current_excute_cmd_id;
                     if (loadBOXStatus == VhLoadCarrierStatus.Exist) //B0.05
                     {
                         vh.BOX_ID = receive_gpp.CarBoxID;
@@ -1229,13 +1236,13 @@ namespace com.mirle.ibg3k0.sc.Service
                     //  =>但也不能命令結束就直接清空中繼站，因為可能貨物真的是要從中繼站搬起來，所以要在判斷一次當命令被拒絕要改回去時，
                     //    確認CassetteData中的位置是否有到中繼站了
                     SpinWait.SpinUntil(() => false, 1000);
-                    finishCommand(cmd);
+                    finishQueueCommand(cmd);
                 }
             }
             return isSuccess;
         }
 
-        public void finishCommand(ACMD_OHTC cmd)
+        public void finishQueueCommand(ACMD_OHTC cmd)
         {
             if (!SCUtility.isEmpty(cmd.CMD_ID_MCS))
             {
@@ -1246,6 +1253,10 @@ namespace com.mirle.ibg3k0.sc.Service
                     bool is_box_at_relay_station = SCUtility.isMatche(cmdOHT_CSTdata.Carrier_LOC, cmd_mcs.RelayStation);
                     scApp.CMDBLL.updateCMD_MCS_CRANE(cmd.CMD_ID, "");
                     scApp.CMDBLL.updateCMD_MCS_TranStatus2Queue(cmd.CMD_ID_MCS, is_box_at_relay_station);
+                    scApp.TransferService.TransferServiceLogger.Info
+                    (
+                        DateTime.Now.ToString("HH:mm:ss.fff ") + $"OHB >> OHT|準備強制結束Queue命令:{cmd.CMD_ID}，將MCS命令:{SCUtility.Trim(cmd.CMD_ID_MCS)} 改回Queue，"
+                    );
                 }
                 else
                 {
@@ -1259,6 +1270,11 @@ namespace com.mirle.ibg3k0.sc.Service
                 }
             }
             scApp.CMDBLL.updateCommand_OHTC_StatusByCmdID(cmd.CMD_ID, E_CMD_STATUS.AbnormalEndByOHT);
+            scApp.TransferService.TransferServiceLogger.Info
+            (
+            DateTime.Now.ToString("HH:mm:ss.fff ") + $"OHB >> OHT|強制結束Queue命令:{cmd.CMD_ID}完成"
+            );
+
         }
 
         public bool doSendOHxCOverrideCmdToVh(AVEHICLE assignVH, ACMD_OHTC cmd, bool isNeedPauseFirst)
@@ -2567,22 +2583,37 @@ namespace com.mirle.ibg3k0.sc.Service
                        CarrierID: eqpt.CST_ID);
                     //List<string> reserve_fail_sections = reserveInfos.Select(reserve => reserve.ReserveSectionID).ToList();
                     //Task.Run(() => tryNotifyVhAvoid_New(eqpt.VEHICLE_ID, ReserveResult.reservedVhID, reserve_fail_sections));
-
-                    //在預約失敗以後，會嘗試看能不能將車子趕走
-                    var reserved_vh = scApp.VehicleBLL.cache.getVhByID(ReserveResult.reservedVhID);
-                    if (reserved_vh != null && !reserved_vh.IS_INSTALLED)
+                    if (SystemParameter.isLoopTransferEnhance)
                     {
-                        Task.Run(() => tryDriveOutTheVh(eqpt.VEHICLE_ID, ReserveResult.reservedVhID));
+                        var reserved_vh = scApp.VehicleBLL.cache.getVhByID(ReserveResult.reservedVhID);
+                        if (reserved_vh == null)
+                            return;
+                        ALINE line = scApp.getEQObjCacheManager().getLine();
+                        if (!reserved_vh.IS_INSTALLED ||
+                            line.SCStats == ALINE.TSCState.PAUSED ||
+                            line.SCStats == ALINE.TSCState.PAUSING)
+                        {
+                            Task.Run(() => tryDriveOutTheVh(eqpt.VEHICLE_ID, ReserveResult.reservedVhID));
+                        }
                     }
                     else
                     {
-                        ALINE line = scApp.getEQObjCacheManager().getLine();
-                        if (!IsCMD_MCSCanProcess() ||
-                            line.SCStats == ALINE.TSCState.PAUSED ||
-                            line.SCStats == ALINE.TSCState.PAUSING
-                           )
+                        var reserved_vh = scApp.VehicleBLL.cache.getVhByID(ReserveResult.reservedVhID);
+                        //在預約失敗以後，會嘗試看能不能將車子趕走
+                        if (reserved_vh != null && !reserved_vh.IS_INSTALLED)
                         {
                             Task.Run(() => tryDriveOutTheVh(eqpt.VEHICLE_ID, ReserveResult.reservedVhID));
+                        }
+                        else
+                        {
+                            ALINE line = scApp.getEQObjCacheManager().getLine();
+                            if (!IsCMD_MCSCanProcess() ||
+                                line.SCStats == ALINE.TSCState.PAUSED ||
+                                line.SCStats == ALINE.TSCState.PAUSING
+                               )
+                            {
+                                Task.Run(() => tryDriveOutTheVh(eqpt.VEHICLE_ID, ReserveResult.reservedVhID));
+                            }
                         }
                     }
                 }
@@ -2848,6 +2879,157 @@ namespace com.mirle.ibg3k0.sc.Service
 
         private (bool isSuccess, string reservedVhID, RepeatedField<ReserveInfo> reserveSuccessInfos) IsMultiReserveSuccess
             (string vhID, RepeatedField<ReserveInfo> reserveInfos, bool isAsk = false)
+        {
+            try
+            {
+                if (IsOneVehicleSystem())
+                {
+                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                       Data: "Is one vh system, will driect reply to vh pass",
+                       VehicleID: vhID);
+                    return (true, string.Empty, reserveInfos);
+                }
+
+                if (DebugParameter.isForcedPassReserve)
+                {
+                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                       Data: "test flag: Force pass reserve is open, will driect reply to vh pass",
+                       VehicleID: vhID);
+                    return (true, string.Empty, reserveInfos);
+                }
+
+                //強制拒絕Reserve的要求
+                if (DebugParameter.isForcedRejectReserve)
+                {
+                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                       Data: "test flag: Force reject reserve is open, will driect reply to vh can't pass",
+                       VehicleID: vhID);
+                    return (false, string.Empty, null);
+                }
+                AVEHICLE vh = scApp.getEQObjCacheManager().getVehicletByVHID(vhID);
+                if (vh.IsPrepareAvoid)
+                {
+                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                       Data: $"vh:{vhID} is prepare excute avoid action, will reject reserve request.",
+                       VehicleID: vhID);
+                    return (false, string.Empty, null);
+                }
+                if (reserveInfos == null || reserveInfos.Count == 0) return (false, string.Empty, null);
+
+                if (SystemParameter.isReserveByPassOnStraight)
+                {
+                    return checkReserveByPassStraight(vhID, reserveInfos);
+                }
+                else
+                {
+                    return checkReserveByNoPassStraight(vhID, reserveInfos);
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                   Data: ex,
+                   Details: $"process function:{nameof(IsMultiReserveSuccess)} Exception");
+                return (false, string.Empty, null);
+            }
+        }
+
+        private (bool hasSuccess, string finialBlockedVhID, RepeatedField<ReserveInfo> reserveSuccessSection)
+            checkReserveByNoPassStraight(string vhID, RepeatedField<ReserveInfo> reserveInfos)
+        {
+            LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+               Data: $"vh:{vhID} start check reserve no pass straight...",
+               VehicleID: vhID);
+            var reserve_success_section = new RepeatedField<ReserveInfo>();
+            bool has_success = false;
+            string final_blocked_vh_id = string.Empty;
+
+            foreach (var reserve_info in reserveInfos)
+            {
+                string reserve_section_id = reserve_info.ReserveSectionID;
+
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                   Data: $"vh:{vhID} Try add(Only ask) reserve section:{reserve_section_id} ,hlt dir:{HltDirection.Forward}...",
+                   VehicleID: vhID);
+                var result = scApp.ReserveBLL.TryAddReservedSection(vhID, reserve_section_id,
+                                                                     sensorDir: HltDirection.Forward,
+                                                                     isAsk: true);
+                if (result.OK)
+                {
+                    reserve_success_section.Add(reserve_info);
+                    has_success |= true;
+                }
+                else
+                {
+                    has_success |= false;
+                    final_blocked_vh_id = result.VehicleID;
+                    break;
+                }
+            }
+            return (has_success, final_blocked_vh_id, reserve_success_section);
+        }
+
+        private (bool hasSuccess, string finialBlockedVhID, RepeatedField<ReserveInfo> reserveSuccessSection)
+            checkReserveByPassStraight(string vhID, RepeatedField<ReserveInfo> reserveInfos)
+        {
+            var reserve_success_section = new RepeatedField<ReserveInfo>();
+            bool has_success = false;
+            string first_blocked_vh_id = string.Empty;
+            bool is_pass_through_vh = false;
+            LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+               Data: $"vh:{vhID} start check reserve by pass straight...",
+               VehicleID: vhID);
+            foreach (var reserve_info in reserveInfos)
+            {
+                string reserve_section_id = reserve_info.ReserveSectionID;
+
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                   Data: $"vh:{vhID} Try add(Only ask) reserve section:{reserve_section_id} ,hlt dir:{HltDirection.Forward}...",
+                   VehicleID: vhID);
+                var result = scApp.ReserveBLL.TryAddReservedSection(vhID, reserve_section_id,
+                                                                    sensorDir: HltDirection.Forward,
+                                                                    isAsk: true);
+                ASECTION try_reserve_sec = scApp.SectionBLL.cache.GetSection(reserve_section_id);
+                if (try_reserve_sec.SEC_TYPE == SectionType.Curve)
+                {
+                    if (result.OK)
+                    {
+                        if (is_pass_through_vh)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            reserve_success_section.Add(reserve_info);
+                            has_success |= true;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    //如果在直線段預約失敗，代表有通過車子，接著若碰到取線就要先拒絕
+                    if (!result.OK)
+                    {
+                        is_pass_through_vh = true;
+                        if (SCUtility.isEmpty(first_blocked_vh_id))
+                        {
+                            first_blocked_vh_id = result.VehicleID;
+                        }
+                    }
+                    reserve_success_section.Add(reserve_info);
+                    has_success |= true;
+                }
+            }
+            return (has_success, first_blocked_vh_id, reserve_success_section);
+        }
+        private (bool isSuccess, string reservedVhID, RepeatedField<ReserveInfo> reserveSuccessInfos) IsMultiReserveSuccess_old
+    (string vhID, RepeatedField<ReserveInfo> reserveInfos, bool isAsk = false)
         {
             try
             {
@@ -4846,11 +5028,12 @@ namespace com.mirle.ibg3k0.sc.Service
             VhStopSingle errorStat = recive_str.ErrorStatus;
             VhLoadCarrierStatus loadCSTStatus = recive_str.HasCst;
             VhLoadCarrierStatus loadBOXStatus = recive_str.HasBox;
+            string current_excute_cmd_id = recive_str.CmdID;
             if (loadBOXStatus == VhLoadCarrierStatus.Exist) //B0.05
             {
                 eqpt.BOX_ID = recive_str.CarBoxID;
             }
-
+            eqpt.CurrentExcuteCmdID = current_excute_cmd_id;
             //VhGuideStatus leftGuideStat = recive_str.LeftGuideLockStatus;
             //VhGuideStatus rightGuideStat = recive_str.RightGuideLockStatus;
             // 0317 Jason 此部分之loadBOXStatus 原為loadCSTStatus ，現在之狀況為暫時解法
@@ -5142,16 +5325,18 @@ namespace com.mirle.ibg3k0.sc.Service
                         if (check_result.has)
                         {
                             ACMD_OHTC queue_cmd = check_result.cmd_ohtc;
-                            scApp.CMDBLL.updateCommand_OHTC_StatusByCmdID(queue_cmd.CMD_ID, E_CMD_STATUS.AbnormalEndByOHTC);
-                            if (!SCUtility.isEmpty(queue_cmd.CMD_ID_MCS))
-                            {
-                                ACMD_MCS pre_initial_cmd_mcs = scApp.CMDBLL.getCMD_MCSByID(queue_cmd.CMD_ID_MCS);
-                                if (pre_initial_cmd_mcs != null /*&&
-                                    pre_initial_cmd_mcs.TRANSFERSTATE == E_TRAN_STATUS.PreInitial*/)
-                                {
-                                    scApp.CMDBLL.updateCMD_MCS_TranStatus2Queue(pre_initial_cmd_mcs.CMD_ID);
-                                }
-                            }
+                            finishQueueCommand(queue_cmd);
+
+                            //scApp.CMDBLL.updateCommand_OHTC_StatusByCmdID(queue_cmd.CMD_ID, E_CMD_STATUS.AbnormalEndByOHTC);
+                            //if (!SCUtility.isEmpty(queue_cmd.CMD_ID_MCS))
+                            //{
+                            //    ACMD_MCS pre_initial_cmd_mcs = scApp.CMDBLL.getCMD_MCSByID(queue_cmd.CMD_ID_MCS);
+                            //    if (pre_initial_cmd_mcs != null /*&&
+                            //        pre_initial_cmd_mcs.TRANSFERSTATE == E_TRAN_STATUS.PreInitial*/)
+                            //    {
+                            //        scApp.CMDBLL.updateCMD_MCS_TranStatus2Queue(pre_initial_cmd_mcs.CMD_ID);
+                            //    }
+                            //}
                         }
                     }
 

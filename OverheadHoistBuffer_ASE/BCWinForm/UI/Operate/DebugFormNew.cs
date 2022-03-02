@@ -47,6 +47,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             num_priorityWatershed.Value = sc.App.SystemParameter.cmdPriorityWatershed;
             num_priorityForBoxMove.Value = sc.App.SystemParameter.BoxMovePriority;
             cb_LoopEnhance.Checked = sc.App.SystemParameter.isLoopTransferEnhance;
+            cb_isByPassStraightReserve.Checked = sc.App.SystemParameter.isReserveByPassOnStraight;
             List<string> lstVh = new List<string>();
             lstVh.Add(string.Empty);
             lstVh.AddRange(bcApp.SCApplication.getEQObjCacheManager().getAllVehicle().Select(vh => vh.VEHICLE_ID).ToList());
@@ -493,6 +494,11 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             {
                 grb_testAear.Visible = true;
             }
+        }
+
+        private void cb_isByPassStraightReserve_CheckedChanged(object sender, EventArgs e)
+        {
+            sc.App.SystemParameter.setIsReserveByPassOnStraight(cb_isByPassStraightReserve.Checked);
         }
 
         //*************************************

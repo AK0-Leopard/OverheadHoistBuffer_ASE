@@ -2258,6 +2258,7 @@ namespace com.mirle.ibg3k0.sc.App
         public static int cmdPriorityWatershed = 50;
         public static int BoxMovePriority = 99;
         public static bool isLoopTransferEnhance = false;
+        public static bool isReserveByPassOnStraight { private set; get; } = false;
 
         /// <summary>
         /// Sets the secs conversaction timeout.
@@ -2323,6 +2324,10 @@ namespace com.mirle.ibg3k0.sc.App
         public static void setIsLoopTransferEnhanceFlag(bool _isLoopTransferEnhance)
         {
             isLoopTransferEnhance = _isLoopTransferEnhance;
+        }
+        public static void setIsReserveByPassOnStraight(bool _isReserveByPassOnStraight)
+        {
+            isReserveByPassOnStraight = _isReserveByPassOnStraight;
         }
 
     }

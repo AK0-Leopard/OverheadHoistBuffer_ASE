@@ -3983,7 +3983,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                         if (check_force_finish_result.isForceFinish)
                         {
                             scApp.TransferService.TransferServiceLogger.Info($"命令 ID:{cmd.CMD_ID} ,cmd mcs id:{cmd.CMD_ID_MCS}，強制結束命令。Reason:{check_force_finish_result.reason}");
-                            scApp.VehicleService.finishCommand(cmd);
+                            scApp.VehicleService.finishQueueCommand(cmd);
                             continue;
                         }
                         //if (!assignVH.isTcpIpConnect || assignVH.IsError || !SCUtility.isEmpty(assignVH.OHTC_CMD) || (assignVH.ACT_STATUS == VHActionStatus.Commanding))
