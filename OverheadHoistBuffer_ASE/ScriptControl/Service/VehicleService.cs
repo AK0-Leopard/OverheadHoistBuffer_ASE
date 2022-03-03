@@ -115,7 +115,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 vh.HasImportantEventReportRetryOverTimes += Vh_HasImportantEventReportRetryOverTimes;
                 vh.IdleTimeIsEnough += Vh_IdleTimeIsEnough;
                 vh.BoxIdleOnVh += Vh_BoxIdleOnVh;
-                vh.CycleMovePausing += Vh_CycleMovePausing;
+                //vh.CycleMovePausing += Vh_CycleMovePausing;
                 vh.TimerActionStart();
             }
 
@@ -200,11 +200,15 @@ namespace com.mirle.ibg3k0.sc.Service
 
                 //}
                 //else if (line.SCStats != ALINE.TSCState.AUTO)
-                if (line.SCStats != ALINE.TSCState.AUTO)
+                //if (line.SCStats != ALINE.TSCState.AUTO ||
+                //    line.IsLineIdling)
+                //{
+                //    return;
+                //}
+                if (!IsLineStatsReady())
                 {
                     return;
                 }
-
                 AVEHICLE vh = sender as AVEHICLE;
                 if (vh.HAS_CST == 1)
                 {
@@ -225,6 +229,31 @@ namespace com.mirle.ibg3k0.sc.Service
             {
                 logger.Error(ex, "Exception:");
             }
+        }
+
+        string LINE_STATS_CHECK_LOG = "";
+        private bool IsLineStatsReady()
+        {
+            bool is_ready = true;
+            string log = "";
+            ALINE line = scApp.getEQObjCacheManager().getLine();
+            if (line.SCStats != ALINE.TSCState.AUTO ||
+                line.IsLineIdling)
+            {
+                log = $"目前Line Stats not ready,sc stats:{line.SCStats}、is line idling:{line.IsLineIdling}";
+                is_ready = false;
+            }
+            else
+            {
+                log = $"目前Line Stats is ready,sc stats:{line.SCStats}、is line idling:{line.IsLineIdling}";
+                is_ready = true;
+            }
+            if (!SCUtility.isMatche(log, LINE_STATS_CHECK_LOG))
+            {
+                LINE_STATS_CHECK_LOG = log;
+                scApp.TransferService.TransferServiceLogger.Info(LINE_STATS_CHECK_LOG);
+            }
+            return is_ready;
         }
 
         private void Vh_HasImportantEventReportRetryOverTimes(object sender, EventType overRetryImportantEvent)
@@ -4993,27 +5022,58 @@ namespace com.mirle.ibg3k0.sc.Service
 
         private bool checkAndPrcessIsContinueProcessZoneCommandReq(AVEHICLE eqpt)
         {
-            bool is_continue_process_zone_command_req = true;
             ALINE line = scApp.getEQObjCacheManager().getLine();
-            if (line.SCStats == ALINE.TSCState.PAUSED || !SystemParameter.isLoopTransferEnhance)
+            if (!SystemParameter.isLoopTransferEnhance)
             {
+                scApp.TransferService.TransferServiceLogger.
+                    Info($"目前並非為LoopTranEnhanceMode，故不繼續處理Vh:{eqpt.VEHICLE_ID}的ZoneCommandReq，並嘗試結束cycle move...");
                 if (eqpt.IsCycleMove(ACMD_OHTC.CMD_OHTC_InfoList))
                 {
                     doAbortCommand(eqpt, eqpt.OHTC_CMD, CMDCancelType.CmdCancel);
                 }
-                is_continue_process_zone_command_req = false;
+                return false;
             }
-            else if (line.IsLineIdling)
+            if (line.SCStats == ALINE.TSCState.PAUSED)
             {
-                if (eqpt.IsCycleMove(ACMD_OHTC.CMD_OHTC_InfoList) &&
-                    !eqpt.IsPause)
+                scApp.TransferService.TransferServiceLogger.
+                    Info($"目前並非為Line stats為:{line.SCStats}，故不繼續處理Vh:{eqpt.VEHICLE_ID}的ZoneCommandReq，並嘗試結束cycle move...");
+                if (eqpt.IsCycleMove(ACMD_OHTC.CMD_OHTC_InfoList))
                 {
-                    PauseRequest(eqpt.VEHICLE_ID, PauseEvent.Pause, OHxCPauseType.Normal);
+                    doAbortCommand(eqpt, eqpt.OHTC_CMD, CMDCancelType.CmdCancel);
                 }
-                is_continue_process_zone_command_req = false;
+                return false;
             }
+            if (line.IsLineIdling)
+            {
+                scApp.TransferService.TransferServiceLogger.
+                    Info($"目前並非為Line Is idling為:{line.IsLineIdling}，故不繼續處理Vh:{eqpt.VEHICLE_ID}的ZoneCommandReq，並嘗試結束cycle move...");
+                if (eqpt.IsCycleMove(ACMD_OHTC.CMD_OHTC_InfoList))
+                {
+                    doAbortCommand(eqpt, eqpt.OHTC_CMD, CMDCancelType.CmdCancel);
+                }
+                return false;
+            }
+            return true;
+            //bool is_continue_process_zone_command_req = true;
+            //if (line.SCStats == ALINE.TSCState.PAUSED || !SystemParameter.isLoopTransferEnhance)
+            //{
+            //    if (eqpt.IsCycleMove(ACMD_OHTC.CMD_OHTC_InfoList))
+            //    {
+            //        doAbortCommand(eqpt, eqpt.OHTC_CMD, CMDCancelType.CmdCancel);
+            //    }
+            //    is_continue_process_zone_command_req = false;
+            //}
+            //else if (line.IsLineIdling)
+            //{
+            //    if (eqpt.IsCycleMove(ACMD_OHTC.CMD_OHTC_InfoList) &&
+            //        !eqpt.IsPause)
+            //    {
+            //        PauseRequest(eqpt.VEHICLE_ID, PauseEvent.Pause, OHxCPauseType.Normal);
+            //    }
+            //    is_continue_process_zone_command_req = false;
+            //}
 
-            return is_continue_process_zone_command_req;
+            //return is_continue_process_zone_command_req;
         }
         #endregion Position Report
 
