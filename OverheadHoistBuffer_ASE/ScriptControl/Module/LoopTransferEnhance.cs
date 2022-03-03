@@ -388,6 +388,7 @@ namespace com.mirle.ibg3k0.sc.Module
                         }
 
                         string original_host_dest = SCUtility.Trim(cmdMCS.HOSTDESTINATION, true);
+                        string relay_station = "";
                         if (cmdMCS.ReadyStatus == ACMD_MCS.CommandReadyStatus.Realy)
                         {
                             //1.找出一個最接近目的地的儲位
@@ -397,7 +398,8 @@ namespace com.mirle.ibg3k0.sc.Module
                             if (!SCUtility.isEmpty(empty_shelf))
                             {
                                 logger.Info($"OHB >> OHB|cmd id:{cmdMCS.CMD_ID} 找到中繼站的儲位:{empty_shelf}");
-                                cmdMCS.RelayStation = empty_shelf;
+                                //cmdMCS.RelayStation = empty_shelf;
+                                relay_station = empty_shelf;
                                 cmdBLL.updateCMD_MCS_RelayStation(cmdMCS.CMD_ID, empty_shelf);
                             }
                             else
@@ -453,7 +455,7 @@ namespace com.mirle.ibg3k0.sc.Module
                             }
                         }
                         //2.產生該命令的小命令到Queue
-                        var cmd_ohtc = cmdMCS.convertToACMD_OHTC(vh, portDefBLL, sequenceBLL, transferService);
+                        var cmd_ohtc = cmdMCS.convertToACMD_OHTC(vh, portDefBLL, sequenceBLL, transferService, relay_station);
                         is_success = is_success && cmdBLL.creatCommand_OHTC(cmd_ohtc);
                         logger.Info($"OHB >> OHB|cmd id:{cmdMCS.CMD_ID}，產生cmd_ohtc結果:{is_success}");
 

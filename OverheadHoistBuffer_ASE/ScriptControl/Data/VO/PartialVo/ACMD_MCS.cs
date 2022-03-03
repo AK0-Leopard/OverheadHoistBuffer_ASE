@@ -121,7 +121,7 @@ namespace com.mirle.ibg3k0.sc
         }
         public static List<ACMD_MCS> loadReadyTransferOfQueueCMD_MCS()
         {
-            if (MCS_CMD_InfoList == null )
+            if (MCS_CMD_InfoList == null)
             {
                 return new List<ACMD_MCS>();
             }
@@ -144,7 +144,8 @@ namespace com.mirle.ibg3k0.sc
             AVEHICLE assignVehicle,
             BLL.Interface.IPortDefBLL portDefBLL,
             BLL.Interface.ISequenceBLL sequenceBLL,
-            Service.Interface.ITransferService transferService)
+            Service.Interface.ITransferService transferService,
+            string relayStation)
         {
             if (IsScan())
             {
@@ -192,7 +193,7 @@ namespace com.mirle.ibg3k0.sc
                 string real_dest_port = HOSTDESTINATION;
                 if (ReadyStatus == CommandReadyStatus.Realy)
                 {
-                    real_dest_port = RelayStation;
+                    real_dest_port = relayStation;
                 }
                 var dest_port_def = portDefBLL.getPortDef(real_dest_port);
 
