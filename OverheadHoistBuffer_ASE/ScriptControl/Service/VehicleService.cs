@@ -2638,7 +2638,8 @@ namespace com.mirle.ibg3k0.sc.Service
                         ALINE line = scApp.getEQObjCacheManager().getLine();
                         if (!reserved_vh.IS_INSTALLED ||
                             line.SCStats == ALINE.TSCState.PAUSED ||
-                            line.SCStats == ALINE.TSCState.PAUSING)
+                            line.SCStats == ALINE.TSCState.PAUSING ||
+                            line.IsLineIdling)
                         {
                             Task.Run(() => tryDriveOutTheVh(eqpt.VEHICLE_ID, ReserveResult.reservedVhID));
                         }
@@ -3003,6 +3004,11 @@ namespace com.mirle.ibg3k0.sc.Service
                 var result = scApp.ReserveBLL.TryAddReservedSection(vhID, reserve_section_id,
                                                                      sensorDir: HltDirection.Forward,
                                                                      isAsk: true);
+                if (!result.OK)
+                {
+                    result.OK = reCheckReserveSection(vhID, reserve_section_id);
+                }
+
                 if (result.OK)
                 {
                     reserve_success_section.Add(reserve_info);
@@ -3018,13 +3024,31 @@ namespace com.mirle.ibg3k0.sc.Service
             return (has_success, final_blocked_vh_id, reserve_success_section);
         }
 
+        private bool reCheckReserveSection(string vhID, string reserveSecID)
+        {
+            AVEHICLE vh = scApp.getEQObjCacheManager().getVehicletByVHID(vhID);
+            string current_adr = vh.CUR_ADR_ID;
+            var last_sections = scApp.SectionBLL.cache.GetSectionsByToAddress(current_adr);
+            if (last_sections.Count > 0)
+            {
+                ASECTION last_sec = last_sections[0];
+                if (SCUtility.isMatche(reserveSecID, last_sec.SEC_ID))
+                {
+                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                       Data: $"Froce pass reserve section:{reserveSecID},becuse it is last section of adr:{current_adr}",
+                       VehicleID: vh.VEHICLE_ID);
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private (bool hasSuccess, string finialBlockedVhID, RepeatedField<ReserveInfo> reserveSuccessSection)
             checkReserveByPassStraight(string vhID, RepeatedField<ReserveInfo> reserveInfos)
         {
             var reserve_success_section = new RepeatedField<ReserveInfo>();
             bool has_success = false;
             string first_blocked_vh_id = string.Empty;
-            bool is_pass_through_vh = false;
             LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
                Data: $"vh:{vhID} start check reserve by pass straight...",
                VehicleID: vhID);
@@ -3043,7 +3067,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 {
                     if (result.OK)
                     {
-                        if (is_pass_through_vh)
+                        if (hasThroughVhWhenAskCurveSection(vhID, try_reserve_sec))
                         {
                             break;
                         }
@@ -3060,23 +3084,50 @@ namespace com.mirle.ibg3k0.sc.Service
                 }
                 else
                 {
-                    //如果在直線段預約失敗，代表有通過車子，接著若碰到取線就要先拒絕
-                    if (!result.OK)
-                    {
-                        is_pass_through_vh = true;
-                        if (SCUtility.isEmpty(first_blocked_vh_id))
-                        {
-                            first_blocked_vh_id = result.VehicleID;
-                        }
-                    }
+
                     reserve_success_section.Add(reserve_info);
                     has_success |= true;
                 }
             }
             return (has_success, first_blocked_vh_id, reserve_success_section);
         }
-        private (bool isSuccess, string reservedVhID, RepeatedField<ReserveInfo> reserveSuccessInfos) IsMultiReserveSuccess_old
-    (string vhID, RepeatedField<ReserveInfo> reserveInfos, bool isAsk = false)
+        private bool hasThroughVhWhenAskCurveSection(string vhID, ASECTION askCurveSection)
+        {
+            var vh = scApp.VehicleBLL.cache.getVhByID(vhID);
+            string vh_current_adr = SCUtility.Trim(vh.CUR_ADR_ID, true);
+            string vh_current_sec = SCUtility.Trim(vh.CUR_SEC_ID, true);
+
+            string reserve_sec_from_adr = SCUtility.Trim(askCurveSection.FROM_ADR_ID, true);
+            var guide_info
+                = scApp.GuideBLL.getGuideInfo(vh_current_adr, reserve_sec_from_adr);
+            if (!guide_info.isSuccess)
+            {
+                return false;
+            }
+            foreach (string sec_id in guide_info.guideSectionIds)
+            {
+                var on_sec_vhs = scApp.VehicleBLL.cache.getVhBySections(sec_id);
+                if (on_sec_vhs.Count == 0) continue;
+
+                if (SCUtility.isMatche(sec_id, vh_current_sec))
+                {
+                    foreach (var on_sec_vh in on_sec_vhs)
+                    {
+                        if (vh == on_sec_vh) continue;
+                        if (on_sec_vh.ACC_SEC_DIST > vh.ACC_SEC_DIST)
+                            return true;
+                    }
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            return false;
+
+        }
+
+        private (bool isSuccess, string reservedVhID, RepeatedField<ReserveInfo> reserveSuccessInfos) IsMultiReserveSuccess_old(string vhID, RepeatedField<ReserveInfo> reserveInfos, bool isAsk = false)
         {
             try
             {

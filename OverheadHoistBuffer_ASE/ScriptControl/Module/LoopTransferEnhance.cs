@@ -231,11 +231,12 @@ namespace com.mirle.ibg3k0.sc.Module
         }
 
         const int MAX_FIND_CLOSE_VH_COUNT = 50;
-        const double MAX_CLOSE_DIS_MM = 10_000;
+        const double MAX_CLOSE_DIS_MM = 15_000;
         public (bool hasCommand, string waitPort, ACMD_MCS cmdMCS) tryGetZoneCommand(List<ACMD_MCS> mcsCMDs, string vhID, string zoneCommandID, bool isNeedCheckHasVhClose = true)
         {
             try
             {
+                logger.Info($"OHB >> OHB| vh:{vhID}，進行ZoneCommandRequest ID:{zoneCommandID}...");
                 AVEHICLE vh = vehicleBLL.getVehicle(vhID);
                 if (!vh.TransferReady(cmdBLL))
                 {
@@ -265,7 +266,7 @@ namespace com.mirle.ibg3k0.sc.Module
 
                 //}
                 //
-                if (isNeedCheckHasVhClose && zone_mcs_cmds.Count == 1)
+                if (isNeedCheckHasVhClose && zone_mcs_cmds.Count == 1)  
                 {
                     //1筆
                     //	判斷後面是否有空車在距離內
@@ -300,7 +301,8 @@ namespace com.mirle.ibg3k0.sc.Module
                         var on_sec_vhs = cycling_vhs.Where(v => v != vh && sc.Common.SCUtility.isMatche(v.CUR_SEC_ID, pre_section.SEC_ID)).FirstOrDefault();
                         if (on_sec_vhs != null)
                         {
-                            logger.Info($"OHB >> OHB|vh:{vhID}詢問zone command:{zoneCommandID}，有一筆搬送命令:{cmd_mcs.CMD_ID}但有後車:{on_sec_vhs.VEHICLE_ID}接近因此Pass該次詢問");
+                            logger.Info($"OHB >> OHB|vh:{vhID}詢問zone command:{zoneCommandID}，有一筆搬送命令:{cmd_mcs.CMD_ID}" +
+                                        $"但有後車:{on_sec_vhs.VEHICLE_ID}接近，因此Pass該次詢問(距離:{App.SystemParameter.IgnoreTransferCommandDistanceWithBehindVh})");
                             return (false, "", null);
                         }
                         check_dis += pre_section.SEC_DIS;
@@ -315,7 +317,8 @@ namespace com.mirle.ibg3k0.sc.Module
                         System.Threading.SpinWait.SpinUntil(() => false, 1);
                         find_count++;
                     }
-                    while (check_dis < MAX_CLOSE_DIS_MM);
+                    //while (check_dis < MAX_CLOSE_DIS_MM);
+                    while (check_dis < App.SystemParameter.IgnoreTransferCommandDistanceWithBehindVh);
                     logger.Info($"OHB >> OHB|vh:{vhID}詢問zone command:{zoneCommandID}，有一筆搬送命令:{cmd_mcs.CMD_ID} L:{cmd_mcs.HOSTSOURCE} U:{cmd_mcs.HOSTDESTINATION}，回復該筆命令可搬送");
                     return (true, cmd_mcs.HOSTSOURCE, cmd_mcs);
                 }

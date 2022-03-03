@@ -805,6 +805,7 @@ namespace com.mirle.ibg3k0.sc.App
 
             SystemParameter.setIsEnableIDReadFailScenarioFlag(getBoolean("IsEnableIDReadFailScenario", false));
             SystemParameter.setIsLoopTransferEnhanceFlag(getBoolean("IsLoopTransferEnhance", false));
+            SystemParameter.setIgnoreTransferCommandDistanceWithBehindVh(getDouble("IgnoreTransferCommandDistanceWithBehindVh", 15_000));
 
             initDao();      //Initial DAO
             initBLL();      //Initial BLL
@@ -2259,6 +2260,7 @@ namespace com.mirle.ibg3k0.sc.App
         public static int BoxMovePriority = 99;
         public static bool isLoopTransferEnhance = false;
         public static bool isReserveByPassOnStraight { private set; get; } = false;
+        public static double IgnoreTransferCommandDistanceWithBehindVh { private set; get; } = 15_000;
 
         /// <summary>
         /// Sets the secs conversaction timeout.
@@ -2328,6 +2330,10 @@ namespace com.mirle.ibg3k0.sc.App
         public static void setIsReserveByPassOnStraight(bool _isReserveByPassOnStraight)
         {
             isReserveByPassOnStraight = _isReserveByPassOnStraight;
+        }
+        public static void setIgnoreTransferCommandDistanceWithBehindVh(double _IgnoreTransferCommandDistanceWithBehindVh)
+        {
+            IgnoreTransferCommandDistanceWithBehindVh = _IgnoreTransferCommandDistanceWithBehindVh;
         }
 
     }
