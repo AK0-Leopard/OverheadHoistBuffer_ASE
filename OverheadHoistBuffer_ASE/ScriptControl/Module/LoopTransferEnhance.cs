@@ -231,7 +231,6 @@ namespace com.mirle.ibg3k0.sc.Module
         }
 
         const int MAX_FIND_CLOSE_VH_COUNT = 50;
-        const double MAX_CLOSE_DIS_MM = 15_000;
         public (bool hasCommand, string waitPort, ACMD_MCS cmdMCS) tryGetZoneCommand(List<ACMD_MCS> mcsCMDs, string vhID, string zoneCommandID, bool isNeedCheckHasVhClose = true)
         {
             try
@@ -266,7 +265,7 @@ namespace com.mirle.ibg3k0.sc.Module
 
                 //}
                 //
-                if (isNeedCheckHasVhClose && zone_mcs_cmds.Count == 1)  
+                if (isNeedCheckHasVhClose && zone_mcs_cmds.Count == 1)
                 {
                     //1筆
                     //	判斷後面是否有空車在距離內
@@ -277,7 +276,7 @@ namespace com.mirle.ibg3k0.sc.Module
                     string ask_vh_sec_id = vh.CUR_SEC_ID;
                     var ask_vh_sec_obj = sectionBLL.getSection(ask_vh_sec_id);
                     //a.確認同一段Section是否有在後面的車子，有的話代表已經靠近中了
-                    List<AVEHICLE> cycling_vhs = vehicleBLL.loadCyclingVhs();
+                    List<AVEHICLE> cycling_vhs = vehicleBLL.loadCyclingAndTransferReadyVhs(cmdBLL);
                     ACMD_MCS cmd_mcs = zone_mcs_cmds.FirstOrDefault();
                     foreach (var v in cycling_vhs)
                     {

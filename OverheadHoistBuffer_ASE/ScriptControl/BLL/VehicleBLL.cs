@@ -2120,9 +2120,9 @@ namespace com.mirle.ibg3k0.sc.BLL
             return cache.getVhBySections(secID);
         }
 
-        public List<AVEHICLE> loadCyclingVhs()
+        public List<AVEHICLE> loadCyclingAndTransferReadyVhs(ICMDBLL cmdBLL)
         {
-            return cache.loadCyclingVhs();
+            return cache.loadCyclingVhs(cmdBLL);
         }
         #endregion Vehicle Object Info
 
@@ -2220,19 +2220,27 @@ namespace com.mirle.ibg3k0.sc.BLL
                 var vhs = eqObjCacheManager.getAllVehicle();
                 return vhs;
             }
-            /// <summary>
-            /// 如果車子有命令但不是在進行MCS的搬送命令話
-            /// 應該就是再進行CycleRun
-            /// </summary>
-            /// <returns></returns>
-            public List<AVEHICLE> loadCyclingVhs()
+            public List<AVEHICLE> loadCyclingVhs(ICMDBLL cmdBLL)
             {
                 var vhs = eqObjCacheManager.getAllVehicle();
-                vhs = vhs.Where(v => v.ACT_STATUS == VHActionStatus.Commanding &&
-                                     !SCUtility.isEmpty(v.OHTC_CMD) && 
-                                     SCUtility.isEmpty(v.MCS_CMD)).
-                          ToList();
+                //vhs = vhs.Where(v => v.ACT_STATUS == VHActionStatus.Commanding &&
+                //                     !SCUtility.isEmpty(v.OHTC_CMD) && 
+                //                     SCUtility.isEmpty(v.MCS_CMD)).
+                vhs = vhs.Where(v => isCyclingAndTransferReady(v, cmdBLL)).
+                      ToList();
                 return vhs;
+            }
+            private bool isCyclingAndTransferReady(AVEHICLE vh, ICMDBLL cmdBLL)
+            {
+                if (!vh.IsCycleMove(ACMD_OHTC.CMD_OHTC_InfoList))
+                {
+                    return false;
+                }
+                if (!vh.TransferReady(cmdBLL))
+                {
+                    return false;
+                }
+                return true;
             }
             public List<AVEHICLE> loadVhsBySegmentID(string segmentID)
             {

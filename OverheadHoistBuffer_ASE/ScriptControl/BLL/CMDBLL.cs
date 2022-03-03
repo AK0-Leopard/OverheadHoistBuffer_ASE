@@ -746,12 +746,18 @@ namespace com.mirle.ibg3k0.sc.BLL
 
         public bool isCMD_OHTCWillSending(string vhID)
         {
-            int count = 0;
-            using (DBConnection_EF con = DBConnection_EF.GetUContext())
-            {
-                count = cmd_ohtcDAO.getVhWillSendingCMDConut(con, vhID);
-            }
+            var cmds_ohtc = ACMD_OHTC.loadCmdOhtcListOfCmdObj();
+            int count = cmds_ohtc.Where(cmd => SCUtility.isMatche(cmd.VH_ID, vhID) &&
+                                                    cmd.CMD_STAUS <= E_CMD_STATUS.Sending)
+                                        .Count();
             return count != 0;
+
+            //int count = 0;
+            //using (DBConnection_EF con = DBConnection_EF.GetUContext())
+            //{
+            //    count = cmd_ohtcDAO.getVhWillSendingCMDConut(con, vhID);
+            //}
+            //return count != 0;
         }
 
         //*************************************************
@@ -4057,8 +4063,8 @@ namespace com.mirle.ibg3k0.sc.BLL
         {
             bool has_change = false;
             List<string> new_current_excute_cmd_ohtc = currentExcuteCmdOhtc.Select(cmd => SCUtility.Trim(cmd.CMD_ID, true)).ToList();
-            List<string> old_current_excute_cmd_ohtc = ACMD_OHTC.CMD_OHTC_InfoList.Keys.ToList();
-
+            //List<string> old_current_excute_cmd_ohtc = ACMD_OHTC.CMD_OHTC_InfoList.Keys.ToList();
+            List<string> old_current_excute_cmd_ohtc = ACMD_OHTC.loadCmdOhtcListOfCmdID();
             List<string> new_add_cmds_ohtc = new_current_excute_cmd_ohtc.Except(old_current_excute_cmd_ohtc).ToList();
             //1.新增多出來的命令
             foreach (string new_cmd in new_add_cmds_ohtc)

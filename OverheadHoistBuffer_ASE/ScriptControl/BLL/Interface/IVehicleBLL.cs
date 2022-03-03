@@ -13,7 +13,7 @@ namespace com.mirle.ibg3k0.sc.BLL.Interface
 
         AVEHICLE getVehicle(string vhID);
         List<AVEHICLE> loadVehicleBySecID(string secID);
-        List<AVEHICLE> loadCyclingVhs();
+        List<AVEHICLE> loadCyclingAndTransferReadyVhs(ICMDBLL cmdBLL);
 
 
     }

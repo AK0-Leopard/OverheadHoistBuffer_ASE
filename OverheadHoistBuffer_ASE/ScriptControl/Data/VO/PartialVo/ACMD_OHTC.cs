@@ -10,7 +10,16 @@ namespace com.mirle.ibg3k0.sc
     public partial class ACMD_OHTC
     {
         public static ConcurrentDictionary<string, ACMD_OHTC> CMD_OHTC_InfoList { get; private set; } = new ConcurrentDictionary<string, ACMD_OHTC>();
-
+        public static List<string> loadCmdOhtcListOfCmdID()
+        {
+            var array_cmd_ohtc = CMD_OHTC_InfoList.ToArray();
+            return array_cmd_ohtc.Select(cmd => cmd.Key).ToList();
+        }
+        public static List<ACMD_OHTC> loadCmdOhtcListOfCmdObj()
+        {
+            var array_cmd_ohtc = CMD_OHTC_InfoList.ToArray();
+            return array_cmd_ohtc.Select(cmd => cmd.Value).ToList();
+        }
         public bool IsCMD_MCS()
         {
             return !sc.Common.SCUtility.isEmpty(CMD_ID_MCS);

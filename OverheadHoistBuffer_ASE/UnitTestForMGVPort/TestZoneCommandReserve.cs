@@ -195,7 +195,7 @@ namespace UnitTestForLoopEnhance
                 vh2,
                 vh3
             };
-            stub.vehicleBLL.loadCyclingVhs().Returns(vhs);
+            stub.vehicleBLL.loadCyclingAndTransferReadyVhs(stub.cmdBLL).Returns(vhs);
 
             stub.vehicleBLL.getVehicle("B7_OHBLINE3_CR1").Returns(vh1);
             stub.vehicleBLL.getVehicle("B7_OHBLINE3_CR2").Returns(vh2);
@@ -462,7 +462,7 @@ namespace UnitTestForLoopEnhance
             setSectionData(stub);
             setVehicleData(stub);
             //變更車子的位置
-            stub.vehicleBLL.loadCyclingVhs().
+            stub.vehicleBLL.loadCyclingAndTransferReadyVhs(stub.cmdBLL).
                 Where(v => v.VEHICLE_ID == "B7_OHBLINE3_CR2").FirstOrDefault().CUR_SEC_ID = "30141";
 
             setZoneCommandData(stub);
@@ -586,7 +586,7 @@ namespace UnitTestForLoopEnhance
                 (stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL,
                  stub.transferService, stub.shelfDefBLL, stub.cassetteDataBLL, stub.cmdBLL);
             //變更車子的位置
-            var vh2 = stub.vehicleBLL.loadCyclingVhs().
+            var vh2 = stub.vehicleBLL.loadCyclingAndTransferReadyVhs(stub.cmdBLL).
                  Where(v => v.VEHICLE_ID == "B7_OHBLINE3_CR2").FirstOrDefault();
             vh2.X_Axis = 9000;
 
@@ -615,7 +615,7 @@ namespace UnitTestForLoopEnhance
                 (stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL,
                  stub.transferService, stub.shelfDefBLL, stub.cassetteDataBLL, stub.cmdBLL);
             //變更車子的位置
-            var vh2 = stub.vehicleBLL.loadCyclingVhs().
+            var vh2 = stub.vehicleBLL.loadCyclingAndTransferReadyVhs(stub.cmdBLL).
                  Where(v => v.VEHICLE_ID == "B7_OHBLINE3_CR2").FirstOrDefault();
             vh2.X_Axis = 10000;
 
@@ -644,7 +644,7 @@ namespace UnitTestForLoopEnhance
                 (stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL,
                  stub.transferService, stub.shelfDefBLL, stub.cassetteDataBLL, stub.cmdBLL);
             //變更車子的位置
-            var vh2 = stub.vehicleBLL.loadCyclingVhs().
+            var vh2 = stub.vehicleBLL.loadCyclingAndTransferReadyVhs(stub.cmdBLL).
                  Where(v => v.VEHICLE_ID == "B7_OHBLINE3_CR2").FirstOrDefault();
             vh2.X_Axis = 17000;
 
@@ -673,7 +673,7 @@ namespace UnitTestForLoopEnhance
                 (stub.zoneCommandBLL, stub.vehicleBLL, stub.sectionBLL, stub.portDefBLL, stub.reserveBLL,
                  stub.transferService, stub.shelfDefBLL, stub.cassetteDataBLL, stub.cmdBLL);
             //變更車子的位置
-            var vh2 = stub.vehicleBLL.loadCyclingVhs().
+            var vh2 = stub.vehicleBLL.loadCyclingAndTransferReadyVhs(stub.cmdBLL).
                  Where(v => v.VEHICLE_ID == "B7_OHBLINE3_CR2").FirstOrDefault();
             vh2.X_Axis = 13000;
 
@@ -706,10 +706,10 @@ namespace UnitTestForLoopEnhance
                  stub.transferService, stub.shelfDefBLL, stub.cassetteDataBLL, stub.cmdBLL);
 
             //變更車子的位置
-            var vh2 = stub.vehicleBLL.loadCyclingVhs().
+            var vh2 = stub.vehicleBLL.loadCyclingAndTransferReadyVhs(stub.cmdBLL).
                  Where(v => v.VEHICLE_ID == "B7_OHBLINE3_CR2").FirstOrDefault();
             vh2.CUR_SEC_ID = "30147";
-            var vh1 = stub.vehicleBLL.loadCyclingVhs().
+            var vh1 = stub.vehicleBLL.loadCyclingAndTransferReadyVhs(stub.cmdBLL).
                  Where(v => v.VEHICLE_ID == "B7_OHBLINE3_CR1").FirstOrDefault();
             vh1.X_Axis = 6794;
             vh1.CUR_ADR_ID = "12272";
@@ -744,10 +744,10 @@ namespace UnitTestForLoopEnhance
                  stub.transferService, stub.shelfDefBLL, stub.cassetteDataBLL, stub.cmdBLL);
 
             //變更車子的位置
-            var vh2 = stub.vehicleBLL.loadCyclingVhs().
+            var vh2 = stub.vehicleBLL.loadCyclingAndTransferReadyVhs(stub.cmdBLL).
                  Where(v => v.VEHICLE_ID == "B7_OHBLINE3_CR2").FirstOrDefault();
             vh2.CUR_SEC_ID = "30139";
-            var vh1 = stub.vehicleBLL.loadCyclingVhs().
+            var vh1 = stub.vehicleBLL.loadCyclingAndTransferReadyVhs(stub.cmdBLL).
                  Where(v => v.VEHICLE_ID == "B7_OHBLINE3_CR1").FirstOrDefault();
             vh1.X_Axis = 10280;
             vh1.CUR_ADR_ID = "13280";
