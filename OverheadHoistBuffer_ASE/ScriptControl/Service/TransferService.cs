@@ -8431,6 +8431,14 @@ namespace com.mirle.ibg3k0.sc.Service
                                                  && data.UnitType == UnitType.AGV.ToString()
                                            ).OrderBy(loc => loc.PortName).ToList();
         }
+        public (bool isFind, string zoneName) tryGetAGVZoneName(string portID)
+        {
+            if (portINIData.TryGetValue(portID, out var port))
+            {
+                return (true, port.Group);
+            }
+            return (false, "");
+        }
         public string getShelfZoneID(string shelfID)
         {
             bool is_ger_success = portINIData.TryGetValue(shelfID, out PortINIData data);

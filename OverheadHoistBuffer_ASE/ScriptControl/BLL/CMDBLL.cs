@@ -1497,9 +1497,9 @@ namespace com.mirle.ibg3k0.sc.BLL
 
         public bool updateCMD_MCS_TranStatus2Queue(string cmd_id)
         {
-            return updateCMD_MCS_TranStatus2Queue(cmd_id, false);
+            return updateCMD_MCS_TranStatus2Queue(cmd_id, "", false);
         }
-        public bool updateCMD_MCS_TranStatus2Queue(string cmd_id, bool isKeepRelatSt)
+        public bool updateCMD_MCS_TranStatus2Queue(string cmd_id, string recoverDest, bool isKeepRelatSt)
         {
             bool isSuccess = true;
             try
@@ -1511,6 +1511,10 @@ namespace com.mirle.ibg3k0.sc.BLL
                     cmd.COMMANDSTATE = 0;
                     if (!isKeepRelatSt)
                         cmd.RelayStation = "";
+                    if (!SCUtility.isEmpty(recoverDest))
+                    {
+                        cmd.HOSTDESTINATION = recoverDest;
+                    }
                     cmd_mcsDao.update(con, cmd);
                 }
             }
