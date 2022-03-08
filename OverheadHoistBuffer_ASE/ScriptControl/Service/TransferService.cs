@@ -1963,7 +1963,6 @@ namespace com.mirle.ibg3k0.sc.Service
                                     $"{DateTime.Now.ToString("HH:mm:ss.fff ")} current line scstate:{line.SCStats} ,不進行檢查是否已經卡匣Time out的流程"
                                 );
                             }
-
                         }
                     }
 
@@ -2004,6 +2003,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         cst.TrnDT = time;
                     }
                 }
+
                 TransferServiceLogger.Info
                 (
                     $"{DateTime.Now.ToString("HH:mm:ss.fff ")} 更新所有[Not Complete]的Cst Data 的TrnDT 結束。"

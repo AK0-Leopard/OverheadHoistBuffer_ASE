@@ -154,8 +154,9 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
                 string BC_CPU = Math.Round(bc_cpu.NextValue(), 2).ToString();
                 string CPU = $"{cpu.NextValue():n1}";
                 string Memory = $"{memory.NextValue():n0}";
-
-                string record_message = $"{DateTime.Now.ToString(SCAppConstants.DateTimeFormat_19)},{工作集_Process},{工作集},{私有工作集},{BC_CPU},{CPU},{Memory}";
+                var thread_pool_info = getThreadPoolInfo();
+                string record_message = $"{DateTime.Now.ToString(SCAppConstants.DateTimeFormat_19)},{工作集_Process},{工作集},{私有工作集},{BC_CPU},{CPU},{Memory}," +
+                                        $"{thread_pool_info.availableThreads},{thread_pool_info.availableThreadsAsyncIO},{thread_pool_info.maxThreads},{thread_pool_info.maxThreadsAsyncIO},{thread_pool_info.minThreads},{thread_pool_info.minThreadsAsyncIO}";
                 BCMemoryLog.Info(record_message);
 
                 //BCMemoryLog.Debug("{0}:{1}  {2:N}KB", ps.ProcessName, "工作集(Process)", ps.WorkingSet64 / 1024);
@@ -167,6 +168,34 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
                 //BCMemoryLog.Debug("Memory: {0:n0}%", memory.NextValue());
             }
             catch (Exception ex) { }
+        }
+
+        public (string availableThreads, string availableThreadsAsyncIO, string maxThreads, string maxThreadsAsyncIO, string minThreads, string minThreadsAsyncIO)
+                getThreadPoolInfo()
+        {
+            int workThreads, completionPortThreads;
+            System.Threading.ThreadPool.GetAvailableThreads(out workThreads, out completionPortThreads);
+            //Console.WriteLine($"GetAvailableThreads => workThreads:{workThreads};completionPortThreads:{completionPortThreads}");
+            //scApp.TransferService.TransferServiceLogger.Info($"GetAvailableThreads => workThreads:{workThreads};completionPortThreads:{completionPortThreads}");
+            string available_threads = workThreads.ToString();
+            string available_threads_async_io = completionPortThreads.ToString();
+
+            System.Threading.ThreadPool.GetMaxThreads(out workThreads, out completionPortThreads);
+            //Console.WriteLine($"GetMaxThreads => workThreads:{workThreads};completionPortThreads:{completionPortThreads}");
+            //scApp.TransferService.TransferServiceLogger.Info($"GetMaxThreads => workThreads:{workThreads};completionPortThreads:{completionPortThreads}");
+            string max_threads = workThreads.ToString();
+            string max_threads_async_io = completionPortThreads.ToString();
+
+            System.Threading.ThreadPool.GetMinThreads(out workThreads, out completionPortThreads);
+            //Console.WriteLine($"GetMinThreads => workThreads:{workThreads};completionPortThreads:{completionPortThreads}");
+            //scApp.TransferService.TransferServiceLogger.Info($"GetMinThreads => workThreads:{workThreads};completionPortThreads:{completionPortThreads}");
+            string min_threads = workThreads.ToString();
+            string min_threads_async_io = completionPortThreads.ToString();
+
+            return (available_threads, available_threads_async_io,
+                    max_threads, max_threads_async_io,
+                    min_threads, min_threads_async_io);
+
         }
 
 

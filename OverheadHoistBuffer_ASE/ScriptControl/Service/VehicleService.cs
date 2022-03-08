@@ -2280,7 +2280,13 @@ namespace com.mirle.ibg3k0.sc.Service
             LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
                                    Data: $"start try drive out vh:{inTheWayVhID}...",
                                    VehicleID: willPassVhID);
-
+            if (SCUtility.isMatche(willPassVhID, inTheWayVhID))
+            {
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                                       Data: $"要被趕車的與被擋住的車為同一台:{inTheWayVhID}，因此不進行趕車計算",
+                                       VehicleID: willPassVhID);
+                return false;
+            }
             //確認能否把該Vh趕走
             AVEHICLE in_the_way_vh = scApp.VehicleBLL.cache.getVhByID(inTheWayVhID);
             var check_can_creat_avoid_command = canCreatDriveOutCommand(in_the_way_vh);
@@ -2634,14 +2640,19 @@ namespace com.mirle.ibg3k0.sc.Service
                     {
                         var reserved_vh = scApp.VehicleBLL.cache.getVhByID(ReserveResult.reservedVhID);
                         if (reserved_vh == null)
-                            return;
-                        ALINE line = scApp.getEQObjCacheManager().getLine();
-                        if (!reserved_vh.IS_INSTALLED ||
-                            line.SCStats == ALINE.TSCState.PAUSED ||
-                            line.SCStats == ALINE.TSCState.PAUSING ||
-                            line.IsLineIdling)
                         {
-                            Task.Run(() => tryDriveOutTheVh(eqpt.VEHICLE_ID, ReserveResult.reservedVhID));
+                            //not thing...
+                        }
+                        else
+                        {
+                            ALINE line = scApp.getEQObjCacheManager().getLine();
+                            if (!reserved_vh.IS_INSTALLED ||
+                                line.SCStats == ALINE.TSCState.PAUSED ||
+                                line.SCStats == ALINE.TSCState.PAUSING ||
+                                line.IsLineIdling)
+                            {
+                                Task.Run(() => tryDriveOutTheVh(eqpt.VEHICLE_ID, ReserveResult.reservedVhID));
+                            }
                         }
                     }
                     else

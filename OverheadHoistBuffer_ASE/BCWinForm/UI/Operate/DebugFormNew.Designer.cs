@@ -32,6 +32,7 @@
             this.grb_testAear = new System.Windows.Forms.GroupBox();
             this.cb_testZoneCommandReqNoReply = new System.Windows.Forms.CheckBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.cb_isByPassStraightReserve = new System.Windows.Forms.CheckBox();
             this.cb_LoopEnhance = new System.Windows.Forms.CheckBox();
             this.num_priorityForBoxMove = new System.Windows.Forms.NumericUpDown();
             this.label8 = new System.Windows.Forms.Label();
@@ -86,7 +87,8 @@
             this.cb_OperMode = new System.Windows.Forms.ComboBox();
             this.button3 = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.cb_isByPassStraightReserve = new System.Windows.Forms.CheckBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.num_passDisForBackVh = new System.Windows.Forms.NumericUpDown();
             this.tabPage1.SuspendLayout();
             this.grb_testAear.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -103,6 +105,7 @@
             this.groupBox5.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.num_passDisForBackVh)).BeginInit();
             this.SuspendLayout();
             // 
             // tabPage1
@@ -146,6 +149,8 @@
             // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.num_passDisForBackVh);
+            this.groupBox6.Controls.Add(this.label9);
             this.groupBox6.Controls.Add(this.cb_isByPassStraightReserve);
             this.groupBox6.Controls.Add(this.cb_LoopEnhance);
             this.groupBox6.Controls.Add(this.num_priorityForBoxMove);
@@ -160,10 +165,21 @@
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Parameter Setting";
             // 
+            // cb_isByPassStraightReserve
+            // 
+            this.cb_isByPassStraightReserve.AutoSize = true;
+            this.cb_isByPassStraightReserve.Location = new System.Drawing.Point(28, 176);
+            this.cb_isByPassStraightReserve.Name = "cb_isByPassStraightReserve";
+            this.cb_isByPassStraightReserve.Size = new System.Drawing.Size(239, 26);
+            this.cb_isByPassStraightReserve.TabIndex = 62;
+            this.cb_isByPassStraightReserve.Text = "關閉直線路段預約控制";
+            this.cb_isByPassStraightReserve.UseVisualStyleBackColor = true;
+            this.cb_isByPassStraightReserve.CheckedChanged += new System.EventHandler(this.cb_isByPassStraightReserve_CheckedChanged);
+            // 
             // cb_LoopEnhance
             // 
             this.cb_LoopEnhance.AutoSize = true;
-            this.cb_LoopEnhance.Location = new System.Drawing.Point(28, 110);
+            this.cb_LoopEnhance.Location = new System.Drawing.Point(28, 144);
             this.cb_LoopEnhance.Name = "cb_LoopEnhance";
             this.cb_LoopEnhance.Size = new System.Drawing.Size(229, 26);
             this.cb_LoopEnhance.TabIndex = 60;
@@ -762,16 +778,28 @@
             this.tabControl1.Size = new System.Drawing.Size(1206, 865);
             this.tabControl1.TabIndex = 23;
             // 
-            // cb_isByPassStraightReserve
+            // label9
             // 
-            this.cb_isByPassStraightReserve.AutoSize = true;
-            this.cb_isByPassStraightReserve.Location = new System.Drawing.Point(28, 142);
-            this.cb_isByPassStraightReserve.Name = "cb_isByPassStraightReserve";
-            this.cb_isByPassStraightReserve.Size = new System.Drawing.Size(239, 26);
-            this.cb_isByPassStraightReserve.TabIndex = 62;
-            this.cb_isByPassStraightReserve.Text = "關閉直線路段預約控制";
-            this.cb_isByPassStraightReserve.UseVisualStyleBackColor = true;
-            this.cb_isByPassStraightReserve.CheckedChanged += new System.EventHandler(this.cb_isByPassStraightReserve_CheckedChanged);
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(22, 108);
+            this.label9.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(207, 22);
+            this.label9.TabIndex = 63;
+            this.label9.Text = "Pass給後車搬的距離:";
+            // 
+            // num_passDisForBackVh
+            // 
+            this.num_passDisForBackVh.Location = new System.Drawing.Point(226, 104);
+            this.num_passDisForBackVh.Maximum = new decimal(new int[] {
+            50000,
+            0,
+            0,
+            0});
+            this.num_passDisForBackVh.Name = "num_passDisForBackVh";
+            this.num_passDisForBackVh.Size = new System.Drawing.Size(172, 30);
+            this.num_passDisForBackVh.TabIndex = 64;
+            this.num_passDisForBackVh.ValueChanged += new System.EventHandler(this.num_passDisForBackVh_ValueChanged);
             // 
             // DebugFormNew
             // 
@@ -811,6 +839,7 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.tabControl1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.num_passDisForBackVh)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -875,5 +904,7 @@
         private System.Windows.Forms.GroupBox grb_testAear;
         private System.Windows.Forms.CheckBox cb_testZoneCommandReqNoReply;
         private System.Windows.Forms.CheckBox cb_isByPassStraightReserve;
+        private System.Windows.Forms.NumericUpDown num_passDisForBackVh;
+        private System.Windows.Forms.Label label9;
     }
 }

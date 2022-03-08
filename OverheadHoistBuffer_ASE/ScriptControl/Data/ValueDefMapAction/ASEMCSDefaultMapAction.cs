@@ -456,7 +456,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
 
                                 if (s2f50.HCACK == SECSConst.HCACK_Confirm)
                                 {
-                                    //isCreatScuess &= scApp.SysExcuteQualityBLL.creatSysExcuteQuality(cmdID, cstID, source, dest);//取消對於SystemQuality的紀錄
+                                    scApp.SysExcuteQualityBLL.creatSysExcuteQuality(cmdID, cstID, source, dest);
                                 }
 
                                 if (isCreatScuess)
@@ -531,7 +531,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                         //    }
                         //    break;
                 }
-                ShowThreadPoolInfo();
+                //ShowThreadPoolInfo();
 
             }
             catch (Exception ex)
@@ -553,7 +553,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             System.Threading.ThreadPool.GetMaxThreads(out workThreads, out completionPortThreads);
             //Console.WriteLine($"GetMaxThreads => workThreads:{workThreads};completionPortThreads:{completionPortThreads}");
             scApp.TransferService.TransferServiceLogger.Info($"GetMaxThreads => workThreads:{workThreads};completionPortThreads:{completionPortThreads}");
-            
+
             System.Threading.ThreadPool.GetMinThreads(out workThreads, out completionPortThreads);
             //Console.WriteLine($"GetMinThreads => workThreads:{workThreads};completionPortThreads:{completionPortThreads}");
             scApp.TransferService.TransferServiceLogger.Info($"GetMinThreads => workThreads:{workThreads};completionPortThreads:{completionPortThreads}");

@@ -268,12 +268,12 @@ namespace com.mirle.ibg3k0.sc.BLL
                 quality.CMD_TOTAL_EXCUTION_TIME = getWithNowDifferenceSeconds(quality.CMD_START_TIME);
                 //sysExeQualityDAO.update(scApp.getRedisCacheManager(), quality);
                 sysExeQualityDAO.delete(scApp.getRedisCacheManager(), quality.CMD_ID_MCS);
-                using (DBConnection_EF con = DBConnection_EF.GetUContext())
-                {
-                    ASYSEXCUTEQUALITY qualityTemp = sysExeQualityDAO.getByID(con, mcs_cmd_id);
-                    if (qualityTemp == null)
-                        sysExeQualityDAO.add(con, quality);
-                }
+                //using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                //{
+                //    ASYSEXCUTEQUALITY qualityTemp = sysExeQualityDAO.getByID(con, mcs_cmd_id);
+                //    if (qualityTemp == null)
+                //        sysExeQualityDAO.add(con, quality);
+                //}
             }
             else
             {

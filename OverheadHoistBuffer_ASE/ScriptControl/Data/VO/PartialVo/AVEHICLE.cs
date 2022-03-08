@@ -888,14 +888,14 @@ namespace com.mirle.ibg3k0.sc
             {
                 return false;
             }
-            
+
             if (cmdBLL.isCMD_OHTCWillSending(VEHICLE_ID))
             {
                 return false;
             }
             return true;
         }
-        
+
 
 
         public int getPortNum(BCFApplication bcfApp)
@@ -1499,7 +1499,8 @@ namespace com.mirle.ibg3k0.sc
                 {
                     return;
                 }
-                if (vh.HAS_BOX == 1)
+                //if (vh.HAS_BOX == 1)
+                if (vh.HAS_CST == 1)
                 {
                     vh.onBoxIdleOnVh(vh.BOX_ID);
                 }

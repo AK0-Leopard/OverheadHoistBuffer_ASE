@@ -259,12 +259,14 @@ namespace com.mirle.ibg3k0.sc
         }
         public bool IsSource_ShelfPort(Service.Interface.ITransferService transferService)
         {
-            return transferService.isUnitType(HOSTSOURCE, Service.UnitType.SHELF); ;
+            //return transferService.isUnitType(HOSTSOURCE, Service.UnitType.SHELF); ;
+            return transferService.isUnitType(CURRENT_LOCATION, Service.UnitType.SHELF); ;
         }
 
         public bool IsSource_CRANE(Service.Interface.ITransferService transferService)
         {
-            return transferService.isUnitType(HOSTSOURCE, Service.UnitType.CRANE); ;
+            //return transferService.isUnitType(HOSTSOURCE, Service.UnitType.CRANE); ;
+            return transferService.isUnitType(CURRENT_LOCATION, Service.UnitType.CRANE); ;
         }
 
         public bool IsDestination_ShelfZone(Service.Interface.ITransferService transferService)
@@ -281,7 +283,8 @@ namespace com.mirle.ibg3k0.sc
         }
         public bool IsDestination_CVPort(Service.Interface.ITransferService transferService)
         {
-            return transferService.isCVPort(HOSTDESTINATION);
+            //return transferService.isCVPort(HOSTDESTINATION);
+            return transferService.isCVPort(CURRENT_LOCATION);
         }
         public bool IsTimeOutToAlternate()
         {

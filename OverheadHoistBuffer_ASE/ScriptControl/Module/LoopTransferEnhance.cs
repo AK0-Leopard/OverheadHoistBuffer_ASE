@@ -470,7 +470,9 @@ namespace com.mirle.ibg3k0.sc.Module
                         {
                             tx.Complete();
                             cmdMCS.TRANSFERSTATE = E_TRAN_STATUS.Transferring;
-                            if (transferService.isCVPort(cmdMCS.HOSTDESTINATION))
+                            //if (transferService.isCVPort(cmdMCS.HOSTDESTINATION))
+                            if (cmdMCS.ReadyStatus != ACMD_MCS.CommandReadyStatus.Realy &&
+                                transferService.isCVPort(cmdMCS.HOSTDESTINATION))
                             {
                                 transferService.PortCommanding(cmdMCS.HOSTDESTINATION, true);
                             }

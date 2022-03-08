@@ -46,6 +46,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
 
             num_priorityWatershed.Value = sc.App.SystemParameter.cmdPriorityWatershed;
             num_priorityForBoxMove.Value = sc.App.SystemParameter.BoxMovePriority;
+            num_passDisForBackVh.Value = (int)sc.App.SystemParameter.IgnoreTransferCommandDistanceWithBehindVh;
             cb_LoopEnhance.Checked = sc.App.SystemParameter.isLoopTransferEnhance;
             cb_isByPassStraightReserve.Checked = sc.App.SystemParameter.isReserveByPassOnStraight;
             List<string> lstVh = new List<string>();
@@ -499,6 +500,11 @@ namespace com.mirle.ibg3k0.bc.winform.UI
         private void cb_isByPassStraightReserve_CheckedChanged(object sender, EventArgs e)
         {
             sc.App.SystemParameter.setIsReserveByPassOnStraight(cb_isByPassStraightReserve.Checked);
+        }
+
+        private void num_passDisForBackVh_ValueChanged(object sender, EventArgs e)
+        {
+            sc.App.SystemParameter.setIgnoreTransferCommandDistanceWithBehindVh((double)num_passDisForBackVh.Value);
         }
 
         //*************************************
