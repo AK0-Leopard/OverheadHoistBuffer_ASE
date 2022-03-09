@@ -82,7 +82,7 @@ namespace com.mirle.ibg3k0.sc.Module
         {
             try
             {
-                logger.Info($"OHB >> OHB| 進行命令:{cmd_mcs.CMD_ID}的檢查，L:{cmd_mcs.HOSTSOURCE} U:{cmd_mcs.HOSTDESTINATION} ");
+                logger.Info($"OHB >> OHB| 進行命令:{cmd_mcs.CMD_ID}的檢查，L:{cmd_mcs.HOSTSOURCE} U:{cmd_mcs.HOSTDESTINATION} loc:{cmd_mcs.CURRENT_LOCATION} ");
                 //確認是否為AGV Port > Station的特殊命令，是的話就走特別處理流程
                 bool is_agv_port_to_station_cmd = transferService.checkAndProcessIsAgvPortToStation(cmd_mcs);
                 if (is_agv_port_to_station_cmd) return (ACMD_MCS.CommandReadyStatus.NotReady, ACMD_MCS.NotReadyReason.SpeciallyProcess);
@@ -318,8 +318,9 @@ namespace com.mirle.ibg3k0.sc.Module
                     }
                     //while (check_dis < MAX_CLOSE_DIS_MM);
                     while (check_dis < App.SystemParameter.IgnoreTransferCommandDistanceWithBehindVh);
-                    logger.Info($"OHB >> OHB|vh:{vhID}詢問zone command:{zoneCommandID}，有一筆搬送命令:{cmd_mcs.CMD_ID} L:{cmd_mcs.HOSTSOURCE} U:{cmd_mcs.HOSTDESTINATION}，回復該筆命令可搬送");
-                    return (true, cmd_mcs.HOSTSOURCE, cmd_mcs);
+                    logger.Info($"OHB >> OHB|vh:{vhID}詢問zone command:{zoneCommandID}，有一筆搬送命令:{cmd_mcs.CMD_ID} L:{cmd_mcs.HOSTSOURCE} U:{cmd_mcs.HOSTDESTINATION} loc:{cmd_mcs.CURRENT_LOCATION}，回復該筆命令可搬送");
+                    //return (true, cmd_mcs.HOSTSOURCE, cmd_mcs);
+                    return (true, cmd_mcs.CURRENT_LOCATION, cmd_mcs);
                 }
                 else
                 {

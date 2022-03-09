@@ -1783,7 +1783,7 @@ namespace com.mirle.ibg3k0.sc.Service
         }
 
 
-        public bool TransferRequset(string vh_id, string cmd_id, string mcs_cmd_id, ActiveType activeType, string cst_id, string box_id, string lot_id,
+        public bool TransferRequset(string vh_id, string cmdID, string mcs_cmd_id, ActiveType activeType, string cst_id, string box_id, string lot_id,
             string[] minRouteSec_Vh2From, string[] minRouteSec_From2To, string[] minRouteAdr_Vh2From, string[] minRouteAdr_From2To,
             string fromPort_id, string toPort_id, string fromAdr, string toAdr)
         {
@@ -1792,6 +1792,7 @@ namespace com.mirle.ibg3k0.sc.Service
             ID_131_TRANS_RESPONSE receive_gpp = null;
             AVEHICLE vh = scApp.getEQObjCacheManager().getVehicletByVHID(vh_id);
             isSuccess = TransferCommandCheck(activeType, cst_id, minRouteSec_Vh2From, minRouteSec_From2To, minRouteAdr_Vh2From, minRouteAdr_From2To, fromAdr, toAdr, out reason);
+            string cmd_id = SCUtility.Trim(cmdID,true);
             if (isSuccess)
             {
                 ID_31_TRANS_REQUEST send_gpb = new ID_31_TRANS_REQUEST()
