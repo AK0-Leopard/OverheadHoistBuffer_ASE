@@ -425,13 +425,13 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             return isSuccess;
         }
 
-        public override bool send_Str37(string cmd_id, CMDCancelType actType)
+        public override bool send_Str37(string cmdID, CMDCancelType actType)
         {
             //加入StackTrace，來找出他會下達Cancel的入口 by Kevin
             try
             {
                 StackTrace st = new StackTrace(true);
-                string trace_msg = SCUtility.ShowCallerInfo(st, $"Call EQTcpIpMapAction.send_Str37(),cmd id:{cmd_id},act type:{actType}");
+                string trace_msg = SCUtility.ShowCallerInfo(st, $"Call EQTcpIpMapAction.send_Str37(),cmd id:{cmdID},act type:{actType}");
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(EQTcpIpMapAction), Device: "OHxC",
                    Data: trace_msg,
                    VehicleID: eqpt.VEHICLE_ID,
@@ -442,7 +442,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             bool isScuess = false;
             try
             {
-
+                string cmd_id = SCUtility.Trim(cmdID,true);
                 string rtnMsg = string.Empty;
                 ID_37_TRANS_CANCEL_REQUEST stSend;
                 ID_137_TRANS_CANCEL_RESPONSE stRecv;

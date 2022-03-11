@@ -163,6 +163,11 @@ namespace com.mirle.ibg3k0.sc.Service
                                           FirstOrDefault();
                 if (vh_transfer_command != null)
                 {
+                    if (!vh.TransferReady(scApp.CMDBLL, isUnload: true))
+                    {
+                        scApp.TransferService.TransferServiceLogger.Info($"vh:{vh.VEHICLE_ID}車上有idle的CST:{boxID}，目前車子狀態不正確 Unload命令:{vh_transfer_command.CMD_ID}。");
+                        return;
+                    }
                     lock (zoneCommandLockObj)
                     {
                         bool is_assign_success = scApp.LoopTransferEnhance.preAssignMCSCommand(scApp.SequenceBLL, vh, vh_transfer_command);
@@ -1792,7 +1797,7 @@ namespace com.mirle.ibg3k0.sc.Service
             ID_131_TRANS_RESPONSE receive_gpp = null;
             AVEHICLE vh = scApp.getEQObjCacheManager().getVehicletByVHID(vh_id);
             isSuccess = TransferCommandCheck(activeType, cst_id, minRouteSec_Vh2From, minRouteSec_From2To, minRouteAdr_Vh2From, minRouteAdr_From2To, fromAdr, toAdr, out reason);
-            string cmd_id = SCUtility.Trim(cmdID,true);
+            string cmd_id = SCUtility.Trim(cmdID, true);
             if (isSuccess)
             {
                 ID_31_TRANS_REQUEST send_gpb = new ID_31_TRANS_REQUEST()
@@ -5055,24 +5060,38 @@ namespace com.mirle.ibg3k0.sc.Service
                             (ready_transfer_cmd_mcs, eqpt.VEHICLE_ID, zondCommandID);
                         if (get_command_zone_result.hasCommand)
                         {
+                            zome_command_port_id = get_command_zone_result.waitPort;
+                            var port_def = scApp.PortDefBLL.getPortDef(zome_command_port_id);
+                            if (port_def != null)
+                                port_adr_id = port_def.ADR_ID;
+
+                            replyTranEventReport(bcfApp, eventType, eqpt, seqNum,
+                                                     zoneCommandPortID: zome_command_port_id,
+                                                     zoneCommandPortAdrID: port_adr_id);
                             bool is_success_pre_assign = scApp.LoopTransferEnhance.preAssignMCSCommand(scApp.SequenceBLL, eqpt, get_command_zone_result.cmdMCS);
                             if (is_success_pre_assign)
                             {
-                                zome_command_port_id = get_command_zone_result.waitPort;
-                                var port_def = scApp.PortDefBLL.getPortDef(zome_command_port_id);
-                                if (port_def != null)
-                                    port_adr_id = port_def.ADR_ID;
+                                //not thing...
                             }
                             else
                             {
                                 scApp.TransferService.TransferServiceLogger.Info($"OHB >> OHB zone id:{zondCommandID},cmd id:{get_command_zone_result.cmdMCS.CMD_ID} 預先下命令失敗");
                             }
                         }
+                        else
+                        {
+                            replyTranEventReport(bcfApp, eventType, eqpt, seqNum,
+                                                     zoneCommandPortID: zome_command_port_id,
+                                                     zoneCommandPortAdrID: port_adr_id);
+                        }
                     }
                 }
-                replyTranEventReport(bcfApp, eventType, eqpt, seqNum,
-                                         zoneCommandPortID: zome_command_port_id,
-                                         zoneCommandPortAdrID: port_adr_id);
+                else
+                {
+                    replyTranEventReport(bcfApp, eventType, eqpt, seqNum,
+                                             zoneCommandPortID: zome_command_port_id,
+                                             zoneCommandPortAdrID: port_adr_id);
+                }
             }
             catch (Exception ex)
             {
