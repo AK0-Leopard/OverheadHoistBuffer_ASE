@@ -40,7 +40,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
         public ASECTION getSectionByToAdr(string adrID)
         {
-            return cache.GetSectionsByAddress(adrID).FirstOrDefault();
+            return cache.GetSectionsByToAddress(adrID).FirstOrDefault();
         }
 
         public ASECTION getSectionByFromAdr(string adrID)

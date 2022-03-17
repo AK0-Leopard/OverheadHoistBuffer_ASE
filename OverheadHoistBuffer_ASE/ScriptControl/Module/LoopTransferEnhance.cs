@@ -297,6 +297,12 @@ namespace com.mirle.ibg3k0.sc.Module
                     do
                     {
                         ASECTION pre_section = sectionBLL.getSectionByToAdr(ask_vh_sec_from_adr);
+                        if (pre_section == null)
+                        {
+                            logger.Info($"OHB >> OHB|vh:{vhID}詢問zone command:{zoneCommandID}，有一筆搬送命令:{cmd_mcs.CMD_ID}" +
+                                        $"確認後方是否有車時，發現ADRID:{ask_vh_sec_from_adr},無法接續的Section");
+                            break;
+                        }
                         var on_sec_vhs = cycling_vhs.Where(v => v != vh && sc.Common.SCUtility.isMatche(v.CUR_SEC_ID, pre_section.SEC_ID)).FirstOrDefault();
                         if (on_sec_vhs != null)
                         {

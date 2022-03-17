@@ -157,9 +157,12 @@ namespace com.mirle.ibg3k0.sc.Service
 
                 AVEHICLE vh = sender as AVEHICLE;
                 var ready_tran_command = ACMD_MCS.loadReadyTransferOfQueueCMD_MCS();
+                //var vh_transfer_command = ready_tran_command.
+                //                          Where(cmd => SCUtility.isMatche(cmd.BOX_ID, boxID) &&
+                //                                       SCUtility.isMatche(cmd.HOSTSOURCE, vh.VEHICLE_ID)).
+                //                          FirstOrDefault();
                 var vh_transfer_command = ready_tran_command.
-                                          Where(cmd => SCUtility.isMatche(cmd.BOX_ID, boxID) &&
-                                                       SCUtility.isMatche(cmd.HOSTSOURCE, vh.VEHICLE_ID)).
+                                          Where(cmd => SCUtility.isMatche(cmd.HOSTSOURCE, vh.VEHICLE_ID)).
                                           FirstOrDefault();
                 if (vh_transfer_command != null)
                 {
@@ -3096,6 +3099,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     }
                     else
                     {
+                        first_blocked_vh_id = result.VehicleID;
                         break;
                     }
                 }
