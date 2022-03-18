@@ -223,11 +223,11 @@ namespace com.mirle.ibg3k0.sc.Service
                     scApp.TransferService.TransferServiceLogger.Info($"vh:{vh.VEHICLE_ID},身上有BOX:{vh.BOX_ID},不進行cycle run命令");
                     return;
                 }
-                if (!vh.IS_INSTALLED)
-                {
-                    scApp.TransferService.TransferServiceLogger.Info($"vh:{vh.VEHICLE_ID},非Installed 狀態，不進行cycle run");
-                    return;
-                }
+                //if (!vh.IS_INSTALLED)
+                //{
+                //    scApp.TransferService.TransferServiceLogger.Info($"vh:{vh.VEHICLE_ID},非Installed 狀態，不進行cycle run");
+                //    return;
+                //}
 
 
                 bool is_success = scApp.CMDBLL.doCreatTransferCommand(vh.VEHICLE_ID,

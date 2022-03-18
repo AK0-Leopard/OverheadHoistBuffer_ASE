@@ -7791,7 +7791,7 @@ namespace com.mirle.ibg3k0.sc.Service
         }
         #endregion
         #region 命令操作
-        public string Manual_InsertCmd(string source, string dest, int priority = 5, string sourceCmd = "UI", CmdType cmdType = CmdType.Manual)   //手動搬送，sourceCmd : 誰呼叫
+        public string Manual_InsertCmd(string source, string dest, int priority = 5, string sourceCmd = "UI", CmdType cmdType = CmdType.Manual, string assignVH = "")   //手動搬送，sourceCmd : 誰呼叫
         {
             try
             {
@@ -7800,6 +7800,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 (
                     DateTime.Now.ToString("HH:mm:ss.fff ") +
                     "OHB >> CMD|Manual_InsertCmd"
+                    + " VH: " + assignVH
                     + " 來源: " + source
                     + " 目的: " + dest
                     + " 誰呼叫: " + sourceCmd
@@ -7895,7 +7896,8 @@ namespace com.mirle.ibg3k0.sc.Service
                 datainfo.PRIORITY_SUM = datainfo.PRIORITY + datainfo.TIME_PRIORITY + datainfo.PORT_PRIORITY;
                 datainfo.LOT_ID = sourceData.LotID?.Trim() ?? "";
                 datainfo.CMDTYPE = cmdType.ToString();
-                datainfo.CRANE = "";
+                //datainfo.CRANE = "";
+                datainfo.CRANE = assignVH;
 
                 if (cmdBLL.getCMD_ByBoxID(datainfo.BOX_ID) != null)
                 {
@@ -7927,6 +7929,66 @@ namespace com.mirle.ibg3k0.sc.Service
                 return "命令建立失敗";
             }
         }
+
+        //public string Manual_InsertCmdAssignVh(string vhID, string source, string dest, int priority = 5, string sourceCmd = "UI", CmdType cmdType = CmdType.Manual)   //手動搬送，sourceCmd : 誰呼叫
+        //{
+        //    var check_result = checkCanCreatManualMCSCommand();
+        //}
+
+        //private (bool isOK, string reason) checkCanCreatManualMCSCommand(string source, string dest)
+        //{
+        //    CassetteData sourceData = cassette_dataBLL.loadCassetteDataByLoc(source);
+
+        //    if (sourceData == null)
+        //    {
+        //        string returnLog = "Source:" + source + " Cassette is not exist";
+        //        TransferServiceLogger.Info
+        //        (
+        //            DateTime.Now.ToString("HH:mm:ss.fff ") +
+        //            "Manual >> OHB|Manual_InsertCmd " + returnLog
+        //        );
+
+        //        return (false, returnLog);
+        //    }
+
+        //    CassetteData destData = cassette_dataBLL.loadCassetteDataByLoc(dest);
+
+        //    if (destData != null)
+        //    {
+        //        string returnLog = "dest:" + dest + " Has Cassette";
+        //        TransferServiceLogger.Info
+        //        (
+        //            DateTime.Now.ToString("HH:mm:ss.fff ") +
+        //            "Manual >> OHB|Manual_InsertCmd " + returnLog
+        //        );
+
+        //        return (false, returnLog);
+        //    }
+
+
+        //    if (checkShelfIsDisable(source))
+        //    {
+        //        return (false, $"Source shelf:{source} is disable.");
+        //    }
+
+        //    if (checkShelfIsDisable(dest))
+        //    {
+        //        return (false, $"Dest. shelf:{dest} is disable.");
+        //    }
+
+        //    if (portINIData.ContainsKey(source) == false
+        //     || portINIData.ContainsKey(dest) == false
+        //       )
+        //    {
+        //        return "來源或目的不存在";
+        //    }
+
+        //    if (isShelfPort(dest) &&
+        //        scApp.CMDBLL.hasExcuteCMDMCSByTargetDest(dest))
+        //    {
+        //        return $"目的地:{dest}已經有命令準備前往。";
+        //    }
+        //}
 
         private bool checkShelfIsDisable(string shelfID)
         {

@@ -50,17 +50,23 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Test
                 }
             }
 
+            cmb_forceAssignVh.Items.Add("");
             foreach (var v in avehicle)
             {
                 comboBox1.Items.Add(v.VEHICLE_ID);
                 //comboBox2.Items.Add(v.PLCPortID);
                 comboBox3.Items.Add(v.VEHICLE_ID);
+                cmb_forceAssignVh.Items.Add(v.VEHICLE_ID);
             }
 
             foreach (var v in shelfDefs)
             {
                 comboBox1.Items.Add(v.ShelfID);
-                comboBox2.Items.Add(v.ShelfID);
+                if (sc.Common.SCUtility.isMatche(v.Enable, "Y") &&
+                    sc.Common.SCUtility.isMatche(v.ShelfState, ShelfDef.E_ShelfState.EmptyShelf))
+                {
+                    comboBox2.Items.Add(v.ShelfID);
+                }
             }
 
             foreach (var v in BCApp.SCApplication.ShelfDefBLL.LoadShelf())
@@ -186,7 +192,8 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Test
         }
         private void button6_Click(object sender, EventArgs e)
         {
-            label5.Text = BCApp.SCApplication.TransferService.Manual_InsertCmd(comboBox1.Text, comboBox2.Text);
+            string assign_vh_id = cmb_forceAssignVh.Text;
+            label5.Text = BCApp.SCApplication.TransferService.Manual_InsertCmd(comboBox1.Text, comboBox2.Text, assignVH: assign_vh_id);
             UpDate_CmdData();
         }
         private void button9_Click(object sender, EventArgs e)
@@ -201,11 +208,11 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Test
         public void UpDate_CstData()
         {
             //dataGridView2.DataSource = BCApp.SCApplication.CassetteDataBLL.loadCassetteData().OrderBy(data => data.Carrier_LOC).ToList();
-            var cst_datas =  BCApp.SCApplication.CassetteDataBLL.loadCassetteData();
+            var cst_datas = BCApp.SCApplication.CassetteDataBLL.loadCassetteData();
             var cst_datas_show_obj = cst_datas.Select(cst_data => new sc.ObjectRelay.CassetteDataToShow
                                                                   (cst_data, BCApp.SCApplication.ZoneCommandBLL, BCApp.SCApplication.TransferService))
                                               .OrderBy(data => data.ZCID)
-                                              .ThenBy(data=>data.Carrier_LOC)
+                                              .ThenBy(data => data.Carrier_LOC)
                                               .ToList();
             dataGridView2.DataSource = cst_datas_show_obj;
             dataGridView2.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;

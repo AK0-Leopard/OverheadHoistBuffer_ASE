@@ -32,6 +32,8 @@
             this.grb_testAear = new System.Windows.Forms.GroupBox();
             this.cb_testZoneCommandReqNoReply = new System.Windows.Forms.CheckBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.num_passDisForBackVh = new System.Windows.Forms.NumericUpDown();
+            this.label9 = new System.Windows.Forms.Label();
             this.cb_isByPassStraightReserve = new System.Windows.Forms.CheckBox();
             this.cb_LoopEnhance = new System.Windows.Forms.CheckBox();
             this.num_priorityForBoxMove = new System.Windows.Forms.NumericUpDown();
@@ -87,11 +89,10 @@
             this.cb_OperMode = new System.Windows.Forms.ComboBox();
             this.button3 = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.label9 = new System.Windows.Forms.Label();
-            this.num_passDisForBackVh = new System.Windows.Forms.NumericUpDown();
             this.tabPage1.SuspendLayout();
             this.grb_testAear.SuspendLayout();
             this.groupBox6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.num_passDisForBackVh)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.num_priorityForBoxMove)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.num_priorityWatershed)).BeginInit();
             this.group_cycleRun.SuspendLayout();
@@ -105,7 +106,6 @@
             this.groupBox5.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.num_passDisForBackVh)).BeginInit();
             this.SuspendLayout();
             // 
             // tabPage1
@@ -164,6 +164,29 @@
             this.groupBox6.TabIndex = 59;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Parameter Setting";
+            // 
+            // num_passDisForBackVh
+            // 
+            this.num_passDisForBackVh.Location = new System.Drawing.Point(226, 104);
+            this.num_passDisForBackVh.Maximum = new decimal(new int[] {
+            50000,
+            0,
+            0,
+            0});
+            this.num_passDisForBackVh.Name = "num_passDisForBackVh";
+            this.num_passDisForBackVh.Size = new System.Drawing.Size(172, 30);
+            this.num_passDisForBackVh.TabIndex = 64;
+            this.num_passDisForBackVh.ValueChanged += new System.EventHandler(this.num_passDisForBackVh_ValueChanged);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(22, 108);
+            this.label9.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(207, 22);
+            this.label9.TabIndex = 63;
+            this.label9.Text = "Pass給後車搬的距離:";
             // 
             // cb_isByPassStraightReserve
             // 
@@ -237,7 +260,7 @@
             // cb_IsHandleBoxPassOff
             // 
             this.cb_IsHandleBoxPassOff.AutoSize = true;
-            this.cb_IsHandleBoxPassOff.Location = new System.Drawing.Point(808, 256);
+            this.cb_IsHandleBoxPassOff.Location = new System.Drawing.Point(809, 295);
             this.cb_IsHandleBoxPassOff.Name = "cb_IsHandleBoxPassOff";
             this.cb_IsHandleBoxPassOff.Size = new System.Drawing.Size(249, 26);
             this.cb_IsHandleBoxPassOff.TabIndex = 58;
@@ -252,7 +275,7 @@
             this.group_cycleRun.Controls.Add(this.cb_StartGenAntoCmd);
             this.group_cycleRun.Location = new System.Drawing.Point(790, 98);
             this.group_cycleRun.Name = "group_cycleRun";
-            this.group_cycleRun.Size = new System.Drawing.Size(387, 136);
+            this.group_cycleRun.Size = new System.Drawing.Size(387, 146);
             this.group_cycleRun.TabIndex = 58;
             this.group_cycleRun.TabStop = false;
             this.group_cycleRun.Text = "Cycle Run";
@@ -261,7 +284,7 @@
             // combox_cycle_type
             // 
             this.combox_cycle_type.FormattingEnabled = true;
-            this.combox_cycle_type.Location = new System.Drawing.Point(18, 52);
+            this.combox_cycle_type.Location = new System.Drawing.Point(19, 56);
             this.combox_cycle_type.Name = "combox_cycle_type";
             this.combox_cycle_type.Size = new System.Drawing.Size(186, 30);
             this.combox_cycle_type.TabIndex = 27;
@@ -270,7 +293,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(15, 27);
+            this.label4.Location = new System.Drawing.Point(15, 31);
             this.label4.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(50, 22);
@@ -280,7 +303,7 @@
             // cb_StartGenAntoCmd
             // 
             this.cb_StartGenAntoCmd.AutoSize = true;
-            this.cb_StartGenAntoCmd.Location = new System.Drawing.Point(18, 94);
+            this.cb_StartGenAntoCmd.Location = new System.Drawing.Point(19, 98);
             this.cb_StartGenAntoCmd.Name = "cb_StartGenAntoCmd";
             this.cb_StartGenAntoCmd.Size = new System.Drawing.Size(349, 26);
             this.cb_StartGenAntoCmd.TabIndex = 18;
@@ -778,29 +801,6 @@
             this.tabControl1.Size = new System.Drawing.Size(1206, 865);
             this.tabControl1.TabIndex = 23;
             // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(22, 108);
-            this.label9.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(207, 22);
-            this.label9.TabIndex = 63;
-            this.label9.Text = "Pass給後車搬的距離:";
-            // 
-            // num_passDisForBackVh
-            // 
-            this.num_passDisForBackVh.Location = new System.Drawing.Point(226, 104);
-            this.num_passDisForBackVh.Maximum = new decimal(new int[] {
-            50000,
-            0,
-            0,
-            0});
-            this.num_passDisForBackVh.Name = "num_passDisForBackVh";
-            this.num_passDisForBackVh.Size = new System.Drawing.Size(172, 30);
-            this.num_passDisForBackVh.TabIndex = 64;
-            this.num_passDisForBackVh.ValueChanged += new System.EventHandler(this.num_passDisForBackVh_ValueChanged);
-            // 
             // DebugFormNew
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 22F);
@@ -819,6 +819,7 @@
             this.grb_testAear.PerformLayout();
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.num_passDisForBackVh)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.num_priorityForBoxMove)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.num_priorityWatershed)).EndInit();
             this.group_cycleRun.ResumeLayout(false);
@@ -839,7 +840,6 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.tabControl1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.num_passDisForBackVh)).EndInit();
             this.ResumeLayout(false);
 
         }

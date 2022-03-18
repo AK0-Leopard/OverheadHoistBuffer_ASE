@@ -230,6 +230,19 @@ namespace com.mirle.ibg3k0.sc.Module
             }
         }
 
+        private bool isTestCMD(ACMD_MCS cmd_mcs)
+        {
+            if (!SCUtility.isMatche(cmd_mcs.CMDTYPE, ACMD_MCS.CmdType.Manual.ToString()))
+            {
+                return false;
+            }
+            if (SCUtility.isEmpty(cmd_mcs.CRANE))
+            {
+                return false;
+            }
+            return true;
+        }
+
         const int MAX_FIND_CLOSE_VH_COUNT = 50;
         public (bool hasCommand, string waitPort, ACMD_MCS cmdMCS) tryGetZoneCommand(List<ACMD_MCS> mcsCMDs, string vhID, string zoneCommandID, bool isNeedCheckHasVhClose = true)
         {
@@ -237,12 +250,18 @@ namespace com.mirle.ibg3k0.sc.Module
             {
                 logger.Info($"OHB >> OHB| vh:{vhID}，進行ZoneCommandRequest ID:{zoneCommandID}...");
                 AVEHICLE vh = vehicleBLL.getVehicle(vhID);
+                //Install 狀態，直接確認是否有指定要給該VH搬送的命令
+                if (!vh.IS_INSTALLED)
+                {
+                    return tryAssginMCSCommandForTestVh(mcsCMDs, zoneCommandID, vh);
+                }
+
                 if (!vh.TransferReady(cmdBLL))
                 {
                     logger.Info($"OHB >> OHB| fun:tryGetZoneCommand vh:{vh.VEHICLE_ID}，並未準備好進行新的搬送.");
                     return (false, "", null);
                 }
-
+                mcsCMDs = mcsCMDs.Where(cmd => !isTestCMD(cmd)).ToList();
                 //沒命令就不需要等待
                 if (mcsCMDs == null || mcsCMDs.Count == 0) return (false, "", null);
                 var zone_group = zoneCommandBLL.getZoneCommandGroup(zoneCommandID);
@@ -343,6 +362,25 @@ namespace com.mirle.ibg3k0.sc.Module
                 return (false, "", null);
             }
         }
+
+        private (bool hasCommand, string waitPort, ACMD_MCS cmdMCS) tryAssginMCSCommandForTestVh(List<ACMD_MCS> mcsCMDs, string zoneCommandID, AVEHICLE vh)
+        {
+            if (!vh.TransferReadyForTest(cmdBLL))
+            {
+                return (false, "", null);
+            }
+            var has_assign_vh_cmd = mcsCMDs.Where(cmd => SCUtility.isMatche(cmd.CRANE, vh.VEHICLE_ID)).ToList();
+            if (has_assign_vh_cmd.Count == 0)
+                return (false, "", null);
+            var zone_group = zoneCommandBLL.getZoneCommandGroup(zoneCommandID);
+            List<ACMD_MCS> zone_mcs_cmds = mcsCMDs.Where(cmd => zone_group.PortIDs.Contains(sc.Common.SCUtility.Trim(cmd.CURRENT_LOCATION, true))).
+                                                   ToList();
+            if (zone_mcs_cmds.Count == 0)
+                return (false, "", null);
+            var assign_cmd = zone_mcs_cmds.FirstOrDefault();
+            return (true, assign_cmd.CURRENT_LOCATION, assign_cmd);
+        }
+
         private bool isAskSameZoneCommandWithVhZone(AVEHICLE vh, string zoneID)
         {
             try
@@ -574,6 +612,7 @@ namespace com.mirle.ibg3k0.sc.Module
                     logger.Info($"OHB >> OHB|確認 vh:{vh.VEHICLE_ID}命令完成後是否有同Zone的命令可以搬送，但Port:{port.PLCPortID}並無對應的ZoneCommand.");
                     return (false, "", null);
                 }
+                mcsCMDs = mcsCMDs.Where(cmd => !isTestCMD(cmd)).ToList();
                 var zone_mcs_cmds = mcsCMDs.Where(cmd => get_result.zoneCommandGroup.PortIDs.Contains(sc.Common.SCUtility.Trim(cmd.CURRENT_LOCATION, true)));
                 bool is_need_check_has_vh_close = zone_mcs_cmds.Count() == 1;
                 //找出還沒跑過頭的命令
