@@ -373,7 +373,7 @@ namespace com.mirle.ibg3k0.sc.Module
             if (has_assign_vh_cmd.Count == 0)
                 return (false, "", null);
             var zone_group = zoneCommandBLL.getZoneCommandGroup(zoneCommandID);
-            List<ACMD_MCS> zone_mcs_cmds = mcsCMDs.Where(cmd => zone_group.PortIDs.Contains(sc.Common.SCUtility.Trim(cmd.CURRENT_LOCATION, true))).
+            List<ACMD_MCS> zone_mcs_cmds = has_assign_vh_cmd.Where(cmd => zone_group.PortIDs.Contains(sc.Common.SCUtility.Trim(cmd.CURRENT_LOCATION, true))).
                                                    ToList();
             if (zone_mcs_cmds.Count == 0)
                 return (false, "", null);

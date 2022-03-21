@@ -192,7 +192,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Test
         }
         private void button6_Click(object sender, EventArgs e)
         {
-            string assign_vh_id = cmb_forceAssignVh.Text;
+            string assign_vh_id = "";
             label5.Text = BCApp.SCApplication.TransferService.Manual_InsertCmd(comboBox1.Text, comboBox2.Text, assignVH: assign_vh_id);
             UpDate_CmdData();
         }

@@ -118,7 +118,6 @@ namespace com.mirle.ibg3k0.sc.Service
                 //vh.CycleMovePausing += Vh_CycleMovePausing;
                 vh.TimerActionStart();
             }
-
             transferService = app.TransferService;
         }
 
@@ -5115,7 +5114,13 @@ namespace com.mirle.ibg3k0.sc.Service
                     Info($"目前並非為LoopTranEnhanceMode，故不繼續處理Vh:{eqpt.VEHICLE_ID}的ZoneCommandReq，並嘗試結束cycle move...");
                 if (eqpt.IsCycleMove(ACMD_OHTC.CMD_OHTC_InfoList))
                 {
-                    doAbortCommand(eqpt, eqpt.OHTC_CMD, CMDCancelType.CmdCancel);
+                    string current_excute_cmd_id = sc.Common.SCUtility.Trim(eqpt.OHTC_CMD, true);
+                    if (sc.Common.SCUtility.isEmpty(current_excute_cmd_id))
+                    {
+                        current_excute_cmd_id = sc.Common.SCUtility.Trim(eqpt.CurrentExcuteCmdID, true);
+                    }
+                    //doAbortCommand(eqpt, eqpt.OHTC_CMD, CMDCancelType.CmdCancel);
+                    doAbortCommand(eqpt, current_excute_cmd_id, CMDCancelType.CmdCancel);
                 }
                 return false;
             }
@@ -5125,7 +5130,13 @@ namespace com.mirle.ibg3k0.sc.Service
                     Info($"目前並非為Line stats為:{line.SCStats}，故不繼續處理Vh:{eqpt.VEHICLE_ID}的ZoneCommandReq，並嘗試結束cycle move...");
                 if (eqpt.IsCycleMove(ACMD_OHTC.CMD_OHTC_InfoList))
                 {
-                    doAbortCommand(eqpt, eqpt.OHTC_CMD, CMDCancelType.CmdCancel);
+                    string current_excute_cmd_id = sc.Common.SCUtility.Trim(eqpt.OHTC_CMD, true);
+                    if (sc.Common.SCUtility.isEmpty(current_excute_cmd_id))
+                    {
+                        current_excute_cmd_id = sc.Common.SCUtility.Trim(eqpt.CurrentExcuteCmdID, true);
+                    }
+                    //doAbortCommand(eqpt, eqpt.OHTC_CMD, CMDCancelType.CmdCancel);
+                    doAbortCommand(eqpt, current_excute_cmd_id, CMDCancelType.CmdCancel);
                 }
                 return false;
             }
@@ -5135,7 +5146,13 @@ namespace com.mirle.ibg3k0.sc.Service
                     Info($"目前並非為Line Is idling為:{line.IsLineIdling}，故不繼續處理Vh:{eqpt.VEHICLE_ID}的ZoneCommandReq，並嘗試結束cycle move...");
                 if (eqpt.IsCycleMove(ACMD_OHTC.CMD_OHTC_InfoList))
                 {
-                    doAbortCommand(eqpt, eqpt.OHTC_CMD, CMDCancelType.CmdCancel);
+                    string current_excute_cmd_id = sc.Common.SCUtility.Trim(eqpt.OHTC_CMD, true);
+                    if (sc.Common.SCUtility.isEmpty(current_excute_cmd_id))
+                    {
+                        current_excute_cmd_id = sc.Common.SCUtility.Trim(eqpt.CurrentExcuteCmdID, true);
+                    }
+                    //doAbortCommand(eqpt, eqpt.OHTC_CMD, CMDCancelType.CmdCancel);
+                    doAbortCommand(eqpt, current_excute_cmd_id, CMDCancelType.CmdCancel);
                 }
                 return false;
             }
@@ -5560,7 +5577,13 @@ namespace com.mirle.ibg3k0.sc.Service
             }
             if (!vh.IS_INSTALLED)
             {
-                scApp.TransferService.TransferServiceLogger.Info($"vh:{vh.VEHICLE_ID},非Installed 狀態，不進行cycle run");
+                //scApp.TransferService.TransferServiceLogger.Info($"vh:{vh.VEHICLE_ID},非Installed 狀態，不進行cycle run");
+                bool can_continue_service_for_no_installed_vh = IsCanContinueService(vh, completeStatus);
+                if (can_continue_service_for_no_installed_vh)
+                {
+                    bool is_success = scApp.CMDBLL.doCreatTransferCommand(vh.VEHICLE_ID,
+                                     cmd_type: E_CMD_TYPE.Round);
+                }
                 return;
             }
             bool can_continue_service = IsCanContinueService(vh, completeStatus);

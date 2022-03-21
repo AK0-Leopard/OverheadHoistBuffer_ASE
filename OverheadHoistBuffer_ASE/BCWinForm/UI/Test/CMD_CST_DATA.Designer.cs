@@ -658,6 +658,7 @@
             this.cmb_forceAssignVh.Name = "cmb_forceAssignVh";
             this.cmb_forceAssignVh.Size = new System.Drawing.Size(163, 24);
             this.cmb_forceAssignVh.TabIndex = 35;
+            this.cmb_forceAssignVh.Visible = false;
             // 
             // label14
             // 
@@ -668,6 +669,7 @@
             this.label14.Size = new System.Drawing.Size(58, 21);
             this.label14.TabIndex = 34;
             this.label14.Text = "Vh：";
+            this.label14.Visible = false;
             // 
             // CMD_CST_DATA
             // 
