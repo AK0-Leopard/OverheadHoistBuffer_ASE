@@ -141,9 +141,6 @@
           <Property Name="CARRIER_ID_ON_CRANE" Type="varchar" MaxLength="64" />
           <Property Name="CMDTYPE" Type="varchar" MaxLength="64" />
           <Property Name="CRANE" Type="varchar" MaxLength="64" Nullable="false" />
-          <Property Name="REQ_EQ" Type="varchar" MaxLength="64" />
-          <Property Name="REQ_EQ_NUM" Type="varchar" MaxLength="64" />
-          <Property Name="REQ_PORT" Type="varchar" MaxLength="64" />
         </EntityType>
         <EntityType Name="ACMD_OHTC">
           <Key>
@@ -1028,9 +1025,6 @@
           <Property Name="CARRIER_ID_ON_CRANE" Type="varchar" MaxLength="64" />
           <Property Name="CMDTYPE" Type="varchar" MaxLength="64" />
           <Property Name="CRANE" Type="varchar" MaxLength="64" Nullable="false" />
-          <Property Name="REQ_EQ" Type="varchar" MaxLength="64" />
-          <Property Name="REQ_EQ_NUM" Type="varchar" MaxLength="64" />
-          <Property Name="REQ_PORT" Type="varchar" MaxLength="64" />
         </EntityType>
         <EntityType Name="HCMD_OHTC">
           <Key>
@@ -2788,9 +2782,6 @@
           <Property Name="CMDTYPE" Type="String" MaxLength="64" Unicode="false" FixedLength="false" />
           <Property Name="CRANE" Type="String" MaxLength="64" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="RelayStation" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
-          <Property Name="REQ_EQ" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
-          <Property Name="REQ_EQ_NUM" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
-          <Property Name="REQ_PORT" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="CassetteData">
           <Key>
@@ -2919,9 +2910,6 @@
           <Property Name="CARRIER_ID_ON_CRANE" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
           <Property Name="CMDTYPE" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
           <Property Name="CRANE" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
-          <Property Name="REQ_EQ" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
-          <Property Name="REQ_EQ_NUM" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
-          <Property Name="REQ_PORT" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="HCMD_OHTC">
           <Key>
@@ -4162,10 +4150,7 @@
     <EntitySetMapping Name="ACMD_MCS">
       <EntityTypeMapping TypeName="IsTypeOf(OHTC_DevModel.ACMD_MCS)">
         <MappingFragment StoreEntitySet="ACMD_MCS">
-          <ScalarProperty Name="REQ_PORT" ColumnName="REQ_PORT" />
-                <ScalarProperty Name="REQ_EQ_NUM" ColumnName="REQ_EQ_NUM" />
-                <ScalarProperty Name="REQ_EQ" ColumnName="REQ_EQ" />
-                <ScalarProperty Name="CMD_ID" ColumnName="CMD_ID" />
+          <ScalarProperty Name="CMD_ID" ColumnName="CMD_ID" />
           <ScalarProperty Name="CARRIER_ID" ColumnName="CARRIER_ID" />
           <ScalarProperty Name="TRANSFERSTATE" ColumnName="TRANSFERSTATE" />
           <ScalarProperty Name="COMMANDSTATE" ColumnName="COMMANDSTATE" />
@@ -4284,10 +4269,7 @@
     <EntitySetMapping Name="HCMD_MCS">
       <EntityTypeMapping TypeName="IsTypeOf(OHTC_DevModel.HCMD_MCS)">
         <MappingFragment StoreEntitySet="HCMD_MCS">
-          <ScalarProperty Name="REQ_PORT" ColumnName="REQ_PORT" />
-                <ScalarProperty Name="REQ_EQ_NUM" ColumnName="REQ_EQ_NUM" />
-                <ScalarProperty Name="REQ_EQ" ColumnName="REQ_EQ" />
-                <ScalarProperty Name="CMD_ID" ColumnName="CMD_ID" />
+          <ScalarProperty Name="CMD_ID" ColumnName="CMD_ID" />
           <ScalarProperty Name="CMD_INSER_TIME" ColumnName="CMD_INSER_TIME" />
           <ScalarProperty Name="CARRIER_ID" ColumnName="CARRIER_ID" />
           <ScalarProperty Name="TRANSFERSTATE" ColumnName="TRANSFERSTATE" />
