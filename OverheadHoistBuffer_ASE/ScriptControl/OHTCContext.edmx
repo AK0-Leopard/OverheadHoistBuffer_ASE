@@ -141,6 +141,9 @@
           <Property Name="CARRIER_ID_ON_CRANE" Type="varchar" MaxLength="64" />
           <Property Name="CMDTYPE" Type="varchar" MaxLength="64" />
           <Property Name="CRANE" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="REQ_EQ" Type="varchar" MaxLength="64" />
+          <Property Name="REQ_EQ_NUM" Type="varchar" MaxLength="64" />
+          <Property Name="REQ_PORT" Type="varchar" MaxLength="64" />
         </EntityType>
         <EntityType Name="ACMD_OHTC">
           <Key>
@@ -332,7 +335,7 @@
           <Property Name="CMD_ID" Type="varchar" MaxLength="64" />
         </EntityType>
         <!--產生期間發現錯誤:
-警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE1.dbo.ALARMMAP' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
+警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE3_V3.dbo.ALARMMAP' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
         <EntityType Name="ALARMMAP">
           <Key>
             <PropertyRef Name="EQPT_ID" />
@@ -1025,6 +1028,9 @@
           <Property Name="CARRIER_ID_ON_CRANE" Type="varchar" MaxLength="64" />
           <Property Name="CMDTYPE" Type="varchar" MaxLength="64" />
           <Property Name="CRANE" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="REQ_EQ" Type="varchar" MaxLength="64" />
+          <Property Name="REQ_EQ_NUM" Type="varchar" MaxLength="64" />
+          <Property Name="REQ_PORT" Type="varchar" MaxLength="64" />
         </EntityType>
         <EntityType Name="HCMD_OHTC">
           <Key>
@@ -1200,7 +1206,7 @@
           <Property Name="TrnDT" Type="varchar" MaxLength="20" />
         </EntityType>
         <!--產生期間發現錯誤:
-警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE1.dbo.VACMD_MCS' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
+警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE3_V3.dbo.VACMD_MCS' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
         <EntityType Name="VACMD_MCS">
           <Key>
             <PropertyRef Name="CMD_ID" />
@@ -1215,6 +1221,7 @@
             <PropertyRef Name="TIME_PRIORITY" />
             <PropertyRef Name="PORT_PRIORITY" />
             <PropertyRef Name="REPLACE" />
+            <PropertyRef Name="LOT_ID" />
           </Key>
           <Property Name="CMD_ID" Type="varchar" MaxLength="64" Nullable="false" />
           <Property Name="CARRIER_ID" Type="varchar" MaxLength="64" />
@@ -1234,9 +1241,11 @@
           <Property Name="REPLACE" Type="int" Nullable="false" />
           <Property Name="OHTC_CMD" Type="char" MaxLength="64" />
           <Property Name="VH_ID" Type="char" MaxLength="32" />
+          <Property Name="BOX_ID" Type="varchar" MaxLength="64" />
+          <Property Name="LOT_ID" Type="varchar" MaxLength="64" Nullable="false" />
         </EntityType>
         <!--產生期間發現錯誤:
-警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE1.dbo.VALARM' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
+警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE3_V3.dbo.VALARM' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
         <EntityType Name="VALARM">
           <Key>
             <PropertyRef Name="EQPT_ID" />
@@ -1267,7 +1276,7 @@
           <Property Name="TRANSFERSTATE" Type="int" />
         </EntityType>
         <!--產生期間發現錯誤:
-警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE1.dbo.VSECTION_100' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
+警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE3_V3.dbo.VSECTION_100' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
         <EntityType Name="VSECTION_100">
           <Key>
             <PropertyRef Name="SEC_ID" />
@@ -1450,7 +1459,9 @@
     [VACMD_MCS].[PORT_PRIORITY] AS [PORT_PRIORITY], 
     [VACMD_MCS].[REPLACE] AS [REPLACE], 
     [VACMD_MCS].[OHTC_CMD] AS [OHTC_CMD], 
-    [VACMD_MCS].[VH_ID] AS [VH_ID]
+    [VACMD_MCS].[VH_ID] AS [VH_ID], 
+    [VACMD_MCS].[BOX_ID] AS [BOX_ID], 
+    [VACMD_MCS].[LOT_ID] AS [LOT_ID]
     FROM [dbo].[VACMD_MCS] AS [VACMD_MCS]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="VALARM" EntityType="Self.VALARM" store:Type="Views" store:Schema="dbo">
@@ -2777,6 +2788,9 @@
           <Property Name="CMDTYPE" Type="String" MaxLength="64" Unicode="false" FixedLength="false" />
           <Property Name="CRANE" Type="String" MaxLength="64" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="RelayStation" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="REQ_EQ" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="REQ_EQ_NUM" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="REQ_PORT" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="CassetteData">
           <Key>
@@ -2905,6 +2919,9 @@
           <Property Name="CARRIER_ID_ON_CRANE" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
           <Property Name="CMDTYPE" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
           <Property Name="CRANE" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="REQ_EQ" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="REQ_EQ_NUM" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="REQ_PORT" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="HCMD_OHTC">
           <Key>
@@ -2947,6 +2964,7 @@
             <PropertyRef Name="TIME_PRIORITY" />
             <PropertyRef Name="PORT_PRIORITY" />
             <PropertyRef Name="REPLACE" />
+            <PropertyRef Name="LOT_ID" />
           </Key>
           <Property Name="CMD_ID" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
           <Property Name="CARRIER_ID" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
@@ -2966,6 +2984,8 @@
           <Property Name="REPLACE" Type="Int32" Nullable="false" />
           <Property Name="OHTC_CMD" Type="String" MaxLength="64" FixedLength="true" Unicode="false" />
           <Property Name="VH_ID" Type="String" MaxLength="32" FixedLength="true" Unicode="false" />
+          <Property Name="BOX_ID" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="LOT_ID" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="VSECTION_100">
           <Key>
@@ -4142,7 +4162,10 @@
     <EntitySetMapping Name="ACMD_MCS">
       <EntityTypeMapping TypeName="IsTypeOf(OHTC_DevModel.ACMD_MCS)">
         <MappingFragment StoreEntitySet="ACMD_MCS">
-          <ScalarProperty Name="CMD_ID" ColumnName="CMD_ID" />
+          <ScalarProperty Name="REQ_PORT" ColumnName="REQ_PORT" />
+                <ScalarProperty Name="REQ_EQ_NUM" ColumnName="REQ_EQ_NUM" />
+                <ScalarProperty Name="REQ_EQ" ColumnName="REQ_EQ" />
+                <ScalarProperty Name="CMD_ID" ColumnName="CMD_ID" />
           <ScalarProperty Name="CARRIER_ID" ColumnName="CARRIER_ID" />
           <ScalarProperty Name="TRANSFERSTATE" ColumnName="TRANSFERSTATE" />
           <ScalarProperty Name="COMMANDSTATE" ColumnName="COMMANDSTATE" />
@@ -4261,7 +4284,10 @@
     <EntitySetMapping Name="HCMD_MCS">
       <EntityTypeMapping TypeName="IsTypeOf(OHTC_DevModel.HCMD_MCS)">
         <MappingFragment StoreEntitySet="HCMD_MCS">
-          <ScalarProperty Name="CMD_ID" ColumnName="CMD_ID" />
+          <ScalarProperty Name="REQ_PORT" ColumnName="REQ_PORT" />
+                <ScalarProperty Name="REQ_EQ_NUM" ColumnName="REQ_EQ_NUM" />
+                <ScalarProperty Name="REQ_EQ" ColumnName="REQ_EQ" />
+                <ScalarProperty Name="CMD_ID" ColumnName="CMD_ID" />
           <ScalarProperty Name="CMD_INSER_TIME" ColumnName="CMD_INSER_TIME" />
           <ScalarProperty Name="CARRIER_ID" ColumnName="CARRIER_ID" />
           <ScalarProperty Name="TRANSFERSTATE" ColumnName="TRANSFERSTATE" />
@@ -4317,6 +4343,8 @@
           <EntitySetMapping Name="VACMD_MCS">
             <EntityTypeMapping TypeName="IsTypeOf(OHTC_DevModel.VACMD_MCS)">
               <MappingFragment StoreEntitySet="VACMD_MCS">
+                <ScalarProperty Name="LOT_ID" ColumnName="LOT_ID" />
+                <ScalarProperty Name="BOX_ID" ColumnName="BOX_ID" />
                 <ScalarProperty Name="VH_ID" ColumnName="VH_ID" />
                 <ScalarProperty Name="OHTC_CMD" ColumnName="OHTC_CMD" />
                 <ScalarProperty Name="REPLACE" ColumnName="REPLACE" />
