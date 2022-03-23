@@ -765,7 +765,7 @@ namespace com.mirle.ibg3k0.sc.BLL
         //  doSortShelfDataByDistanceFromHostSource()
         //   判斷目前此筆命令的起點得到最近的port(若為loop 則需判斷順向問題)
         //   => 使用 address 或 X Y 座標去得到 shelfData 這個 list 中所有的 shelf 到 HostSource 的路徑長度對原本的 shelfData 進行排序去得到新的shelfData list
-        public List<ShelfDef> doSortShelfDataByDistanceFromHostSource(List<ShelfDef> originShelfData, string hostSource)
+        public List<ShelfDef> doSortShelfDataByDistanceFromHostSource(List<ShelfDef> originShelfData, string hostSource, IComparer<ShelfDef> sortObj)
         {
             try
             {
@@ -810,7 +810,8 @@ namespace com.mirle.ibg3k0.sc.BLL
                 //A20.05.15      O(N^2) 根據MSDN 的 list sort
                 // 3. 再來呼叫list的sort 去處理此list
                 // 此處之處理方式指定在partial ShelfDef.cs 中的 IComparer
-                sortedShelfData.Sort(new ShelfDefCompareByAddressDistance());
+                //sortedShelfData.Sort(new ShelfDefCompareByAddressDistance());
+                sortedShelfData.Sort(sortObj);
                 #endregion
 
 

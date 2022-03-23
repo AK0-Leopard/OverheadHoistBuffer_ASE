@@ -472,7 +472,7 @@ namespace com.mirle.ibg3k0.sc.Module
                                 {
                                     logger.Info($"OHB >> OHB|TransferCommandHandler 目的 Zone: { cmdMCS.HOSTDESTINATION } 可用儲位數量: { shelfData.Count}");
 
-                                    string shelfID = transferService.GetShelfRecentLocation(shelfData, cmdMCS.HOSTSOURCE);
+                                    string shelfID = transferService.GetShelfRecentLocationForFarthest(shelfData, cmdMCS.HOSTSOURCE);
                                     bool is_find_shelf = !SCUtility.isEmpty(shelfID);
                                     if (is_find_shelf)
                                     {

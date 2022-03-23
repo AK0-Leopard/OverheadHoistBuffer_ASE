@@ -1103,12 +1103,6 @@ namespace com.mirle.ibg3k0.sc.Service
                             #endregion
 
                             OHBC_OHT_IDLE_HasCMD_TimeOutCleared();
-
-                            if (SystemParameter.isLoopTransferEnhance)
-                            {
-                                //在MCS搬送命令時，經過30秒後 就讓車子先暫停下來
-
-                            }
                         }
 
                         ohtTimeout = DateTime.Now;
@@ -5439,9 +5433,15 @@ namespace com.mirle.ibg3k0.sc.Service
 
                         cmdSource = emptyBoxData.Carrier_LOC;
                         var shelfData = shelfDefBLL.LoadEnableShelf();
-
-                        string shelfID = scApp.TransferService.GetShelfRecentLocation(shelfData, cmdSource);
-
+                        string shelfID = "";
+                        if (SystemParameter.isLoopTransferEnhance)
+                        {
+                            shelfID = scApp.TransferService.GetShelfRecentLocationForNoSameSide(shelfData, cmdSource);
+                        }
+                        else
+                        {
+                            shelfID = scApp.TransferService.GetShelfRecentLocation(shelfData, cmdSource);
+                        }
                         if (string.IsNullOrWhiteSpace(shelfID) == false)
                         {
                             cmdDest = shelfID;
@@ -6709,7 +6709,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 {
                     string shelfName = "";
                     //A20.06.09.0
-                    shelfData = cmdBLL.doSortShelfDataByDistanceFromHostSource(shelfData, portLoc.Trim())
+                    shelfData = cmdBLL.doSortShelfDataByDistanceFromHostSource(shelfData, portLoc.Trim(), new ShelfDef.ShelfDefCompareByAddressDistance())
                                       .Where(data => data.ShelfState == ShelfDef.E_ShelfState.EmptyShelf).ToList();
 
                     foreach (var v in shelfData)
@@ -6767,6 +6767,195 @@ namespace com.mirle.ibg3k0.sc.Service
 
                 return "";
             }
+        }
+
+        public string GetShelfRecentLocationForFarthest(List<ShelfDef> shelfData, string portLoc)  //取得最遠儲位
+        {
+            if (Interlocked.Exchange(ref GetShelfRecentLocationIng, 1) == 0)
+            {
+                try
+                {
+                    string shelfName = "";
+                    //A20.06.09.0
+                    shelfData = cmdBLL.doSortShelfDataByDistanceFromHostSource(shelfData, portLoc.Trim(), new ShelfDef.ShelfDefCompareByAddressDistanceDesc())
+                                      .Where(data => data.ShelfState == ShelfDef.E_ShelfState.EmptyShelf).ToList();
+
+                    foreach (var v in shelfData)
+                    {
+                        ACMD_MCS cmdData = cmdBLL.GetCmdDataByDest(v.ShelfID).FirstOrDefault();
+                        if (cmdData == null) //cmdList.Count == 0
+                        {
+                            shelfName = v.ShelfID;
+                            break;
+                        }
+                        else
+                        {
+                            TransferServiceLogger.Info
+                            (
+                                DateTime.Now.ToString("HH:mm:ss.fff ")
+                                + "OHB >> OHB|GetShelfRecentLocation 已有命令搬到此 " + v.ShelfID + " 儲位 " + GetCmdLog(cmdData)
+                            );
+                        }
+                    }
+
+                    if (string.IsNullOrWhiteSpace(shelfName))
+                    {
+                        TransferServiceLogger.Info
+                        (
+                            DateTime.Now.ToString("HH:mm:ss.fff ")
+                            + "OHB >> OHB|GetShelfRecentLocation 沒有儲位可以用"
+                        );
+
+                        OHBC_AlarmSet(line.LINE_ID, ((int)AlarmLst.LINE_NotEmptyShelf).ToString());
+                    }
+                    else
+                    {
+                        shelfDefBLL.updateStatus(shelfName, ShelfDef.E_ShelfState.StorageInReserved);
+                    }
+
+                    return shelfName;
+                }
+                catch (Exception ex)
+                {
+                    TransferServiceLogger.Error(ex, "GetShelfRecentLocation 找離 " + portLoc + "最近儲位");
+                    return "";
+                }
+                finally
+                {
+                    Interlocked.Exchange(ref GetShelfRecentLocationIng, 0);
+                }
+            }
+            else
+            {
+                TransferServiceLogger.Info
+                (
+                    DateTime.Now.ToString("HH:mm:ss.fff ")
+                    + "OHB >> OHB|GetShelfRecentLocation interlock 中 回傳空值"
+                );
+
+                return "";
+            }
+        }
+        public string GetShelfRecentLocationForNoSameSide(List<ShelfDef> shelfData, string portLoc)  //取得最近儲位
+        {
+            if (Interlocked.Exchange(ref GetShelfRecentLocationIng, 1) == 0)
+            {
+                try
+                {
+                    string shelfName = "";
+                    //A20.06.09.0
+                    shelfData = cmdBLL.doSortShelfDataByDistanceFromHostSource(shelfData, portLoc.Trim(), new ShelfDef.ShelfDefCompareByAddressDistance())
+                                      .Where(data => data.ShelfState == ShelfDef.E_ShelfState.EmptyShelf).ToList();
+                    var no_same_side_shelf = shelfData.Where(s => !IsPortWithShelfSameSide(portLoc, s)).ToList();
+                    //先找尋是否有不同側的儲位可放
+                    if (no_same_side_shelf.Count > 0)
+                    {
+                        foreach (var v in no_same_side_shelf)
+                        {
+                            ACMD_MCS cmdData = cmdBLL.GetCmdDataByDest(v.ShelfID).FirstOrDefault();
+                            if (cmdData == null) //cmdList.Count == 0
+                            {
+                                shelfName = v.ShelfID;
+                                break;
+                            }
+                            else
+                            {
+                                TransferServiceLogger.Info
+                                (
+                                    DateTime.Now.ToString("HH:mm:ss.fff ")
+                                    + "OHB >> OHB|GetShelfRecentLocation 已有命令搬到此 " + v.ShelfID + " 儲位 " + GetCmdLog(cmdData)
+                                );
+                            }
+                        }
+                    }
+                    else
+                    {
+                        TransferServiceLogger.Info
+                        (
+                            DateTime.Now.ToString("HH:mm:ss.fff ")
+                            + "OHB >> OHB| 退BOX時找不到對面的儲位可以放置"
+                        );
+                    }
+                    if (SCUtility.isEmpty(shelfName))
+                    {
+                        foreach (var v in shelfData)
+                        {
+                            ACMD_MCS cmdData = cmdBLL.GetCmdDataByDest(v.ShelfID).FirstOrDefault();
+                            if (cmdData == null) //cmdList.Count == 0
+                            {
+                                bool is_same_side = IsPortWithShelfSameSide(portLoc, v);
+                                shelfName = v.ShelfID;
+                                break;
+                            }
+                            else
+                            {
+                                TransferServiceLogger.Info
+                                (
+                                    DateTime.Now.ToString("HH:mm:ss.fff ")
+                                    + "OHB >> OHB|GetShelfRecentLocation 已有命令搬到此 " + v.ShelfID + " 儲位 " + GetCmdLog(cmdData)
+                                );
+                            }
+                        }
+                    }
+                    if (string.IsNullOrWhiteSpace(shelfName))
+                    {
+                        TransferServiceLogger.Info
+                        (
+                            DateTime.Now.ToString("HH:mm:ss.fff ")
+                            + "OHB >> OHB|GetShelfRecentLocation 沒有儲位可以用"
+                        );
+
+                        OHBC_AlarmSet(line.LINE_ID, ((int)AlarmLst.LINE_NotEmptyShelf).ToString());
+                    }
+                    else
+                    {
+                        shelfDefBLL.updateStatus(shelfName, ShelfDef.E_ShelfState.StorageInReserved);
+                    }
+
+                    return shelfName;
+                }
+                catch (Exception ex)
+                {
+                    TransferServiceLogger.Error(ex, "GetShelfRecentLocation 找離 " + portLoc + "最近儲位");
+                    return "";
+                }
+                finally
+                {
+                    Interlocked.Exchange(ref GetShelfRecentLocationIng, 0);
+                }
+            }
+            else
+            {
+                TransferServiceLogger.Info
+                (
+                    DateTime.Now.ToString("HH:mm:ss.fff ")
+                    + "OHB >> OHB|GetShelfRecentLocation interlock 中 回傳空值"
+                );
+
+                return "";
+            }
+        }
+
+        private bool IsPortWithShelfSameSide(string portLoc, ShelfDef v)
+        {
+            string port_loc = SCUtility.Trim(portLoc, true);
+            bool is_port_loc_adr_exist = scApp.MapBLL.getAddressID(portLoc, out string portLocAdr);
+            if (!is_port_loc_adr_exist)
+                return false;
+            bool is_shelf_adr_exist = scApp.MapBLL.getAddressID(v.ShelfID, out string shelfAdr);
+            if (!is_shelf_adr_exist)
+                return false;
+            var port_loc_adr_obj = scApp.ReserveBLL.GetHltMapAddress(portLocAdr);
+            if (!port_loc_adr_obj.isExist)
+                return false;
+            var shelf_adr_obj = scApp.ReserveBLL.GetHltMapAddress(shelfAdr);
+            if (!shelf_adr_obj.isExist)
+                return false;
+            if (port_loc_adr_obj.y == shelf_adr_obj.y)
+            {
+                return true;
+            }
+            return false;
         }
         #endregion
         #region PLC 控制命令

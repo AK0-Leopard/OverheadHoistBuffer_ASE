@@ -2646,6 +2646,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     //Task.Run(() => tryNotifyVhAvoid_New(eqpt.VEHICLE_ID, ReserveResult.reservedVhID, reserve_fail_sections));
                     if (SystemParameter.isLoopTransferEnhance)
                     {
+                        //在Loop Enhance的模式下，需要在真的需要趕車時
                         var reserved_vh = scApp.VehicleBLL.cache.getVhByID(ReserveResult.reservedVhID);
                         if (reserved_vh == null)
                         {

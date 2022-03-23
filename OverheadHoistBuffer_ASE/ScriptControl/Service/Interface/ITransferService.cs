@@ -16,6 +16,7 @@ namespace com.mirle.ibg3k0.sc.Service.Interface
         string Manual_DeleteCmd(string cmdid, string cmdSource);
         void MCSCommandFinishByShelfNotEnough(ACMD_MCS cmdMCS);
         string GetShelfRecentLocation(List<ShelfDef> shelfData, string portLoc);
+        string GetShelfRecentLocationForFarthest(List<ShelfDef> shelfData, string portLoc);
         string GetAGV_OutModeInServicePortName(string agvZone);
         bool AreDestEnable(string destName, out bool isDestCvPortFull);
         List<PortINIData> GetAGVPort(string agvZoneName);
