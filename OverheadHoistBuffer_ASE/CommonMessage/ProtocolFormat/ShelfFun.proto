@@ -32,5 +32,5 @@ enum shelfStatus{
 	shelfStatus_PreOut = 3;
 	shelfStatus_Alternate = 4;
 }
-message shelf { string shelf_id=1; string zone_id=2; string box_id=3; bool enable=4; string adr_id=5; shelfStatus shelf_status=6;} 
+message shelf { string shelf_id=1; string zone_id=2; string box_id=3; bool enable=4; string adr_id=5; shelfStatus shelf_status=6; string cst_id=7;} 
 message replyAllShelfInfo { repeated shelf shelf_info = 1; }

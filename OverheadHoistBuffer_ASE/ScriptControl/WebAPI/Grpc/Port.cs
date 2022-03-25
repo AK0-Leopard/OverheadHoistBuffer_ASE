@@ -28,40 +28,72 @@ namespace com.mirle.ibg3k0.sc.WebAPI.Grpc
 
                 var temp = app.TransferService.GetPLC_PortData(port_id);
                 if (temp is null) continue;
-                portType portType = port_type_get_result.portType;
-                ////app.ManualPortControlService.GetPortPlcState(portID, out var temp);
-                //#region ManuPortPLCInfo to manualPort(Proto type)
-                //data.AlarmCode = temp.AlarmCode;
-                //data.CarrierIdOfStage1 = temp.CarrierIdOfStage1;
-                //data.CarrierIdReadResult = temp.CarrierIdReadResult;
-                //data.CstTypes = temp.CstTypes;
-                //data.ErrorIndex = temp.ErrorIndex;
-                //data.IsAlarm = temp.IsAlarm;
-                //data.IsBcrReadDone = temp.IsBcrReadDone;
-                //data.IsDirectionChangable = temp.IsDirectionChangable;
-                //data.IsDoorOpen = temp.IsDoorOpen;
-                //data.IsDown = temp.IsDown;
-                //data.IsHeartBeatOn = temp.IsHeartBeatOn;
-                //data.IsInMode = temp.IsInMode;
-                //data.IsLoadOK = temp.IsLoadOK;
-                //data.IsOutMode = temp.IsOutMode;
-                //data.IsRemoveCheck = temp.IsRemoveCheck;
-                //data.IsRun = temp.IsRun;
-                //data.IsTransferComplete = temp.IsTransferComplete;
-                //data.IsUnloadOK = temp.IsUnloadOK;
-                //data.IsWaitIn = temp.IsWaitIn;
-                //data.IsWaitOut = temp.IsWaitOut;
-                //data.LoadPosition1 = temp.LoadPosition1;
-                //data.LoadPosition2 = temp.LoadPosition2;
-                //data.LoadPosition3 = temp.LoadPosition3;
-                //data.LoadPosition4 = temp.LoadPosition4;
-                //data.LoadPosition5 = temp.LoadPosition5;
-                //data.ManualPortId = port.PORT_ID;
-                //data.RunEnable = temp.RunEnable;
-                //data.AddressID = port.ADR_ID;
-                //#endregion
 
-                //result.ManualPortInfo.Add(data);
+                #region PLC_PortData to portInfo
+                portInfo info = new portInfo();
+                info.PortID = port_id;
+                info.PortType = port_type_get_result.portType;
+                info.OpAutoMode = temp.OpAutoMode;
+
+                info.OpManualMode = temp.OpManualMode;
+                info.OpError = temp.OpError;
+
+                info.IsInputMode = temp.IsInputMode;
+                info.IsOutputMode = temp.IsOutputMode;
+                info.IsModeChangable = temp.IsModeChangable;
+
+                info.IsAGVMode = temp.IsAGVMode;
+                info.IsMGVMode = temp.IsMGVMode;
+
+                info.PortWaitIn = temp.PortWaitIn;
+                info.PortWaitOut = temp.PortWaitOut;
+
+                info.IsAutoMode = temp.IsAutoMode;
+
+                info.IsReadyToLoad = temp.IsReadyToLoad;
+                info.IsReadyToUnload = temp.IsReadyToUnload;
+
+                info.LoadPosition1 = temp.LoadPosition1;
+                info.LoadPosition2 = temp.LoadPosition2;
+                info.LoadPosition3 = temp.LoadPosition3;
+                info.LoadPosition4 = temp.LoadPosition4;
+                info.LoadPosition5 = temp.LoadPosition5;
+                info.LoadPosition7 = temp.LoadPosition7;
+                info.LoadPosition6 = temp.LoadPosition6;
+
+                info.IsCSTPresence = temp.IsCSTPresence;
+                info.AGVPortReady = temp.AGVPortReady;
+                info.CanOpenBox = temp.CanOpenBox;
+                info.IsBoxOpen = temp.IsBoxOpen;
+
+                info.BCRReadDone = temp.BCRReadDone;
+                info.CSTPresenceMismatch = temp.CSTPresenceMismatch;
+                info.IsTransferComplete = temp.IsTransferComplete;
+                info.CstRemoveCheck = temp.CstRemoveCheck;
+
+                info.ErrorCode = Convert.ToInt32(temp.ErrorCode);
+
+                info.BoxID = temp.BoxID;
+
+                info.LoadPositionBOX1 = temp.LoadPositionBOX1;
+
+                info.LoadPositionBOX2 = temp.LoadPositionBOX2;
+
+                info.LoadPositionBOX3 = temp.LoadPositionBOX3;
+
+                info.LoadPositionBOX4 = temp.LoadPositionBOX4;
+
+                info.LoadPositionBOX5 = temp.LoadPositionBOX5;
+
+                info.CassetteID = temp.CassetteID;
+
+                info.FireAlarm = temp.FireAlarm;
+
+                info.CimOn = temp.cim_on;
+
+                info.PreLoadOK = temp.preLoadOK;
+                #endregion
+                result.PortInfoList.Add(info);
             }
             return Task.FromResult(result);
         }

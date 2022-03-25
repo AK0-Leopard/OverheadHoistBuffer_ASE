@@ -28,6 +28,7 @@ namespace com.mirle.ibg3k0.sc.WebAPI.Grpc
                 temp.ShelfId = shelfData.ShelfID;
                 temp.ZoneId = shelfData.ZoneID;
                 temp.AdrId = shelfData.ADR_ID;
+                temp.CstId = "";
                 #region shelf status
                 switch (shelfData.ShelfState)
                 {
