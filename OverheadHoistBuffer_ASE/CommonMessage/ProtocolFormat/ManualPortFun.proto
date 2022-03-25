@@ -1,0 +1,52 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "CommonMessage.ProtocolFormat.ManualPortFun";
+
+package greet;
+
+// The greeting service definition.
+service manualPortGreeter {
+	// Sends a greeting
+	
+	rpc getAllManualPortInfo(Empty) returns (replyAllManualPortInfo);
+	rpc getAllEQPortInfo(Empty) returns (replyAllEQPortInfo);
+}
+
+message Empty { }
+message manualPort { 
+	string manualPort_id=1; 
+	bool IsRun=2; 
+	bool IsDown=3; 
+	bool IsAlarm=4; 
+	bool IsInMode=5; 
+	bool IsOutMode=6; 
+	bool IsDirectionChangable=7;
+	bool RunEnable=8;
+	bool IsWaitIn=9;
+	bool IsWaitOut=10;
+	bool IsHeartBeatOn=11;
+	bool IsLoadOK=12;
+	bool IsUnloadOK=13;
+	bool LoadPosition1=14;
+	bool LoadPosition2=15;
+	bool LoadPosition3=16;
+	bool LoadPosition4=17;
+	bool LoadPosition5=18;
+	bool IsBcrReadDone=19;
+	bool IsTransferComplete=20;
+	bool IsRemoveCheck=21;
+	bool IsDoorOpen=22;
+	int32 ErrorIndex=23;
+	int32 AlarmCode=24;
+	string CarrierIdOfStage1=25;
+	string CarrierIdReadResult=26;
+	int32 CstTypes=27;
+	string AddressID=28;
+}
+message replyAllManualPortInfo { repeated manualPort manualPort_info = 1; }
+
+message EQPort{
+	string EQPortID=1;
+	string EQPortAddress=2;
+}
+message replyAllEQPortInfo{ repeated EQPort EQPort_info=1; }

@@ -32,5 +32,7 @@ namespace com.mirle.ibg3k0.sc
         public int REPLACE { get; set; }
         public string OHTC_CMD { get; set; }
         public string VH_ID { get; set; }
+        public string BOX_ID { get; set; }
+        public string LOT_ID { get; set; }
     }
 }

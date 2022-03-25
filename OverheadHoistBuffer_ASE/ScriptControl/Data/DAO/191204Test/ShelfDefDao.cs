@@ -262,6 +262,22 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                 throw;
             }
         }
+        public List<ShelfDef> loadHasChangeShelfDefByAfterDateTime(DBConnection_EF conn, string afterDateTime)  //取得不是有改變狀態的儲位
+        {
+            try
+            {
+                var result = conn.ShelfDef
+                    .Where(x => x.TrnDT != "1" &&
+                                x.TrnDT.CompareTo(afterDateTime) >= 0)
+                    .ToList();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex);
+                throw;
+            }
+        }
 
     }
 }
