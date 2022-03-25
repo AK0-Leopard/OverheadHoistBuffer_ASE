@@ -359,5 +359,23 @@ namespace com.mirle.ibg3k0.sc.BLL
             ShelfDef targetShelf = loadShelfDataByID(shelfID);
             return scApp.GuideBLL.GetDistance(targetShelf.ADR_ID, targetAddress);
         }
+
+        public List<ShelfDef> loadHasChangeShelfDefByAfterDateTime(string afterDateTime)
+        {
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+
+                    return shelfdefDao.loadHasChangeShelfDefByAfterDateTime(con, afterDateTime);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return null;
+            }
+        }
     }
 }
+

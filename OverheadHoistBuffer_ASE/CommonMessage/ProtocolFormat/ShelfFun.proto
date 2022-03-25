@@ -1,0 +1,36 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "CommonMessage.ProtocolFormat.ShelfFun";
+
+package greet;
+
+// The greeting service definition.
+service shelfGreeter {
+	// Sends a greeting
+	//取得所有Shelf資訊
+	rpc getAllShelfInfo(Empty) returns (replyAllShelfInfo);
+	//↓這邊做單一shelf詢問使用，若此處回傳的shelf型態的message中的shelf_id=""，則代表client所詢問的shelf_id不存在唷~請注意
+	rpc getShelfInfo(shelf_id) returns (shelf);
+	//取得部分Shelf資訊
+	rpc getNeedChangeShelf(lastUpdateTime) returns (replyAllShelfInfo);
+}
+
+//Start MapData
+message Empty {} 
+message shelf_id { string ID = 1;}
+//grpc不支援dateTime的資料格式，所以將dateTime轉成數字後再做傳輸
+//long longDateTime = DateTime.Now.Ticks;
+//註：這邊詢問是client最後一次詢問我的時間，我將以這戳記來判斷我要給那些在這時間點之後有變動的shelf資訊
+message lastUpdateTime{int64 datetime=1;}
+
+
+//↓這邊做單一shelf詢問使用，若此處回傳的shelf_id=""，則代表client所詢問的shelf_id不存在唷~請注意
+enum shelfStatus{
+	shelfStatus_Empty = 0;
+	shelfStatus_Store = 1;
+	shelfStatus_PreIn = 2;
+	shelfStatus_PreOut = 3;
+	shelfStatus_Alternate = 4;
+}
+message shelf { string shelf_id=1; string zone_id=2; string box_id=3; bool enable=4; string adr_id=5; shelfStatus shelf_status=6;} 
+message replyAllShelfInfo { repeated shelf shelf_info = 1; }

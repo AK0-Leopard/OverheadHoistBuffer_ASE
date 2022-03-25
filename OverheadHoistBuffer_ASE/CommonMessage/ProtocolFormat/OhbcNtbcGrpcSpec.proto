@@ -1,0 +1,149 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "Mirle.U332MA30.Grpc.OhbcNtbcConnect";
+
+package OhbcNtbcConnect;
+
+service OhbcToNtbcService
+{
+	rpc HeartBeatRequest (HeartBeatReq) returns (HeartBeatAck);
+	rpc IoPortSignalQuery (OhtPortQuery) returns (OhtPortSignal);
+    rpc ReelStateUpdate (ReelStateUpdateReq) returns (ReelStateUpdateAck);
+    rpc ForceDeleteReel (ReelDeleteReq) returns (ReelDeleteAck);
+}
+
+service NtbcToOhbcService
+{
+	rpc HeartBeatRequest (HeartBeatReq) returns (HeartBeatAck);
+	rpc CarrierTransferRequest (TransferCommandRequset) returns (TransferCommandAck);
+    rpc GetReelState (ReelStateQuery) returns (ReelStateAck);
+    rpc GetOhtPortState (OhtPortQuery) returns (OhtPortStateAck);
+}
+
+message HeartBeatReq {}
+message HeartBeatAck
+{
+   Ack ReplyCode = 1;
+}
+
+message RequestAck
+{
+	Ack ReplyCode = 1;
+}
+
+enum Ack 
+{
+	NG = 0;
+	OK = 1;
+}
+
+message OhtPortQuery
+{
+	string PortName = 1;
+}
+
+message OhtPortSignal
+{
+	string PortName = 1;
+	PortState State = 2;
+	DirectionType Direction = 3;
+	RequestType RequestState = 4;
+    string CarrierReelId = 5;
+}
+
+enum PortState 
+{
+	Port_Normal = 0;
+	Port_Alarm = 1;
+	Port_Offline = 2;
+}
+
+enum DirectionType 
+{
+	InMode = 0;
+	OutMode = 1;
+}
+
+enum RequestType 
+{
+	NoRequest = 0;
+	UnloadRequest = 1;
+	LoadRequest = 2;
+}
+
+message TransferCommandRequset
+{
+    string CarrierReelId = 1;
+    string SourcePortName = 2;
+    string DestinationEqPortName = 3;
+    string DestinationEqPortId = 4;
+    int32 ReelType = 5;
+}
+
+message TransferCommandAck
+{
+	Ack ReplyCode = 1;
+    string ReasonForRejection = 2;
+}
+
+message ReelStateQuery
+{
+    string CarrierReelId = 1;
+}
+
+message ReelStateAck
+{
+    string CarrierReelId = 1;
+	Ack ReplyCode = 2;
+    string ReasonForRejection = 3;
+	ReelTransferState Scenario = 4;
+    string McsTransferToEqPortCommandId = 5; 
+    string McsTransferToNtbCommand = 6;
+    int32 ReelType = 7;
+}
+
+enum ReelTransferState 
+{
+	ReciveNtbcTransferRequest = 0;
+	SendMcsWaitIn = 1;
+	ReciveMcsTransferToEqPortCommand = 2;
+	TransferringToEqPort = 3;
+	FailedWhenTransferringToEqPort = 4;
+	ArrivedEqPort = 5;
+	ReciveMcsTransferToNtbCommand = 6;
+	TransferringToNtbPort = 7;
+	FailedWhenTransferringToNtbPort = 8;
+	ArrivedNtbPort = 9;
+}
+
+message ReelStateUpdateReq
+{
+    string CarrierReelId = 1;
+    ReelTransferState Scenario = 2;
+    string McsTransferToEqPortCommandId = 3; 
+    string McsTransferToNtbCommand = 4;
+    int32 ReelType = 5;
+}
+
+message ReelStateUpdateAck
+{
+	Ack ReplyCode = 1;
+}
+
+message OhtPortStateAck
+{
+    string CarrierReelId = 1;
+	Ack ReplyCode = 2;
+    string ReasonForRejection = 3;
+}
+
+message ReelDeleteReq
+{
+    string CarrierReelId = 1;
+    string Reasons = 2;
+}
+
+message ReelDeleteAck
+{
+	Ack ReplyCode = 1;
+}

@@ -1,0 +1,144 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "com.mirle.AK0.ProtocolFormat";
+// The greeting service definition.
+service VehicleControlFun {
+	// Sends a greeting
+	rpc RequestSegmentData(Empty) returns (ReplySegmentData) {}
+	rpc RequestTrnsfer(VehicleCommandInfo) returns (ReplyTrnsfer) {}
+	rpc RequestGuideInfo(SearchInfo) returns (ReplyGuideInfo) {}
+	rpc RequestVehicleSummary(Empty) returns (ReplyVehicleSummary) {}
+	rpc RequestPortsInfo(Empty) returns (ReplyPortsInfo) {}
+}
+
+//comm enum
+enum Result
+{
+    Result_OK = 0;
+    Result_NG = 1;
+}
+
+//Start MapData
+message Empty 
+{
+	string ID = 1;
+}
+enum SegmentStatus
+{
+    SegmentStatus_Active = 0;
+    SegmentStatus_Inactive = 1;
+    SegmentStatus_Closed = 2;
+}
+message SegmentInfo 
+{
+	string ID = 1;
+	SegmentStatus  status = 2;
+	repeated string sec_ids = 3;
+	string note = 4;
+}
+message ReplySegmentData
+{
+	repeated SegmentInfo segment_infos = 1;
+}
+
+//End MapData
+
+//Start Command
+enum CommandEventType
+{
+    CommandEventType_Move = 0;
+    CommandEventType_Load = 1;
+    CommandEventType_Unload = 2;
+    CommandEventType_LoadUnload = 3;
+}
+message VehicleCommandInfo 
+{
+	string vh_id = 1;
+    CommandEventType type = 2;
+	string carrier_id = 3;
+	string from_port_id = 4;
+	string to_port_id = 5;
+}
+message ReplyTrnsfer
+{
+	Result result = 1;
+	string reason = 2;
+}
+
+//End Command
+//Start GuideInfo
+
+message SearchInfo 
+{
+	string start_adr = 1;
+    string end_adr = 2;
+}
+message ReplyGuideInfo
+{
+	repeated string adr_ids = 1;
+	repeated string sec_ids = 2;
+}
+//End GuideInfo
+
+//Start VehicleInfo
+
+  message ReplyVehicleSummary {
+	repeated VehicleSummary vehicles_summary = 1;
+  }
+  message VehicleSummary {
+	string VEHICLE_ID = 1;
+  }
+
+//End VehicleInfo
+
+//Start Port Info
+  message ReplyPortsInfo {
+	repeated PortInfo ports_info = 1;
+  }
+  message PortInfo {
+	string port_id = 1;
+    PLCData plc_data = 2;
+}
+
+  message PLCData{
+  	   int64 Timestamp = 1;
+       bool OpAutoMode = 2;         //D6401.0
+       bool OpManualMode = 3;       //D6401.1 
+       bool OpError = 4;
+       bool IsInputMode = 5;        //D6401.3
+       bool IsOutputMode = 6;       //D6401.4
+       bool IsModeChangable = 7;    //D6401.5
+       bool IsAGVMode = 8;
+       bool IsMGVMode = 9;
+       bool PortWaitIn = 10;         //D6401.8
+       bool PortWaitOut = 11;        //D6401.9
+       bool IsAutoMode = 12;
+       bool IsReadyToLoad = 13;      //D6401.12
+       bool IsReadyToUnload = 14;    //D6401.13
+       bool LoadPosition1 = 15;      //D6402.0
+       bool LoadPosition2 = 16;      //D6402.1
+       bool LoadPosition3 = 17;      //D6402.2
+       bool LoadPosition4 = 18;      //D6402.3
+       bool LoadPosition5 = 19;      //D6402.4
+       bool LoadPosition7 = 20;      //D6402.B
+       bool LoadPosition6 = 21;      //D6402.C
+       bool IsCSTPresence = 22;      //D6402.5
+       bool AGVPortReady = 23;       //D6402.6
+       bool CanOpenBox = 24;        
+       bool IsBoxOpen = 25;
+       bool BCRReadDone = 26;
+       bool CSTPresenceMismatch = 27;    //D6402.A
+       bool IsTransferComplete = 28;
+       bool CstRemoveCheck = 29;
+       int32 ErrorCode = 30;
+       string BoxID = 31;
+       string CassetteID = 32;
+       string PortID = 33;
+       string LoadPositionBOX1 = 34;
+       string LoadPositionBOX2 = 35;
+       string LoadPositionBOX3 = 36;
+       string LoadPositionBOX4 = 37;
+       string LoadPositionBOX5 = 38;
+       bool FireAlarm = 39;
+  }
+//End Port Info

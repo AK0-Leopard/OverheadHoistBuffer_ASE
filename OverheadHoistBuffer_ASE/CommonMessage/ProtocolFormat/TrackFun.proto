@@ -1,0 +1,97 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "RailChangerProtocol";
+
+package greet;
+
+// The greeting service definition.
+service Greeter {
+  // Sends a greeting
+  rpc SayHello (HelloRequest) returns (HelloReply);
+  rpc isAlive (isAliveRequest) returns (isAliveReply);
+  rpc alarmRst(alarmRstRequest) returns (alarmRstReply);
+  rpc blockRst(blockRstRequest) returns (blockRstReply);
+  rpc changeDir(changeDirRequest) returns (changeDirReply);
+  rpc getDir(getDirRequest) returns (getDirReply);
+  rpc getStatus(getStatusRequest) returns (getStatusReply);
+  rpc getBlock(getBlockRequest) returns (getBlockReply);
+  rpc getChangerTimer(getChangerTimerRequest) returns (getChangerTimerReply);
+  rpc getErrorReport(getErrorReportRequest) returns (getErrorReportReply);
+  rpc getVersion(getVersionRequest) returns (getVersionReply);
+  rpc changeMode(changeModeRequest) returns (changeModeReply);
+  rpc stopSet(stopSetRequest) returns (stopSetReply);
+  rpc RequestTracksInfo(Empty) returns (ReplyTracksInfo);
+}
+
+//Start MapData
+message Empty 
+{
+ string ID = 1;
+}
+//Start Track Info
+enum TrackDir{
+    TrackDir_None = 0;
+    TrackDir_Straight = 1;
+    TrackDir_Curve = 2;
+}
+enum TrackStatus{
+    TrackStatus_NotDefine = 0;
+    TrackStatus_Manaul = 1;
+    TrackStatus_Auto = 2;
+    TrackStatus_Alarm = 3;
+}
+enum TrackBlock
+{
+    TrackBlock_None=0;
+    TrackBlock_Block=1;
+    TrackBlock_NonBlock=2;
+}
+message ReplyTracksInfo { repeated TrackInfo tracks_info = 1; }
+message TrackInfo { string track_id = 1; TrackDir dir = 2; TrackStatus status = 3; int32 alarmCode=4; bool Alive=5; TrackBlock isBlock=6; bool autoChangeTrack=7; TrackDir autoChangeTrackDir=8;}
+
+// The request message containing the user's name.
+message HelloRequest {string name = 1;}
+// The response message containing the greetings.
+message HelloReply {string message = 1;}
+
+//is Alive 
+message isAliveRequest {string railChangerNumber = 1;}
+message isAliveReply {string message = 1;}
+
+//PLC控制訊號
+//Alarm Reset
+message alarmRstRequest{ string railChangerNumber = 1; }
+message alarmRstReply{ string message = 1;}
+//block Reset
+message blockRstRequest{ string railChangerNumber = 1; }
+message blockRstReply{ string message = 1;}
+//Change dir
+message changeDirRequest{ string railChangerNumber = 1; string dir=2;}
+message changeDirReply{ string message = 1;}
+
+message getDirRequest{ string railChangerNumber = 1; }
+message getDirReply{ string message = 1;}
+
+message getStatusRequest{string railChangerNumber = 1;}
+message getStatusReply { string message = 1;}
+
+message getBlockRequest {string railChangerNumber = 1;}
+message getBlockReply { string message=1; }
+
+
+
+
+message getChangerTimerRequest {string railChangerNumber=1;}
+message getChangerTimerReply {string message=1;}
+
+message getErrorReportRequest {string railChangerNumber=1;}
+message getErrorReportReply {string message=1;}
+
+message getVersionRequest {string railChangerNumber=1;}
+message getVersionReply {string message=1;}
+
+message changeModeRequest{ string railChangerNumber = 1; string mode=2;}
+message changeModeReply{ string message = 1;}
+
+message stopSetRequest {string railChangerNumber=1;}
+message stopSetReply {string message=1;}
