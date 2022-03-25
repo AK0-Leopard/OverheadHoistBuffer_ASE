@@ -1043,7 +1043,8 @@
       <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="WebAPI\CSTBoxControl.cs" />
-    <Compile Include="WebAPI\Gprc\Shelf.cs" />
+    <Compile Include="WebAPI\Grpc\Port.cs" />
+    <Compile Include="WebAPI\Grpc\Shelf.cs" />
     <Compile Include="WebAPI\MTSMTLInfo.cs" />
     <Compile Include="WebAPI\TransferManagement.cs" />
     <Compile Include="WebAPI\ConnectionInfo.cs" />

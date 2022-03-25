@@ -1,0 +1,85 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "CommonMessage.ProtocolFormat.PortFun";
+
+package greet;
+
+// The greeting service definition.
+service PortGreeter {
+	// Sends a greeting
+	
+	rpc getAllPortInfo(Empty) returns (replyPortInfo);
+}
+
+enum portType{
+    CV=0;
+    Station=1;
+}
+
+message Empty {}
+
+message portInfo { 
+    string PortID = 1;
+    portType PortType = 2;
+
+        bool OpAutoMode = 3;
+        bool OpManualMode = 4;
+        bool OpError = 5;
+
+        bool IsInputMode = 6;
+        bool IsOutputMode = 7;
+        bool IsModeChangable = 8;
+        
+        bool IsAGVMode = 9;
+        bool IsMGVMode = 10;
+
+        bool PortWaitIn = 11;
+        bool PortWaitOut = 12;
+
+        bool IsAutoMode = 13;
+
+        bool IsReadyToLoad = 14;
+        bool IsReadyToUnload = 15;
+
+        bool LoadPosition1 = 16;
+        bool LoadPosition2 = 17;
+        bool LoadPosition3 = 18;
+        bool LoadPosition4 = 19;
+        bool LoadPosition5 = 20;
+        bool LoadPosition7 = 21;
+        bool LoadPosition6 = 22;
+
+        bool IsCSTPresence = 23;
+        bool AGVPortReady = 24;
+        bool CanOpenBox = 25;
+        bool IsBoxOpen = 26;
+
+        bool BCRReadDone = 27;
+        bool CSTPresenceMismatch = 28;
+        bool IsTransferComplete = 29;
+        bool CstRemoveCheck = 30;
+
+        int32 ErrorCode = 31;
+
+        string BoxID = 32;
+
+        string LoadPositionBOX1 = 33;
+
+        string LoadPositionBOX2 = 34;
+
+        string LoadPositionBOX3 = 35;
+
+        string LoadPositionBOX4 = 36;
+        
+        string LoadPositionBOX5 = 37;
+
+        string CassetteID = 38;
+
+        bool FireAlarm = 39;
+
+        bool cim_on = 40;
+
+        bool preLoadOK = 41;
+}
+
+message replyPortInfo { repeated portInfo portInfoList = 1;}
