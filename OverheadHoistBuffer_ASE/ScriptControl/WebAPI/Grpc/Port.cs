@@ -114,5 +114,38 @@ namespace com.mirle.ibg3k0.sc.WebAPI.Grpc
                     return (false, portType.Cv);
             }
         }
+
+        public override Task<replyPortMng> setPortRun(requestPortMng req, ServerCallContext context)
+        {
+            replyPortMng result = new replyPortMng();
+            result.IsSuccess = app.TransferService.SetPortRun(req.PortID);
+            result.Result = result.IsSuccess ? "" : $"Exception happened! (TransferServiceLogger)";
+            return Task.FromResult(result);
+        }
+
+        public override Task<replyPortMng> setPortStop(requestPortMng req, ServerCallContext context)
+        {
+            replyPortMng result = new replyPortMng();
+            result.IsSuccess = app.TransferService.SetPortStop(req.PortID);
+            result.Result = result.IsSuccess ? "" : $"Exception happened! (TransferServiceLogger)";
+            return Task.FromResult(result);
+        }
+
+        public override Task<replyPortMng> resetPortAlarm(requestPortMng req, ServerCallContext context)
+        {
+            replyPortMng result = new replyPortMng();
+            result.IsSuccess = app.TransferService.PortAlarrmReset(req.PortID);
+            result.Result = result.IsSuccess ? "" : $"Exception happened! (TransferServiceLogger)";
+            return Task.FromResult(result);
+        }
+
+        public override Task<replyPortMng> setPortDir(requestPortDir req, ServerCallContext context)
+        {
+            replyPortMng result = new replyPortMng();
+            E_PortType portType = req.PortDir == portDir.In ? E_PortType.In : E_PortType.Out;
+            result.IsSuccess = app.TransferService.PortTypeChange(req.PortID, portType, "gRPC PortFun.PortGreeter.setPortDir");
+            result.Result = result.IsSuccess ? "" : $"Exception happened! (TransferServiceLogger)";
+            return Task.FromResult(result);
+        }
     }
 }
