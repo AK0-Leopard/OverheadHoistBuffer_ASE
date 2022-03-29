@@ -1191,20 +1191,33 @@ namespace com.mirle.ibg3k0.sc.Service
                     has_change = true;
                 }
                 //3.更新現有命令
-                foreach (var mcs_cmd_item in ACMD_MCS.MCS_CMD_InfoList)
+                foreach (var cache_mcs_cmd_item in ACMD_MCS.MCS_CMD_InfoList)
                 {
-                    string cmd_mcs_id = mcs_cmd_item.Key;
-                    ACMD_MCS cmd_mcs = currentExcuteMCSCmd.Where(cmd => SCUtility.isMatche(cmd.CMD_ID, cmd_mcs_id)).FirstOrDefault();
-                    if (cmd_mcs == null)
+                    string cmd_mcs_id = cache_mcs_cmd_item.Key;
+                    ACMD_MCS current_cmd_mcs = currentExcuteMCSCmd.Where(cmd => SCUtility.isMatche(cmd.CMD_ID, cmd_mcs_id)).FirstOrDefault();
+                    if (current_cmd_mcs == null)
                     {
                         continue;
                     }
-                    if (mcs_cmd_item.Value.put(cmd_mcs))
+                    //再進行更新命令時，若發現caceh中的資料與即將更新的有不同時，
+                    //將需要再去資料庫拉一次資料進行比對
+                    if (current_cmd_mcs.TRANSFERSTATE == E_TRAN_STATUS.Queue &&
+                        cache_mcs_cmd_item.Value.TRANSFERSTATE == E_TRAN_STATUS.Transferring)
+                    {
+                        TransferServiceLogger.Info($"OHB >> OHB|cmd id:{cmd_mcs_id}，cache狀態:{cache_mcs_cmd_item.Value.TRANSFERSTATE}與目前狀態:{current_cmd_mcs.TRANSFERSTATE}不同，開始進行比對...");
+                        ACMD_MCS check_cmd_mcs_object = scApp.CMDBLL.getCMD_MCSByID(cmd_mcs_id);
+                        if (check_cmd_mcs_object != null &&
+                            check_cmd_mcs_object.TRANSFERSTATE == E_TRAN_STATUS.Transferring)
+                        {
+                            TransferServiceLogger.Info($"OHB >> OHB|cmd id:{cmd_mcs_id}，cache狀態:{cache_mcs_cmd_item.Value.TRANSFERSTATE}與目前狀態:{current_cmd_mcs.TRANSFERSTATE}不同，抓取資料庫比對後確實為Transferring，跳過該此更新");
+                            continue;
+                        }
+                    }
+                    if (cache_mcs_cmd_item.Value.put(current_cmd_mcs))
                     {
                         has_change = true;
                     }
                 }
-
             }
             catch (Exception ex)
             {
@@ -5624,7 +5637,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 return false;
             }
         }
-        public bool PortCommanding(string portID, bool Commanding)  //通知PLC有命令要過去，不能切換流向
+        public bool PortCommanding(string portID, bool Commanding, string apiSource = "")  //通知PLC有命令要過去，不能切換流向
         {
             try
             {
@@ -5634,6 +5647,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     "OHB >> PLC|PortCommanding"
                     + "    portID:" + portID
                     + "    Commanding:" + Commanding
+                    + "    誰呼叫:" + apiSource
                 );
 
                 if (isCVPort(portID))

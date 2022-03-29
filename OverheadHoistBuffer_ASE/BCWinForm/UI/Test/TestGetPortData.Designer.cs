@@ -209,6 +209,7 @@
             // 
             // button5
             // 
+            this.button5.Enabled = false;
             this.button5.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.button5.Location = new System.Drawing.Point(203, 92);
             this.button5.Name = "button5";
@@ -216,7 +217,6 @@
             this.button5.TabIndex = 7;
             this.button5.Text = "取消預約";
             this.button5.UseVisualStyleBackColor = true;
-            this.button5.Visible = false;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // button6
@@ -921,7 +921,7 @@
             this.dataGridView5.Name = "dataGridView5";
             this.dataGridView5.ReadOnly = true;
             this.dataGridView5.RowTemplate.Height = 24;
-            this.dataGridView5.Size = new System.Drawing.Size(368, 119);
+            this.dataGridView5.Size = new System.Drawing.Size(327, 119);
             this.dataGridView5.TabIndex = 35;
             this.dataGridView5.Visible = false;
             // 

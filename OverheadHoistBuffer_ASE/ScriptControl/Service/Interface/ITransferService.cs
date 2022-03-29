@@ -21,7 +21,7 @@ namespace com.mirle.ibg3k0.sc.Service.Interface
         bool AreDestEnable(string destName, out bool isDestCvPortFull);
         List<PortINIData> GetAGVPort(string agvZoneName);
         PortPLCInfo GetPLC_PortData(string hOSTSOURCE);
-        bool PortCommanding(string portID, bool Commanding);
+        bool PortCommanding(string portID, bool Commanding, string apiSource = "");
         (bool isExist, string zoneName) tryGetShelfZoneName(string shelfID);
     }
 }
