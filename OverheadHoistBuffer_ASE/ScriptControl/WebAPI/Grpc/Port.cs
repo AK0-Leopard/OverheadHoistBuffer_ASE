@@ -73,19 +73,19 @@ namespace com.mirle.ibg3k0.sc.WebAPI.Grpc
 
                 info.ErrorCode = Convert.ToInt32(temp.ErrorCode);
 
-                info.BoxID = temp.BoxID;
+                info.BoxID = temp.BoxID ?? "";
 
-                info.LoadPositionBOX1 = temp.LoadPositionBOX1;
+                info.LoadPositionBOX1 = temp.LoadPositionBOX1 ?? "";
 
-                info.LoadPositionBOX2 = temp.LoadPositionBOX2;
+                info.LoadPositionBOX2 = temp.LoadPositionBOX2 ?? "";
 
-                info.LoadPositionBOX3 = temp.LoadPositionBOX3;
+                info.LoadPositionBOX3 = temp.LoadPositionBOX3 ?? "";
 
-                info.LoadPositionBOX4 = temp.LoadPositionBOX4;
+                info.LoadPositionBOX4 = temp.LoadPositionBOX4 ?? "";
 
-                info.LoadPositionBOX5 = temp.LoadPositionBOX5;
+                info.LoadPositionBOX5 = temp.LoadPositionBOX5 ?? "";
 
-                info.CassetteID = temp.CassetteID;
+                info.CassetteID = temp.CassetteID ?? "";
 
                 info.FireAlarm = temp.FireAlarm;
 
@@ -96,6 +96,10 @@ namespace com.mirle.ibg3k0.sc.WebAPI.Grpc
                 info.ADRID = port.ADR_ID;
                 info.Stage = port.Stage;
                 info.IsInService = app.PortDefBLL.GetPortData(port_id).IsAutoMode;
+                info.UnitType = port.UnitType ?? "";
+                info.ZoneName = port.ZoneName ?? "";
+                info.AGVStationStatus = app.TransferService.GetAGV_StationStatus(port_id) ?? "";
+                info.AGVAutoPortType = app.TransferService.GetAGV_AutoPortType(port_id) ?? "";
                 #endregion
                 result.PortInfoList.Add(info);
             }
@@ -149,6 +153,28 @@ namespace com.mirle.ibg3k0.sc.WebAPI.Grpc
             E_PortType portType = req.PortDir == portDir.In ? E_PortType.In : E_PortType.Out;
             result.IsSuccess = app.TransferService.PortTypeChange(req.PortID, portType, "gRPC PortFun.PortGreeter.setPortDir");
             result.Result = result.IsSuccess ? "" : $"Exception happened! (TransferServiceLogger)";
+            return Task.FromResult(result);
+        }
+
+        public override Task<replyPortMng> setPortWaitIn(requestPortMng req, ServerCallContext context)
+        {
+            replyPortMng result = new replyPortMng();
+            result.IsSuccess = false;
+            result.Result = $"Failed! plcInfo.LoadPosition1 = false";
+            Data.PLC_Functions.PortPLCInfo plcInfo = app.TransferService.GetPLC_PortData(req.PortID);
+            if (plcInfo.LoadPosition1)
+            {
+                result.IsSuccess = app.TransferService.PLC_ReportPortWaitIn(plcInfo, "gRPC PortFun.PortGreeter.setPortWaitIn");
+                result.Result = result.IsSuccess ? "" : $"Failed! (TransferServiceLogger)";
+            }
+            return Task.FromResult(result);
+        }
+
+        public override Task<replyPortMng> openAgvStation(requestAgvStationOpen req, ServerCallContext context)
+        {
+            replyPortMng result = new replyPortMng();
+            result.IsSuccess = Convert.ToBoolean(app.TransferService.OpenAGV_Station(req.PortID, req.Open, "gRPC PortFun.PortGreeter.openAgvStation"));
+            result.Result = result.IsSuccess ? "" : $"Failed! (TransferServiceLogger)";
             return Task.FromResult(result);
         }
     }

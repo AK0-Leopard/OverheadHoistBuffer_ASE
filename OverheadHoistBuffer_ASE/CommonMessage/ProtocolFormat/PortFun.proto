@@ -14,6 +14,8 @@ service PortGreeter {
 	rpc setPortStop(requestPortMng) returns (replyPortMng);
     rpc resetPortAlarm(requestPortMng) returns (replyPortMng);
 	rpc setPortDir(requestPortDir) returns (replyPortMng);
+	rpc setPortWaitIn(requestPortMng) returns (replyPortMng);
+	rpc openAgvStation(requestAgvStationOpen) returns (replyPortMng);
 }
 
 enum portType{
@@ -89,6 +91,10 @@ message portInfo {
         int32 ADR_ID = 42;
         int32 stage = 43;
         bool isInService = 44;
+        string UnitType = 45;
+        string ZoneName = 46;
+        string AGV_StationStatus = 47;
+        string AGV_AutoPortType = 48;
 }
 
 message replyPortInfo { repeated portInfo portInfoList = 1;}
@@ -103,3 +109,5 @@ enum portDir{
 }
 
 message requestPortDir { string PortID = 1; portDir PortDir = 2; }
+
+message requestAgvStationOpen { string PortID = 1; bool Open = 2; }

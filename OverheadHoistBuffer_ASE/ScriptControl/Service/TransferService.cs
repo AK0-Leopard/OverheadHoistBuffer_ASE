@@ -3302,7 +3302,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 TransferServiceLogger.Error(ex, "PLC_ReportPortIsModeChangable");
             }
         }
-        public void PLC_ReportPortWaitIn(PortPLCInfo plcInfo, string sourceCmd)
+        public bool PLC_ReportPortWaitIn(PortPLCInfo plcInfo, string sourceCmd)
         {
             try
             {
@@ -3313,7 +3313,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         DateTime.Now.ToString("HH:mm:ss.fff ") +
                         "PLC >> OHB|PLC_ReportPortWaitIn cassette_dataBLL = null"
                     );
-                    return;
+                    return false;
                 }
 
                 CassetteData cstData = new CassetteData();
@@ -3359,7 +3359,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                     + "\ndbCSTData" + GetCstLog(dbCSTData)
                                 );
 
-                                return;
+                                return false;
                             }
                         }
                         else
@@ -3372,7 +3372,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                 + "\ndbCSTData" + GetCstLog(dbCSTData)
                             );
 
-                            return;
+                            return false;
                         }
                     }
 
@@ -3388,7 +3388,7 @@ namespace com.mirle.ibg3k0.sc.Service
                                 + GetCmdLog(dbMcsdata)
                             );
 
-                            return;
+                            return false;
                         }
                         else
                         {
@@ -3450,10 +3450,13 @@ namespace com.mirle.ibg3k0.sc.Service
 
                     OHBC_AGV_HasCmdsAccessCleared(agvZoneName);
                 }
+
+                return true;
             }
             catch (Exception ex)
             {
                 TransferServiceLogger.Error(ex, "PLC_ReportPortWaitIn");
+                return false;
             }
         }
         public void PortPositionWaitOut(CassetteData datainfo, int outStage, string sourceCmd = "PLC")
