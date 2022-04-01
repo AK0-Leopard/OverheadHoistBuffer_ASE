@@ -1287,9 +1287,14 @@ namespace com.mirle.ibg3k0.sc.Service
                 if (cmd_mcs != null && cmdOHT_CSTdata != null)
                 {
                     bool is_box_at_relay_station = SCUtility.isMatche(cmdOHT_CSTdata.Carrier_LOC, cmd_mcs.RelayStation);
-                    string recover_dest = tryGetCommandRecoverDest(cmd_mcs);
+                    //string recover_dest = tryGetCommandRecoverDestWhenMcsAndAGVSt(cmd_mcs);
+                    var try_get_result = tryGetCommandRecoverDestWhenMcsAndAGVSt(cmd_mcs);
                     scApp.CMDBLL.updateCMD_MCS_CRANE(cmd.CMD_ID, "");
-                    scApp.CMDBLL.updateCMD_MCS_TranStatus2Queue(cmd.CMD_ID_MCS, recover_dest, is_box_at_relay_station);
+                    scApp.CMDBLL.updateCMD_MCS_TranStatus2Queue(cmd.CMD_ID_MCS, try_get_result.agvStZoneName, is_box_at_relay_station);
+                    if (try_get_result.isMcsAndAgvStCmd)
+                    {
+                        scApp.TransferService.PortCommanding(cmd_mcs.HOSTDESTINATION, false, nameof(finishQueueCommand));
+                    }
                     scApp.TransferService.TransferServiceLogger.Info
                     (
                         DateTime.Now.ToString("HH:mm:ss.fff ") + $"OHB >> OHT|準備強制結束Queue命令:{cmd.CMD_ID}，將MCS命令:{SCUtility.Trim(cmd.CMD_ID_MCS)} 改回Queue，"
@@ -1314,21 +1319,21 @@ namespace com.mirle.ibg3k0.sc.Service
 
         }
 
-        private string tryGetCommandRecoverDest(ACMD_MCS cmdMCS)
+        private (bool isMcsAndAgvStCmd, string agvStZoneName) tryGetCommandRecoverDestWhenMcsAndAGVSt(ACMD_MCS cmdMCS)
         {
             if (!SCUtility.isMatche(cmdMCS.CMDTYPE, ACMD_MCS.CmdType.MCS.ToString()))
             {
-                return "";
+                return (false, "");
             }
             if (!scApp.TransferService.isUnitType(cmdMCS.HOSTDESTINATION, UnitType.AGV))
             {
-                return "";
+                return (false, "");
             }
             var get_result = scApp.TransferService.tryGetAGVZoneName(cmdMCS.HOSTDESTINATION);
             if (get_result.isFind)
-                return get_result.zoneName;
+                return (true, get_result.zoneName);
             else
-                return "";
+                return (false, "");
         }
 
         public bool doSendOHxCOverrideCmdToVh(AVEHICLE assignVH, ACMD_OHTC cmd, bool isNeedPauseFirst)
