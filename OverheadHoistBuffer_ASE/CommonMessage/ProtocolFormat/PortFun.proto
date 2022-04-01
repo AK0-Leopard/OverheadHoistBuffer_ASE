@@ -9,6 +9,11 @@ service PortGreeter {
 	// Sends a greeting
 	
 	rpc getAllPortInfo(Empty) returns (replyPortInfo);
+
+	rpc setPortRun(requestPortMng) returns (replyPortMng);
+	rpc setPortStop(requestPortMng) returns (replyPortMng);
+    rpc resetPortAlarm(requestPortMng) returns (replyPortMng);
+	rpc setPortDir(requestPortDir) returns (replyPortMng);
 }
 
 enum portType{
@@ -87,3 +92,14 @@ message portInfo {
 }
 
 message replyPortInfo { repeated portInfo portInfoList = 1;}
+
+message requestPortMng { string PortID = 1; }
+
+message replyPortMng { bool IsSuccess = 1; string Result = 2; }
+
+enum portDir{
+    In=0;
+    Out=1;
+}
+
+message requestPortDir { string PortID = 1; portDir PortDir = 2; }
