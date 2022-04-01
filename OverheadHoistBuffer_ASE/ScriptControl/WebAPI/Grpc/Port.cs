@@ -28,7 +28,7 @@ namespace com.mirle.ibg3k0.sc.WebAPI.Grpc
 
                 var temp = app.TransferService.GetPLC_PortData(port_id);
                 if (temp is null) continue;
-
+                
                 #region PLC_PortData to portInfo
                 portInfo info = new portInfo();
                 info.PortID = port_id;
@@ -92,6 +92,10 @@ namespace com.mirle.ibg3k0.sc.WebAPI.Grpc
                 info.CimOn = temp.cim_on;
 
                 info.PreLoadOK = temp.preLoadOK;
+
+                info.ADRID = port.ADR_ID;
+                info.Stage = port.Stage;
+                info.IsInService = app.PortDefBLL.GetPortData(port_id).IsAutoMode;
                 #endregion
                 result.PortInfoList.Add(info);
             }

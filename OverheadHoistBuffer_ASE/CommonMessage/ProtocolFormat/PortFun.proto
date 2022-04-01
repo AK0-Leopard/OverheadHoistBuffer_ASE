@@ -80,6 +80,10 @@ message portInfo {
         bool cim_on = 40;
 
         bool preLoadOK = 41;
+
+        int32 ADR_ID = 42;
+        int32 stage = 43;
+        bool isInService = 44;
 }
 
 message replyPortInfo { repeated portInfo portInfoList = 1;}
