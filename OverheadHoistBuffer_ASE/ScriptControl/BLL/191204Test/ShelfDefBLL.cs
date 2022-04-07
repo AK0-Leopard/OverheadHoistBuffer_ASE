@@ -103,7 +103,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                     shelf.Enable = enable == true ? "Y" : "N";
                     shelf.Remark = reason;
                     shelf.TrnDT = disable_enabl_time;
-                    shelfdefDao.UpdateShelfDef(con);
+                    shelfdefDao.UpdateShelfDef(con, shelf);
                 }
             }
             catch (Exception ex)
@@ -146,7 +146,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
                     con.Entry(shelf_def).Property(p => p.SelectPriority).IsModified = true;
 
-                    shelfdefDao.UpdateShelfDef(con);
+                    shelfdefDao.UpdateShelfDef(con, shelf_def);
                     //con.Entry(port_statino).State = EntityState.Detached;
                 }
             }
@@ -170,7 +170,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
                     con.Entry(shelf_def).Property(p => p.Remark).IsModified = true;
 
-                    shelfdefDao.UpdateShelfDef(con);
+                    shelfdefDao.UpdateShelfDef(con, shelf_def);
                     //con.Entry(port_statino).State = EntityState.Detached;
                 }
             }
@@ -193,7 +193,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                     var shelf_def = con.ShelfDef.Where(x => x.ShelfID == shelf_id).FirstOrDefault();
                     shelf_def.ShelfState = status;
                     con.Entry(shelf_def).Property(p => p.ShelfState).IsModified = true;
-                    shelfdefDao.UpdateShelfDef(con);
+                    shelfdefDao.UpdateShelfDef(con, shelf_def);
                 }
 
                 scApp.TransferService.TransferServiceLogger.Info
@@ -232,7 +232,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
                     con.Entry(shelf_def).Property(p => p.SelectPriority).IsModified = true;
 
-                    shelfdefDao.UpdateShelfDef(con);
+                    shelfdefDao.UpdateShelfDef(con, shelf_def);
                     //con.Entry(port_statino).State = EntityState.Detached;
                 }
             }
@@ -296,7 +296,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
                     con.Entry(shelf_def).Property(p => p.EmptyBlockFlag).IsModified = true;
 
-                    shelfdefDao.UpdateShelfDef(con);
+                    shelfdefDao.UpdateShelfDef(con, shelf_def);
                 }
             }
             catch (Exception ex)

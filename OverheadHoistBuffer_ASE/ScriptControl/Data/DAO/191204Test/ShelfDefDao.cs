@@ -39,10 +39,11 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
             }
         }
 
-        public void UpdateShelfDef(DBConnection_EF conn)
+        public void UpdateShelfDef(DBConnection_EF conn, ShelfDef shelfdef)
         {
             try
             {
+                shelfdef.TrnDT = DateTime.Now.ToString(sc.App.SCAppConstants.TimestampFormat_19);
                 conn.SaveChanges();
             }
             catch (Exception ex)
