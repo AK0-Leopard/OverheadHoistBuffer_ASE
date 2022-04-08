@@ -76,14 +76,19 @@ namespace com.mirle.ibg3k0.sc.WebAPI.Grpc
                 info.BoxID = temp.BoxID ?? "";
 
                 info.LoadPositionBOX1 = temp.LoadPositionBOX1 ?? "";
+                info.LoadPositionCST1 = "";
 
                 info.LoadPositionBOX2 = temp.LoadPositionBOX2 ?? "";
+                info.LoadPositionCST2 = "";
 
                 info.LoadPositionBOX3 = temp.LoadPositionBOX3 ?? "";
+                info.LoadPositionCST3 = "";
 
                 info.LoadPositionBOX4 = temp.LoadPositionBOX4 ?? "";
+                info.LoadPositionCST4 = "";
 
                 info.LoadPositionBOX5 = temp.LoadPositionBOX5 ?? "";
+                info.LoadPositionCST5 = "";
 
                 info.CassetteID = temp.CassetteID ?? "";
 

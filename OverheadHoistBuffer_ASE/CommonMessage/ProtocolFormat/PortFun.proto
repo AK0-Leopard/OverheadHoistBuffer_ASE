@@ -95,6 +95,17 @@ message portInfo {
         string ZoneName = 46;
         string AGV_StationStatus = 47;
         string AGV_AutoPortType = 48;
+
+        string LoadPositionCST1 = 49;
+
+        string LoadPositionCST2 = 50;
+
+        string LoadPositionCST3 = 51;
+
+        string LoadPositionCST4 = 52;
+        
+        string LoadPositionCST5 = 53;
+
 }
 
 message replyPortInfo { repeated portInfo portInfoList = 1;}
