@@ -772,7 +772,7 @@ namespace com.mirle.ibg3k0.bc.winform
                     logger.Error(ex, "Exception");
                 }
             }
-        }
+        }     
         public void recordAction(string tipMessage, string confirmResult)
         {
             StringBuilder sb = new StringBuilder();

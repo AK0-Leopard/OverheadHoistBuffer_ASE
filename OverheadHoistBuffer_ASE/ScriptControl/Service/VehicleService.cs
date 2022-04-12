@@ -77,6 +77,7 @@ namespace com.mirle.ibg3k0.sc.Service
         PORT_LP_WaitOutTimeOut = 100030,
         OHT_CommandNotFinishedInTime = 100031,
         OHT_BoxStatusAbnormalPassOff = 100032,
+        OHBC_Parse_SECS_Format_Fail = 100100
     }
     public class VehicleService : IDynamicMetaObjectProvider
     {

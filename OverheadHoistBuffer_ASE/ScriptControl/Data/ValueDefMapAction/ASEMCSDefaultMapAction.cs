@@ -534,11 +534,31 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 //ShowThreadPoolInfo();
 
             }
+            catch (stc.Common.SECS.SECSFormatException ex)
+            {
+                scApp.TransferService.TransferServiceLogger.Error(
+                    DateTime.Now.ToString("HH:mm:ss.fff ") + "  S2F49ReceiveEnhancedRemoteCommandExtension\n" + ex);
+
+                logger.Error("MESDefaultMapAction has Error[Line Name:{0}],[Error method:{1}],[Error Message:{2}", line.LINE_ID, "S2F49_Receive_Remote_Command", ex);
+                GrandTotalSECSFormatParseFailTimes();
+            }
             catch (Exception ex)
             {
                 scApp.TransferService.TransferServiceLogger.Error(
                     DateTime.Now.ToString("HH:mm:ss.fff ") + "  S2F49ReceiveEnhancedRemoteCommandExtension\n" + ex);
 
+                logger.Error("MESDefaultMapAction has Error[Line Name:{0}],[Error method:{1}],[Error Message:{2}", line.LINE_ID, "S2F49_Receive_Remote_Command", ex);
+            }
+        }
+        private void GrandTotalSECSFormatParseFailTimes()
+        {
+            try
+            {
+                ALINE line = scApp.getEQObjCacheManager().getLine();
+                line.SecsMessageParseFail++;
+            }
+            catch(Exception ex)
+            {
                 logger.Error("MESDefaultMapAction has Error[Line Name:{0}],[Error method:{1}],[Error Message:{2}", line.LINE_ID, "S2F49_Receive_Remote_Command", ex);
             }
         }

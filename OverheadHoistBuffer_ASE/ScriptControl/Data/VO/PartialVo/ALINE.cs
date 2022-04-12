@@ -18,6 +18,9 @@ namespace com.mirle.ibg3k0.sc
     public partial class ALINE : BaseEQObject, IAlarmHisList
     {
         public static UInt32 MAX_LINE_IDLE_TIME_MMILLI_SECOND { get; private set; } = 30_000;
+        public static int MAX_ALLOW_S2F49_PARSE_FAIL_TIMES { get; private set; } = 3;
+
+        public event EventHandler<int> SecsParseFailOverTimes;
 
         public ALINE()
         {
@@ -46,7 +49,9 @@ namespace com.mirle.ibg3k0.sc
         public bool AlarmSetChecked
         {
             get
-            { return alarmSetChecked; }
+            {
+                return alarmSetChecked;
+            }
             set
             {
                 if (alarmSetChecked != value)
@@ -1399,16 +1404,26 @@ namespace com.mirle.ibg3k0.sc
                 }
             }
         }
-        public void onIdleTimeIsEnough()
-        {
-            IdleTimeIsEnough?.Invoke(this, EventArgs.Empty);
-        }
 
         public bool IsLineIdling
         {
             get
             {
                 return IdleTime.ElapsedMilliseconds > MAX_LINE_IDLE_TIME_MMILLI_SECOND;
+            }
+        }
+
+        private int secsmessageparsefail = 0;
+        public int SecsMessageParseFail
+        {
+            get { return secsmessageparsefail; }
+            set
+            {
+                secsmessageparsefail = value;
+                if (secsmessageparsefail >= MAX_ALLOW_S2F49_PARSE_FAIL_TIMES)
+                {
+                    SecsParseFailOverTimes?.Invoke(this, secsmessageparsefail);
+                }
             }
         }
 
@@ -1528,7 +1543,6 @@ namespace com.mirle.ibg3k0.sc
             catch (Exception ex)
             {
                 return false;
-
             }
         }
         public bool StartUpSuccessed(ReportBLL reportBLL)
