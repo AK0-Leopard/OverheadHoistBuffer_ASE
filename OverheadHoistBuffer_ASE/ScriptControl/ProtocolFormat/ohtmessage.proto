@@ -54,7 +54,6 @@ message Timestamp {
 	SYSTEMIN = 12;
 	TECHINGMOVE = 13;
 	CYCLEMOVE=31;
-	ROUND=99;
   }
    enum EventType {
     LoadArrivals = 0;
@@ -77,8 +76,9 @@ message Timestamp {
 	Scan = 17;
 	BlockRelease = 21;
 	HIDRelease = 22;
-	BlockHIDRelease = 23;
 	ZoneCommandReq = 31;
+	BlockHIDRelease = 23;
+	CommandComplete = 99;
   }
 	enum CompleteStatus {
 	CmpStatusMove = 0;
@@ -100,11 +100,11 @@ message Timestamp {
 	CmpStatusIDMisMatch = 23;
 	CmpStatusIDReadFailed = 24;
 	CmpStatusIDReadDuplicate = 25;
+	CmpStatusCycleMove = 31;
 	CmpStatusInterlockError = 64;
-	CompleteStatus_CommandInitailFail = 96;
-	CompleteStatus_LongTimeInaction = 97;
-	CompleteStatus_ForceAbnormalFinishByOp = 98;
-	CompleteStatus_ForceNormalFinishByOp = 99;
+
+	CmpStatusLongTimeInaction = 98;
+	CmpStatusForceFinishByOp = 99;
   }
   	enum CMDCancelType {
 	CMD_None = 0;
@@ -131,6 +131,7 @@ message Timestamp {
 	PauseType_ManualBlock = 7;
 	PauseType_ManualHID = 8;
 	PauseType_All = 9;
+	PauseType_SyncStartUp = 11;
   }
    enum VhGuideStatus{
     Unlock = 0;
@@ -178,15 +179,15 @@ message Timestamp {
 		int32 ReplyCode = 1;
   }
 
-   message ID_11_BASIC_INFO_REP {
-		int32 TravelBasicDataCount = 1;
-		int32 SectionDataCount = 2;
-		int32 AddressDataCount = 3;
-		int32 ScaleDataCount = 4;
-		int32 ContrlDataCount = 5;
-		int32 GuideDataCount = 6;
+
+  message ZoneCommandInfo {
+	string ZoneID = 1;
+	repeated string PortIDs = 2;
+   }
+   message ID_11_ZONE_COMMAND_INFO_REP {
+	repeated ZoneCommandInfo ZoneCommandInfos = 1;
   }
-   message ID_111_BASIC_INFO_RESPONSE {
+   message ID_111_ZONE_COMMAND_INFO_RESPONSE {
 		int32 ReplyCode = 1;
   }
 
@@ -475,7 +476,7 @@ message Timestamp {
 	string RenameCSTID = 6;
 	string RenameLOTID = 7;
 	CMDCancelType ReplyActiveType = 8;
-	int32 ReplyCode = 9;		
+	int32 ReplyCode = 9;				  
 	string ZoneCommandPortID = 10;				  
     EventType EventType = 99;
   }
@@ -736,6 +737,7 @@ message Timestamp {
    {
         Normal = 0;
         MTL = 1;
+        Curve = 2;
    }
 
    enum TSCState
@@ -777,57 +779,51 @@ message Timestamp {
 	double ACC_SEC_DIST = 6;
 	VHModeStatus MODE_STATUS = 7;
 	VHActionStatus ACT_STATUS = 8;
-	string TransferCmdID1 = 9;
-	string TransferCmdID2 = 10;
-	string CmdID1 = 11;
-	string CmdID2 = 12;
-
-	VhStopSingle PAUSE_STATUS = 13;
-
-	VhStopSingle BLOCK_PAUSE = 14;
-	VhStopSingle CMD_PAUSE = 15;
-	VhStopSingle OBS_PAUSE = 16;
-	VhStopSingle HID_PAUSE= 17;
-	VhStopSingle SAFETY_DOOR_PAUSE= 18;
-	VhStopSingle EARTHQUAKE_PAUSE= 19;
-	VhStopSingle RESERVE_PAUSE= 20;
-	
-	VhStopSingle ERROR = 21;
-	int32 OBS_DIST = 22;
-	int32 HasCst_L = 23;
-	string CstIdL = 24;
-	int32 HasCst_R = 25;
-	string CstIdR = 26;
-	Timestamp UPD_TIME = 27;
-	int32 VEHICLE_ACC_DIST = 28;
-	int32 MANT_ACC_DIST = 29;
-	Timestamp MANT_DATE = 30;
-	int32 GRIP_COUNT = 31;
-	int32 GRIP_MANT_COUNT = 32;
-	Timestamp GRIP_MANT_DATE =33;
+	string MCS_CMD = 9;
+	string OHTC_CMD = 10;
+	VhStopSingle BLOCK_PAUSE = 11;
+	VhStopSingle CMD_PAUSE = 12;
+	VhStopSingle OBS_PAUSE = 13;
+	VhStopSingle HID_PAUSE= 14;
+	VhStopSingle ERROR = 15;
+	int32 OBS_DIST = 16;
+	int32 HAS_CST = 17;
+	string CST_ID = 18;
+	Timestamp UPD_TIME = 19;
+	int32 VEHICLE_ACC_DIST = 20;
+	int32 MANT_ACC_DIST = 21;
+	Timestamp MANT_DATE = 22;
+	int32 GRIP_COUNT = 23;
+	int32 GRIP_MANT_COUNT = 24;
+	Timestamp GRIP_MANT_DATE = 25;
 	// string NODE_ADR = 25;
-	bool IS_PARKING = 34;
-	Timestamp PARK_TIME = 35;
-	string PARK_ADR_ID = 36;
-	bool IS_CYCLING = 37;
-	Timestamp CYCLERUN_TIME = 38;
-	string CYCLERUN_ID = 39;
+	bool IS_PARKING = 26;
+	Timestamp PARK_TIME = 27;
+	string PARK_ADR_ID = 28;
+	bool IS_CYCLING = 29;
+	Timestamp CYCLERUN_TIME = 30;
+	string CYCLERUN_ID = 31;
 
-	repeated string PredictPath = 40;
-	repeated string CyclingPath = 41;
-	string startAdr = 42;
-	string FromAdr = 43;
-	string ToAdr = 44;
-	double Speed = 45;
-	string ObsVehicleID = 46;
-	repeated string Alarms = 47;
-	CommandType CmdType = 48;
-	CommandStatus vh_CMD_Status = 49;
-	EventType VhRecentTranEvent = 50;
-	repeated string WillPassSectionID = 51;
-	int32 procProgress_Percen = 52;
-	DriveDirction CurrentDriveDirction = 53;
-
+	repeated string PredictPath = 32;
+	repeated string CyclingPath = 33;
+	string startAdr = 34;
+	string FromAdr = 35;
+	string ToAdr = 36;
+	double Speed = 37;
+	string ObsVehicleID = 38;
+	repeated string Alarms = 39;
+	CommandType CmdType = 40;
+	CommandStatus vh_CMD_Status = 41;
+	EventType VhRecentTranEvent = 42;
+	repeated string WillPassSectionID = 43;
+	int32 procProgress_Percen = 44;
+	DriveDirction CurrentDriveDirction = 45;
+	int32 CMD_PRIOTITY = 46;
+	string CMD_CST_ID = 47;
+	VehicleState State = 48;
+	VhStopSingle PauseStatus = 49;
+	VhStopSingle SAFETY_DOOR_PAUSE = 50;
+	VhStopSingle EARTHQUAKE_PAUSE = 51;
   }
 
   message PORT_INFO{
@@ -884,28 +880,6 @@ message Timestamp {
         OnlineLocal = 2;
    }
 
-   enum E_ID_READ_STSTUS
-   {
-        E_ID_READ_STSTUS_Successful = 0;
-        E_ID_READ_STSTUS_Failed = 1;
-        E_ID_READ_STSTUS_Duplicate = 2;
-        E_ID_READ_STSTUS_Mismatch = 3;
-   }
-
-
-   enum E_CARRIER_STATE
-   {
-        E_CARRIER_STATE_None = 0;
-        E_CARRIER_STATE_WaitIn = 1;
-        E_CARRIER_STATE_Installed = 2;
-        E_CARRIER_STATE_Complete = 3;
-        E_CARRIER_STATE_IdReadFail = 4;
-        E_CARRIER_STATE_IdMismatch = 5;
-        E_CARRIER_STATE_IdDuplicate = 6;
-        E_CARRIER_STATE_OpRemove = 7;
-        E_CARRIER_STATE_MoveError = 8;
-        E_CARRIER_STATE_AGVRemove = 9;
-   }
    enum DeviceConnectionType
    {
         DeviceConnectionType_MCS = 0;
@@ -1036,20 +1010,8 @@ message Timestamp {
 	bool Interlock = 5;
 	string CarID = 6;
 	string MTLLocation =7;
-	string MTLRailStatus =8;
-	string SynchronizeTime =9;
-	string distance =10;
-	bool OHTCCarOutInterlock =11;
-	bool OHTCCarOutReady =12;
-	bool OHTCCarOutMoving =13;
-	bool OHTCCarOutMoveComplete =14;
-	bool OHTCCarInMoving =15;
-	bool OHTCCarInInterlock =16;
-	bool OHTCCarInMoveComplete =17;
-	bool MTLCarOutSafetyCheck = 18;
-	bool MTLCarOutInterlock = 19;
-	bool MTLCarInSafetyCheck = 20;
-	bool MTLCarInInterlock = 21;
+	string SynchronizeTime =8;
+	string distance =9;
    }
 
    message TRANSFER_INFO 
@@ -1102,13 +1064,7 @@ message Timestamp {
    {
         MTLLocation_None = 0;
         MTLLocation_Upper = 1;
-        MTLLocation_Bottorm = 2;
-   }
-   enum MTLRailStatus
-   {
-        MTLRailStatus_None = 0;
-        MTLRailStatus_Closed = 1;
-        MTLRailStatus_Open = 2;
+        MTLLocation_Bottorn = 2;
    }
    enum MTLMovingStatus
    {
@@ -1132,8 +1088,8 @@ message Timestamp {
 		ID_102_BASIC_INFO_VERSION_REP Basic_Info_Version_Rep = 102;
 		ID_2_BASIC_INFO_VERSION_RESPONSE Basic_Info_Version_Resp = 2;
 
-		ID_11_BASIC_INFO_REP Basic_Info_Rep = 11;
-		ID_111_BASIC_INFO_RESPONSE Basic_Info_Resp = 111;
+		ID_11_ZONE_COMMAND_INFO_REP Zone_Command_Info_Rep = 11;
+		ID_111_ZONE_COMMAND_INFO_RESPONSE Zone_Command_Info_Resp = 111;
 
 		ID_13_TAVELLING_DATA_REP Tavelling_Data_Rep = 13;
 		ID_113_TAVELLING_DATA_RESPONSE Tavelling_Data_Resp = 113;
@@ -1200,7 +1156,7 @@ message Timestamp {
 		ID_45_POWER_OPE_REQ Power_Ope_Req = 45;
 		ID_145_POWER_OPE_RESPONSE Power_Ope_Resp = 145;
 
-		ID_51_AVOID_REQUEST Avoid_Req = 51;
+  		ID_51_AVOID_REQUEST Avoid_Req = 51;
 		ID_151_AVOID_RESPONSE Avoid_Resp = 151;
 
 		ID_152_AVOID_COMPLETE_REPORT Avoid_Complete_Rep = 152;
