@@ -85,8 +85,7 @@ namespace com.mirle.ibg3k0.sc.Service
         Logger logger = LogManager.GetCurrentClassLogger();
         TransferService transferService = null;
         SCApplication scApp = null;
-
-
+        public static bool IsOneVehicleSystem = false;
         public VehicleService()
         {
 
@@ -120,6 +119,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 vh.TimerActionStart();
             }
             transferService = app.TransferService;
+            IsOneVehicleSystem = this.JudgeIsOneVehicleSystem();
         }
 
         private void Vh_CycleMovePausing(object sender, EventArgs e)
@@ -2050,7 +2050,8 @@ namespace com.mirle.ibg3k0.sc.Service
         /// <returns></returns>
         private (double after_check_x_axis, double after_check_y_axis) checkVehicleAxis(string vhID, string curAdrID, double real_x_axis, double real_y_axis)
         {
-            if (IsOneVehicleSystem())
+            //if (JudgeIsOneVehicleSystem())
+            if (IsOneVehicleSystem)
                 return (real_x_axis, real_y_axis);
             if (SystemParameter.PassAxisDistance <= 0)
                 return (real_x_axis, real_y_axis);
@@ -2141,9 +2142,16 @@ namespace com.mirle.ibg3k0.sc.Service
             //var update_result = scApp.VehicleBLL.updateVheiclePositionToReserveControlModule
             //    (scApp.ReserveBLL, vh, current_sec_id, x_axis, y_axis, 0, vh_angle, speed,
             //     Mirle.Hlts.Utils.HltDirection.Forward, Mirle.Hlts.Utils.HltDirection.None);
-            var update_result = scApp.VehicleBLL.updateVheiclePositionToReserveControlModule
-                (scApp.ReserveBLL, vh, current_sec_id, x_axis, y_axis, 0, vh_angle, speed,
-                 Mirle.Hlts.Utils.HltDirection.None, Mirle.Hlts.Utils.HltDirection.None);
+            if (IsOneVehicleSystem)
+            {
+                //not thing...
+            }
+            else
+            {
+                var update_result = scApp.VehicleBLL.updateVheiclePositionToReserveControlModule
+                    (scApp.ReserveBLL, vh, current_sec_id, x_axis, y_axis, 0, vh_angle, speed,
+                     Mirle.Hlts.Utils.HltDirection.None, Mirle.Hlts.Utils.HltDirection.None);
+            }
 
             if (line.ServiceMode == SCAppConstants.AppServiceMode.Active)
             {
@@ -2933,7 +2941,7 @@ namespace com.mirle.ibg3k0.sc.Service
             IsMultiReserveSuccess(vhID, reserveInfos);
         }
 
-        public bool IsOneVehicleSystem()
+        private bool JudgeIsOneVehicleSystem()
         {
             try
             {
@@ -2956,7 +2964,8 @@ namespace com.mirle.ibg3k0.sc.Service
         {
             try
             {
-                if (IsOneVehicleSystem())
+                //if (JudgeIsOneVehicleSystem())
+                if (IsOneVehicleSystem)
                 {
                     LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
                        Data: "Is one vh system, will driect reply to vh pass",
@@ -3158,7 +3167,8 @@ namespace com.mirle.ibg3k0.sc.Service
         {
             try
             {
-                if (IsOneVehicleSystem())
+                //if (JudgeIsOneVehicleSystem())
+                if (IsOneVehicleSystem)
                 {
                     LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
                        Data: "Is one vh system, will driect reply to vh pass",
@@ -6280,6 +6290,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 is_success = is_success && scApp.VehicleBLL.updataVehicleRemove(vhID);
                 if (is_success)
                 {
+                    //initialVhPosition(vhID);
                     AVEHICLE vh_vo = scApp.VehicleBLL.cache.getVhByID(vhID);
                     vh_vo.VechileRemove();
                     scApp.ReserveBLL.RemoveAllReservedSectionsByVehicleID(vhID);
@@ -6294,6 +6305,25 @@ namespace com.mirle.ibg3k0.sc.Service
                 LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
                    Data: ex,
                    VehicleID: vhID);
+            }
+        }
+        private void initialVhPosition(string vhID)
+        {
+            try
+            {
+                AVEHICLE vh = scApp.VehicleBLL.cache.getVhByID(vhID);
+                ID_134_TRANS_EVENT_REP recive_str = new ID_134_TRANS_EVENT_REP()
+                {
+                    CurrentAdrID = "",
+                    CurrentSecID = "",
+                    XAxis = 0,
+                    YAxis = 0
+                };
+                PositionReport(scApp.getBCFApplication(), vh, recive_str);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
             }
         }
         #endregion Vehicle Install/Remove

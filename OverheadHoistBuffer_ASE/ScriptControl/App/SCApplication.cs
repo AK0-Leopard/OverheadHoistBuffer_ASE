@@ -2258,7 +2258,21 @@ namespace com.mirle.ibg3k0.sc.App
         public static int cmdTimeOutToAlternate = 30;
         public static int cmdPriorityWatershed = 50;
         public static int BoxMovePriority = 99;
-        public static bool isLoopTransferEnhance = false;
+        public static bool islooptransferenhance = false;
+        public static bool isLoopTransferEnhance
+        {
+            get
+            {
+                if (VehicleService.IsOneVehicleSystem)
+                {
+                    return false;
+                }
+                else
+                {
+                    return islooptransferenhance;
+                }
+            }
+        }
         public static bool isReserveByPassOnStraight { private set; get; } = false;
         public static double IgnoreTransferCommandDistanceWithBehindVh { private set; get; } = 15_000;
 
@@ -2325,7 +2339,8 @@ namespace com.mirle.ibg3k0.sc.App
         }
         public static void setIsLoopTransferEnhanceFlag(bool _isLoopTransferEnhance)
         {
-            isLoopTransferEnhance = _isLoopTransferEnhance;
+            //isLoopTransferEnhance = _isLoopTransferEnhance;
+            islooptransferenhance = _isLoopTransferEnhance;
         }
         public static void setIsReserveByPassOnStraight(bool _isReserveByPassOnStraight)
         {

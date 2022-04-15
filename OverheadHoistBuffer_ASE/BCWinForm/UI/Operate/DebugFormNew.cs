@@ -87,6 +87,11 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                 group_cycleRun.Visible = true;
                 groupBox6.Enabled = true;
             }
+            if (sc.Service.VehicleService.IsOneVehicleSystem)
+            {
+                cb_LoopEnhance.Visible = false;
+                cb_isByPassStraightReserve.Visible = false;
+            }
 
         }
 

@@ -89,15 +89,6 @@ namespace com.mirle.ibg3k0.sc.BLL
                 return (false, 0, 0, false);
             }
         }
-        public HltResult TryAddVehicleOrUpdateResetSensorForkDir(string vhID)
-        {
-            var hltvh = mapAPI.HltVehicles.Where(vh => SCUtility.isMatche(vh.ID, vhID)).SingleOrDefault();
-            var clone_hltvh = hltvh.DeepClone();
-            clone_hltvh.SensorDirection = HltDirection.None;
-            clone_hltvh.ForkDirection = HltDirection.None;
-            HltResult result = mapAPI.TryAddOrUpdateVehicle(clone_hltvh);
-            return result;
-        }
         public HltResult TryAddVehicleOrUpdate(string vhID, string currentSectionID, double vehicleX, double vehicleY, float vehicleAngle, double speedMmPerSecond,
                                            HltDirection sensorDir, HltDirection forkDir)
         {

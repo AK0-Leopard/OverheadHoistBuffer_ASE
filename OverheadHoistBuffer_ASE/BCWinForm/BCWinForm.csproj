@@ -628,6 +628,12 @@
     <None Include="Config\ASE\CSV\ALARMMAP.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Config\ASE\CSV\ZONECOMMANDINFO.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE2\CSV\ZONECOMMANDINFO.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Config\ASE_LINE3\CSV\ZONECOMMANDINFO.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
