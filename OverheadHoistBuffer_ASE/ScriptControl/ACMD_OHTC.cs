@@ -35,5 +35,6 @@ namespace com.mirle.ibg3k0.sc
         public string BOX_ID { get; set; }
         public string LOT_ID { get; set; }
         public Nullable<System.DateTime> CMD_INSER_TIME { get; set; }
+        public Nullable<com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.CompleteStatus> COMPLETE_STATUS { get; set; }
     }
 }

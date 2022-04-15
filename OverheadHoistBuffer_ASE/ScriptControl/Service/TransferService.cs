@@ -756,7 +756,8 @@ namespace com.mirle.ibg3k0.sc.Service
                                 reportBLL.ReportTransferCompleted(cmd_mcs, dbData, ResultCode.OtherErrors);
                             cmdBLL.updateCMD_MCS_TranStatus(cmd_mcs.CMD_ID, E_TRAN_STATUS.TransferCompleted);
                         }
-                        cmdBLL.updateCommand_OHTC_StatusByCmdID(cmd_ohtc.CMD_ID, E_CMD_STATUS.AbnormalEndByOHTC);
+                        //cmdBLL.updateCommand_OHTC_StatusByCmdID(cmd_ohtc.CMD_ID, E_CMD_STATUS.AbnormalEndByOHTC);
+                        cmdBLL.updateOHTCCommandToFinishByCmdID(cmd_ohtc.CMD_ID, E_CMD_STATUS.AbnormalEndByOHTC, CompleteStatus.CmpStatusAbort);
                         scApp.VehicleBLL.cache.updataExcuteCmdIDToEmpty(vh.VEHICLE_ID);
 
                         TransferServiceLogger.Info

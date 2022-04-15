@@ -100,13 +100,18 @@ message Timestamp {
 	CmpStatusIDMisMatch = 23;
 	CmpStatusIDReadFailed = 24;
 	CmpStatusIDReadDuplicate = 25;
+	CmpStatusIDDoubleStorage = 26;
+	CmpStatusIDEmptyRetrival = 27;
+	CmpStatusIDCSTTypeMismatch = 28;
 	CmpStatusCycleMove = 31;
 	CmpStatusInterlockError = 64;
-
-	CmpStatusLongTimeInaction = 98;
-	CmpStatusForceFinishByOp = 99;
+	//C自己內部的 Code
+	CmpStatusCommandInitailFail = 96;
+	CmpStatusLongTimeInaction = 97;
+	CmpStatusForceAbnormalFinishByOp = 98;
+	CmpStatusForceNormalFinishByOp = 99;
   }
-  	enum CMDCancelType {
+  enum CMDCancelType {
 	CMD_None = 0;
 	CMD_Retry = 1;
 	CMD_Cancel = 20;

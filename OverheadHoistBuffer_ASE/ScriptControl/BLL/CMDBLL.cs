@@ -3457,7 +3457,48 @@ namespace com.mirle.ibg3k0.sc.BLL
 
         }
 
+        public bool updateOHTCCommandToFinishByCmdID(string cmd_id, E_CMD_STATUS status, CompleteStatus completeStatus, int travelDis = 0)
+        {
+            bool isSuccess = false;
+            //using (DBConnection_EF con = new DBConnection_EF())
 
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    ACMD_OHTC cmd = cmd_ohtcDAO.getByID(con, cmd_id);
+                    if (cmd != null)
+                    {
+                        cmd.CMD_PROGRESS = travelDis;
+                        cmd.CMD_END_TIME = DateTime.Now;
+                        cmd_ohtc_detailDAO.DeleteByBatch(con, cmd.CMD_ID);
+                        cmd.CMD_STAUS = status;
+
+                        if (cmd.COMPLETE_STATUS == CompleteStatus.CmpStatusIdemptyRetrival ||
+                            cmd.COMPLETE_STATUS == CompleteStatus.CmpStatusIddoubleStorage)
+                        {
+                            //如果命令狀態已經是空取、二重格
+                            //則不再對該欄位進行複寫
+                        }
+                        else
+                        {
+                            cmd.COMPLETE_STATUS = completeStatus;
+                        }
+
+                        cmd_ohtcDAO.Update(con, cmd);
+
+                        scApp.VehicleBLL.updateVehicleExcuteCMD(cmd.VH_ID, string.Empty, string.Empty);
+                    }
+                    isSuccess = true;
+                }
+                return isSuccess;
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return false;
+            }
+        }
         public bool updateCMD_OHxC_Status2ReadyToReWirte(string cmd_id, out ACMD_OHTC cmd_ohtc)
         {
             bool isSuccess = false;
@@ -3486,6 +3527,29 @@ namespace com.mirle.ibg3k0.sc.BLL
                 return false;
             }
 
+        }
+        public void updateCMD_OHTC_CompleteStatus(string cmdID, CompleteStatus completeStatus)
+        {
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    ACMD_OHTC cmd = cmd_ohtcDAO.getByID(con, cmdID);
+                    if (cmd != null)
+                    {
+                        cmd.COMPLETE_STATUS = completeStatus;
+                        cmd_ohtcDAO.Update(con, cmd);
+                    }
+                    else
+                    {
+                        logger.Warn($"want to update cmd ohtc of complete status,but obj not exist,cmd ID:{cmdID}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+            }
         }
 
 
@@ -3864,11 +3928,13 @@ namespace com.mirle.ibg3k0.sc.BLL
 
         }
 
-        public bool forceUpdataCmdStatus2FnishByVhID(string vh_id)
+        public bool forceUpdataCmdStatus2FnishByVhID(string vh_id, bool isByOp = true)
         {
             int count = 0;
             try
             {
+                CompleteStatus completeStatus = isByOp ? CompleteStatus.CmpStatusForceAbnormalFinishByOp :
+                                                         CompleteStatus.CmpStatusAbort;
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
                     List<ACMD_OHTC> cmds = cmd_ohtcDAO.loadExecuteCmd(con, vh_id);
@@ -3878,7 +3944,8 @@ namespace com.mirle.ibg3k0.sc.BLL
                         {
                             if (cmd.CMD_STAUS > E_CMD_STATUS.Queue)
                             {
-                                updateCommand_OHTC_StatusByCmdID(cmd.CMD_ID, E_CMD_STATUS.AbnormalEndByOHTC);
+                                //updateCommand_OHTC_StatusByCmdID(cmd.CMD_ID, E_CMD_STATUS.AbnormalEndByOHTC);
+                                updateOHTCCommandToFinishByCmdID(cmd.CMD_ID, E_CMD_STATUS.AbnormalEndByOHTC, completeStatus);
                                 if (!SCUtility.isEmpty(cmd.CMD_ID_MCS))
                                 {
                                     //scApp.CMDBLL.updateCMD_MCS_TranStatus2Complete(cmd.CMD_ID_MCS, E_TRAN_STATUS.Aborting);
@@ -3887,7 +3954,8 @@ namespace com.mirle.ibg3k0.sc.BLL
                             else
                             {
                                 ACMD_OHTC queue_cmd = cmd;
-                                updateCommand_OHTC_StatusByCmdID(queue_cmd.CMD_ID, E_CMD_STATUS.AbnormalEndByOHTC);
+                                //updateCommand_OHTC_StatusByCmdID(queue_cmd.CMD_ID, E_CMD_STATUS.AbnormalEndByOHTC);
+                                updateOHTCCommandToFinishByCmdID(queue_cmd.CMD_ID, E_CMD_STATUS.AbnormalEndByOHTC, completeStatus);
                                 if (!SCUtility.isEmpty(queue_cmd.CMD_ID_MCS))
                                 {
                                     ACMD_MCS pre_initial_cmd_mcs = getCMD_MCSByID(queue_cmd.CMD_ID_MCS);
@@ -4210,7 +4278,8 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
             catch (Exception ex)
             {
-                updateCommand_OHTC_StatusByCmdID(acmd_ohtc.CMD_ID, E_CMD_STATUS.AbnormalEndByOHTC);
+                //updateCommand_OHTC_StatusByCmdID(acmd_ohtc.CMD_ID, E_CMD_STATUS.AbnormalEndByOHTC);
+                updateOHTCCommandToFinishByCmdID(acmd_ohtc.CMD_ID, E_CMD_STATUS.AbnormalEndByOHTC, CompleteStatus.CmpStatusCommandInitailFail);
                 logger_VhRouteLog.Error(ex, "generateCmd_OHTC_Details happend");
                 return false;
             }

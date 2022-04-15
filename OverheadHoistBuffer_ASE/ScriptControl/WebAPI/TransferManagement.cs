@@ -137,7 +137,8 @@ namespace com.mirle.ibg3k0.sc.WebAPI
                 {
                     if (excute_cmd_of_vh != null)
                     {
-                        scApp.VehicleBLL.doTransferCommandFinish(excute_cmd_of_vh.VEHICLE_ID, excute_cmd_of_vh.OHTC_CMD, CompleteStatus.CmpStatusForceFinishByOp);
+                        //scApp.VehicleBLL.doTransferCommandFinish(excute_cmd_of_vh.VEHICLE_ID, excute_cmd_of_vh.OHTC_CMD, CompleteStatus.CmpStatusForceFinishByOp);
+                        scApp.VehicleBLL.doTransferCommandFinish(excute_cmd_of_vh.VEHICLE_ID, excute_cmd_of_vh.OHTC_CMD, CompleteStatus.CmpStatusForceAbnormalFinishByOp);
                         scApp.VIDBLL.initialVIDCommandInfo(excute_cmd_of_vh.VEHICLE_ID);
                     }
                     //scApp.CMDBLL.updateCMD_MCS_TranStatus2Complete(mcs_cmd.CMD_ID, E_TRAN_STATUS.Aborting);

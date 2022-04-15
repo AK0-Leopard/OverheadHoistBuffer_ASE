@@ -64,7 +64,8 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                     {
                         if (excute_cmd_of_vh != null)
                         {
-                            mainform.BCApp.SCApplication.VehicleBLL.doTransferCommandFinish(excute_cmd_of_vh.VEHICLE_ID, excute_cmd_of_vh.OHTC_CMD, CompleteStatus.CmpStatusForceFinishByOp);
+                            //mainform.BCApp.SCApplication.VehicleBLL.doTransferCommandFinish(excute_cmd_of_vh.VEHICLE_ID, excute_cmd_of_vh.OHTC_CMD, CompleteStatus.CmpStatusForceFinishByOp);
+                            mainform.BCApp.SCApplication.VehicleBLL.doTransferCommandFinish(excute_cmd_of_vh.VEHICLE_ID, excute_cmd_of_vh.OHTC_CMD, CompleteStatus.CmpStatusForceAbnormalFinishByOp);
                             mainform.BCApp.SCApplication.VIDBLL.initialVIDCommandInfo(excute_cmd_of_vh.VEHICLE_ID);
                         }
                         //mainform.BCApp.SCApplication.CMDBLL.updateCMD_MCS_TranStatus2Complete(mcs_cmd.CMD_ID, E_TRAN_STATUS.Aborting);

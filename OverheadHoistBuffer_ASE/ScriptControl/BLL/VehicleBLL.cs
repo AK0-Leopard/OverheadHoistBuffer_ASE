@@ -1757,7 +1757,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 case CompleteStatus.CmpStatusInterlockError:
                 case CompleteStatus.CmpStatusLongTimeInaction:
                     return E_CMD_STATUS.AbnormalEndByOHT;
-                case CompleteStatus.CmpStatusForceFinishByOp:
+                case CompleteStatus.CmpStatusForceAbnormalFinishByOp:
                     return E_CMD_STATUS.AbnormalEndByOHTC;
                 default:
                     return E_CMD_STATUS.NormalEnd;
