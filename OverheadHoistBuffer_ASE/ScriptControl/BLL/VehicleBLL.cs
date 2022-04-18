@@ -307,6 +307,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
                     AVEHICLE vh = vehicleDAO.getByID(con, vhID);
+                    vh.VEHICLE_ACC_DIST += cmdFinish;
                     vh.MANT_ACC_DIST += cmdFinish;
                     con.Entry(vh).Property(p => p.MANT_ACC_DIST).IsModified = true;
                     vehicleDAO.doUpdate(scApp, con, vh);
