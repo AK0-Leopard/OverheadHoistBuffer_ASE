@@ -213,12 +213,13 @@ namespace com.mirle.ibg3k0.sc.BLL
                 }
 
 
-                string strNow = BCFUtility.formatDateTime(DateTime.Now, SCAppConstants.TimestampFormat_19);
+                //string strNow = BCFUtility.formatDateTime(DateTime.Now, SCAppConstants.TimestampFormat_19);
+                DateTime date_time_now = DateTime.Now;
 
                 ALARM alarm = new ALARM()
                 {
                     EQPT_ID = eq_id,
-                    RPT_DATE_TIME = strNow,
+                    RPT_DATE_TIME = date_time_now,
                     ALAM_CODE = error_code,
                     ALAM_LVL = alarmMap == null ? E_ALARM_LVL.Warn : alarmMap.ALARM_LVL,
                     ALAM_STAT = ProtocolFormat.OHTMessage.ErrorStatus.ErrSet,
@@ -320,9 +321,10 @@ namespace com.mirle.ibg3k0.sc.BLL
                     ALARM alarm = alarmDao.getSetAlarm(con, eq_id, error_code);
                     if (alarm != null)
                     {
-                        string strNow = BCFUtility.formatDateTime(DateTime.Now, SCAppConstants.TimestampFormat_19);
+                        //string strNow = BCFUtility.formatDateTime(DateTime.Now, SCAppConstants.TimestampFormat_19);
+                        DateTime date_time_now = DateTime.Now;
                         alarm.ALAM_STAT = ProtocolFormat.OHTMessage.ErrorStatus.ErrReset;
-                        alarm.END_TIME = strNow;
+                        alarm.END_TIME = date_time_now;
                         alarmDao.updateAlarm(con, alarm);
 
                         CheckSetAlarm();

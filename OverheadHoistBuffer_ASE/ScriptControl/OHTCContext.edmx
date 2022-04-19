@@ -320,8 +320,8 @@
           </Key>
           <Property Name="EQPT_ID" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="UNIT_NUM" Type="int" Nullable="false" />
-          <Property Name="RPT_DATE_TIME" Type="char" MaxLength="19" Nullable="false" />
-          <Property Name="END_TIME" Type="char" MaxLength="19" />
+          <Property Name="RPT_DATE_TIME" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="END_TIME" Type="datetime2" Precision="7" />
           <Property Name="ALAM_CODE" Type="char" MaxLength="10" Nullable="false" />
           <Property Name="ALAM_LVL" Type="int" Nullable="false" />
           <Property Name="ALAM_STAT" Type="int" Nullable="false" />
@@ -2702,7 +2702,7 @@
           </Key>
           <Property Name="EQPT_ID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="UNIT_NUM" Type="Int32" Nullable="false" />
-          <Property Name="RPT_DATE_TIME" Type="String" Nullable="false" MaxLength="19" Unicode="false" FixedLength="true" />
+          <Property Name="RPT_DATE_TIME" Type="DateTime" Nullable="false" />
           <Property Name="ALAM_CODE" Type="String" MaxLength="10" FixedLength="true" Unicode="false" Nullable="false" />
           <Property Name="ALAM_LVL" Type="OHTC_DevModel.E_ALARM_LVL" Nullable="false" />
           <Property Name="ALAM_STAT" Type="OHTC_DevModel.ErrorStatus" Nullable="false" />
@@ -2712,7 +2712,7 @@
           <Property Name="UnitState" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
           <Property Name="RecoveryOption" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="CMD_ID" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
-          <Property Name="END_TIME" Type="String" MaxLength="19" FixedLength="true" Unicode="false" />
+          <Property Name="END_TIME" Type="DateTime" />
         </EntityType>
         <EnumType Name="E_ALARM_LVL">
           <Member Name="Warn" Value="1" />

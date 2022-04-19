@@ -540,14 +540,17 @@ namespace com.mirle.ibg3k0.sc.Service
 
             if (leave_section != null)
             {
-                scApp.ReserveBLL.RemoveManyReservedSectionsByVIDSID(vh.VEHICLE_ID, leave_section.SEC_ID);
                 scApp.CMDBLL.removePassSection(vh.VEHICLE_ID, leave_section.SEC_ID);
-                LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
-                   Data: $"vh:{vh.VEHICLE_ID} leave section {leave_section.SEC_ID},remove reserved.",
-                   VehicleID: vh.VEHICLE_ID);
+                if (!IsOneVehicleSystem)
+                {
+                    scApp.ReserveBLL.RemoveManyReservedSectionsByVIDSID(vh.VEHICLE_ID, leave_section.SEC_ID);
+                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Info, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                       Data: $"vh:{vh.VEHICLE_ID} leave section {leave_section.SEC_ID},remove reserved.",
+                       VehicleID: vh.VEHICLE_ID);
+                }
             }
             //如果在進入該Section後，還有在該Section之前的Section沒有清掉的，就把它全部釋放
-            if (entry_section != null)
+            if (!IsOneVehicleSystem && entry_section != null)
             {
                 List<string> current_resreve_section = scApp.ReserveBLL.loadCurrentReserveSections(vh.VEHICLE_ID);
                 int current_section_index_in_reserve_section = current_resreve_section.IndexOf(entry_section.SEC_ID);
