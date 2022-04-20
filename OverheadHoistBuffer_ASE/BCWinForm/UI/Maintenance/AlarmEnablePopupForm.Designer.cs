@@ -38,10 +38,10 @@
             this.txt_userID = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.txt_AlarmCode = new System.Windows.Forms.TextBox();
+            this.txt_reason = new System.Windows.Forms.TextBox();
             this.LoginPnl = new System.Windows.Forms.Panel();
             this.CancelBtn = new System.Windows.Forms.Button();
             this.OKBtn = new System.Windows.Forms.Button();
-            this.txt_reason = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.LoginPnl.SuspendLayout();
@@ -104,6 +104,11 @@
             this.txt_AlarmCode.Name = "txt_AlarmCode";
             this.txt_AlarmCode.ReadOnly = true;
             // 
+            // txt_reason
+            // 
+            resources.ApplyResources(this.txt_reason, "txt_reason");
+            this.txt_reason.Name = "txt_reason";
+            // 
             // LoginPnl
             // 
             this.LoginPnl.Controls.Add(this.CancelBtn);
@@ -124,11 +129,6 @@
             this.OKBtn.Name = "OKBtn";
             this.OKBtn.UseVisualStyleBackColor = true;
             this.OKBtn.Click += new System.EventHandler(this.OKBtn_Click);
-            // 
-            // txt_reason
-            // 
-            resources.ApplyResources(this.txt_reason, "txt_reason");
-            this.txt_reason.Name = "txt_reason";
             // 
             // AlarmEnablePopupForm
             // 

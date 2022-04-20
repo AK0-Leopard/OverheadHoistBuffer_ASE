@@ -107,13 +107,14 @@ namespace com.mirle.ibg3k0.bc.winform
             this.zh_twToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zh_chToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tipMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.engineerToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.debugToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.engineeringModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.搬送模擬ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.monitorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.communectionStatusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.engineerToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.debugToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.engineeringModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.vehicleMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.CMS_OnLineMode.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -408,6 +409,7 @@ namespace com.mirle.ibg3k0.bc.winform
             this.toolStripMenuItem1,
             this.shelfToolStripMenuItem1,
             this.命令卡匣資料ToolStripMenuItem,
+            this.vehicleMaintenanceToolStripMenuItem,
             this.toolStripSeparator3,
             this.reserveInfoToolStripMenuItem,
             this.alarmEnableDisableToolStripMenuItem});
@@ -505,6 +507,26 @@ namespace com.mirle.ibg3k0.bc.winform
             resources.ApplyResources(this.tipMessageToolStripMenuItem, "tipMessageToolStripMenuItem");
             this.tipMessageToolStripMenuItem.Click += new System.EventHandler(this.tipMessageToolStripMenuItem_Click);
             // 
+            // engineerToolStripMenuItem1
+            // 
+            this.engineerToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.debugToolStripMenuItem1,
+            this.engineeringModeToolStripMenuItem});
+            this.engineerToolStripMenuItem1.Name = "engineerToolStripMenuItem1";
+            resources.ApplyResources(this.engineerToolStripMenuItem1, "engineerToolStripMenuItem1");
+            // 
+            // debugToolStripMenuItem1
+            // 
+            this.debugToolStripMenuItem1.Name = "debugToolStripMenuItem1";
+            resources.ApplyResources(this.debugToolStripMenuItem1, "debugToolStripMenuItem1");
+            this.debugToolStripMenuItem1.Click += new System.EventHandler(this.debugToolStripMenuItem1_Click);
+            // 
+            // engineeringModeToolStripMenuItem
+            // 
+            this.engineeringModeToolStripMenuItem.Name = "engineeringModeToolStripMenuItem";
+            resources.ApplyResources(this.engineeringModeToolStripMenuItem, "engineeringModeToolStripMenuItem");
+            this.engineeringModeToolStripMenuItem.Click += new System.EventHandler(this.engineeringModeToolStripMenuItem_Click);
+            // 
             // testToolStripMenuItem
             // 
             this.testToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -531,25 +553,11 @@ namespace com.mirle.ibg3k0.bc.winform
             resources.ApplyResources(this.communectionStatusToolStripMenuItem, "communectionStatusToolStripMenuItem");
             this.communectionStatusToolStripMenuItem.Click += new System.EventHandler(this.communectionStatusToolStripMenuItem_Click);
             // 
-            // engineerToolStripMenuItem1
+            // vehicleMaintenanceToolStripMenuItem
             // 
-            this.engineerToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.debugToolStripMenuItem1,
-            this.engineeringModeToolStripMenuItem});
-            this.engineerToolStripMenuItem1.Name = "engineerToolStripMenuItem1";
-            resources.ApplyResources(this.engineerToolStripMenuItem1, "engineerToolStripMenuItem1");
-            // 
-            // debugToolStripMenuItem1
-            // 
-            this.debugToolStripMenuItem1.Name = "debugToolStripMenuItem1";
-            resources.ApplyResources(this.debugToolStripMenuItem1, "debugToolStripMenuItem1");
-            this.debugToolStripMenuItem1.Click += new System.EventHandler(this.debugToolStripMenuItem1_Click);
-            // 
-            // engineeringModeToolStripMenuItem
-            // 
-            this.engineeringModeToolStripMenuItem.Name = "engineeringModeToolStripMenuItem";
-            resources.ApplyResources(this.engineeringModeToolStripMenuItem, "engineeringModeToolStripMenuItem");
-            this.engineeringModeToolStripMenuItem.Click += new System.EventHandler(this.engineeringModeToolStripMenuItem_Click);
+            this.vehicleMaintenanceToolStripMenuItem.Name = "vehicleMaintenanceToolStripMenuItem";
+            resources.ApplyResources(this.vehicleMaintenanceToolStripMenuItem, "vehicleMaintenanceToolStripMenuItem");
+            this.vehicleMaintenanceToolStripMenuItem.Click += new System.EventHandler(this.vehicleMaintenanceToolStripMenuItem_Click);
             // 
             // BCMainForm
             // 
@@ -713,6 +721,7 @@ namespace com.mirle.ibg3k0.bc.winform
         private System.Windows.Forms.ToolStripMenuItem queryToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem alarmHistoryQueryToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem transferHistoryQueryToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem vehicleMaintenanceToolStripMenuItem;
     }
 
     /// <summary>

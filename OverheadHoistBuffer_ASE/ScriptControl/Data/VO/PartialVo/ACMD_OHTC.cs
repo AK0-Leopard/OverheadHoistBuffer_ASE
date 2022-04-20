@@ -52,6 +52,7 @@ namespace com.mirle.ibg3k0.sc
                 LOT_ID = this.LOT_ID,
                 CMD_INSER_TIME =
                 this.CMD_INSER_TIME.HasValue ? this.CMD_INSER_TIME.Value : DateTime.Now,
+                COMPLETE_STATUS = this.COMPLETE_STATUS
             };
         }
 

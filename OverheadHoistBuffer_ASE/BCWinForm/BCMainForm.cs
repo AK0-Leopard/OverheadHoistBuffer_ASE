@@ -1096,5 +1096,10 @@ namespace com.mirle.ibg3k0.bc.winform
         {
             openForm(typeof(HistoryCMD_MCS).Name, true, false);
         }
+
+        private void vehicleMaintenanceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openForm(typeof(VehicleMaintenanceForm).Name, true, false);
+        }
     }
 }

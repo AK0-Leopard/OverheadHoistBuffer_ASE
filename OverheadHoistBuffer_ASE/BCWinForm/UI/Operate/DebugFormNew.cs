@@ -439,7 +439,6 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             try
             {
                 btn_resetODO.Enabled = false;
-                await Task.Run(() => bcApp.SCApplication.VehicleService.ResetODO(vh_id));
             }
             catch (Exception ex)
             {

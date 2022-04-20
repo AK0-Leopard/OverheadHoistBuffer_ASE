@@ -120,7 +120,7 @@ namespace com.mirle.ibg3k0.sc.Service
             }
             transferService = app.TransferService;
             IsOneVehicleSystem = this.JudgeIsOneVehicleSystem();
-        }
+         }
 
         private void Vh_CycleMovePausing(object sender, EventArgs e)
         {
@@ -2545,7 +2545,8 @@ namespace com.mirle.ibg3k0.sc.Service
             {
                 scApp.VehicleBLL.doUnloading(eqpt.VEHICLE_ID);
             }
-            Task.Run(() => scApp.FlexsimCommandDao.setVhEventTypeToFlexsimDB(eqpt.VEHICLE_ID, eventType));
+            //Task.Run(() => scApp.FlexsimCommandDao.setVhEventTypeToFlexsimDB(eqpt.VEHICLE_ID, eventType));
+            scApp.VehicleBLL.updateVheicleGripInfoAccumulate(eqpt.VEHICLE_ID);
         }
 
         [ClassAOPAspect]
@@ -5457,7 +5458,7 @@ namespace com.mirle.ibg3k0.sc.Service
             string finish_ohxc_cmd = eqpt.OHTC_CMD;
             string finish_mcs_cmd = eqpt.MCS_CMD;
             string cmd_id = recive_str.CmdID;
-            int travel_dis = recive_str.CmdDistance;
+            int travel_dis_mm = recive_str.CmdDistance;
             CompleteStatus completeStatus = recive_str.CmpStatus;
             string cur_sec_id = recive_str.CurrentSecID;
             string cur_adr_id = recive_str.CurrentAdrID;
@@ -5518,7 +5519,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     isSuccess &= scApp.VehicleBLL.doTransferCommandFinish(eqpt.VEHICLE_ID, cmd_id, completeStatus);
                     E_CMD_STATUS ohtc_cmd_status = scApp.VehicleBLL.CompleteStatusToCmdStatus(completeStatus);
                     //isSuccess &= scApp.CMDBLL.updateCommand_OHTC_StatusByCmdID(cmd_id, ohtc_cmd_status, travel_dis);
-                    isSuccess &= scApp.CMDBLL.updateOHTCCommandToFinishByCmdID(cmd_id, ohtc_cmd_status, completeStatus, travel_dis);
+                    isSuccess &= scApp.CMDBLL.updateOHTCCommandToFinishByCmdID(cmd_id, ohtc_cmd_status, completeStatus, travel_dis_mm);
                     isSuccess &= scApp.VIDBLL.initialVIDCommandInfo(eqpt.VEHICLE_ID);
 
 
@@ -5584,7 +5585,8 @@ namespace com.mirle.ibg3k0.sc.Service
                 //tryAskVhToIdlePosition(vh_id);//B0.11
             });
             eqpt.onCommandComplete(completeStatus);
-            scApp.VehicleBLL.updateVheicleTravelInfo(eqpt.VEHICLE_ID, travel_dis);
+
+            scApp.VehicleBLL.updateVheicleTravelInfo(eqpt.VEHICLE_ID, travel_dis_mm);
 
         }
 
@@ -6341,11 +6343,22 @@ namespace com.mirle.ibg3k0.sc.Service
         }
 
         #region Specially Control
-        public void ResetODO(string vhID)
+        public void ResetMantAccDist(string vhID)
         {
             try
             {
                 scApp.VehicleBLL.resetVheicleTravelInfo(vhID);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception:");
+            }
+        }
+        public void ResetGripMantCount(string vhID)
+        {
+            try
+            {
+                scApp.VehicleBLL.resetVheicleGripInfo(vhID);
             }
             catch (Exception ex)
             {

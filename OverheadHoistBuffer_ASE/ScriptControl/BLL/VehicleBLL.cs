@@ -298,17 +298,17 @@ namespace com.mirle.ibg3k0.sc.BLL
             //});
             //}
         }
-        public void updateVheicleTravelInfo(string vhID, int cmdFinish)
+        public void updateVheicleTravelInfo(string vhID, int cmdFinish_mm)
         {
-            //AVEHICLE vh = scApp.VehiclPool.GetObject();
-            //string preNodeAdr = string.Empty;
             try
             {
+                int cmdFinish_m = cmdFinish_mm / 1000;//轉換回公尺
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
                     AVEHICLE vh = vehicleDAO.getByID(con, vhID);
-                    vh.VEHICLE_ACC_DIST += cmdFinish;
-                    vh.MANT_ACC_DIST += cmdFinish;
+                    vh.VEHICLE_ACC_DIST += cmdFinish_m;
+                    vh.MANT_ACC_DIST += cmdFinish_m;
+                    con.Entry(vh).Property(p => p.VEHICLE_ACC_DIST).IsModified = true;
                     con.Entry(vh).Property(p => p.MANT_ACC_DIST).IsModified = true;
                     vehicleDAO.doUpdate(scApp, con, vh);
                 }
@@ -317,10 +317,25 @@ namespace com.mirle.ibg3k0.sc.BLL
             {
                 logger.Error(ex, "Exception:");
             }
-            //finally
-            //{
-            //    scApp.VehiclPool.PutObject(vh);
-            //}
+        }
+        public void updateVheicleGripInfoAccumulate(string vhID)
+        {
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    AVEHICLE vh = vehicleDAO.getByID(con, vhID);
+                    vh.GRIP_COUNT = vh.GRIP_COUNT + 1;
+                    vh.GRIP_MANT_COUNT = vh.GRIP_MANT_COUNT + 1;
+                    con.Entry(vh).Property(p => p.GRIP_COUNT).IsModified = true;
+                    con.Entry(vh).Property(p => p.GRIP_MANT_COUNT).IsModified = true;
+                    vehicleDAO.doUpdate(scApp, con, vh);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception:");
+            }
         }
         public void resetVheicleTravelInfo(string vhID)
         {
@@ -336,6 +351,34 @@ namespace com.mirle.ibg3k0.sc.BLL
                     vh.MANT_DATE = DateTime.Now;
                     con.Entry(vh).Property(p => p.MANT_ACC_DIST).IsModified = true;
                     con.Entry(vh).Property(p => p.MANT_DATE).IsModified = true;
+                    vehicleDAO.doUpdate(scApp, con, vh);
+                    con.Entry(vh).State = EntityState.Detached;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception:");
+            }
+            finally
+            {
+                scApp.VehiclPool.PutObject(vh);
+            }
+        }
+
+        public void resetVheicleGripInfo(string vhID)
+        {
+            AVEHICLE vh = scApp.VehiclPool.GetObject();
+            string preNodeAdr = string.Empty;
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    vh.VEHICLE_ID = vhID;
+                    con.AVEHICLE.Attach(vh);
+                    vh.GRIP_MANT_COUNT = 0;
+                    vh.GRIP_MANT_DATE = DateTime.Now;
+                    con.Entry(vh).Property(p => p.GRIP_MANT_COUNT).IsModified = true;
+                    con.Entry(vh).Property(p => p.GRIP_MANT_DATE).IsModified = true;
                     vehicleDAO.doUpdate(scApp, con, vh);
                     con.Entry(vh).State = EntityState.Detached;
                 }

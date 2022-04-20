@@ -408,6 +408,7 @@
             this.btn_resetODO.TabIndex = 59;
             this.btn_resetODO.Text = "Reset ODO";
             this.btn_resetODO.UseVisualStyleBackColor = true;
+            this.btn_resetODO.Visible = false;
             this.btn_resetODO.Click += new System.EventHandler(this.btn_resetODO_Click);
             // 
             // groupBox9

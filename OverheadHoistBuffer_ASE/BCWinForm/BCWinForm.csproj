@@ -286,6 +286,12 @@
     <Compile Include="UI\Maintenance\AlarmEnablePopupForm.Designer.cs">
       <DependentUpon>AlarmEnablePopupForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\Maintenance\VehicleMaintenanceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Maintenance\VehicleMaintenanceForm.Designer.cs">
+      <DependentUpon>VehicleMaintenanceForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\Maintenance\ShelfMaintenanceForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1132,6 +1138,9 @@
     <EmbeddedResource Include="UI\Maintenance\AlarmEnablePopupForm.resx">
       <DependentUpon>AlarmEnablePopupForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UI\Maintenance\VehicleMaintenanceForm.resx">
+      <DependentUpon>VehicleMaintenanceForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\Maintenance\ShelfMaintenanceForm.resx">
       <DependentUpon>ShelfMaintenanceForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -1407,12 +1416,12 @@
   <ItemGroup>
     <PublishFile Include="Config\SQLServer.cfg.xml">
       <Visible>False</Visible>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
       <Group>
       </Group>
       <TargetPath>
       </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
       <FileType>File</FileType>
     </PublishFile>
   </ItemGroup>
