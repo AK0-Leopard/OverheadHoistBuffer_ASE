@@ -318,6 +318,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 logger.Error(ex, "Exception:");
             }
         }
+
         public void updateVheicleGripInfoAccumulate(string vhID)
         {
             try

@@ -130,7 +130,17 @@ namespace com.mirle.ibg3k0.sc
                                                        cmd.TRANSFERSTATE == E_TRAN_STATUS.Queue).ToList();
             return ready_transfer_cmd_mcs;
         }
-
+        public static List<ACMD_MCS> loadTransferingAndBeforeLoadingCMD_MCS()
+        {
+            if (MCS_CMD_InfoList == null)
+            {
+                return new List<ACMD_MCS>();
+            }
+            var ready_transfer_cmd_mcs = MCS_CMD_InfoList.Values.
+                                         Where(cmd => cmd.TRANSFERSTATE == E_TRAN_STATUS.Transferring &&
+                                                      cmd.COMMANDSTATE < ACMD_MCS.COMMAND_STATUS_BIT_INDEX_LOADING).ToList();
+            return ready_transfer_cmd_mcs;
+        }
         public static List<ACMD_MCS> loadCurrentExcuteCMD_MCS()
         {
             if (MCS_CMD_InfoList == null)

@@ -120,7 +120,7 @@ namespace com.mirle.ibg3k0.sc.Service
             }
             transferService = app.TransferService;
             IsOneVehicleSystem = this.JudgeIsOneVehicleSystem();
-         }
+        }
 
         private void Vh_CycleMovePausing(object sender, EventArgs e)
         {
@@ -2023,7 +2023,7 @@ namespace com.mirle.ibg3k0.sc.Service
             double real_y_axis = recive_str.YAxis;
             (double after_check_x_axis, double after_check_y_axis) = checkVehicleAxis(eqpt.VEHICLE_ID, current_adr_id, real_x_axis, real_y_axis);
             //double vh_angle = recive_str.Angle;
-            double vh_angle = current_sec.PADDING;
+            double vh_angle = current_sec == null ? 0 : current_sec.PADDING;
             double speed = recive_str.Speed;
 
             //doUpdateVheiclePositionAndCmdSchedule
@@ -4123,7 +4123,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     if (!SCUtility.isEmpty(eqpt.MCS_CMD))
                     {
                         //scApp.CMDBLL.updateCMD_MCS_TranStatus2Transferring(eqpt.MCS_CMD);
-                        //scApp.CMDBLL.updateCMD_MCS_CmdStatus2LoadComplete(eqpt.MCS_CMD);
+                        scApp.CMDBLL.updateCMD_MCS_CmdStatus2LoadComplete(eqpt.MCS_CMD);
                     }
                     //scApp.PortBLL.OperateCatch.updatePortStationCSTExistStatus(eqpt.CUR_ADR_ID, string.Empty);
                     //CarrierInterfaceSim_LoadComplete(eqpt);
@@ -5617,7 +5617,7 @@ namespace com.mirle.ibg3k0.sc.Service
             {
                 lock (zoneCommandLockObj)
                 {
-                    var get_command_zone_result = scApp.LoopTransferEnhance.tryGetZoneCommandWhenCommandComplete(ACMD_MCS.loadReadyTransferOfQueueCMD_MCS(), vh.VEHICLE_ID);
+                    var get_command_zone_result = scApp.LoopTransferEnhance.tryGetZoneCommandWhenCommandComplete(ACMD_MCS.loadReadyTransferOfQueueCMD_MCS(), ACMD_MCS.loadTransferingAndBeforeLoadingCMD_MCS(), vh.VEHICLE_ID);
                     if (get_command_zone_result.hasCommand)
                     {
                         bool is_success_pre_assign = scApp.LoopTransferEnhance.preAssignMCSCommand(scApp.SequenceBLL, vh, get_command_zone_result.cmdMCS);
@@ -6301,9 +6301,18 @@ namespace com.mirle.ibg3k0.sc.Service
                 {
                     //initialVhPosition(vhID);
                     AVEHICLE vh_vo = scApp.VehicleBLL.cache.getVhByID(vhID);
-                    vh_vo.VechileRemove();
-                    scApp.ReserveBLL.RemoveAllReservedSectionsByVehicleID(vhID);
-                    scApp.ReserveBLL.RemoveVehicle(vhID);
+                    //如果車子沒有連線的時候，進行Remove才進行路權等資料的釋放
+                    if (!vh_vo.isTcpIpConnect)
+                    {
+                        initialVhPosition(vh_vo);
+
+                        vh_vo.VechileRemove();
+                        scApp.ReserveBLL.RemoveAllReservedSectionsByVehicleID(vhID);
+                        scApp.ReserveBLL.RemoveVehicle(vhID);
+
+                    }
+
+
                 }
                 List<AMCSREPORTQUEUE> reportqueues = new List<AMCSREPORTQUEUE>();
                 is_success = is_success && scApp.ReportBLL.newReportVehicleRemoved(vhID, reportqueues);
@@ -6316,11 +6325,10 @@ namespace com.mirle.ibg3k0.sc.Service
                    VehicleID: vhID);
             }
         }
-        private void initialVhPosition(string vhID)
+        private void initialVhPosition(AVEHICLE vh)
         {
             try
             {
-                AVEHICLE vh = scApp.VehicleBLL.cache.getVhByID(vhID);
                 ID_134_TRANS_EVENT_REP recive_str = new ID_134_TRANS_EVENT_REP()
                 {
                     CurrentAdrID = "",

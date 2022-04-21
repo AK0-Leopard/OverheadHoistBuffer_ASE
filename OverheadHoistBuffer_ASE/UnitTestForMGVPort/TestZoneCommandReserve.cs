@@ -716,7 +716,7 @@ namespace UnitTestForLoopEnhance
             vh1.CUR_SEC_ID = "30143";
 
             //Act
-            var result = loopTransferEnhance.tryGetZoneCommandWhenCommandComplete(mcs_cmds, vhID);
+            var result = loopTransferEnhance.tryGetZoneCommandWhenCommandComplete(mcs_cmds,new List<ACMD_MCS>(), vhID);
 
             //Assert
             var assert_result = (true, "B7_OHBLINE3_A01", cmd_mcs1);
@@ -754,7 +754,7 @@ namespace UnitTestForLoopEnhance
             vh1.CUR_SEC_ID = "30151";
 
             //Act
-            var result = loopTransferEnhance.tryGetZoneCommandWhenCommandComplete(mcs_cmds, vhID);
+            var result = loopTransferEnhance.tryGetZoneCommandWhenCommandComplete(mcs_cmds, new List<ACMD_MCS>(), vhID);
 
             //Assert
             var assert_result = (false, "", default(ACMD_MCS));

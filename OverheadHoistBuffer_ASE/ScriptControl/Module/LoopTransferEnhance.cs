@@ -590,7 +590,7 @@ namespace com.mirle.ibg3k0.sc.Module
             }
         }
 
-        public (bool hasCommand, string waitPort, ACMD_MCS cmdMCS) tryGetZoneCommandWhenCommandComplete(List<ACMD_MCS> mcsCMDs, string vhID)
+        public (bool hasCommand, string waitPort, ACMD_MCS cmdMCS) tryGetZoneCommandWhenCommandComplete(List<ACMD_MCS> readyInQueueCommand, List<ACMD_MCS> transferringAndNotLoadCommand, string vhID)
         {
             try
             {
@@ -612,8 +612,16 @@ namespace com.mirle.ibg3k0.sc.Module
                     logger.Info($"OHB >> OHB|確認 vh:{vh.VEHICLE_ID}命令完成後是否有同Zone的命令可以搬送，但Port:{port.PLCPortID}並無對應的ZoneCommand.");
                     return (false, "", null);
                 }
-                mcsCMDs = mcsCMDs.Where(cmd => !isTestCMD(cmd)).ToList();
-                var zone_mcs_cmds = mcsCMDs.Where(cmd => get_result.zoneCommandGroup.PortIDs.Contains(sc.Common.SCUtility.Trim(cmd.CURRENT_LOCATION, true)));
+
+                bool has_transferring_and_not_load_cmd_in_zone = HasTransferringAndNotLoadCommandInZone(transferringAndNotLoadCommand, get_result.zoneCommandGroup);
+                if (has_transferring_and_not_load_cmd_in_zone)
+                {
+                    logger.Info($"OHB >> OHB|確認 vh:{vh.VEHICLE_ID}命令完成後是否有同Zone:{get_result.zoneCommandGroup.ZoneCommandID}的命令可以搬送，但已經有搬送命令準備進行搬送，故跳過該次執行.");
+                    return (false, "", null);
+                }
+
+                readyInQueueCommand = readyInQueueCommand.Where(cmd => !isTestCMD(cmd)).ToList();
+                var zone_mcs_cmds = readyInQueueCommand.Where(cmd => get_result.zoneCommandGroup.PortIDs.Contains(sc.Common.SCUtility.Trim(cmd.CURRENT_LOCATION, true)));
                 bool is_need_check_has_vh_close = zone_mcs_cmds.Count() == 1;
                 //找出還沒跑過頭的命令
                 zone_mcs_cmds = zone_mcs_cmds.Where(mcs_cmd => !IsRunOver(vh, mcs_cmd.CURRENT_LOCATION, false));
@@ -629,7 +637,7 @@ namespace com.mirle.ibg3k0.sc.Module
                     }
 
                     try_get_result = tryGetZoneCommand
-                    (mcsCMDs, vh.VEHICLE_ID, get_next_zone_command_result.nextZoneCommandID);
+                    (readyInQueueCommand, vh.VEHICLE_ID, get_next_zone_command_result.nextZoneCommandID);
                 }
                 return try_get_result;
             }
@@ -639,6 +647,21 @@ namespace com.mirle.ibg3k0.sc.Module
                 return (false, "", null);
             }
         }
+
+        private bool HasTransferringAndNotLoadCommandInZone(List<ACMD_MCS> transferringAndNotLoadCommand, ZoneCommandGroup zoneCommandGroup)
+        {
+            //確認是否有準備被搬送的命令在這個區域中
+            var transferring_mcs_cmd_in_zone_count =
+                transferringAndNotLoadCommand.Where(cmd => zoneCommandGroup.PortIDs.Contains(sc.Common.SCUtility.Trim(cmd.CURRENT_LOCATION, true))).
+                Count();
+
+            if (transferring_mcs_cmd_in_zone_count > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
         const double MAX_PRE_ASSIGN_ZONE_COMMAND_MM = 10_000;
         private (bool isFind, string nextZoneCommandID) tryGetNextZoneCommandInXm(string currentZoneCommandID, AVEHICLE vh)
         {
