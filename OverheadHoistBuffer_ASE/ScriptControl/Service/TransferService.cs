@@ -7221,7 +7221,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         bool is_success = true;
                         string eq_name = SCUtility.Trim(alarm.EQPT_ID, true);
                         string err_code = SCUtility.Trim(alarm.ALAM_CODE, true);
-                        string rtp_time = SCUtility.Trim(alarm.RPT_DATE_TIME, true);
+                        string rtp_time = SCUtility.Trim(alarm.RPT_DATE_TIME.ToString(), true);
                         is_success = is_success && scApp.AlarmBLL.SetAlarmAlreadyReport(alarm);
                         bool is_need_report = scApp.AlarmBLL.isReportAlarmReport2MCS(eq_name, err_code);
                         if (!is_need_report)

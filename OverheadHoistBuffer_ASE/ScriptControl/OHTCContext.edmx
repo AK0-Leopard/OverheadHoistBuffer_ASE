@@ -167,6 +167,7 @@
           <Property Name="DESTINATION_ADR" Type="char" MaxLength="64" />
           <Property Name="BOX_ID" Type="char" MaxLength="64" />
           <Property Name="LOT_ID" Type="char" MaxLength="64" />
+          <Property Name="COMPLETE_STATUS" Type="int" />
         </EntityType>
         <EntityType Name="ACMD_OHTC_DETAIL">
           <Key>
@@ -319,8 +320,8 @@
           </Key>
           <Property Name="EQPT_ID" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="UNIT_NUM" Type="int" Nullable="false" />
-          <Property Name="RPT_DATE_TIME" Type="char" MaxLength="19" Nullable="false" />
-          <Property Name="END_TIME" Type="char" MaxLength="19" />
+          <Property Name="RPT_DATE_TIME" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="END_TIME" Type="datetime2" Precision="7" />
           <Property Name="ALAM_CODE" Type="char" MaxLength="10" Nullable="false" />
           <Property Name="ALAM_LVL" Type="int" Nullable="false" />
           <Property Name="ALAM_STAT" Type="int" Nullable="false" />
@@ -332,7 +333,7 @@
           <Property Name="CMD_ID" Type="varchar" MaxLength="64" />
         </EntityType>
         <!--產生期間發現錯誤:
-警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE3_V3.dbo.ALARMMAP' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
+警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE1.dbo.ALARMMAP' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
         <EntityType Name="ALARMMAP">
           <Key>
             <PropertyRef Name="EQPT_ID" />
@@ -1052,6 +1053,7 @@
           <Property Name="DESTINATION_ADR" Type="char" MaxLength="64" />
           <Property Name="BOX_ID" Type="char" MaxLength="64" />
           <Property Name="LOT_ID" Type="char" MaxLength="64" />
+          <Property Name="COMPLETE_STATUS" Type="int" />
         </EntityType>
         <EntityType Name="HOPERATION">
           <Key>
@@ -1200,7 +1202,7 @@
           <Property Name="TrnDT" Type="varchar" MaxLength="20" />
         </EntityType>
         <!--產生期間發現錯誤:
-警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE3_V3.dbo.VACMD_MCS' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
+警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE1.dbo.VACMD_MCS' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
         <EntityType Name="VACMD_MCS">
           <Key>
             <PropertyRef Name="CMD_ID" />
@@ -1215,7 +1217,6 @@
             <PropertyRef Name="TIME_PRIORITY" />
             <PropertyRef Name="PORT_PRIORITY" />
             <PropertyRef Name="REPLACE" />
-            <PropertyRef Name="LOT_ID" />
           </Key>
           <Property Name="CMD_ID" Type="varchar" MaxLength="64" Nullable="false" />
           <Property Name="CARRIER_ID" Type="varchar" MaxLength="64" />
@@ -1235,11 +1236,9 @@
           <Property Name="REPLACE" Type="int" Nullable="false" />
           <Property Name="OHTC_CMD" Type="char" MaxLength="64" />
           <Property Name="VH_ID" Type="char" MaxLength="32" />
-          <Property Name="BOX_ID" Type="varchar" MaxLength="64" />
-          <Property Name="LOT_ID" Type="varchar" MaxLength="64" Nullable="false" />
         </EntityType>
         <!--產生期間發現錯誤:
-警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE3_V3.dbo.VALARM' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
+警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE1.dbo.VALARM' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
         <EntityType Name="VALARM">
           <Key>
             <PropertyRef Name="EQPT_ID" />
@@ -1270,7 +1269,31 @@
           <Property Name="TRANSFERSTATE" Type="int" />
         </EntityType>
         <!--產生期間發現錯誤:
-警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE3_V3.dbo.VSECTION_100' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
+警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE1.dbo.VHCMD_OHTC_MCS' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
+        <EntityType Name="VHCMD_OHTC_MCS">
+          <Key>
+            <PropertyRef Name="CMD_ID_MCS" />
+            <PropertyRef Name="VH_ID" />
+            <PropertyRef Name="OHTC_CMD_STATUS" />
+            <PropertyRef Name="OHTC_CMD_TYPE" />
+          </Key>
+          <Property Name="CMD_ID_MCS" Type="char" MaxLength="64" Nullable="false" />
+          <Property Name="VH_ID" Type="char" MaxLength="32" Nullable="false" />
+          <Property Name="CARRIER_ID" Type="char" MaxLength="64" />
+          <Property Name="HOSTSOURCE" Type="varchar" MaxLength="64" />
+          <Property Name="HOSTDESTINATION" Type="varchar" MaxLength="64" />
+          <Property Name="MCS_CMD_INSER_TIME" Type="datetime2" Precision="7" />
+          <Property Name="MCS_CMD_START_TIME" Type="datetime2" Precision="7" />
+          <Property Name="MCS_CMD_FINISH_TIME" Type="datetime2" Precision="7" />
+          <Property Name="MCS_COMMANDSTATE" Type="int" />
+          <Property Name="OHTC_CMD_STATUS" Type="int" Nullable="false" />
+          <Property Name="OHTC_CMD_TYPE" Type="int" Nullable="false" />
+          <Property Name="OHTC_CMD_START_TIME" Type="datetime2" Precision="7" />
+          <Property Name="OHTC_CMD_END_TIME" Type="datetime2" Precision="7" />
+          <Property Name="OHTC_COMPLETE_STATUS" Type="int" />
+        </EntityType>
+        <!--產生期間發現錯誤:
+警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE1.dbo.VSECTION_100' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
         <EntityType Name="VSECTION_100">
           <Key>
             <PropertyRef Name="SEC_ID" />
@@ -1354,6 +1377,8 @@
           <Property Name="AREA_SECSOR" Type="int" />
           <Property Name="LAST_TECH_TIME" Type="datetime2" Precision="7" />
         </EntityType>
+        <Function Name="SqlQueryNotificationStoredProcedure_0864f1ca_8e0c_4f04_ba1a_6a30eca7dcef" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="SqlQueryNotificationStoredProcedure-0864f1ca-8e0c-4f04-ba1a-6a30eca7dcef" />
+        <Function Name="SqlQueryNotificationStoredProcedure_2c8d3593_89e6_411b_aa38_e023612bf644" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="SqlQueryNotificationStoredProcedure-2c8d3593-89e6-411b-aa38-e023612bf644" />
         <EntityContainer Name="OHTC_DevModelStoreContainer">
           <EntitySet Name="AADDRESS" EntityType="Self.AADDRESS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AADDRESS_DATA" EntityType="Self.AADDRESS_DATA" Schema="dbo" store:Type="Tables" />
@@ -1453,9 +1478,7 @@
     [VACMD_MCS].[PORT_PRIORITY] AS [PORT_PRIORITY], 
     [VACMD_MCS].[REPLACE] AS [REPLACE], 
     [VACMD_MCS].[OHTC_CMD] AS [OHTC_CMD], 
-    [VACMD_MCS].[VH_ID] AS [VH_ID], 
-    [VACMD_MCS].[BOX_ID] AS [BOX_ID], 
-    [VACMD_MCS].[LOT_ID] AS [LOT_ID]
+    [VACMD_MCS].[VH_ID] AS [VH_ID]
     FROM [dbo].[VACMD_MCS] AS [VACMD_MCS]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="VALARM" EntityType="Self.VALARM" store:Type="Views" store:Schema="dbo">
@@ -1480,6 +1503,24 @@
     [VALARM].[HOSTSOURCE] AS [HOSTSOURCE], 
     [VALARM].[TRANSFERSTATE] AS [TRANSFERSTATE]
     FROM [dbo].[VALARM] AS [VALARM]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="VHCMD_OHTC_MCS" EntityType="Self.VHCMD_OHTC_MCS" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [VHCMD_OHTC_MCS].[CMD_ID_MCS] AS [CMD_ID_MCS], 
+    [VHCMD_OHTC_MCS].[VH_ID] AS [VH_ID], 
+    [VHCMD_OHTC_MCS].[CARRIER_ID] AS [CARRIER_ID], 
+    [VHCMD_OHTC_MCS].[HOSTSOURCE] AS [HOSTSOURCE], 
+    [VHCMD_OHTC_MCS].[HOSTDESTINATION] AS [HOSTDESTINATION], 
+    [VHCMD_OHTC_MCS].[MCS_CMD_INSER_TIME] AS [MCS_CMD_INSER_TIME], 
+    [VHCMD_OHTC_MCS].[MCS_CMD_START_TIME] AS [MCS_CMD_START_TIME], 
+    [VHCMD_OHTC_MCS].[MCS_CMD_FINISH_TIME] AS [MCS_CMD_FINISH_TIME], 
+    [VHCMD_OHTC_MCS].[MCS_COMMANDSTATE] AS [MCS_COMMANDSTATE], 
+    [VHCMD_OHTC_MCS].[OHTC_CMD_STATUS] AS [OHTC_CMD_STATUS], 
+    [VHCMD_OHTC_MCS].[OHTC_CMD_TYPE] AS [OHTC_CMD_TYPE], 
+    [VHCMD_OHTC_MCS].[OHTC_CMD_START_TIME] AS [OHTC_CMD_START_TIME], 
+    [VHCMD_OHTC_MCS].[OHTC_CMD_END_TIME] AS [OHTC_CMD_END_TIME], 
+    [VHCMD_OHTC_MCS].[OHTC_COMPLETE_STATUS] AS [OHTC_COMPLETE_STATUS]
+    FROM [dbo].[VHCMD_OHTC_MCS] AS [VHCMD_OHTC_MCS]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="VSECTION_100" EntityType="Self.VSECTION_100" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -1612,6 +1653,9 @@
           <EntitySet Name="VACMD_MCS" EntityType="OHTC_DevModel.VACMD_MCS" />
           <EntitySet Name="VSECTION_100" EntityType="OHTC_DevModel.VSECTION_100" />
           <EntitySet Name="VALARM" EntityType="OHTC_DevModel.VALARM" />
+          <EntitySet Name="VHCMD_OHTC_MCS" EntityType="OHTC_DevModel.VHCMD_OHTC_MCS" />
+          <FunctionImport Name="SqlQueryNotificationStoredProcedure_0864f1ca_8e0c_4f04_ba1a_6a30eca7dcef" ReturnType="Collection(Guid)" />
+          <FunctionImport Name="SqlQueryNotificationStoredProcedure_2c8d3593_89e6_411b_aa38_e023612bf644" ReturnType="Collection(Guid)" />
         </EntityContainer>
         <EntityType Name="ABASEDATA_VER">
           <Key>
@@ -1911,6 +1955,7 @@
           <Property Name="BOX_ID" Type="String" MaxLength="64" FixedLength="true" Unicode="false" />
           <Property Name="LOT_ID" Type="String" MaxLength="64" FixedLength="true" Unicode="false" />
           <Property Name="CMD_INSER_TIME" Type="DateTime" Precision="7" />
+          <Property Name="COMPLETE_STATUS" Type="Int32" />
         </EntityType>
         <EntityType Name="ACEID">
           <Key>
@@ -2703,7 +2748,7 @@
           </Key>
           <Property Name="EQPT_ID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="UNIT_NUM" Type="Int32" Nullable="false" />
-          <Property Name="RPT_DATE_TIME" Type="String" Nullable="false" MaxLength="19" Unicode="false" FixedLength="true" />
+          <Property Name="RPT_DATE_TIME" Type="DateTime" Nullable="false" />
           <Property Name="ALAM_CODE" Type="String" MaxLength="10" FixedLength="true" Unicode="false" Nullable="false" />
           <Property Name="ALAM_LVL" Type="OHTC_DevModel.E_ALARM_LVL" Nullable="false" />
           <Property Name="ALAM_STAT" Type="OHTC_DevModel.ErrorStatus" Nullable="false" />
@@ -2713,7 +2758,7 @@
           <Property Name="UnitState" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
           <Property Name="RecoveryOption" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="CMD_ID" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
-          <Property Name="END_TIME" Type="String" MaxLength="19" FixedLength="true" Unicode="false" />
+          <Property Name="END_TIME" Type="DateTime" />
         </EntityType>
         <EnumType Name="E_ALARM_LVL">
           <Member Name="Warn" Value="1" />
@@ -2937,6 +2982,7 @@
           <Property Name="DESTINATION_ADR" Type="String" MaxLength="64" FixedLength="true" Unicode="false" />
           <Property Name="BOX_ID" Type="String" MaxLength="64" FixedLength="true" Unicode="false" />
           <Property Name="LOT_ID" Type="String" MaxLength="64" FixedLength="true" Unicode="false" />
+          <Property Name="COMPLETE_STATUS" Type="Int32" />
         </EntityType>
         <EntityType Name="VACMD_MCS">
           <Key>
@@ -2952,7 +2998,6 @@
             <PropertyRef Name="TIME_PRIORITY" />
             <PropertyRef Name="PORT_PRIORITY" />
             <PropertyRef Name="REPLACE" />
-            <PropertyRef Name="LOT_ID" />
           </Key>
           <Property Name="CMD_ID" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
           <Property Name="CARRIER_ID" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
@@ -2972,8 +3017,6 @@
           <Property Name="REPLACE" Type="Int32" Nullable="false" />
           <Property Name="OHTC_CMD" Type="String" MaxLength="64" FixedLength="true" Unicode="false" />
           <Property Name="VH_ID" Type="String" MaxLength="32" FixedLength="true" Unicode="false" />
-          <Property Name="BOX_ID" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
-          <Property Name="LOT_ID" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="VSECTION_100">
           <Key>
@@ -3086,6 +3129,28 @@
           <Property Name="CRANE" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
           <Property Name="HOSTSOURCE" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
           <Property Name="TRANSFERSTATE" Type="Int32" />
+        </EntityType>
+        <EntityType Name="VHCMD_OHTC_MCS">
+          <Key>
+            <PropertyRef Name="CMD_ID_MCS" />
+            <PropertyRef Name="VH_ID" />
+            <PropertyRef Name="OHTC_CMD_STATUS" />
+            <PropertyRef Name="OHTC_CMD_TYPE" />
+          </Key>
+          <Property Name="CMD_ID_MCS" Type="String" Nullable="false" MaxLength="64" FixedLength="true" Unicode="false" />
+          <Property Name="VH_ID" Type="String" Nullable="false" MaxLength="32" FixedLength="true" Unicode="false" />
+          <Property Name="CARRIER_ID" Type="String" MaxLength="64" FixedLength="true" Unicode="false" />
+          <Property Name="HOSTSOURCE" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="HOSTDESTINATION" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="MCS_CMD_INSER_TIME" Type="DateTime" Precision="7" />
+          <Property Name="MCS_CMD_START_TIME" Type="DateTime" Precision="7" />
+          <Property Name="MCS_CMD_FINISH_TIME" Type="DateTime" Precision="7" />
+          <Property Name="MCS_COMMANDSTATE" Type="Int32" />
+          <Property Name="OHTC_CMD_STATUS" Type="Int32" Nullable="false" />
+          <Property Name="OHTC_CMD_TYPE" Type="Int32" Nullable="false" />
+          <Property Name="OHTC_CMD_START_TIME" Type="DateTime" Precision="7" />
+          <Property Name="OHTC_CMD_END_TIME" Type="DateTime" Precision="7" />
+          <Property Name="OHTC_COMPLETE_STATUS" Type="Int32" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -3297,7 +3362,8 @@
     <EntitySetMapping Name="ACMD_OHTC">
       <EntityTypeMapping TypeName="IsTypeOf(OHTC_DevModel.ACMD_OHTC)">
         <MappingFragment StoreEntitySet="ACMD_OHTC">
-          <ScalarProperty Name="CMD_ID" ColumnName="CMD_ID" />
+          <ScalarProperty Name="COMPLETE_STATUS" ColumnName="COMPLETE_STATUS" />
+                <ScalarProperty Name="CMD_ID" ColumnName="CMD_ID" />
           <ScalarProperty Name="VH_ID" ColumnName="VH_ID" />
           <ScalarProperty Name="CARRIER_ID" ColumnName="CARRIER_ID" />
           <ScalarProperty Name="CMD_ID_MCS" ColumnName="CMD_ID_MCS" />
@@ -4298,7 +4364,8 @@
     <EntitySetMapping Name="HCMD_OHTC">
       <EntityTypeMapping TypeName="IsTypeOf(OHTC_DevModel.HCMD_OHTC)">
         <MappingFragment StoreEntitySet="HCMD_OHTC">
-          <ScalarProperty Name="CMD_ID" ColumnName="CMD_ID" />
+          <ScalarProperty Name="COMPLETE_STATUS" ColumnName="COMPLETE_STATUS" />
+                <ScalarProperty Name="CMD_ID" ColumnName="CMD_ID" />
           <ScalarProperty Name="CMD_INSER_TIME" ColumnName="CMD_INSER_TIME" />
           <ScalarProperty Name="VH_ID" ColumnName="VH_ID" />
           <ScalarProperty Name="CARRIER_ID" ColumnName="CARRIER_ID" />
@@ -4325,8 +4392,6 @@
           <EntitySetMapping Name="VACMD_MCS">
             <EntityTypeMapping TypeName="IsTypeOf(OHTC_DevModel.VACMD_MCS)">
               <MappingFragment StoreEntitySet="VACMD_MCS">
-                <ScalarProperty Name="LOT_ID" ColumnName="LOT_ID" />
-                <ScalarProperty Name="BOX_ID" ColumnName="BOX_ID" />
                 <ScalarProperty Name="VH_ID" ColumnName="VH_ID" />
                 <ScalarProperty Name="OHTC_CMD" ColumnName="OHTC_CMD" />
                 <ScalarProperty Name="REPLACE" ColumnName="REPLACE" />
@@ -4425,6 +4490,28 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="VHCMD_OHTC_MCS">
+            <EntityTypeMapping TypeName="OHTC_DevModel.VHCMD_OHTC_MCS">
+              <MappingFragment StoreEntitySet="VHCMD_OHTC_MCS">
+                <ScalarProperty Name="OHTC_COMPLETE_STATUS" ColumnName="OHTC_COMPLETE_STATUS" />
+                <ScalarProperty Name="OHTC_CMD_END_TIME" ColumnName="OHTC_CMD_END_TIME" />
+                <ScalarProperty Name="OHTC_CMD_START_TIME" ColumnName="OHTC_CMD_START_TIME" />
+                <ScalarProperty Name="OHTC_CMD_TYPE" ColumnName="OHTC_CMD_TYPE" />
+                <ScalarProperty Name="OHTC_CMD_STATUS" ColumnName="OHTC_CMD_STATUS" />
+                <ScalarProperty Name="MCS_COMMANDSTATE" ColumnName="MCS_COMMANDSTATE" />
+                <ScalarProperty Name="MCS_CMD_FINISH_TIME" ColumnName="MCS_CMD_FINISH_TIME" />
+                <ScalarProperty Name="MCS_CMD_START_TIME" ColumnName="MCS_CMD_START_TIME" />
+                <ScalarProperty Name="MCS_CMD_INSER_TIME" ColumnName="MCS_CMD_INSER_TIME" />
+                <ScalarProperty Name="HOSTDESTINATION" ColumnName="HOSTDESTINATION" />
+                <ScalarProperty Name="HOSTSOURCE" ColumnName="HOSTSOURCE" />
+                <ScalarProperty Name="CARRIER_ID" ColumnName="CARRIER_ID" />
+                <ScalarProperty Name="VH_ID" ColumnName="VH_ID" />
+                <ScalarProperty Name="CMD_ID_MCS" ColumnName="CMD_ID_MCS" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SqlQueryNotificationStoredProcedure_0864f1ca_8e0c_4f04_ba1a_6a30eca7dcef" FunctionName="OHTC_DevModel.Store.SqlQueryNotificationStoredProcedure_0864f1ca_8e0c_4f04_ba1a_6a30eca7dcef" />
+          <FunctionImportMapping FunctionImportName="SqlQueryNotificationStoredProcedure_2c8d3593_89e6_411b_aa38_e023612bf644" FunctionName="OHTC_DevModel.Store.SqlQueryNotificationStoredProcedure_2c8d3593_89e6_411b_aa38_e023612bf644" />
     </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>

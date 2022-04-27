@@ -10,13 +10,12 @@
 namespace com.mirle.ibg3k0.sc
 {
     using System;
-
+    
     public enum E_ADR_TYPE : int
     {
         Address = 1,
         Port = 2,
         Control = 3,
         MTL = 5,
-
     }
 }
