@@ -20,19 +20,40 @@ namespace com.mirle.ibg3k0.sc.ObjectRelay
             cmd_mcs = cmdMcs;
             VehicleBLL = vehicleBLL;
         }
+        public void put(ACMD_MCS cmdMcs)
+        {
+            cmd_mcs = cmdMcs;
+        }
         public string CMD_ID { get { return cmd_mcs.CMD_ID; } }
         public string CARRIER_ID { get { return cmd_mcs.CARRIER_ID; } }
+        public string BOX_ID { get { return cmd_mcs.BOX_ID; } }
         public string VEHICLE_ID
         {
             get
             {
-                if (VehicleBLL != null)
+                List<ACMD_OHTC> cmd_ohtc = ACMD_OHTC.CMD_OHTC_InfoList.Values.ToList();
+                if (cmd_ohtc == null || cmd_ohtc.Count == 0)
                 {
-                    var vh = VehicleBLL.cache.getVehicleByMCSCmdID(CMD_ID);
-                    return vh == null ? "" : vh.VEHICLE_ID;
-                }
-                else
                     return "";
+                }
+                var cms_ohtc = cmd_ohtc.Where(cmd => sc.Common.SCUtility.isMatche(cmd.CMD_ID_MCS, CMD_ID)).FirstOrDefault();
+                if (cms_ohtc == null)
+                {
+                    return "";
+                }
+                if (cms_ohtc.CMD_STAUS == E_CMD_STATUS.Queue)
+                {
+                    return $"{Common.SCUtility.Trim(cms_ohtc.VH_ID)}(P)";
+                }
+                return Common.SCUtility.Trim(cms_ohtc.VH_ID);
+
+                //    if (VehicleBLL != null)
+                //{
+                //    var vh = VehicleBLL.cache.getVehicleByMCSCmdID(CMD_ID);
+                //    return vh == null ? "" : vh.VEHICLE_ID;
+                //}
+                //else
+                //    return "";
             }
         }
 
@@ -41,16 +62,16 @@ namespace com.mirle.ibg3k0.sc.ObjectRelay
         {
             get
             {
-                var portstation = app.PortStationBLL.OperateCatch.getPortStation(cmd_mcs.HOSTSOURCE);
-                return portstation == null ? cmd_mcs.HOSTSOURCE : portstation.ToString();
+                var portstation = app.PortDefBLL.getPortDef(cmd_mcs.HOSTSOURCE);
+                return portstation == null ? cmd_mcs.HOSTSOURCE : portstation.ToString(app.ZoneCommandBLL);
             }
         }
         public string HOSTDESTINATION
         {
             get
             {
-                var portstation = app.PortStationBLL.OperateCatch.getPortStation(cmd_mcs.HOSTDESTINATION);
-                return portstation == null ? cmd_mcs.HOSTDESTINATION : portstation.ToString();
+                var portstation = app.PortDefBLL.getPortDef(cmd_mcs.HOSTDESTINATION);
+                return portstation == null ? cmd_mcs.HOSTDESTINATION : portstation.ToString(app.ZoneCommandBLL);
             }
         }
         public string RelayStation { get { return cmd_mcs.RelayStation; } }
@@ -60,6 +81,38 @@ namespace com.mirle.ibg3k0.sc.ObjectRelay
         public Nullable<System.DateTime> CMD_START_TIME { get { return cmd_mcs.CMD_START_TIME; } }
         public Nullable<System.DateTime> CMD_FINISH_TIME { get { return cmd_mcs.CMD_FINISH_TIME; } }
         public int REPLACE { get { return cmd_mcs.REPLACE; } }
+
+        public string ReadyReason
+        {
+            get
+            {
+                bool is_exist = NgReasonConvert.TryGetValue(cmd_mcs.ReadyReason, out string reason);
+                if (is_exist)
+                {
+                    return reason;
+                }
+                else
+                {
+                    return "";
+                }
+            }
+        }
+        Dictionary<ACMD_MCS.NotReadyReason, string> NgReasonConvert = new Dictionary<ACMD_MCS.NotReadyReason, string>()
+        {
+            { ACMD_MCS.NotReadyReason.None,"" },
+            { ACMD_MCS.NotReadyReason.Ready,"預備搬送中" },
+            { ACMD_MCS.NotReadyReason.SpeciallyProcess,"特別命令，處理中" },
+            { ACMD_MCS.NotReadyReason.NoCSTData,"無對應的帳" },
+            { ACMD_MCS.NotReadyReason.SourceNotReady,"來源尚未準備好" },
+            { ACMD_MCS.NotReadyReason.DestZoneIsFull,"目的地-Zone已滿" },
+            { ACMD_MCS.NotReadyReason.DestAGVZoneNotReady,"目的地-AGV Zone尚未準備好" },
+            { ACMD_MCS.NotReadyReason.DestAGVZoneNotReadyWillRealy,"目的地-AGV Zone尚未準備好，準備到中繼站" },
+            { ACMD_MCS.NotReadyReason.DestPortNotReady,"目的地-Port尚未準備好" },
+            { ACMD_MCS.NotReadyReason.DestPoerNotReadyWillRealy,"目的地-Port尚未準備好，準備到中繼站" },
+            { ACMD_MCS.NotReadyReason.ExceptionHappend,"例外發生" },
+            { ACMD_MCS.NotReadyReason.HosStateNotAuto,"目前MCS 非在Auto狀態" },
+
+        };
 
     }
 
@@ -77,7 +130,7 @@ namespace com.mirle.ibg3k0.sc.ObjectRelay
         public string CMD_ID { get { return cmd_mcs.CMD_ID; } }
         public string CARRIER_ID { get { return cmd_mcs.CARRIER_ID; } }
         public E_TRAN_STATUS TRANSFERSTATE { get { return cmd_mcs.TRANSFERSTATE; } }
-        public CompleteStatus COMMANDSTATE { get { return  CompleteStatus.CmpStatusOverride; } }
+        public CompleteStatus COMMANDSTATE { get { return CompleteStatus.CmpStatusOverride; } }
 
         public string HOSTSOURCE
         {

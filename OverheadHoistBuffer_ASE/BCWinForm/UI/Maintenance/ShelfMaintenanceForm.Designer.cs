@@ -183,7 +183,7 @@
             // 
             this.cmb_zoneID.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.cmb_zoneID.FormattingEnabled = true;
-            this.cmb_zoneID.Location = new System.Drawing.Point(177, 26);
+            this.cmb_zoneID.Location = new System.Drawing.Point(177, 31);
             this.cmb_zoneID.Name = "cmb_zoneID";
             this.cmb_zoneID.Size = new System.Drawing.Size(385, 30);
             this.cmb_zoneID.TabIndex = 4;
@@ -389,6 +389,7 @@
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 83.74613F));
             this.tableLayoutPanel5.Controls.Add(this.label5, 0, 0);
             this.tableLayoutPanel5.Controls.Add(this.txt_reason, 1, 0);
+            this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel5.Location = new System.Drawing.Point(0, 771);
             this.tableLayoutPanel5.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";

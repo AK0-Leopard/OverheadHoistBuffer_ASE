@@ -14,6 +14,7 @@
 // 2020/05/27    Jason Wu       N/A            A0.03   修改filterVh部分，使其使用OHTC CMD去判斷是否有命令執行。
 //**********************************************************************************
 using com.mirle.ibg3k0.sc.App;
+using com.mirle.ibg3k0.sc.BLL.Interface;
 using com.mirle.ibg3k0.sc.Common;
 using com.mirle.ibg3k0.sc.Data;
 using com.mirle.ibg3k0.sc.Data.DAO;
@@ -34,7 +35,7 @@ using System.Threading.Tasks;
 
 namespace com.mirle.ibg3k0.sc.BLL
 {
-    public class VehicleBLL
+    public class VehicleBLL : IVehicleBLL
     {
         VehicleDao vehicleDAO = null;
         private SCApplication scApp = null;
@@ -142,12 +143,10 @@ namespace com.mirle.ibg3k0.sc.BLL
             vh.NotifyVhPositionChange();
             return true;
         }
-        public Mirle.Hlts.Utils.HltResult updateVheiclePositionToReserveControlModule(BLL.ReserveBLL reserveBLL, AVEHICLE vh, string currentSectionID, double x_axis, double y_axis, double dirctionAngle, double vehicleAngle, double speed,
-                                                                              Mirle.Hlts.Utils.HltDirection sensorDir, Mirle.Hlts.Utils.HltDirection forkDir)
+
+        public Mirle.Hlts.Utils.HltResult updateVheiclePositionToReserveControlModule(BLL.ReserveBLL reserveBLL, AVEHICLE vh)
         {
-            string vh_id = vh.VEHICLE_ID;
-            string section_id = currentSectionID;
-            return reserveBLL.TryAddVehicleOrUpdate(vh_id, section_id, x_axis, y_axis, (float)vehicleAngle, speed, sensorDir, forkDir);
+            return reserveBLL.TryAddVehicleOrUpdate(vh);
         }
 
         public void updateVehicleActionStatus(AVEHICLE vh, EventType vhPassEvent)
@@ -297,16 +296,17 @@ namespace com.mirle.ibg3k0.sc.BLL
             //});
             //}
         }
-        public void updateVheicleTravelInfo(string vhID, int cmdFinish)
+        public void updateVheicleTravelInfo(string vhID, int cmdFinish_mm)
         {
-            //AVEHICLE vh = scApp.VehiclPool.GetObject();
-            //string preNodeAdr = string.Empty;
             try
             {
+                int cmdFinish_m = cmdFinish_mm / 1000;//轉換回公尺
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
                     AVEHICLE vh = vehicleDAO.getByID(con, vhID);
-                    vh.MANT_ACC_DIST += cmdFinish;
+                    vh.VEHICLE_ACC_DIST += cmdFinish_m;
+                    vh.MANT_ACC_DIST += cmdFinish_m;
+                    con.Entry(vh).Property(p => p.VEHICLE_ACC_DIST).IsModified = true;
                     con.Entry(vh).Property(p => p.MANT_ACC_DIST).IsModified = true;
                     vehicleDAO.doUpdate(scApp, con, vh);
                 }
@@ -315,10 +315,26 @@ namespace com.mirle.ibg3k0.sc.BLL
             {
                 logger.Error(ex, "Exception:");
             }
-            //finally
-            //{
-            //    scApp.VehiclPool.PutObject(vh);
-            //}
+        }
+
+        public void updateVheicleGripInfoAccumulate(string vhID)
+        {
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    AVEHICLE vh = vehicleDAO.getByID(con, vhID);
+                    vh.GRIP_COUNT = vh.GRIP_COUNT + 1;
+                    vh.GRIP_MANT_COUNT = vh.GRIP_MANT_COUNT + 1;
+                    con.Entry(vh).Property(p => p.GRIP_COUNT).IsModified = true;
+                    con.Entry(vh).Property(p => p.GRIP_MANT_COUNT).IsModified = true;
+                    vehicleDAO.doUpdate(scApp, con, vh);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception:");
+            }
         }
         public void resetVheicleTravelInfo(string vhID)
         {
@@ -334,6 +350,34 @@ namespace com.mirle.ibg3k0.sc.BLL
                     vh.MANT_DATE = DateTime.Now;
                     con.Entry(vh).Property(p => p.MANT_ACC_DIST).IsModified = true;
                     con.Entry(vh).Property(p => p.MANT_DATE).IsModified = true;
+                    vehicleDAO.doUpdate(scApp, con, vh);
+                    con.Entry(vh).State = EntityState.Detached;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception:");
+            }
+            finally
+            {
+                scApp.VehiclPool.PutObject(vh);
+            }
+        }
+
+        public void resetVheicleGripInfo(string vhID)
+        {
+            AVEHICLE vh = scApp.VehiclPool.GetObject();
+            string preNodeAdr = string.Empty;
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    vh.VEHICLE_ID = vhID;
+                    con.AVEHICLE.Attach(vh);
+                    vh.GRIP_MANT_COUNT = 0;
+                    vh.GRIP_MANT_DATE = DateTime.Now;
+                    con.Entry(vh).Property(p => p.GRIP_MANT_COUNT).IsModified = true;
+                    con.Entry(vh).Property(p => p.GRIP_MANT_DATE).IsModified = true;
                     vehicleDAO.doUpdate(scApp, con, vh);
                     con.Entry(vh).State = EntityState.Detached;
                 }
@@ -1180,14 +1224,26 @@ namespace com.mirle.ibg3k0.sc.BLL
                        CarrierID: vh.CST_ID);
                 }
             }
-            //A0.03
             foreach (AVEHICLE vh in vhs.ToList())
             {
-                if (scApp.CMDBLL.isCMD_OHTCQueueByVh(vh.VEHICLE_ID))
+                if (vh.IsCommandSending)
                 {
                     vhs.Remove(vh);
                     LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleBLL), Device: "OHxC",
-                       Data: $"vh id:{vh.VEHICLE_ID} has ohxc command in queue," +
+                       Data: $"vh id:{vh.VEHICLE_ID} has command sending," +
+                             $"so filter it out",
+                       VehicleID: vh.VEHICLE_ID,
+                       CarrierID: vh.CST_ID);
+                }
+            }
+            //A0.03
+            foreach (AVEHICLE vh in vhs.ToList())
+            {
+                if (scApp.CMDBLL.isCMD_OHTCQueueOrSendingByVh(vh.VEHICLE_ID))
+                {
+                    vhs.Remove(vh);
+                    LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleBLL), Device: "OHxC",
+                       Data: $"vh id:{vh.VEHICLE_ID} has ohxc command in queue or sending," +
                              $"so filter it out",
                        VehicleID: vh.VEHICLE_ID,
                        CarrierID: vh.CST_ID);
@@ -1756,7 +1812,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 case CompleteStatus.CmpStatusInterlockError:
                 case CompleteStatus.CmpStatusLongTimeInaction:
                     return E_CMD_STATUS.AbnormalEndByOHT;
-                case CompleteStatus.CmpStatusForceFinishByOp:
+                case CompleteStatus.CmpStatusForceAbnormalFinishByOp:
                     return E_CMD_STATUS.AbnormalEndByOHTC;
                 default:
                     return E_CMD_STATUS.NormalEnd;
@@ -2108,6 +2164,21 @@ namespace com.mirle.ibg3k0.sc.BLL
             Google.Protobuf.MessageParser<T> parser = new Google.Protobuf.MessageParser<T>(() => new T());
             return parser.ParseFrom(buf);
         }
+
+        public AVEHICLE getVehicle(string vhID)
+        {
+            return cache.getVhByID(vhID);
+        }
+
+        public List<AVEHICLE> loadVehicleBySecID(string secID)
+        {
+            return cache.getVhBySections(secID);
+        }
+
+        public List<AVEHICLE> loadCyclingAndTransferReadyVhs(ICMDBLL cmdBLL)
+        {
+            return cache.loadCyclingVhs(cmdBLL);
+        }
         #endregion Vehicle Object Info
 
 
@@ -2203,6 +2274,28 @@ namespace com.mirle.ibg3k0.sc.BLL
             {
                 var vhs = eqObjCacheManager.getAllVehicle();
                 return vhs;
+            }
+            public List<AVEHICLE> loadCyclingVhs(ICMDBLL cmdBLL)
+            {
+                var vhs = eqObjCacheManager.getAllVehicle();
+                //vhs = vhs.Where(v => v.ACT_STATUS == VHActionStatus.Commanding &&
+                //                     !SCUtility.isEmpty(v.OHTC_CMD) && 
+                //                     SCUtility.isEmpty(v.MCS_CMD)).
+                vhs = vhs.Where(v => isCyclingAndTransferReady(v, cmdBLL)).
+                      ToList();
+                return vhs;
+            }
+            private bool isCyclingAndTransferReady(AVEHICLE vh, ICMDBLL cmdBLL)
+            {
+                if (!vh.IsCycleMove(ACMD_OHTC.CMD_OHTC_InfoList))
+                {
+                    return false;
+                }
+                if (!vh.TransferReady(cmdBLL))
+                {
+                    return false;
+                }
+                return true;
             }
             public List<AVEHICLE> loadVhsBySegmentID(string segmentID)
             {

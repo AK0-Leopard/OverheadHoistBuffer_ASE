@@ -6,9 +6,11 @@ using com.mirle.ibg3k0.bcf.Data.ValueDefMapAction;
 using com.mirle.ibg3k0.bcf.Data.VO;
 using com.mirle.ibg3k0.sc.App;
 using com.mirle.ibg3k0.sc.Common;
+using com.mirle.ibg3k0.sc.Common.AOP;
 using com.mirle.ibg3k0.sc.Data.PLC_Functions;
 using com.mirle.ibg3k0.sc.Data.ValueDefMapAction;
 using com.mirle.ibg3k0.sc.Data.VO.Interface;
+using com.mirle.ibg3k0.sc.Data.VO.PartialVo;
 using com.mirle.ibg3k0.sc.ObjectRelay;
 using com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage;
 using Newtonsoft.Json;
@@ -43,10 +45,13 @@ namespace com.mirle.ibg3k0.sc
             LeaveSegment = leaveSegment;
         }
     }
-
+    [TeaceMethodAspectAttribute]
     public partial class AVEHICLE : BaseEQObject, IConnectionStatusChange
     {
         public VehicleStateMachine vhStateMachine;
+        public VehicleErrorStateMachine vhErrorStateMachine;
+        VehicleStatusInfo vehicleStatusInfo;
+
         public const string DEVICE_NAME_OHx = "OHx";
 
         /// <summary>
@@ -65,7 +70,8 @@ namespace com.mirle.ibg3k0.sc
         /// 單筆命令，最大允許的搬送時間
         /// </summary>
         public static UInt16 MAX_ALLOW_ACTION_TIME_SECOND { get; private set; } = 300;
-        public static UInt16 MAX_ALLOW_IMPORTANT_EVENT_RETRY_COUNT { get; private set; } = 5;
+        public static UInt16 MAX_ALLOW_IMPORTANT_EVENT_RETRY_COUNT { get; private set; } = 3;
+        public static UInt16 MAX_ALLOW_VH_IDLE_TIME_MMILLI_SECOND { get; private set; } = 5_000;
 
         public event EventHandler<LocationChangeEventArgs> LocationChange;
         public event EventHandler<SegmentChangeEventArgs> SegmentChange;
@@ -78,10 +84,17 @@ namespace com.mirle.ibg3k0.sc
         public event EventHandler<VhStopSingle> ReserveStatusChange;
         public event EventHandler<int> HasBoxStatusChange;
         public event EventHandler<EventType> HasImportantEventReportRetryOverTimes;
+        public event EventHandler IdleTimeIsEnough;
+        public event EventHandler<string> BoxIdleOnVh;
+        public event EventHandler CycleMovePausing;
+        public event EventHandler<ACMD_OHTC> ExcuteCommandStatusNotMatch;
+        public event EventHandler HasReserveRequestRetryOverTimes;
+        public event EventHandler<bool> LongTimeReserveRequestFailHappend;
 
 
         VehicleTimerAction vehicleTimer = null;
         private Stopwatch CurrentCommandExcuteTime;
+        private Stopwatch IdleTime;
 
         public void onCommandComplete(CompleteStatus cmpStatus)
         {
@@ -115,6 +128,27 @@ namespace com.mirle.ibg3k0.sc
         {
             HasBoxStatusChange?.Invoke(this, hasBoxStaus);
         }
+        public void onIdleTimeIsEnough()
+        {
+            IdleTimeIsEnough?.Invoke(this, EventArgs.Empty);
+        }
+        public void onBoxIdleOnVh(string boxID)
+        {
+            BoxIdleOnVh?.Invoke(this, boxID);
+        }
+        public void onCycleMovePausing()
+        {
+            CycleMovePausing?.Invoke(this, EventArgs.Empty);
+        }
+        public void onLongTimeReserveRequestFailHappend(bool isHappend)
+        {
+            LongTimeReserveRequestFailHappend?.Invoke(this, isHappend);
+        }
+
+        public void onExcuteCommandStatusNotMatch(ACMD_OHTC cmd)
+        {
+            ExcuteCommandStatusNotMatch?.Invoke(this, cmd);
+        }
 
 
         public AVEHICLE()
@@ -124,9 +158,17 @@ namespace com.mirle.ibg3k0.sc
             vhStateMachine = new VehicleStateMachine(() => State, (state) => State = state);
             vhStateMachine.OnTransitioned(TransitionedHandler);
             vhStateMachine.OnUnhandledTrigger(UnhandledTriggerHandler);
-
+            initialVhErrorStateMachine();
             CurrentCommandExcuteTime = new Stopwatch();
-
+            IdleTime = new Stopwatch();
+            vehicleStatusInfo = new VehicleStatusInfo(this);
+            //VhRecentRequestSection = new Google.Protobuf.Collections.RepeatedField<ReserveInfo>();
+        }
+        private void initialVhErrorStateMachine()
+        {
+            vhErrorStateMachine = new VehicleErrorStateMachine(() => errorState, (errorstate) => errorState = errorstate);
+            vhErrorStateMachine.OnTransitioned(TransitionedHandler);
+            vhErrorStateMachine.OnUnhandledTrigger(UnhandledTriggerHandler);
         }
 
         public void TimerActionStart()
@@ -150,6 +192,7 @@ namespace com.mirle.ibg3k0.sc
         public virtual List<string> PredictSectionsStartToLoad { get; set; }
         public virtual List<string> PredictSectionsToDesination { get; set; }
 
+        public int PrePositionSeqNum = 0;
         [JsonIgnore]
         public virtual string[] CyclingPath { get; set; }
         [JsonIgnore]
@@ -197,6 +240,8 @@ namespace com.mirle.ibg3k0.sc
         public virtual double X_Axis { get; set; }
         [JsonIgnore]
         public virtual double Y_Axis { get; set; }
+        [JsonIgnore]
+        public virtual string CurrentExcuteCmdID { get; set; }
 
         [JsonIgnore]
         public virtual List<string> WillPassSectionID { get; set; }
@@ -276,22 +321,6 @@ namespace com.mirle.ibg3k0.sc
         public int Pixel_Loaction_Y = 0;
 
         private EventType vhRecentTranEcent = EventType.AdrPass;
-
-        [JsonIgnore]
-        [BaseElement(NonChangeFromOtherVO = true)]
-        private int repeatReceiveImportantEventCount = 0;
-        public int RepeatReceiveImportantEventCount
-        {
-            get { return repeatReceiveImportantEventCount; }
-            set
-            {
-                repeatReceiveImportantEventCount = value;
-                if (repeatReceiveImportantEventCount > MAX_ALLOW_IMPORTANT_EVENT_RETRY_COUNT)
-                {
-                    HasImportantEventReportRetryOverTimes?.Invoke(this, vhRecentTranEcent);
-                }
-            }
-        }
         public virtual EventType VhRecentTranEvent
         {
             get { return vhRecentTranEcent; }
@@ -313,9 +342,50 @@ namespace com.mirle.ibg3k0.sc
                 }
             }
         }
+
+        //public Google.Protobuf.Collections.RepeatedField<ReserveInfo> VhRecentRequestSection = new Google.Protobuf.Collections.RepeatedField<ReserveInfo>();
+        public Google.Protobuf.Collections.RepeatedField<ReserveInfo> VhRecentRequestSection = null;
+
+        [JsonIgnore]
+        [BaseElement(NonChangeFromOtherVO = true)]
+        private int repeatReceiveImportantEventCount = 0;
+        public int RepeatReceiveImportantEventCount
+        {
+            get { return repeatReceiveImportantEventCount; }
+            set
+            {
+                repeatReceiveImportantEventCount = value;
+                if (repeatReceiveImportantEventCount > MAX_ALLOW_IMPORTANT_EVENT_RETRY_COUNT)
+                {
+                    HasImportantEventReportRetryOverTimes?.Invoke(this, vhRecentTranEcent);
+                }
+            }
+        }
+
+        public Stopwatch ReserveRequestFailDuration { get; private set; } = new Stopwatch();
+
+        /// <summary>
+        /// 重複收到已經要求成功的Section路段的路權詢問
+        /// </summary>
+        [JsonIgnore]
+        [BaseElement(NonChangeFromOtherVO = true)]
+        private int repeatReceiveReserveRequestSuccessSection = 0;
+        public int RepeatReceiveReserveRequestSuccessSection
+        {
+            get { return repeatReceiveReserveRequestSuccessSection; }
+            set
+            {
+                repeatReceiveReserveRequestSuccessSection = value;
+                if (repeatReceiveReserveRequestSuccessSection > MAX_ALLOW_IMPORTANT_EVENT_RETRY_COUNT)
+                {
+                    HasReserveRequestRetryOverTimes?.Invoke(this, EventArgs.Empty);
+                }
+            }
+        }
         public BCRReadResult BCRReadResult = BCRReadResult.BcrNormal;
 
         public VehicleState State = VehicleState.Remove;
+        public VehicleErrorState errorState = VehicleErrorState.NoAlarm;
 
         private string tcpip_msg_satae;
         [JsonIgnore]
@@ -372,6 +442,9 @@ namespace com.mirle.ibg3k0.sc
 
         [BaseElement(NonChangeFromOtherVO = true)]
         public bool isSynchronizing;
+
+        [BaseElement(NonChangeFromOtherVO = true)]
+        public bool isLongTimeReserveRequestFailHappend;
 
 
         private bool istcpipconnect;
@@ -434,7 +507,6 @@ namespace com.mirle.ibg3k0.sc
         public virtual bool IsObstacle
         {
             get { return OBS_PAUSE == VhStopSingle.StopSingleOn; }
-            set { }
         }
         public Stopwatch watchBlockTime = new Stopwatch();
         [JsonIgnore]
@@ -464,7 +536,6 @@ namespace com.mirle.ibg3k0.sc
         public virtual bool IsBlocking
         {
             get { return BLOCK_PAUSE == VhStopSingle.StopSingleOn; }
-            set { }
         }
         public Stopwatch watchPauseTime = new Stopwatch();
         [JsonIgnore]
@@ -533,7 +604,37 @@ namespace com.mirle.ibg3k0.sc
             get { return HID_PAUSE == VhStopSingle.StopSingleOn; }
             set { }
         }
+        public bool IsCycleMove(ConcurrentDictionary<string, ACMD_OHTC> currentExCmdOhtc)
+        {
+            if (ACT_STATUS != VHActionStatus.Commanding)
+            {
+                return false;
+            }
+            if (SCUtility.isEmpty(OHTC_CMD))
+            {
+                bool is_exist = currentExCmdOhtc.TryGetValue(sc.Common.SCUtility.Trim(CurrentExcuteCmdID, true), out ACMD_OHTC cmd_ohtc);
+                if (!is_exist) return false;
+                if (cmd_ohtc.CMD_TPYE == E_CMD_TYPE.Round)
+                    return true;
+                else
+                    return false;
+            }
+            else
+            {
+                bool is_exist = currentExCmdOhtc.TryGetValue(sc.Common.SCUtility.Trim(OHTC_CMD, true), out ACMD_OHTC cmd_ohtc);
+                if (!is_exist) return false;
+                if (cmd_ohtc.CMD_TPYE == E_CMD_TYPE.Round)
+                    return true;
+                else
+                    return false;
+            }
+        }
         public virtual string NODE_ID { get; set; }
+        public virtual string PreAssignMCSCommandID { get; set; }
+        [JsonIgnore]
+        public virtual bool IsCommandSending { get; set; }
+        [JsonIgnore]
+        public virtual int CheckCommandIDFromCommandIDRequestFailTimes { get; set; }
 
         //public ACMD_OHTC currentExcuteCmd = null;
         [JsonIgnore]
@@ -579,7 +680,7 @@ namespace com.mirle.ibg3k0.sc
             mapAction = getExcuteMapAction();
             return mapAction.sned_Str1(sned_gpp, out receive_gpp);
         }
-        public bool sned_S11(ID_11_BASIC_INFO_REP sned_gpp, out ID_111_BASIC_INFO_RESPONSE receive_gpp)
+        public bool sned_S11(ID_11_ZONE_COMMAND_INFO_REP sned_gpp, out ID_111_ZONE_COMMAND_INFO_RESPONSE receive_gpp)
         {
             ValueDefMapActionBase mapAction = null;
             mapAction = getExcuteMapAction();
@@ -671,7 +772,7 @@ namespace com.mirle.ibg3k0.sc
             getExcuteMapAction().UnRgisteredProcEvent();
         }
 
-        public bool sned_Str31(ID_31_TRANS_REQUEST send_gpp, out ID_131_TRANS_RESPONSE receive_gpp, out string reason)
+        public (bool isSuccess, SCAppConstants.SEND_CMD_OHTC_NG_TYPE ngType) sned_Str31(ID_31_TRANS_REQUEST send_gpp, out ID_131_TRANS_RESPONSE receive_gpp, out string reason)
         {
             ValueDefMapActionBase mapAction = null;
             mapAction = getExcuteMapAction();
@@ -810,6 +911,94 @@ namespace com.mirle.ibg3k0.sc
             return IsListening;
         }
 
+        public bool TransferReady(BLL.Interface.ICMDBLL cmdBLL, bool isUnload = false)
+        {
+            if (!isTcpIpConnect)
+            {
+                return false;
+            }
+            if (!IS_INSTALLED)
+            {
+                return false;
+            }
+            if (isSynchronizing)
+            {
+                return false;
+            }
+            if (MODE_STATUS != VHModeStatus.AutoRemote)
+            {
+                return false;
+            }
+            if (IsError)
+            {
+                return false;
+            }
+            if (!SCUtility.isEmpty(MCS_CMD))
+            {
+                return false;
+            }
+            if (!isUnload && HAS_CST == 1)
+            {
+                return false;
+            }
+            if (SCUtility.isEmpty(CUR_ADR_ID))
+            {
+                return false;
+            }
+            if (IsCommandSending)
+            {
+                return false;
+            }
+            if (cmdBLL.isCMD_OHTCWillSending(VEHICLE_ID))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool TransferReadyForTest(BLL.Interface.ICMDBLL cmdBLL, bool isUnload = false)
+        {
+            if (!isTcpIpConnect)
+            {
+                return false;
+            }
+
+            if (isSynchronizing)
+            {
+                return false;
+            }
+            if (MODE_STATUS != VHModeStatus.AutoRemote)
+            {
+                return false;
+            }
+            if (IsError)
+            {
+                return false;
+            }
+            if (!SCUtility.isEmpty(MCS_CMD))
+            {
+                return false;
+            }
+            if (!isUnload && HAS_CST == 1)
+            {
+                return false;
+            }
+            if (SCUtility.isEmpty(CUR_ADR_ID))
+            {
+                return false;
+            }
+            if (IsCommandSending)
+            {
+                return false;
+            }
+            if (cmdBLL.isCMD_OHTCWillSending(VEHICLE_ID))
+            {
+                return false;
+            }
+            return true;
+        }
+
+
 
         public int getPortNum(BCFApplication bcfApp)
         {
@@ -894,9 +1083,9 @@ namespace com.mirle.ibg3k0.sc
             }
         }
 
-        public void OnBeforeInsert()
+        public string getVhStatusInfo()
         {
-
+            return vehicleStatusInfo.ToString();
         }
         public override void doShareMemoryInit(BCFAppConstants.RUN_LEVEL runLevel)
         {
@@ -963,7 +1152,31 @@ namespace com.mirle.ibg3k0.sc
         public int Num { get; set; }
 
 
-        void TransitionedHandler(Stateless.StateMachine<VehicleState, VehicleTrigger>.Transition transition)
+        //void TransitionedHandler(Stateless.StateMachine<VehicleState, VehicleTrigger>.Transition transition)
+        //{
+        //    string Destination = transition.Destination.ToString();
+        //    string Source = transition.Source.ToString();
+        //    string Trigger = transition.Trigger.ToString();
+        //    string IsReentry = transition.IsReentry.ToString();
+
+        //    LogHelper.Log(logger: NLog.LogManager.GetCurrentClassLogger(), LogLevel: NLog.LogLevel.Debug, Class: nameof(AVEHICLE), Device: DEVICE_NAME_OHx,
+        //                   Data: $"Vh:{VEHICLE_ID} message state,From:{Source} to:{Destination} by:{Trigger}.IsReentry:{IsReentry}",
+        //                   VehicleID: VEHICLE_ID,
+        //                   CarrierID: CST_ID);
+        //}
+
+        //void UnhandledTriggerHandler(VehicleState state, VehicleTrigger trigger)
+        //{
+        //    string SourceState = state.ToString();
+        //    string Trigger = trigger.ToString();
+
+        //    LogHelper.Log(logger: NLog.LogManager.GetCurrentClassLogger(), LogLevel: NLog.LogLevel.Debug, Class: nameof(AVEHICLE), Device: DEVICE_NAME_OHx,
+        //                   Data: $"Vh:{VEHICLE_ID} message state ,unhandled trigger happend ,source state:{SourceState} trigger:{Trigger}",
+        //                   VehicleID: VEHICLE_ID,
+        //                   CarrierID: CST_ID);
+        //}
+
+        void TransitionedHandler<TState, TTrigger>(Stateless.StateMachine<TState, TTrigger>.Transition transition)
         {
             string Destination = transition.Destination.ToString();
             string Source = transition.Source.ToString();
@@ -971,18 +1184,18 @@ namespace com.mirle.ibg3k0.sc
             string IsReentry = transition.IsReentry.ToString();
 
             LogHelper.Log(logger: NLog.LogManager.GetCurrentClassLogger(), LogLevel: NLog.LogLevel.Debug, Class: nameof(AVEHICLE), Device: DEVICE_NAME_OHx,
-                           Data: $"Vh:{VEHICLE_ID} message state,From:{Source} to:{Destination} by:{Trigger}.IsReentry:{IsReentry}",
+                           Data: $"Vh:{VEHICLE_ID}  state,From:{Source} to:{Destination} by:{Trigger}.IsReentry:{IsReentry}",
                            VehicleID: VEHICLE_ID,
                            CarrierID: CST_ID);
         }
 
-        void UnhandledTriggerHandler(VehicleState state, VehicleTrigger trigger)
+        void UnhandledTriggerHandler<TState, TTrigger>(TState state, TTrigger trigger)
         {
             string SourceState = state.ToString();
             string Trigger = trigger.ToString();
 
             LogHelper.Log(logger: NLog.LogManager.GetCurrentClassLogger(), LogLevel: NLog.LogLevel.Debug, Class: nameof(AVEHICLE), Device: DEVICE_NAME_OHx,
-                           Data: $"Vh:{VEHICLE_ID} message state ,unhandled trigger happend ,source state:{SourceState} trigger:{Trigger}",
+                           Data: $"Vh:{VEHICLE_ID}  state ,unhandled trigger happend ,source state:{SourceState} trigger:{Trigger}",
                            VehicleID: VEHICLE_ID,
                            CarrierID: CST_ID);
         }
@@ -1338,9 +1551,125 @@ namespace com.mirle.ibg3k0.sc
 
         #endregion Vehicle state machine
 
+        #region Vehicle Error Status
 
+        public class VehicleErrorStateMachine : StateMachine<VehicleErrorState, VehicleErrorTrigger>
+        {
+            public VehicleErrorStateMachine(Func<VehicleErrorState> stateAccessor, Action<VehicleErrorState> stateMutator)
+                : base(stateAccessor, stateMutator)
+            {
+                VehicleErrorStateMachineConfigInitial();
+            }
+            internal IEnumerable<VehicleErrorTrigger> getPermittedTriggers()//回傳當前狀態可以進行的Trigger，且會檢查GaurdClause。
+            {
+                return this.PermittedTriggers;
+            }
+
+
+            internal VehicleErrorState getCurrentState()//回傳當前的狀態
+            {
+                return this.State;
+            }
+            public List<string> getNextStateStrList()
+            {
+                List<string> nextStateStrList = new List<string>();
+                foreach (VehicleTrigger item in this.PermittedTriggers)
+                {
+                    nextStateStrList.Add(item.ToString());
+                }
+                return nextStateStrList;
+            }
+            private void VehicleErrorStateMachineConfigInitial()
+            {
+                this.Configure(VehicleErrorState.NoAlarm)
+                    .PermitIf(VehicleErrorTrigger.VehicleAlarmSet, VehicleErrorState.AlarmHappending);//guardClause為真才會執行狀態變化
+                this.Configure(VehicleErrorState.AlarmHappending)
+                    .PermitIf(VehicleErrorTrigger.VehicleAlarmClean, VehicleErrorState.AlarmConfirm)
+                    .PermitIf(VehicleErrorTrigger.VehicleConfirmComplete, VehicleErrorState.NoAlarm);
+                this.Configure(VehicleErrorState.AlarmConfirm)
+                    .PermitIf(VehicleErrorTrigger.VehicleConfirmComplete, VehicleErrorState.NoAlarm)
+                    .PermitIf(VehicleErrorTrigger.VehicleAlarmSet, VehicleErrorState.AlarmHappending);
+            }
+        }
+
+        public enum VehicleErrorState //有哪些State
+        {
+            NoAlarm = 0,
+            AlarmHappending = 1,
+            AlarmConfirm = 2,
+        }
+
+        public enum VehicleErrorTrigger //有哪些Trigger
+        {
+            VehicleAlarmClean,
+            VehicleAlarmSet,
+            VehicleConfirmComplete
+        }
+
+        public bool VechileAlarmClean()
+        {
+            try
+            {
+                if (vhErrorStateMachine.CanFire(VehicleErrorTrigger.VehicleAlarmClean))
+                {
+                    vhErrorStateMachine.Fire(VehicleErrorTrigger.VehicleAlarmClean);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public bool VehicleAlarmSet()
+        {
+            try
+            {
+                if (vhErrorStateMachine.CanFire(VehicleErrorTrigger.VehicleAlarmSet))
+                {
+                    vhErrorStateMachine.Fire(VehicleErrorTrigger.VehicleAlarmSet);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+        public bool VehicleAlarmConfirmComplete()
+        {
+            try
+            {
+                if (vhErrorStateMachine.CanFire(VehicleErrorTrigger.VehicleConfirmComplete))
+                {
+                    vhErrorStateMachine.Fire(VehicleErrorTrigger.VehicleConfirmComplete);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        #endregion Vehicle Error Status
+        [TeaceMethodAspectAttribute]
         public class VehicleTimerAction : ITimerAction
         {
+            private static Logger VehicleStatusInfoLogger = NLog.LogManager.GetLogger("VehicleStatusInfo");
             private static Logger logger = LogManager.GetCurrentClassLogger();
             AVEHICLE vh = null;
             SCApplication scApp = null;
@@ -1358,10 +1687,14 @@ namespace com.mirle.ibg3k0.sc
             private long syncPoint = 0;
             public override void doProcess(object obj)
             {
+                if (vh.IS_INSTALLED)
+                    VehicleStatusInfoLogger.Info(vh.getVhStatusInfo());
+
                 if (System.Threading.Interlocked.Exchange(ref syncPoint, 1) == 0)
                 {
                     try
                     {
+
                         //if (!vh.isTcpIpConnect) return;
                         //1.檢查是否已經大於一定時間沒有進行通訊
                         double from_last_comm_time = vh.getFromTheLastCommTime(scApp.getBCFApplication());
@@ -1371,31 +1704,20 @@ namespace com.mirle.ibg3k0.sc
                         {
                             vh.onLongTimeNoCommuncation();
                         }
-                        if (!vh.isTcpIpConnect) return;
-                        double action_time = vh.CurrentCommandExcuteTime.Elapsed.TotalSeconds;
-                        if (action_time > AVEHICLE.MAX_ALLOW_ACTION_TIME_SECOND)
-                        {
-                            if (!vh.isLongTimeInaction)
-                            {
-                                vh.isLongTimeInaction = true;
-                                vh.isLongTimeInactionCMDID = vh.OHTC_CMD;
-                                vh.onLongTimeInaction(vh.OHTC_CMD);
-                            }
-                            else
-                            {
-                                //do nothing
-                            }
-                        }
-                        else
-                        {
-                            if (vh.isLongTimeInaction)
-                            {
-                                //clear
-                                scApp.TransferService.OHBC_AlarmCleared(scApp.getEQObjCacheManager().getLine().LINE_ID, ((int)Service.AlarmLst.OHT_CommandNotFinishedInTime).ToString());
 
-                            }
-                            vh.isLongTimeInaction = false;
+                        if (!vh.isTcpIpConnect) return;
+                        //檢查是否這台車是否有命令是處於Sending狀態
+                        if (!vh.IsCommandSending)
+                        {
+                            var cmd = ACMD_OHTC.getCmdOhtcListOfCmdObj(vh.VEHICLE_ID, E_CMD_STATUS.Sending);
+                            if (cmd != null)
+                                vh.onExcuteCommandStatusNotMatch(cmd);
                         }
+                        checkHasCommandNotFinishedInTime();
+                        checkIsIdleEnough();
+                        checkHasBoxOnVhWhenNoCommand();
+                        checkIsCycleMovePausing();
+                        checkHasReserveRequestFailLongTimeHappend();
                     }
                     catch (Exception ex)
                     {
@@ -1412,6 +1734,110 @@ namespace com.mirle.ibg3k0.sc
                 }
             }
 
+            private void checkHasReserveRequestFailLongTimeHappend()
+            {
+                if (vh.ReserveRequestFailDuration.ElapsedMilliseconds > SystemParameter.MaxAllowReserveRequestFailTimeMS)
+                {
+                    if (!vh.isLongTimeReserveRequestFailHappend)
+                    {
+                        vh.isLongTimeReserveRequestFailHappend = true;
+                        vh.onLongTimeReserveRequestFailHappend(true);
+                    }
+                }
+                else
+                {
+                    if (vh.isLongTimeReserveRequestFailHappend)
+                    {
+                        vh.isLongTimeReserveRequestFailHappend = false;
+                        vh.onLongTimeReserveRequestFailHappend(false);
+                    }
+                }
+            }
+
+            private void checkIsCycleMovePausing()
+            {
+                if (vh.IsCycleMove(ACMD_OHTC.CMD_OHTC_InfoList) &&
+                   vh.IsPause)
+                {
+                    vh.onCycleMovePausing();
+                }
+            }
+
+            private void checkHasBoxOnVhWhenNoCommand()
+            {
+                if (!sc.Common.SCUtility.isEmpty(vh.OHTC_CMD))
+                {
+                    return;
+                }
+                if (vh.ACT_STATUS == VHActionStatus.Commanding)
+                {
+                    return;
+                }
+                //if (vh.HAS_BOX == 1)
+                if (vh.HAS_CST == 1)
+                {
+                    vh.onBoxIdleOnVh(vh.BOX_ID);
+                }
+                else
+                {
+                    return;
+                }
+            }
+
+            private void checkHasCommandNotFinishedInTime()
+            {
+                double action_time = vh.CurrentCommandExcuteTime.Elapsed.TotalSeconds;
+                if (action_time > AVEHICLE.MAX_ALLOW_ACTION_TIME_SECOND)
+                {
+                    if (!vh.isLongTimeInaction)
+                    {
+                        vh.isLongTimeInaction = true;
+                        vh.isLongTimeInactionCMDID = vh.OHTC_CMD;
+                        vh.onLongTimeInaction(vh.OHTC_CMD);
+                    }
+                    else
+                    {
+                        //do nothing
+                    }
+                }
+                else
+                {
+                    if (vh.isLongTimeInaction)
+                    {
+                        //clear
+                        scApp.TransferService.OHBC_AlarmCleared(scApp.getEQObjCacheManager().getLine().LINE_ID, ((int)Service.AlarmLst.OHT_CommandNotFinishedInTime).ToString());
+
+                    }
+                    vh.isLongTimeInaction = false;
+                }
+            }
+
+            private void checkIsIdleEnough()
+            {
+                if (!vh.IsError &&
+                    vh.MODE_STATUS == VHModeStatus.AutoRemote &&
+                    vh.ACT_STATUS == VHActionStatus.NoCommand)
+                {
+                    if (!vh.IdleTime.IsRunning)
+                        vh.IdleTime.Restart();
+                    else
+                    {
+                        if (vh.IdleTime.ElapsedMilliseconds > AVEHICLE.MAX_ALLOW_VH_IDLE_TIME_MMILLI_SECOND)
+                        {
+                            vh.IdleTime.Restart();
+                            vh.onIdleTimeIsEnough();
+                        }
+                    }
+                }
+                else
+                {
+                    if (vh.IdleTime.IsRunning)
+                    {
+                        vh.IdleTime.Reset();
+                        vh.IdleTime.Stop();
+                    }
+                }
+            }
         }
 
     }

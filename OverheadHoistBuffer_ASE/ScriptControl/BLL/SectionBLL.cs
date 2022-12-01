@@ -1,4 +1,5 @@
 ﻿using com.mirle.ibg3k0.sc.App;
+using com.mirle.ibg3k0.sc.BLL.Interface;
 using com.mirle.ibg3k0.sc.Common;
 using com.mirle.ibg3k0.sc.Data;
 using com.mirle.ibg3k0.sc.Data.DAO;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace com.mirle.ibg3k0.sc.BLL
 {
-    public class SectionBLL
+    public class SectionBLL : ISectionBLL
     {
         public SCApplication scApp;
         public Database dataBase { get; private set; }
@@ -26,6 +27,27 @@ namespace com.mirle.ibg3k0.sc.BLL
             dataBase = new Database(scApp.SectionDao);
             cache = new Cache(scApp.getCommObjCacheManager());
         }
+
+        public List<ASECTION> loadSections()
+        {
+            return cache.GetSections();
+        }
+
+        public ASECTION getSection(string secID)
+        {
+            return cache.GetSection(secID);
+        }
+
+        public ASECTION getSectionByToAdr(string adrID)
+        {
+            return cache.GetSectionsByToAddress(adrID).FirstOrDefault();
+        }
+
+        public ASECTION getSectionByFromAdr(string adrID)
+        {
+            return cache.GetSectionsByFromAddress(adrID).FirstOrDefault();
+        }
+
         public class Database
         {
             SectionDao SectionDao = null;

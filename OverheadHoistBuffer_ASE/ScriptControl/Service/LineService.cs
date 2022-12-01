@@ -46,7 +46,30 @@ namespace com.mirle.ibg3k0.sc.Service
             line.addEventHandler(nameof(LineService), nameof(line.IsEarthquakeHappend), PublishLineInfo);
             line.addEventHandler(nameof(LineService), nameof(line.IsAlarmHappened), PublishLineInfo);
             line.LineStatusChange += Line_LineStatusChange;
+            line.SecsParseFailOverTimes += Line_SecsParseFailOverTimes;
 
+            ClearOHBCParseFailAlarm();
+
+        }
+
+        /// <summary>
+        /// 在OHBC有重開後，清除一次
+        /// </summary>
+        private void ClearOHBCParseFailAlarm()
+        {
+            try
+            {
+                scApp.TransferService.OHBC_AlarmCleared(line.LINE_ID, ((int)AlarmLst.OHBC_Parse_SECS_Format_Fail).ToString());
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception:");
+            }
+        }
+
+        private void Line_SecsParseFailOverTimes(object sender, int e)
+        {
+            scApp.TransferService.OHBC_AlarmSet(line.LINE_ID, ((int)AlarmLst.OHBC_Parse_SECS_Format_Fail).ToString());
         }
 
         public void startHostCommunication()

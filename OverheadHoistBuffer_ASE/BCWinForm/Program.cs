@@ -51,6 +51,8 @@ namespace com.mirle.ibg3k0.bc.winform
         [SecurityCritical]
         static void Main(string[] args)
         {
+            Logrila.Logging.NLogIntegration.NLogLogger.Use();
+
             using (Mutex m = new Mutex(false, "Global\\" + appGuid))
             {
                 //MessageBox.Show("Test 1.0.0.2");

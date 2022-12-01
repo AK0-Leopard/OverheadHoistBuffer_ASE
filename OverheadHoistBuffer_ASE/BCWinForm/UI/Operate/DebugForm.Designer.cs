@@ -106,6 +106,8 @@
             this.btn_forceReleaseAllBlock = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.num_preStageWatingTime = new System.Windows.Forms.NumericUpDown();
+            this.label78 = new System.Windows.Forms.Label();
             this.label77 = new System.Windows.Forms.Label();
             this.num_pass_distance = new System.Windows.Forms.NumericUpDown();
             this.combox_cycle_type = new System.Windows.Forms.ComboBox();
@@ -350,8 +352,7 @@
             this.ck_SaftyCheckComplete = new System.Windows.Forms.CheckBox();
             this.ck_SaftyCheckRequest = new System.Windows.Forms.CheckBox();
             this.ck_Alive = new System.Windows.Forms.CheckBox();
-            this.label78 = new System.Windows.Forms.Label();
-            this.num_preStageWatingTime = new System.Windows.Forms.NumericUpDown();
+            this.btn_136_zoneCommandTest = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -364,6 +365,7 @@
             this.groupBox5.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.num_preStageWatingTime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.num_pass_distance)).BeginInit();
             this.groupBox12.SuspendLayout();
             this.groupBox7.SuspendLayout();
@@ -390,7 +392,6 @@
             this.tableLayoutPanel5.SuspendLayout();
             this.groupBox13.SuspendLayout();
             this.groupBox10.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.num_preStageWatingTime)).BeginInit();
             this.SuspendLayout();
             // 
             // cb_FroceReservePass
@@ -1303,6 +1304,33 @@
             this.tabPage1.Text = "TcpIp Control";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // num_preStageWatingTime
+            // 
+            this.num_preStageWatingTime.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.num_preStageWatingTime.Location = new System.Drawing.Point(1242, 459);
+            this.num_preStageWatingTime.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.num_preStageWatingTime.Name = "num_preStageWatingTime";
+            this.num_preStageWatingTime.Size = new System.Drawing.Size(138, 30);
+            this.num_preStageWatingTime.TabIndex = 57;
+            this.num_preStageWatingTime.ValueChanged += new System.EventHandler(this.num_preStageWatingTime_ValueChanged);
+            // 
+            // label78
+            // 
+            this.label78.AutoSize = true;
+            this.label78.Location = new System.Drawing.Point(1238, 434);
+            this.label78.Name = "label78";
+            this.label78.Size = new System.Drawing.Size(230, 22);
+            this.label78.TabIndex = 56;
+            this.label78.Text = "Pre Stage Waiting Time";
+            // 
             // label77
             // 
             this.label77.AutoSize = true;
@@ -1553,7 +1581,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 31);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1455, 830);
+            this.tabPage2.Size = new System.Drawing.Size(1484, 830);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "PLC Control";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -2590,7 +2618,7 @@
             this.table_cache_data_pisplay.Location = new System.Drawing.Point(4, 31);
             this.table_cache_data_pisplay.Name = "table_cache_data_pisplay";
             this.table_cache_data_pisplay.Padding = new System.Windows.Forms.Padding(3);
-            this.table_cache_data_pisplay.Size = new System.Drawing.Size(1455, 830);
+            this.table_cache_data_pisplay.Size = new System.Drawing.Size(1484, 830);
             this.table_cache_data_pisplay.TabIndex = 3;
             this.table_cache_data_pisplay.Text = "Cache Data Display";
             this.table_cache_data_pisplay.UseVisualStyleBackColor = true;
@@ -2610,7 +2638,7 @@
             this.tableLayoutPanel2.RowCount = 2;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 4.61165F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 95.38835F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(1449, 824);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(1478, 824);
             this.tableLayoutPanel2.TabIndex = 3;
             // 
             // dgv_cache_object_data
@@ -2626,7 +2654,7 @@
             this.dgv_cache_object_data.Name = "dgv_cache_object_data";
             this.dgv_cache_object_data.RowTemplate.Height = 24;
             this.dgv_cache_object_data.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgv_cache_object_data.Size = new System.Drawing.Size(1443, 781);
+            this.dgv_cache_object_data.Size = new System.Drawing.Size(1472, 781);
             this.dgv_cache_object_data.TabIndex = 0;
             this.dgv_cache_object_data.EditModeChanged += new System.EventHandler(this.dgv_cache_object_data_EditModeChanged);
             // 
@@ -2651,7 +2679,7 @@
             // 
             this.cb_Cache_data_Name.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.cb_Cache_data_Name.FormattingEnabled = true;
-            this.cb_Cache_data_Name.Location = new System.Drawing.Point(178, 8);
+            this.cb_Cache_data_Name.Location = new System.Drawing.Point(207, 3);
             this.cb_Cache_data_Name.Name = "cb_Cache_data_Name";
             this.cb_Cache_data_Name.Size = new System.Drawing.Size(193, 30);
             this.cb_Cache_data_Name.TabIndex = 1;
@@ -2661,7 +2689,7 @@
             // 
             this.label22.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(12, 7);
+            this.label22.Location = new System.Drawing.Point(41, 7);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(160, 22);
             this.label22.TabIndex = 2;
@@ -2669,6 +2697,7 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.btn_136_zoneCommandTest);
             this.tabPage3.Controls.Add(this.txt_remove_loc_id);
             this.tabPage3.Controls.Add(this.label20);
             this.tabPage3.Controls.Add(this.txt_remove_cst_id);
@@ -2678,7 +2707,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 31);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(1455, 830);
+            this.tabPage3.Size = new System.Drawing.Size(1484, 830);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "tabPage3";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -2771,7 +2800,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 31);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(1455, 830);
+            this.tabPage4.Size = new System.Drawing.Size(1484, 830);
             this.tabPage4.TabIndex = 4;
             this.tabPage4.Text = "MTL Test";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -3544,7 +3573,7 @@
             this.tabPage6.Location = new System.Drawing.Point(4, 31);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(1455, 830);
+            this.tabPage6.Size = new System.Drawing.Size(1484, 830);
             this.tabPage6.TabIndex = 6;
             this.tabPage6.Text = "MTL/MTS Simulator";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -3690,7 +3719,7 @@
             this.tabPage5.Controls.Add(this.btn_SendHIDControl);
             this.tabPage5.Location = new System.Drawing.Point(4, 31);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(1455, 830);
+            this.tabPage5.Size = new System.Drawing.Size(1484, 830);
             this.tabPage5.TabIndex = 5;
             this.tabPage5.Text = "HID Test";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -3909,7 +3938,7 @@
             this.tabPage7.Location = new System.Drawing.Point(4, 31);
             this.tabPage7.Name = "tabPage7";
             this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage7.Size = new System.Drawing.Size(1455, 830);
+            this.tabPage7.Size = new System.Drawing.Size(1484, 830);
             this.tabPage7.TabIndex = 7;
             this.tabPage7.Text = "CV Test";
             this.tabPage7.UseVisualStyleBackColor = true;
@@ -4274,32 +4303,15 @@
             this.ck_Alive.UseVisualStyleBackColor = true;
             this.ck_Alive.CheckedChanged += new System.EventHandler(this.ck_Alive_CheckedChanged);
             // 
-            // label78
+            // btn_136_zoneCommandTest
             // 
-            this.label78.AutoSize = true;
-            this.label78.Location = new System.Drawing.Point(1238, 434);
-            this.label78.Name = "label78";
-            this.label78.Size = new System.Drawing.Size(230, 22);
-            this.label78.TabIndex = 56;
-            this.label78.Text = "Pre Stage Waiting Time";
-            // 
-            // num_preStageWatingTime
-            // 
-            this.num_preStageWatingTime.Increment = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.num_preStageWatingTime.Location = new System.Drawing.Point(1242, 459);
-            this.num_preStageWatingTime.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.num_preStageWatingTime.Name = "num_preStageWatingTime";
-            this.num_preStageWatingTime.Size = new System.Drawing.Size(138, 30);
-            this.num_preStageWatingTime.TabIndex = 57;
-            this.num_preStageWatingTime.ValueChanged += new System.EventHandler(this.num_preStageWatingTime_ValueChanged);
+            this.btn_136_zoneCommandTest.Location = new System.Drawing.Point(10, 238);
+            this.btn_136_zoneCommandTest.Name = "btn_136_zoneCommandTest";
+            this.btn_136_zoneCommandTest.Size = new System.Drawing.Size(196, 43);
+            this.btn_136_zoneCommandTest.TabIndex = 32;
+            this.btn_136_zoneCommandTest.Text = "136 Zone Cmd Test";
+            this.btn_136_zoneCommandTest.UseVisualStyleBackColor = true;
+            this.btn_136_zoneCommandTest.Click += new System.EventHandler(this.btn_136_zoneCommandTest_Click);
             // 
             // DebugForm
             // 
@@ -4333,6 +4345,7 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.num_preStageWatingTime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.num_pass_distance)).EndInit();
             this.groupBox12.ResumeLayout(false);
             this.groupBox12.PerformLayout();
@@ -4380,7 +4393,6 @@
             this.groupBox13.PerformLayout();
             this.groupBox10.ResumeLayout(false);
             this.groupBox10.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.num_preStageWatingTime)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -4711,5 +4723,6 @@
         private System.Windows.Forms.Label label77;
         private System.Windows.Forms.Label label78;
         private System.Windows.Forms.NumericUpDown num_preStageWatingTime;
+        private System.Windows.Forms.Button btn_136_zoneCommandTest;
     }
 }

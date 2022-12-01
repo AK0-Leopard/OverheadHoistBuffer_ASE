@@ -25,9 +25,11 @@ using System.Text;
 using System.Threading.Tasks;
 using NLog;
 using System.Security.Policy;
+using com.mirle.ibg3k0.sc.Common.AOP;
 
 namespace com.mirle.ibg3k0.sc.Service
 {
+    [TeaceMethodAspectAttribute]
     public class EmptyBoxHandlerService
     {
         //2020.6.22 每檢查N次高水位，檢查1次低水位

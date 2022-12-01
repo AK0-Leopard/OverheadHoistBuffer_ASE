@@ -10,6 +10,7 @@ using com.mirle.ibg3k0.sc.Data;
 using com.mirle.ibg3k0.sc.App;
 using com.mirle.ibg3k0.sc.Common;
 using com.mirle.ibg3k0.sc.Service;
+using com.mirle.ibg3k0.sc.BLL.Interface;
 
 namespace com.mirle.ibg3k0.sc.BLL
 {
@@ -21,7 +22,7 @@ namespace com.mirle.ibg3k0.sc.BLL
         TrnDT,
     }
 
-    public class CassetteDataBLL
+    public class CassetteDataBLL : ICassetteDataBLL
     {
         SCApplication scApp = null;
         CassetteDataDao cassettedataDao = null;

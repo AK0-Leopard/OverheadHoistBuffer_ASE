@@ -22,6 +22,7 @@ using com.mirle.ibg3k0.bcf.Data.VO;
 using com.mirle.ibg3k0.bcf.Schedule;
 using com.mirle.ibg3k0.sc.BLL;
 using com.mirle.ibg3k0.sc.Common;
+using com.mirle.ibg3k0.sc.Common.Interface;
 using com.mirle.ibg3k0.sc.ConfigHandler;
 using com.mirle.ibg3k0.sc.Data;
 using com.mirle.ibg3k0.sc.Data.DAO;
@@ -29,10 +30,12 @@ using com.mirle.ibg3k0.sc.Data.DAO.EntityFramework;
 using com.mirle.ibg3k0.sc.Data.PLC_Functions;
 using com.mirle.ibg3k0.sc.Data.SECS;
 using com.mirle.ibg3k0.sc.Data.VO;
+using com.mirle.ibg3k0.sc.Module;
 using com.mirle.ibg3k0.sc.MQTT;
 using com.mirle.ibg3k0.sc.RouteKit;
 using com.mirle.ibg3k0.sc.Scheduler;
 using com.mirle.ibg3k0.sc.Service;
+using com.mirle.ibg3k0.sc.WebAPI;
 using com.mirle.ibg3k0.sc.WIF;
 using com.mirle.ibg3k0.stc.Common.SECS;
 using ExcelDataReader;
@@ -462,6 +465,9 @@ namespace com.mirle.ibg3k0.sc.App
         private HCMD_OHTCDao hcmd_ohtcDao = null;
         public HCMD_OHTCDao HCMD_OHTCDao { get { return hcmd_ohtcDao; } }
 
+        private ZoneCommandDao zoneCommandDao = null;
+        public ZoneCommandDao ZoneCommandDao { get { return zoneCommandDao; } }
+
         //BLL
         /// <summary>
         /// The user BLL
@@ -557,6 +563,8 @@ namespace com.mirle.ibg3k0.sc.App
         public EquipmentBLL EquipmentBLL { get { return equipmentBLL; } }
         private GuideBLL guideBLL = null;
         public GuideBLL GuideBLL { get { return guideBLL; } }
+        private ZoneCommandBLL zoneCommandBLL = null;
+        public ZoneCommandBLL ZoneCommandBLL { get { return zoneCommandBLL; } }
 
         /// <summary>
         /// 在OHT尚未改成新格式前先保留
@@ -592,6 +600,10 @@ namespace com.mirle.ibg3k0.sc.App
 
         private EmptyBoxHandlerService emptyBoxHandlerService = null;
         public EmptyBoxHandlerService EmptyBoxHandlerService { get { return emptyBoxHandlerService; } }
+        private LoopTransferEnhance loopTransferEnhance = null;
+        public LoopTransferEnhance LoopTransferEnhance { get { return loopTransferEnhance; } }
+
+
 
         private DataSyncBLL datasynBLL = null;
         public DataSyncBLL DataSyncBLL { get { return datasynBLL; } }
@@ -610,6 +622,8 @@ namespace com.mirle.ibg3k0.sc.App
         public CassetteDataBLL CassetteDataBLL { get; private set; } = null;
         public ReserveBLL ReserveBLL { get; private set; } = null; //A0.01
         public VAlarmBLL VAlarmBLL { get; private set; } = null; //A0.01
+        public IReserveModule localReserveModule { get; private set; }
+        public IReserveModule remoteReserveModule { get; private set; }
 
         //WIF
         /// <summary>
@@ -636,10 +650,6 @@ namespace com.mirle.ibg3k0.sc.App
         public Guide RouteGuide { get { return routeGuide; } }
         private IRouteGuide newrouteGuide = null;
         public IRouteGuide NewRouteGuide { get { return newrouteGuide; } }
-
-        private Grpc.Core.Server gRPC_With_Shelf;
-        private Grpc.Core.Server gRPC_With_Port;
-
 
         //config
         /// <summary>
@@ -798,10 +808,13 @@ namespace com.mirle.ibg3k0.sc.App
             SystemParameter.SECSConversactionTimeout = getInt("SECSConversactionTimeout", 60);
 
             SystemParameter.setIsEnableIDReadFailScenarioFlag(getBoolean("IsEnableIDReadFailScenario", false));
+            SystemParameter.setIsLoopTransferEnhanceFlag(getBoolean("IsLoopTransferEnhance", false));
+            SystemParameter.setIgnoreTransferCommandDistanceWithBehindVh(getDouble("IgnoreTransferCommandDistanceWithBehindVh", 15_000));
 
             initDao();      //Initial DAO
             initBLL();      //Initial BLL
             initServer();
+            initMoudule();
             initConfig();   //Initial Config
             initialTransferCommandPeriodicDataSet();
 
@@ -860,6 +873,13 @@ namespace com.mirle.ibg3k0.sc.App
             //bdTableWatcher = new DBTableWatcher(this);
 
 
+        }
+
+        private void initMoudule()
+        {
+            localReserveModule = new Common.ReserveModule(this);
+            remoteReserveModule = new WebAPI.ReserveModule(this);
+            loopTransferEnhance = new LoopTransferEnhance();
         }
 
         //A0.01
@@ -1219,6 +1239,7 @@ namespace com.mirle.ibg3k0.sc.App
             hcmd_mcsDao = new HCMD_MCSDao();
             hcmd_ohtcDao = new HCMD_OHTCDao();
             flexsimcommandDao = new FlexsimCommandDao();
+            zoneCommandDao = new ZoneCommandDao();
         }
 
         /// <summary>
@@ -1237,6 +1258,7 @@ namespace com.mirle.ibg3k0.sc.App
                 loadCSVToDataset(ohxcConfig, "RETURNCODEMAP");
                 loadCSVToDataset(ohxcConfig, "EQPTLOCATIONINFO");
                 loadCSVToDataset(ohxcConfig, "RESERVEENHANCEINFO");
+                loadCSVToDataset(ohxcConfig, "ZONECOMMANDINFO");
                 loadMapInfoCSVToDataset(ohxcConfig, "AADDRESS");
                 loadMapInfoCSVToDataset(ohxcConfig, "ASECTION");
                 logger.Info("init bc_Config success");
@@ -1469,6 +1491,7 @@ namespace com.mirle.ibg3k0.sc.App
             sectinoBLL = new SectionBLL();
             segmentBLL = new SegmentBLL();
             equipmentBLL = new EquipmentBLL();
+            zoneCommandBLL = new ZoneCommandBLL();
             datasynBLL = new DataSyncBLL();
 
             guideBLL = new GuideBLL();
@@ -1505,20 +1528,6 @@ namespace com.mirle.ibg3k0.sc.App
             blockControlService = new BlockControlService();
             shelfService = new ShelfService();
             emptyBoxHandlerService = new EmptyBoxHandlerService();
-
-            gRPC_With_Shelf = new Grpc.Core.Server()
-            {
-                Services = { CommonMessage.ProtocolFormat.ShelfFun.shelfGreeter.BindService(new com.mirle.ibg3k0.sc.WebAPI.Grpc.Shelf(this)) },
-                Ports = { new Grpc.Core.ServerPort("127.0.0.1", 7002, Grpc.Core.ServerCredentials.Insecure) },
-            };
-
-            gRPC_With_Port = new Grpc.Core.Server()
-            {
-                Services = { CommonMessage.ProtocolFormat.PortFun.PortGreeter.BindService(new com.mirle.ibg3k0.sc.WebAPI.Grpc.Port(this)) },
-                Ports = { new Grpc.Core.ServerPort("127.0.0.1", 7003, Grpc.Core.ServerCredentials.Insecure) },
-            };
-
-
         }
 
         /// <summary>
@@ -1555,6 +1564,7 @@ namespace com.mirle.ibg3k0.sc.App
             SectionBLL.start(this);
             SegmentBLL.start(this);
             equipmentBLL.start(this);
+            zoneCommandBLL.start(this);
             guideBLL.start(this);
             NodeBLL.start(this);
 
@@ -1581,9 +1591,6 @@ namespace com.mirle.ibg3k0.sc.App
             blockControlService.start(this);
             shelfService.start(this);
             emptyBoxHandlerService.start(this);
-            gRPC_With_Shelf.Start();
-            gRPC_With_Port.Start();
-
         }
 
         /// <summary>
@@ -1712,7 +1719,7 @@ namespace com.mirle.ibg3k0.sc.App
         /// <param name="key">The key.</param>
         /// <param name="defaultValue">The default value.</param>
         /// <returns>System.String.</returns>
-        private string getString(string key, string defaultValue)
+        public string getString(string key, string defaultValue)
         {
             string rtn = defaultValue;
             try
@@ -1812,6 +1819,7 @@ namespace com.mirle.ibg3k0.sc.App
 
             eqObjCacheManager.start(/*eqptCss, nodeFlowRelCss, */recoverFromDB);      //啟動EQ Object Cache.. 將從DB取得Line資訊建立EQ Object
             commObjCacheManager.setPortDefsInfo();
+            commObjCacheManager.setZoneCommandGroup();
             string shareMemoryInitClass = eqptCss.ShareMemoryInitClass;
             try
             {
@@ -1972,9 +1980,28 @@ namespace com.mirle.ibg3k0.sc.App
         {
             initScriptForEquipment();
             startService();
+            startModule();
             Scheduler.Start();
 
             //Scheduler.Start();
+        }
+
+        private void startModule()
+        {
+            loopTransferEnhance.Start
+                (
+                ZoneCommandBLL,
+                vehicleBLL,
+                sectinoBLL,
+                PortDefBLL,
+                ReserveBLL,
+                transferService,
+                ShelfDefBLL,
+                CassetteDataBLL,
+                cmdBLL
+                );
+            remoteReserveModule.Start(this);
+            localReserveModule.Start(this);
         }
 
         /// <summary>
@@ -2239,6 +2266,26 @@ namespace com.mirle.ibg3k0.sc.App
         public static int cmdTimeOutToAlternate = 30;
         public static int cmdPriorityWatershed = 50;
         public static int BoxMovePriority = 99;
+        public static bool islooptransferenhance = false;
+        public static bool isLoopTransferEnhance
+        {
+            get
+            {
+                if (VehicleService.IsOneVehicleSystem)
+                {
+                    return false;
+                }
+                else
+                {
+                    return islooptransferenhance;
+                }
+            }
+        }
+        public static bool isReserveByPassOnStraight { private set; get; } = true;
+        public static double IgnoreTransferCommandDistanceWithBehindVh { private set; get; } = 15_000;
+        public static bool IsUsingRemoteReserveModule { private set; get; } = true;
+        public static int MaxAllowReserveRequestFailTimeMS { private set; get; } = 300_000;
+
         /// <summary>
         /// Sets the secs conversaction timeout.
         /// </summary>
@@ -2300,7 +2347,28 @@ namespace com.mirle.ibg3k0.sc.App
         {
             BoxMovePriority = _BoxMovePriority;
         }
+        public static void setIsLoopTransferEnhanceFlag(bool _isLoopTransferEnhance)
+        {
+            //isLoopTransferEnhance = _isLoopTransferEnhance;
+            islooptransferenhance = _isLoopTransferEnhance;
+        }
+        public static void setIsReserveByPassOnStraight(bool _isReserveByPassOnStraight)
+        {
+            isReserveByPassOnStraight = _isReserveByPassOnStraight;
+        }
+        public static void setIgnoreTransferCommandDistanceWithBehindVh(double _IgnoreTransferCommandDistanceWithBehindVh)
+        {
+            IgnoreTransferCommandDistanceWithBehindVh = _IgnoreTransferCommandDistanceWithBehindVh;
+        }
 
+        public static void setIsUsingRemoveReserveModule(bool _IsUsingRemoveReserveModule)
+        {
+            IsUsingRemoteReserveModule = _IsUsingRemoveReserveModule;
+        }
+        public static void setMaxAllowReserveRequestFailTimeMS(int _MaxAllowReserveRequestFailTimeMS)
+        {
+            MaxAllowReserveRequestFailTimeMS = _MaxAllowReserveRequestFailTimeMS;
+        }
     }
 
     public class HAProxyConnectionTest
@@ -2387,6 +2455,7 @@ namespace com.mirle.ibg3k0.sc.App
 
         public static Boolean Is_136_empty_double_retry = false;
         public static Boolean Is_136_retry_test = false;
+        public static Boolean Is_136_ZoneCommandReq_retry_test = false;
 
         public static CycleRunType cycleRunType;
 
@@ -2404,6 +2473,8 @@ namespace com.mirle.ibg3k0.sc.App
         public static Boolean isForcedPassReserve = false;
         public static Boolean isForcedRejectReserve = false;
         public static Boolean isHandleBoxAbnormalPassOff = true;
+        public static Boolean ID_31_TimeoutTest = false;
+        public static Boolean IsOpenPositionSeqNumCheck = true;
 
         public enum CycleRunType
         {

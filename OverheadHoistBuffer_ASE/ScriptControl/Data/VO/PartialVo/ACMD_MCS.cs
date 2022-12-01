@@ -6,6 +6,7 @@
 // 2020/06/09    Jason Wu       N/A            A20.06.09.0 修改判定部分(新增判定來源目的地是非shelf的優先)   
 //**********************************************************************************
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,8 @@ namespace com.mirle.ibg3k0.sc
 {
     public partial class ACMD_MCS
     {
+        //public static List<ACMD_MCS> ACMD_MCS_List = new List<ACMD_MCS>();
+        public static ConcurrentDictionary<string, ACMD_MCS> MCS_CMD_InfoList { get; private set; } = new ConcurrentDictionary<string, ACMD_MCS>();
 
         //**********************************************************************************
         //A20.05.22 給定一個私有變數去儲存2點間距離
@@ -50,7 +53,40 @@ namespace com.mirle.ibg3k0.sc
             get { return _distanceFromVehicleToHostSource; }
             set { _distanceFromVehicleToHostSource = value; }
         }
+        public string CURRENT_LOCATION
+        {
+            get
+            {
+                string current_location = HOSTSOURCE;
+                if (IsRelayHappend())
+                {
+                    current_location = RelayStation;
+                }
+                return current_location;
+            }
+        }
 
+        public enum CommandReadyStatus
+        {
+            NotReady,
+            Ready,
+            Realy
+        }
+        public enum NotReadyReason
+        {
+            None,
+            Ready,
+            SpeciallyProcess,
+            NoCSTData,
+            SourceNotReady,
+            DestZoneIsFull,
+            DestAGVZoneNotReady,
+            DestAGVZoneNotReadyWillRealy,
+            DestPortNotReady,
+            DestPoerNotReadyWillRealy,
+            ExceptionHappend,
+            HosStateNotAuto
+        }
         public enum CmdType
         {
             MCS,
@@ -83,6 +119,117 @@ namespace com.mirle.ibg3k0.sc
             BoxReadFail_CstIsOK = 4,
             CSTReadFail_BoxIsOK = 5,
         }
+        public static List<ACMD_MCS> loadReadyTransferOfQueueCMD_MCS()
+        {
+            if (MCS_CMD_InfoList == null)
+            {
+                return new List<ACMD_MCS>();
+            }
+            var ready_transfer_cmd_mcs = MCS_CMD_InfoList.Values.
+                                         Where(cmd => (cmd.ReadyStatus == CommandReadyStatus.Ready || cmd.ReadyStatus == CommandReadyStatus.Realy) &&
+                                                       cmd.TRANSFERSTATE == E_TRAN_STATUS.Queue).ToList();
+            return ready_transfer_cmd_mcs;
+        }
+        public static List<ACMD_MCS> loadTransferingAndBeforeLoadingCMD_MCS()
+        {
+            if (MCS_CMD_InfoList == null)
+            {
+                return new List<ACMD_MCS>();
+            }
+            var ready_transfer_cmd_mcs = MCS_CMD_InfoList.Values.
+                                         Where(cmd => cmd.TRANSFERSTATE == E_TRAN_STATUS.Transferring &&
+                                                      cmd.COMMANDSTATE < ACMD_MCS.COMMAND_STATUS_BIT_INDEX_LOADING).ToList();
+            return ready_transfer_cmd_mcs;
+        }
+        public static List<ACMD_MCS> loadCurrentExcuteCMD_MCS()
+        {
+            if (MCS_CMD_InfoList == null)
+            {
+                return new List<ACMD_MCS>();
+            }
+            return MCS_CMD_InfoList.Values.ToList();
+        }
+
+        public ACMD_OHTC convertToACMD_OHTC(
+            AVEHICLE assignVehicle,
+            BLL.Interface.IPortDefBLL portDefBLL,
+            BLL.Interface.ISequenceBLL sequenceBLL,
+            Service.Interface.ITransferService transferService,
+            string relayStation)
+        {
+            if (IsScan())
+            {
+                var port_def = portDefBLL.getPortDef(CURRENT_LOCATION);
+                return new ACMD_OHTC()
+                {
+                    CMD_ID = sequenceBLL.getCommandID(App.SCAppConstants.GenOHxCCommandType.Auto),
+                    CARRIER_ID = this.CARRIER_ID,
+                    BOX_ID = this.BOX_ID,
+                    VH_ID = assignVehicle.VEHICLE_ID.Trim(),
+                    CMD_ID_MCS = this.CMD_ID,
+                    CMD_TPYE = E_CMD_TYPE.Scan,
+                    PRIORITY = 50,
+                    SOURCE = this.CURRENT_LOCATION,
+                    DESTINATION = this.HOSTDESTINATION,
+                    CMD_STAUS = 0,
+                    CMD_PROGRESS = 0,
+                    ESTIMATED_EXCESS_TIME = 0,
+                    REAL_CMP_TIME = 0,
+                    ESTIMATED_TIME = 50,
+                    SOURCE_ADR = port_def.ADR_ID,
+                    DESTINATION_ADR = port_def.ADR_ID
+                };
+            }
+            else
+            {
+                E_CMD_TYPE cmd_type = default(E_CMD_TYPE);
+                bool is_source_vh = transferService.isUnitType(CURRENT_LOCATION, Service.UnitType.CRANE);
+                string _source_address = string.Empty;
+                string _source = string.Empty;
+
+
+                if (is_source_vh)
+                {
+                    cmd_type = E_CMD_TYPE.Unload;
+                }
+                else
+                {
+                    cmd_type = E_CMD_TYPE.LoadUnload;
+                    var port_def = portDefBLL.getPortDef(CURRENT_LOCATION);
+                    _source_address = port_def.ADR_ID;
+                    _source = CURRENT_LOCATION;
+                }
+
+                string real_dest_port = HOSTDESTINATION;
+                if (ReadyStatus == CommandReadyStatus.Realy)
+                {
+                    //real_dest_port = RelayStation;
+                    real_dest_port = relayStation;
+                }
+                var dest_port_def = portDefBLL.getPortDef(real_dest_port);
+
+
+                return new ACMD_OHTC
+                {
+                    CMD_ID = sequenceBLL.getCommandID(App.SCAppConstants.GenOHxCCommandType.Auto),
+                    VH_ID = assignVehicle.VEHICLE_ID.Trim(),
+                    CARRIER_ID = this.CARRIER_ID,
+                    CMD_ID_MCS = this.CMD_ID,
+                    CMD_TPYE = cmd_type,
+                    SOURCE = _source,
+                    DESTINATION = real_dest_port,
+                    PRIORITY = this.PRIORITY,
+                    CMD_STAUS = E_CMD_STATUS.Queue,
+                    CMD_PROGRESS = 0,
+                    ESTIMATED_TIME = 0,
+                    ESTIMATED_EXCESS_TIME = 0,
+                    SOURCE_ADR = _source_address,
+                    DESTINATION_ADR = dest_port_def.ADR_ID,
+                    BOX_ID = this.BOX_ID,
+                    LOT_ID = this.LOT_ID
+                };
+            }
+        }
 
         public static string COMMAND_STATUS_BIT_To_String(int commandStatus)
         {
@@ -106,6 +253,69 @@ namespace com.mirle.ibg3k0.sc
                     return "Command finish";
             }
             return "";
+        }
+
+        //public bool IsReadyTransfer;
+        public CommandReadyStatus ReadyStatus;
+        public NotReadyReason ReadyReason = NotReadyReason.None;
+
+        public bool IsScan()
+        {
+            return CMD_ID.Contains("SCAN");
+        }
+        public bool IsRelayHappend()
+        {
+            return !sc.Common.SCUtility.isEmpty(RelayStation);
+        }
+        public bool IsSource_ShelfPort(Service.Interface.ITransferService transferService)
+        {
+            //return transferService.isUnitType(HOSTSOURCE, Service.UnitType.SHELF); ;
+            return transferService.isUnitType(CURRENT_LOCATION, Service.UnitType.SHELF); ;
+        }
+
+        public bool IsSource_CRANE(Service.Interface.ITransferService transferService)
+        {
+            //return transferService.isUnitType(HOSTSOURCE, Service.UnitType.CRANE); ;
+            return transferService.isUnitType(CURRENT_LOCATION, Service.UnitType.CRANE); ;
+        }
+
+        public bool IsDestination_ShelfZone(Service.Interface.ITransferService transferService)
+        {
+            return transferService.isUnitType(HOSTDESTINATION, Service.UnitType.ZONE); ;
+        }
+        public bool IsDestination_ShelfPort(Service.Interface.ITransferService transferService)
+        {
+            return transferService.isUnitType(HOSTDESTINATION, Service.UnitType.SHELF); ;
+        }
+        public bool IsDestination_AGVZone(Service.Interface.ITransferService transferService)
+        {
+            return transferService.isUnitType(HOSTDESTINATION, Service.UnitType.AGVZONE); ;
+        }
+        public bool IsDestination_CVPort(Service.Interface.ITransferService transferService)
+        {
+            //return transferService.isCVPort(HOSTDESTINATION);
+            return transferService.isCVPort(CURRENT_LOCATION);
+        }
+        public bool IsTimeOutToAlternate()
+        {
+            TimeSpan timeSpan = DateTime.Now - this.CMD_INSER_TIME;
+            return timeSpan.TotalSeconds > App.SystemParameter.cmdTimeOutToAlternate;
+        }
+        public double getHostSourceAxis_X(BLL.Interface.IPortDefBLL portDefBLL, BLL.Interface.IReserveBLL reserveBLL)
+        {
+            var port_def = portDefBLL.getPortDef(CURRENT_LOCATION);
+            if (port_def == null)
+            {
+                NLog.LogManager.GetCurrentClassLogger().Warn($"port id:{CURRENT_LOCATION},obj [PortDef] no define");
+                return double.MaxValue;
+            }
+            var adr_axis = reserveBLL.GetHltMapAddress(port_def.ADR_ID);
+            if (!adr_axis.isExist)
+            {
+                NLog.LogManager.GetCurrentClassLogger().Warn($"port id:{CURRENT_LOCATION} adr id:{port_def.ADR_ID},obj [HltMapAddress] no define");
+                return double.MaxValue;
+            }
+            return adr_axis.x;
         }
         //**********************************************************************************
         //A20.05.22 設定與shelfDef相同之clone
@@ -312,6 +522,141 @@ namespace com.mirle.ibg3k0.sc
                 CRANE = this.CRANE,
                 RelayStation = this.RelayStation,
             };
+        }
+
+        internal bool put(ACMD_MCS ortherObj)
+        {
+            bool has_change = false;
+            if (!sc.Common.SCUtility.isMatche(CMD_ID, ortherObj.CMD_ID))
+            {
+                CMD_ID = ortherObj.CMD_ID;
+                has_change = true;
+            }
+            if (!sc.Common.SCUtility.isMatche(CARRIER_ID, ortherObj.CARRIER_ID))
+            {
+                BOX_ID = ortherObj.CARRIER_ID;
+                has_change = true;
+            }
+            if (TRANSFERSTATE != ortherObj.TRANSFERSTATE)
+            {
+                TRANSFERSTATE = ortherObj.TRANSFERSTATE;
+                has_change = true;
+            }
+            if (COMMANDSTATE != ortherObj.COMMANDSTATE)
+            {
+                COMMANDSTATE = ortherObj.COMMANDSTATE;
+                has_change = true;
+            }
+            if (!sc.Common.SCUtility.isMatche(HOSTSOURCE, ortherObj.HOSTSOURCE))
+            {
+                HOSTSOURCE = ortherObj.HOSTSOURCE;
+                has_change = true;
+            }
+            if (!sc.Common.SCUtility.isMatche(HOSTDESTINATION, ortherObj.HOSTDESTINATION))
+            {
+                HOSTDESTINATION = ortherObj.HOSTDESTINATION;
+                has_change = true;
+            }
+            if (PRIORITY != ortherObj.PRIORITY)
+            {
+                PRIORITY = ortherObj.PRIORITY;
+                has_change = true;
+            }
+            if (!sc.Common.SCUtility.isMatche(CHECKCODE, ortherObj.CHECKCODE))
+            {
+                CHECKCODE = ortherObj.CHECKCODE;
+                has_change = true;
+            }
+            if (!sc.Common.SCUtility.isMatche(PAUSEFLAG, ortherObj.PAUSEFLAG))
+            {
+                PAUSEFLAG = ortherObj.PAUSEFLAG;
+                has_change = true;
+            }
+            if (CMD_INSER_TIME != ortherObj.CMD_INSER_TIME)
+            {
+                CMD_INSER_TIME = ortherObj.CMD_INSER_TIME;
+                has_change = true;
+            }
+            if (CMD_START_TIME != ortherObj.CMD_START_TIME)
+            {
+                CMD_START_TIME = ortherObj.CMD_START_TIME;
+                has_change = true;
+            }
+            if (CMD_FINISH_TIME != ortherObj.CMD_FINISH_TIME)
+            {
+                CMD_FINISH_TIME = ortherObj.CMD_FINISH_TIME;
+                has_change = true;
+            }
+            if (TIME_PRIORITY != ortherObj.TIME_PRIORITY)
+            {
+                TIME_PRIORITY = ortherObj.TIME_PRIORITY;
+                has_change = true;
+            }
+            if (PORT_PRIORITY != ortherObj.PORT_PRIORITY)
+            {
+                PORT_PRIORITY = ortherObj.PORT_PRIORITY;
+                has_change = true;
+            }
+            if (REPLACE != ortherObj.REPLACE)
+            {
+                REPLACE = ortherObj.REPLACE;
+                has_change = true;
+            }
+
+            if (PRIORITY_SUM != ortherObj.PRIORITY_SUM)
+            {
+                PRIORITY_SUM = ortherObj.PRIORITY_SUM;
+                has_change = true;
+            }
+
+            if (!sc.Common.SCUtility.isMatche(BOX_ID, ortherObj.BOX_ID))
+            {
+                BOX_ID = ortherObj.BOX_ID;
+                has_change = true;
+            }
+            if (!sc.Common.SCUtility.isMatche(CARRIER_LOC, ortherObj.CARRIER_LOC))
+            {
+                CARRIER_LOC = ortherObj.CARRIER_LOC;
+                has_change = true;
+            }
+            if (!sc.Common.SCUtility.isMatche(LOT_ID, ortherObj.LOT_ID))
+            {
+                LOT_ID = ortherObj.LOT_ID;
+                has_change = true;
+            }
+            if (!sc.Common.SCUtility.isMatche(CARRIER_ID_ON_CRANE, ortherObj.CARRIER_ID_ON_CRANE))
+            {
+                CARRIER_ID_ON_CRANE = ortherObj.CARRIER_ID_ON_CRANE;
+                has_change = true;
+            }
+            if (!sc.Common.SCUtility.isMatche(CMDTYPE, ortherObj.CMDTYPE))
+            {
+                CMDTYPE = ortherObj.CMDTYPE;
+                has_change = true;
+            }
+            if (!sc.Common.SCUtility.isMatche(CRANE, ortherObj.CRANE))
+            {
+                CRANE = ortherObj.CRANE;
+                has_change = true;
+            }
+            if (!sc.Common.SCUtility.isMatche(RelayStation, ortherObj.RelayStation))
+            {
+                RelayStation = ortherObj.RelayStation;
+                has_change = true;
+            }
+            if (ReadyStatus != ortherObj.ReadyStatus)
+            {
+                ReadyStatus = ortherObj.ReadyStatus;
+                has_change = true;
+            }
+
+            if (ReadyReason != ortherObj.ReadyReason)
+            {
+                ReadyReason = ortherObj.ReadyReason;
+                has_change = true;
+            }
+
+            return has_change;
         }
     }
 }

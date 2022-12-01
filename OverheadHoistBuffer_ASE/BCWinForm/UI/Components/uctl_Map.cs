@@ -132,7 +132,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Components
                 defaultMaxScale = 10;
                 trackBar_scale.SmallChange = 2;
             }
-            else if(BCFUtility.isMatche(mainForm.BCApp.SCApplication.BC_ID, SCAppConstants.WorkVersion.VERSION_NAME_ASE_TEST))
+            else if (BCFUtility.isMatche(mainForm.BCApp.SCApplication.BC_ID, SCAppConstants.WorkVersion.VERSION_NAME_ASE_TEST))
             {
                 space_Height_m = 14000;
                 space_Width_m = 40000;
@@ -380,7 +380,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Components
                     pic_CstIcon.Visible = false;
                     pic_CstIcon.Image = Resources.Action__Cassette_;
 
-                    m_objItemNewVhcl[ii] = new uctlNewVehicle(lstEq[ii], this, pic_AlarmStatus, pic_CstIcon);
+                    m_objItemNewVhcl[ii] = new uctlNewVehicle(ii + 1, lstEq[ii], this, pic_AlarmStatus, pic_CstIcon);
                     m_objItemNewVhcl[ii].Num = ii + 1;
                     //m_objItemNewVhcl[ii].p_SizeW = m_objItemVhcl[ii].Width;
                     //m_objItemNewVhcl[ii].p_SizeH = m_objItemVhcl[ii].Height;
@@ -897,6 +897,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Components
 
         public GroupRails getGroupRailBySecID(string sec_id)
         {
+            if (m_DicSectionGroupRails == null) return null;
             if (!m_DicSectionGroupRails.ContainsKey(sec_id.Trim()))
             {
                 return null;

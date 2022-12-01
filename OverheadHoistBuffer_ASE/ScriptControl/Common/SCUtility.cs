@@ -307,10 +307,6 @@ namespace com.mirle.ibg3k0.sc.Common
             scApp.getEQObjCacheManager().CommonInfo.SECS_Msg = msg;// sb.ToString();
             //            SECSMsgLogger.Info(sb.ToString());
             SECSMsgLogger.Info(msg);
-            Task.Run(() =>
-            {
-                setLogInfo_SECS(scApp, isReceive, sxfy, sDateTime);
-            });
         }
 
         public const String FUNCTION_TRANSDFERTYPE_SEND = "Send";
@@ -813,46 +809,6 @@ namespace com.mirle.ibg3k0.sc.Common
         string vh_status, string msg_body,
         string result)
         {
-            dynamic logEntry = new JObject();
-            DateTime nowDt = DateTime.Now;
-            //logEntry.RPT_TIME = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffzzz", CultureInfo.InvariantCulture);
-            logEntry.RPT_TIME = nowDt.ToString("yyyy-MM-ddTHH:mm:ss.fffzzz", CultureInfo.InvariantCulture);
-
-            logEntry.MSG_FROM = Trim(msg_from, true);
-            logEntry.MSG_TO = Trim(msg_to, true);
-            logEntry.FUN_NAME = Trim(fun_name, true);
-            logEntry.SEQ_NUM = seq_num;
-
-            logEntry.VH_ID = Trim(vh_id, true);
-            logEntry.OHTC_CMD_ID = Trim(ohtc_cmd_id, true);
-            logEntry.ACT_TYPE = act_type;
-            //S2F49
-            logEntry.MCS_CMD_ID = Trim(mcs_cmd_id, true);
-            //132
-            logEntry.TRAVEL_DIS = travel_dis;
-            //134 Rep
-            logEntry.ADR_ID = Trim(adr_id, true);
-            logEntry.SEC_ID = Trim(sec_id, true);
-            logEntry.EVENT_TYPE = Trim(event_type, true);
-            logEntry.SEC_DIS = sec_dis;
-            logEntry.BLOCK_SEC_ID = Trim(block_sec_id, true);
-            //134 Reply
-            logEntry.IS_BLOCK_PASS = is_block_pass;
-            logEntry.IS_HID_PASS = is_hid_pass;
-            //144
-            logEntry.VH_STATUS = Trim(vh_status, true);
-
-            logEntry.MSG_BODY = msg_body;
-            logEntry.RESULT = result;
-            logEntry.Index = "RecodeReportInfo";
-
-
-            var json = logEntry.ToString(Newtonsoft.Json.Formatting.None);
-            json = json.Replace("RPT_TIME", "@timestamp");
-            LogManager.GetLogger("RecodeReportInfo").Info(json);
-
-            logEntry.RPT_TIME = nowDt.ToString(SCAppConstants.DateTimeFormat_23);
-            System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(SCApplication.getInstance().LineService.PublishEQMsgInfo), logEntry);
         }
 
         static Google.Protobuf.JsonFormatter jsonFormatter = new JsonFormatter(new JsonFormatter.Settings(true).WithFormatDefaultValues(true));

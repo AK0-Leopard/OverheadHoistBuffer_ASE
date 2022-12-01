@@ -10,10 +10,11 @@ using com.mirle.ibg3k0.sc.Data;
 using com.mirle.ibg3k0.sc.App;
 using System.Transactions;
 using com.mirle.ibg3k0.sc.Service;
+using com.mirle.ibg3k0.sc.BLL.Interface;
 
 namespace com.mirle.ibg3k0.sc.BLL
 {
-    public class ShelfDefBLL
+    public class ShelfDefBLL : IShelfDefBLL
     {
         SCApplication scApp = null;
         ShelfDefDao shelfdefDao = null;
@@ -103,7 +104,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                     shelf.Enable = enable == true ? "Y" : "N";
                     shelf.Remark = reason;
                     shelf.TrnDT = disable_enabl_time;
-                    shelfdefDao.UpdateShelfDef(con, shelf);
+                    shelfdefDao.UpdateShelfDef(con);
                 }
             }
             catch (Exception ex)
@@ -146,7 +147,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
                     con.Entry(shelf_def).Property(p => p.SelectPriority).IsModified = true;
 
-                    shelfdefDao.UpdateShelfDef(con, shelf_def);
+                    shelfdefDao.UpdateShelfDef(con);
                     //con.Entry(port_statino).State = EntityState.Detached;
                 }
             }
@@ -170,7 +171,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
                     con.Entry(shelf_def).Property(p => p.Remark).IsModified = true;
 
-                    shelfdefDao.UpdateShelfDef(con, shelf_def);
+                    shelfdefDao.UpdateShelfDef(con);
                     //con.Entry(port_statino).State = EntityState.Detached;
                 }
             }
@@ -193,7 +194,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                     var shelf_def = con.ShelfDef.Where(x => x.ShelfID == shelf_id).FirstOrDefault();
                     shelf_def.ShelfState = status;
                     con.Entry(shelf_def).Property(p => p.ShelfState).IsModified = true;
-                    shelfdefDao.UpdateShelfDef(con, shelf_def);
+                    shelfdefDao.UpdateShelfDef(con);
                 }
 
                 scApp.TransferService.TransferServiceLogger.Info
@@ -232,7 +233,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
                     con.Entry(shelf_def).Property(p => p.SelectPriority).IsModified = true;
 
-                    shelfdefDao.UpdateShelfDef(con, shelf_def);
+                    shelfdefDao.UpdateShelfDef(con);
                     //con.Entry(port_statino).State = EntityState.Detached;
                 }
             }
@@ -296,7 +297,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
                     con.Entry(shelf_def).Property(p => p.EmptyBlockFlag).IsModified = true;
 
-                    shelfdefDao.UpdateShelfDef(con, shelf_def);
+                    shelfdefDao.UpdateShelfDef(con);
                 }
             }
             catch (Exception ex)
@@ -360,22 +361,20 @@ namespace com.mirle.ibg3k0.sc.BLL
             return scApp.GuideBLL.GetDistance(targetShelf.ADR_ID, targetAddress);
         }
 
-        public List<ShelfDef> loadHasChangeShelfDefByAfterDateTime(string afterDateTime)
+        public int GetEmptyAndEnableShelfCountByZone(string zoneID)
         {
             try
             {
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
-
-                    return shelfdefDao.loadHasChangeShelfDefByAfterDateTime(con, afterDateTime);
+                    return shelfdefDao.getEnableShelfCountByZone(con, zoneID);
                 }
             }
             catch (Exception ex)
             {
                 logger.Error(ex, "Exception");
-                return null;
+                return 0;
             }
         }
     }
 }
-

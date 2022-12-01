@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HistoryCMD_MCS));
             this.panel1 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
             this.skinGroupBox4 = new CCWin.SkinControl.SkinGroupBox();
@@ -241,7 +242,7 @@
             this.m_exportBtn.DownBack = null;
             this.m_exportBtn.DownBaseColor = System.Drawing.Color.RoyalBlue;
             this.m_exportBtn.Font = new System.Drawing.Font("Arial", 14.25F);
-            this.m_exportBtn.Image = global::com.mirle.ibg3k0.bc.winform.Properties.Resources.export;
+            this.m_exportBtn.Image = ((System.Drawing.Image)(resources.GetObject("m_exportBtn.Image")));
             this.m_exportBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.m_exportBtn.ImageSize = new System.Drawing.Size(24, 24);
             this.m_exportBtn.ImeMode = System.Windows.Forms.ImeMode.NoControl;
@@ -268,7 +269,7 @@
             this.btnlSearch.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnlSearch.Font = new System.Drawing.Font("Arial", 14F);
             this.btnlSearch.ForeColor = System.Drawing.Color.Black;
-            this.btnlSearch.Image = global::com.mirle.ibg3k0.bc.winform.Properties.Resources.se;
+            this.btnlSearch.Image = ((System.Drawing.Image)(resources.GetObject("btnlSearch.Image")));
             this.btnlSearch.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnlSearch.ImageSize = new System.Drawing.Size(24, 24);
             this.btnlSearch.ImeMode = System.Windows.Forms.ImeMode.NoControl;

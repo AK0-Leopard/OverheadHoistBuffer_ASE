@@ -34,7 +34,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
         BindingSource bindingSource = new BindingSource();
         string[] allAdr_ID = null;
         string[] allPortID = null;
-        List<CMD_MCSObjToShow> cmd_mcs_obj_to_show = null;
+        List<CMD_MCSObjToShow> cmd_mcs_obj_to_show = new List<CMD_MCSObjToShow>();
         BindingSource cmsMCS_bindingSource = new BindingSource();
 
         List<ALARM> aLARMs = new List<ALARM>();
@@ -92,6 +92,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
 
         private void initialEvent()
         {
+            recordViewLog("");
             ALINE line = scApp.getEQObjCacheManager().getLine();
 
             line.addEventHandler(this.Name
@@ -104,16 +105,23 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                    {
                        case SCAppConstants.AppServiceMode.None:
                            lbl_isMaster.BackColor = Color.Gray;
+                           recordViewLog("");
+
                            break;
                        case SCAppConstants.AppServiceMode.Active:
                            lbl_isMaster.BackColor = Color.Green;
+                           recordViewLog("");
+
                            break;
                        case SCAppConstants.AppServiceMode.Standby:
                            lbl_isMaster.BackColor = Color.Yellow;
+                           recordViewLog("");
+
                            break;
                    }
                }, null);
            });
+            recordViewLog("");
             line.addEventHandler(this.Name
            , BCFUtility.getPropertyName(() => line.Secs_Link_Stat)
                 , (s1, e1) =>
@@ -122,6 +130,8 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                     line.Secs_Link_Stat == SCAppConstants.LinkStatus.LinkOK ? Color.Green : Color.Gray;
                 }
                 );
+            recordViewLog("");
+
             line.addEventHandler(this.Name
            , BCFUtility.getPropertyName(() => line.Redis_Link_Stat)
                 , (s1, e1) =>
@@ -130,44 +140,8 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                     line.Redis_Link_Stat == SCAppConstants.LinkStatus.LinkOK ? Color.Green : Color.Gray;
                 }
                 );
-            line.addEventHandler(this.Name
-            , BCFUtility.getPropertyName(() => line.IsEarthquakeHappend)
-                , (s1, e1) =>
-                {
-                    lbl_earthqualeHappend.BackColor =
-                    line.IsEarthquakeHappend ? Color.Red : Color.Gray;
-                    //if (line.IsEarthquakeHappend)
-                    //{
-                    //    aLARMs[0].ALAM_CODE = "AE001";
-                    //    aLARMs[0].ALAM_DESC = "An earthquake has occurred !!!";
-                    //    aLARMs[0].ALAM_LVL = "Alarm";
-                    //    aLARMs[0].EQPT_ID = "MCP";
-                    //    aLARMs[0].RPT_DATE_TIME = DateTime.Now.ToString(SCAppConstants.DateTimeFormat_19);
-                    //}
-                    //else
-                    //{
-                    //    aLARMs[0].ALAM_CODE = "";
-                    //    aLARMs[0].ALAM_DESC = "";
-                    //    aLARMs[0].ALAM_LVL = "";
-                    //    aLARMs[0].EQPT_ID = "";
-                    //    aLARMs[0].RPT_DATE_TIME = "";
-                    //}
-                    //Adapter.Invoke((obj) =>
-                    //{
-                    //    if (line.IsEarthquakeHappend)
-                    //        tbcList.SelectedIndex = 4;
-                    //    dgv_Alarm.Refresh();
-                    //}, null);
-                }
-                );
-            line.addEventHandler(this.Name
-                , BCFUtility.getPropertyName(() => line.DetectionSystemExist)
-                    , (s1, e1) =>
-                    {
-                        lbl_detectionSystemExist.BackColor =
-                        line.DetectionSystemExist == SCAppConstants.ExistStatus.Exist ? Color.Green : Color.Gray;
-                    }
-                    );
+            recordViewLog("");
+
             line.addEventHandler(this.Name
                 , BCFUtility.getPropertyName(() => line.Host_Control_State)
                     , (s1, e1) =>
@@ -175,8 +149,8 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                         SetHostControlState(line);
                     }
                     );
-            scApp.getNatsManager().Subscriber(SCAppConstants.NATS_SUBJECT_CURRENT_ALARM, SetCurrentAlarm);
             mainform.TestGuideCompleted += Mainform_TestGuideCompleted;
+            recordViewLog("");
         }
 
         private void Mainform_TestGuideCompleted(object sender, List<string> e)
@@ -184,14 +158,6 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             uctlMapWPFNew1.setTestGideRail(e);
         }
 
-        private void SetCurrentAlarm(object sender, EventArgs e)
-        {
-            List<ALARM> alarms = scApp.AlarmBLL.getCurrentAlarmsFromRedis();
-            Adapter.Invoke((obj) =>
-            {
-                dgv_Alarm.DataSource = alarms;
-            }, null);
-        }
 
         private void SetHostControlState(ALINE line)
         {
@@ -200,9 +166,11 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             {
                 case SCAppConstants.LineHostControlState.HostControlState.EQ_Off_line:
                     hostMode_Color = Color.Gray;
+                    recordViewLog("");
                     break;
                 case SCAppConstants.LineHostControlState.HostControlState.On_Line_Local:
                     hostMode_Color = Color.Yellow;
+                    recordViewLog("");
                     break;
                 case SCAppConstants.LineHostControlState.HostControlState.On_Line_Remote:
                     hostMode_Color = Color.Green;
@@ -212,6 +180,10 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                     break;
             }
             lbl_HoseMode.BackColor = hostMode_Color;
+        }
+        private void recordViewLog(string msg)
+        {
+
         }
 
         private void adjustmentDataGridViewWeight()
@@ -230,6 +202,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                     case "ACT_STATUS":
                         col.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                         col.FillWeight = 1500;
+                        recordViewLog("");
                         break;
                     case "PACK_TIME":
                         col.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -246,6 +219,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                         break;
                 }
             }
+            recordViewLog("");
         }
 
         void Local_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -256,11 +230,12 @@ namespace com.mirle.ibg3k0.bc.winform.UI
 
         void item_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-
+            recordViewLog("");
         }
 
         private void initialComBox()
         {
+            recordViewLog("");
             allPortID = scApp.PortDefBLL.GetOHB_PortData(scApp.getEQObjCacheManager().getLine().LINE_ID).Select(s => s.PLCPortID).ToArray();
 
             List<AADDRESS> allAddress_obj = scApp.MapBLL.loadAllAddress();
@@ -274,7 +249,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                 (scApp.getEQObjCacheManager().getLine().Currnet_Cycle_Type).Select(master => master.ENTRY_ADR_ID).ToArray();
             cmb_cycRunZone.DataSource = allCycleRunZone;
 
-
+            recordViewLog("");
             List<string> lstVh = new List<string>();
             lstVh.Add(string.Empty);
             lstVh.AddRange(scApp.VehicleBLL.loadAllVehicle().Select(vh => SCUtility.Trim(vh.VEHICLE_ID, true)).ToList());
@@ -301,13 +276,12 @@ namespace com.mirle.ibg3k0.bc.winform.UI
         private void initialDataGreadView()
         {
             aLARMs.Add(new ALARM());
-            dgv_Alarm.AutoGenerateColumns = false;
-            dgv_Alarm.DataSource = aLARMs;
         }
 
 
         private void btn_start_Click(object sender, EventArgs e)
         {
+            recordViewLog("");
             string from_adr = cmb_fromAddress.Text;
             string to_adr = cmb_toAddress.Text;
             string vehicle_id = cmb_Vehicle.Text;
@@ -318,6 +292,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                 MessageBox.Show($"No find vehile.", "Start fail.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+            recordViewLog("");
 
             if (scApp.EquipmentBLL.cache.IsInMaintainDeviceRangeOfSection(scApp.SegmentBLL, select_vh.CUR_SEC_ID))
             {
@@ -325,12 +300,15 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                     "Start fail.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+            recordViewLog("");
             if (scApp.EquipmentBLL.cache.IsInMaintainDeviceRangeOfAddress(scApp.SegmentBLL, select_vh.CUR_ADR_ID))
             {
                 MessageBox.Show($"Can't manual control in maintain device of vehicle:{vehicle_id} current address:{select_vh.CUR_ADR_ID}",
                     "Start fail.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+            recordViewLog("");
+
             if (scApp.EquipmentBLL.cache.IsInMaintainDeviceRangeOfAddress(scApp.SegmentBLL, from_adr))
             {
                 MessageBox.Show($"Can't set maintain device range of address:{from_adr}",
@@ -343,6 +321,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                     "Start fail.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+            recordViewLog("");
 
             E_CMD_TYPE cmd_type;
             Enum.TryParse<E_CMD_TYPE>(cbm_Action.SelectedValue.ToString(), out cmd_type);
@@ -354,12 +333,16 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                 case E_CMD_TYPE.SystemIn:
                 case E_CMD_TYPE.MTLHome:
                     excuteMoveCommand(cmd_type);
+                    recordViewLog("");
+
                     break;
                 case E_CMD_TYPE.Round:
                     excuteCycleRunCommand();
                     break;
                 case E_CMD_TYPE.LoadUnload:
                     excuteLoadUnloadCommand();
+                    recordViewLog("");
+
                     break;
                 case E_CMD_TYPE.Teaching:
                     excuteTeachingCommand();
@@ -380,10 +363,13 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                     excuteScanCommand();
                     break;
             }
+            recordViewLog("");
         }
 
         private async void excuteLoadUnloadCommand()
         {
+            recordViewLog("");
+
             string fromSection = cmb_fromSection.Text;
             ASECTION asection = scApp.MapBLL.getSectiontByID(fromSection);
 
@@ -397,6 +383,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             string vehicleId = string.Empty;
 
             vehicleId = SCUtility.Trim(cmb_Vehicle.Text, true);
+            recordViewLog("");
 
             if (BCFUtility.isEmpty(vehicleId))
             {
@@ -414,6 +401,8 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             }
 
             sc.BLL.CMDBLL.OHTCCommandCheckResult check_result_info = null;
+            recordViewLog("");
+
             await Task.Run(() =>
              {
                  scApp.CMDBLL.doCreatTransferCommand(vehicleId, string.Empty, cst_id, E_CMD_TYPE.LoadUnload,
@@ -426,6 +415,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             {
                 MessageBox.Show(check_result_info.ToString(), "Command create fail.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+            recordViewLog("");
 
         }
 
@@ -452,10 +442,12 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                                             E_CMD_TYPE.Round,
                                             string.Empty,
                                             toAdr, 0, 0));
+            recordViewLog("");
         }
 
         private async void excuteMoveCommand(E_CMD_TYPE cmd_type)
         {
+            recordViewLog("");
             string toAdr = string.Empty;
             string vehicleId = string.Empty;
 
@@ -467,11 +459,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                 return;
             }
 
-            //scApp.CMDBLL.creatCommand_OHTC(vehicleId, string.Empty, string.Empty,
-            //                                E_CMD_TYPE.Move,
-            //                                string.Empty,
-            //                                toAdr, 0, 0);
-            //Task.Run(() => { scApp.CMDBLL.generateCmd_OHTC_Details(); });
+            recordViewLog("");
             sc.BLL.CMDBLL.OHTCCommandCheckResult check_result_info = null;
             string box_id = "";
             string lot_id = "";
@@ -490,12 +478,12 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             {
                 MessageBox.Show(check_result_info.ToString(), "Command create fail.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-
+            recordViewLog("");
         }
 
         private async void excuteLoadCommand()
         {
-            //string fromAdr = string.Empty;
+            recordViewLog("");
             string vehicleId = string.Empty;
             string hostsource_portid = cmb_fromAddress.Text;
             string hostdest_portid = cmb_toAddress.Text;
@@ -507,6 +495,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             string box_id = "box_id";
             string lot_id = "lot_id";
             E_VH_TYPE vh_type = E_VH_TYPE.None;
+            recordViewLog("");
 
             vehicleId = SCUtility.Trim(cmb_Vehicle.Text, true);
             scApp.PortDefBLL.getAddressID(hostsource_portid, out from_adr, out vh_type);
@@ -517,6 +506,8 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                 MessageBox.Show("No find vehile.");
                 return;
             }
+            recordViewLog("");
+
             if (BCFUtility.isEmpty(box_id))
             {
                 MessageBox.Show("box_id can't empty.");
@@ -524,13 +515,9 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             }
             AVEHICLE vh = scApp.getEQObjCacheManager().getVehicletByVHID(vehicleId);
             sc.BLL.CMDBLL.OHTCCommandCheckResult check_result_info = null;
+            recordViewLog("");
             await Task.Run(() =>
              {
-                 //if (SCUtility.isMatche(vh.CUR_ADR_ID, fromAdr))
-                 //{
-                 //    scApp.VehicleService.TransferRequset(vehicleId, cmd_id, ActiveType.Load, "CST02", new string[0], new string[0], fromAdr, "");
-                 //}
-                 //else
                  {
                      //scApp.CMDBLL.doCreatTransferCommand(vehicleId, string.Empty, "CST06",
                      scApp.CMDBLL.doCreatTransferCommand(vehicleId, string.Empty, cst_id, E_CMD_TYPE.Load,
@@ -545,17 +532,18 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             {
                 MessageBox.Show(check_result_info.ToString(), "Command create fail.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-
+            recordViewLog("");
         }
 
         private async void excuteScanCommand()
         {
-            //string fromAdr = string.Empty;
+            recordViewLog("");
             string vehicleId = string.Empty;
             string hostsource_portid = cmb_fromAddress.Text;
             string hostdest_portid = cmb_toAddress.Text;
             string from_adr = string.Empty;
             string to_adr = string.Empty;
+            recordViewLog("");
 
             string cmd_id = string.Empty;
             string cst_id = txt_cstID.Text;
@@ -572,6 +560,8 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                 MessageBox.Show("No find vehile.");
                 return;
             }
+            recordViewLog("");
+
             if (BCFUtility.isEmpty(cst_id))
             {
                 MessageBox.Show("cst id can't empty.");
@@ -579,13 +569,9 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             }
             AVEHICLE vh = scApp.getEQObjCacheManager().getVehicletByVHID(vehicleId);
             sc.BLL.CMDBLL.OHTCCommandCheckResult check_result_info = null;
+            recordViewLog("");
             await Task.Run(() =>
             {
-                //if (SCUtility.isMatche(vh.CUR_ADR_ID, fromAdr))
-                //{
-                //    scApp.VehicleService.TransferRequset(vehicleId, cmd_id, ActiveType.Scan, "CST02", new string[0], new string[0], fromAdr, "");
-                //}
-                //else
                 {
                     //scApp.CMDBLL.doCreatTransferCommand(vehicleId, string.Empty, "CST06",
                     scApp.CMDBLL.doCreatTransferCommand(vehicleId, string.Empty, cst_id, E_CMD_TYPE.Scan,
@@ -600,11 +586,12 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             {
                 MessageBox.Show(check_result_info.ToString(), "Command create fail.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-
+            recordViewLog("");
         }
 
         private async void excuteUnloadCommand()
         {
+            recordViewLog("");
             string vehicleId = cmb_Vehicle.Text;
             string cmd_id = scApp.SequenceBLL.getCommandID(SCAppConstants.GenOHxCCommandType.Manual);
 
@@ -615,6 +602,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             string cst_id = SCUtility.Trim(txt_cstID.Text, true);
             string box_id = "box_id";
             string lot_id = "lot_id";
+            recordViewLog("");
 
             scApp.PortDefBLL.getAddressID(hostdest_portid, out to_adr);
             if (BCFUtility.isEmpty(vehicleId))
@@ -626,15 +614,10 @@ namespace com.mirle.ibg3k0.bc.winform.UI
 
 
             sc.BLL.CMDBLL.OHTCCommandCheckResult check_result_info = null;
-
+            recordViewLog("");
             await Task.Run(() =>
              {
 
-                 //if (SCUtility.isMatche(vh.CUR_ADR_ID, toAdr))
-                 //{
-                 //    scApp.VehicleService.TransferRequset(vehicleId, cmd_id, ActiveType.Unload, cst_id, new string[0], new string[0], "", toAdr);
-                 //}
-                 //else
                  {
                      scApp.CMDBLL.doCreatTransferCommand(vehicleId, string.Empty, cst_id, E_CMD_TYPE.Unload,
                                                  "", hostdest_portid, 0, 0,
@@ -648,12 +631,13 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                  }
 
              });
+            recordViewLog("");
         }
 
 
         private void excuteMoveCommandAllVh()
         {
-            //string toAdr = string.Empty;
+            recordViewLog("");
             List<AVEHICLE> lstVh = scApp.VehicleBLL.cache.loadVhs();
             foreach (AVEHICLE vh in lstVh)
             {
@@ -676,6 +660,8 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                     MessageBox.Show("No find vehile.");
                     return;
                 }
+                recordViewLog("");
+
                 Task.Run(() =>
                 scApp.CMDBLL.doCreatTransferCommand(vehicleId, string.Empty, string.Empty,
                                                 E_CMD_TYPE.Move,
@@ -683,6 +669,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                                                 nextSection.TO_ADR_ID, 0, 0));
                 SpinWait.SpinUntil(() => false, 1000);
             }
+            recordViewLog("");
         }
 
         private void excuteTeachingCommand()
@@ -692,6 +679,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             string to_adr = cmb_toAddress.Text;
 
             Task.Run(() => { scApp.VehicleService.TeachingRequest(vh_id, from_adr, to_adr); });
+            recordViewLog("");
 
         }
         private void excuteHomeCommand()
@@ -706,9 +694,10 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                 MessageBox.Show("No find vehile.");
                 return;
             }
+            recordViewLog("");
 
             AVEHICLE vh = scApp.getEQObjCacheManager().getVehicletByVHID(vehicleId);
-
+            recordViewLog("");
             //Task.Run(() =>
             //scApp.VehicleService.TransferRequset(vehicleId, scApp.SequenceBLL.getCommandID(SCAppConstants.GenOHxCCommandType.Manual), ActiveType.Home, "", "", "", 
             //                                    new string[0], new string[0], new string[0], new string[0], "", "", "", ""));
@@ -717,57 +706,24 @@ namespace com.mirle.ibg3k0.bc.winform.UI
 
         private void excuteMTLHomeCommand()
         {
-            string toAdr = string.Empty;
-            string vehicleId = string.Empty;
+            //string toAdr = string.Empty;
+            //string vehicleId = string.Empty;
 
-            vehicleId = cmb_Vehicle.Text;
-            toAdr = cmb_toAddress.Text;
-            if (BCFUtility.isEmpty(vehicleId))
-            {
-                MessageBox.Show("No find vehile.");
-                return;
-            }
+            //vehicleId = cmb_Vehicle.Text;
+            //toAdr = cmb_toAddress.Text;
+            //if (BCFUtility.isEmpty(vehicleId))
+            //{
+            //    MessageBox.Show("No find vehile.");
+            //    return;
+            //}
 
-            AVEHICLE vh = scApp.getEQObjCacheManager().getVehicletByVHID(vehicleId);
+            //AVEHICLE vh = scApp.getEQObjCacheManager().getVehicletByVHID(vehicleId);
 
             //Task.Run(() =>
             //scApp.VehicleService.TransferRequset(vehicleId, scApp.SequenceBLL.getCommandID(SCAppConstants.GenOHxCCommandType.Manual), ActiveType.Mtlhome, "","","", new string[0], new string[0], new string[0], new string[0], "", "","",""));
             //vh.sned_Str31(scApp.SequenceBLL.getCommandID_Manual(), ActiveType.Home, "", new string[0], new string[0], "", ""));
         }
-        //private string getAddressID(string adr_port_id)
-        //{
-        //    E_VH_TYPE vh_type = E_VH_TYPE.None;
-        //    return getAddressID(adr_port_id, out vh_type);
-        //}
-        //private string getAddressID(string adr_port_id, out E_VH_TYPE vh_type)
-        //{
-        //    string Adr_ID = string.Empty;
-        //    if (Raid_PortNameType_AdrID.Checked)
-        //    {
-        //        Adr_ID = adr_port_id;
-        //        vh_type = E_VH_TYPE.None;
-        //    }
-        //    else if (Raid_PortNameType_PortID.Checked)
-        //    {
-        //        APORT port = scApp.MapBLL.getPortByPortID(adr_port_id);
 
-        //        if (port != null)
-        //        {
-        //            Adr_ID = port.ADR_ID;
-        //            vh_type = port.ULD_VH_TYPE;
-        //        }
-        //        else
-        //        {
-        //            vh_type = E_VH_TYPE.None;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        Adr_ID = adr_port_id;
-        //        vh_type = E_VH_TYPE.None;
-        //    }
-        //    return Adr_ID;
-        //}
 
 
         private void timer_TimedUpdates_Tick(object sender, EventArgs e)
@@ -778,21 +734,92 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             //}
             //if (currentSelectIndex != -1)
             //    dgv_vhStatus.Rows[currentSelectIndex].Selected = true;
+            recordViewLog("");
+
             dgv_vhStatus.Refresh();
             updateTransferCommand();
+            var line = scApp.getEQObjCacheManager().getLine();
+            SetSCState(line);
+            recordViewLog("");
+        }
+        private void SetSCState(ALINE line)
+        {
+            switch (line.SCStats)
+            {
+                case ALINE.TSCState.NONE:
+                    lbl_HoseMode.BackColor = Color.Gray;
+                    break;
+                case ALINE.TSCState.AUTO:
+                    lbl_HoseMode.BackColor = Color.Green;
+                    break;
+                case ALINE.TSCState.PAUSED:
+                case ALINE.TSCState.PAUSING:
+                case ALINE.TSCState.TSC_INIT:
+                    lbl_HoseMode.BackColor = Color.Yellow;
+                    break;
+            }
+            lbl_HoseMode.Text = line.SCStats.GetDisplayName();
+            recordViewLog("");
         }
 
-        private async void updateTransferCommand()
+
+
+        private void refreshACMD_MCSInfoList(List<ACMD_MCS> currentExcuteTranCmd)
         {
-            List<ACMD_MCS> ACMD_MCSs = null;
-            await Task.Run(() => ACMD_MCSs = mainform.BCApp.SCApplication.CMDBLL.loadACMD_MCSIsUnfinished());
-            if (ACMD_MCSs != null)
+            try
             {
-                cmd_mcs_obj_to_show = ACMD_MCSs.Select(cmd => new CMD_MCSObjToShow(mainform.BCApp.SCApplication.VehicleBLL, cmd)).ToList();
-                //cmd_mcs_obj_to_show = mainform.BCApp.SCApplication.CMDBLL.loadACMD_MCSIsUnfinishedObjToShow();
-                cmsMCS_bindingSource.DataSource = cmd_mcs_obj_to_show;
-                dgv_TransferCommand.Refresh();
+                List<string> new_current_excute_tran_cmd = currentExcuteTranCmd.Select(cmd => SCUtility.Trim(cmd.CMD_ID, true)).ToList();
+                List<string> old_current_excute_tran_cmd = cmd_mcs_obj_to_show.Select(cmd => cmd.CMD_ID).ToList();
+
+                List<string> new_add_mcs_cmds = new_current_excute_tran_cmd.Except(old_current_excute_tran_cmd).ToList();
+                //1.新增多出來的命令
+                foreach (string new_cmd in new_add_mcs_cmds)
+                {
+                    var cmd_obj = currentExcuteTranCmd.Where(cmd => SCUtility.isMatche(cmd.CMD_ID, new_cmd)).FirstOrDefault();
+                    if (cmd_obj == null) continue;
+                    CMD_MCSObjToShow new_cmd_obj = new CMD_MCSObjToShow(mainform.BCApp.SCApplication.VehicleBLL, cmd_obj);
+                    cmsMCS_bindingSource.Add(new_cmd_obj);
+                }
+                //2.刪除以結束的命令
+                List<string> will_del_mcs_cmds = old_current_excute_tran_cmd.Except(new_current_excute_tran_cmd).ToList();
+                foreach (string old_cmd in will_del_mcs_cmds)
+                {
+                    var cmd_obj = cmd_mcs_obj_to_show.Where(cmd => SCUtility.isMatche(cmd.CMD_ID, old_cmd)).FirstOrDefault();
+                    cmsMCS_bindingSource.Remove(cmd_obj);
+                }
+                //3.更新現有命令
+                foreach (var tran_obj_show_item in cmd_mcs_obj_to_show)
+                {
+                    var cmd_obj = currentExcuteTranCmd.Where(cmd => SCUtility.isMatche(cmd.CMD_ID, tran_obj_show_item.CMD_ID)).FirstOrDefault();
+                    if (cmd_obj == null)
+                    {
+                        continue;
+                    }
+                    tran_obj_show_item.put(cmd_obj);
+                }
+                recordViewLog("");
             }
+            catch (Exception ex)
+            {
+                NLog.LogManager.GetCurrentClassLogger().Error(ex, "Exception");
+            }
+        }
+
+        private void updateTransferCommand()
+        {
+            var current_cmds_mcs = ACMD_MCS.loadCurrentExcuteCMD_MCS();
+            refreshACMD_MCSInfoList(current_cmds_mcs);
+            dgv_TransferCommand.Refresh();
+            recordViewLog("");
+            //List<ACMD_MCS> ACMD_MCSs = null;
+            //await Task.Run(() => ACMD_MCSs = mainform.BCApp.SCApplication.CMDBLL.loadACMD_MCSIsUnfinished());
+            //if (ACMD_MCSs != null)
+            //{
+            //    cmd_mcs_obj_to_show = ACMD_MCSs.Select(cmd => new CMD_MCSObjToShow(mainform.BCApp.SCApplication.VehicleBLL, cmd)).ToList();
+            //    //cmd_mcs_obj_to_show = mainform.BCApp.SCApplication.CMDBLL.loadACMD_MCSIsUnfinishedObjToShow();
+            //    cmsMCS_bindingSource.DataSource = cmd_mcs_obj_to_show;
+            //    dgv_TransferCommand.Refresh();
+            //}
         }
 
 
@@ -809,10 +836,12 @@ namespace com.mirle.ibg3k0.bc.winform.UI
 
                 setMonitorVehicle(vh_id);
             }
+            recordViewLog("");
         }
 
         public void setMonitorVehicle(string vh_id)
         {
+            recordViewLog("");
             lock (predictPathHandler)
             {
                 if (InObservationVh != null)
@@ -820,6 +849,8 @@ namespace com.mirle.ibg3k0.bc.winform.UI
 
                 resetSpecifyRail();
                 resetSpecifyAdr();
+                recordViewLog("");
+
                 if (!BCFUtility.isEmpty(vh_id))
                 {
                     InObservationVh = scApp.getEQObjCacheManager().getVehicletByVHID(vh_id);
@@ -832,7 +863,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                     InObservationVh.addEventHandler(predictPathHandler
                                         , BCFUtility.getPropertyName(() => InObservationVh.VhStatusChangeEvent)
                                         , (s1, e1) => { changePredictPathByInObservation(); });
-
+                    recordViewLog("");
                     cmb_Vehicle.Text = vh_id;
                     VehicleObjToShow veicleObjShow = scApp.getEQObjCacheManager().CommonInfo.ObjectToShow_list.Where(o => o.VEHICLE_ID == vh_id).FirstOrDefault();
                     if (veicleObjShow != null)
@@ -848,6 +879,8 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                             }
                         }
                     }
+                    recordViewLog("");
+
                 }
                 else
                 {
@@ -857,6 +890,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
 
                 }
             }
+            recordViewLog("");
         }
 
         bool setCombBoxFlag = false;
@@ -877,25 +911,13 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                 cmb_toAddress.Text = adr_id;
                 setCombBoxFlag = true;
             }
+            recordViewLog("");
+
         }
 
 
 
-
-        private string int2colorTranfer(int passTimes)
-        {
-            double Denominator = 5000;
-            double percentage = (passTimes / Denominator) * 100;
-            double radPercen = percentage;
-            double greenPercen = 100 - percentage;
-            double radColorScale = 255 * (radPercen / 100);
-            double greenColorScale = 255 * (greenPercen / 100);
-            string sRadColorScale = Convert.ToString((int)radColorScale, 16);
-            string sGreenColorScale = Convert.ToString((int)greenColorScale, 16).ToUpper();
-            string colorCoding = string.Format("#{0}{1}00", sRadColorScale, sGreenColorScale);
-            return colorCoding;
-        }
-
+        
         public void LeaveMonitorMode_SectionThroughTimes()
         {
             ck_montor_vh.Checked = true;
@@ -930,6 +952,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                     resetSpecifyAdr();
                 }
             }
+            recordViewLog("");
         }
 
         string reqSelectionStartAdr = string.Empty;
@@ -937,29 +960,11 @@ namespace com.mirle.ibg3k0.bc.winform.UI
         string reqSelectionToAdr = string.Empty;
         private void setSpecifyAdr()
         {
-            if (!BCFUtility.isEmpty(InObservationVh.startAdr))
-            {
-            }
-            if (!BCFUtility.isEmpty(InObservationVh.FromAdr))
-            {
 
-            }
-            if (!BCFUtility.isEmpty(InObservationVh.ToAdr))
-            {
-            }
         }
         private void resetSpecifyAdr()
         {
-            if (!BCFUtility.isEmpty(reqSelectionStartAdr))
-            {
-            }
-            if (!BCFUtility.isEmpty(reqSelectionFromAdr))
-            {
 
-            }
-            if (!BCFUtility.isEmpty(reqSelectionToAdr))
-            {
-            }
         }
 
 
@@ -998,13 +1003,14 @@ namespace com.mirle.ibg3k0.bc.winform.UI
 
         private void dgv_vhStatus_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
+            recordViewLog("");
             logger.Error(e.Exception, "Exception");
             //todo error catch
         }
 
         private void btn_continuous_Click(object sender, EventArgs e)
         {
-            //Equipment noticeCar = scApp.getEQObjCacheManager().getEquipmentByEQPTID(cmb_Vehicle.Text.Trim());
+            recordViewLog("");
             string vh_id = cmb_Vehicle.Text.Trim();
             Task.Run(() =>
             {
@@ -1013,11 +1019,11 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                 if (noticeCar.IsPause)
                 {
                     scApp.VehicleService.PauseRequest(vh_id, PauseEvent.Continue, SCAppConstants.OHxCPauseType.Normal);
-                    //noticeCar.sned_Str39(PauseEvent.Continue, PauseType.OhxC);
+
                 }
                 else
                 {
-                    //scApp.VehicleBLL.noticeVhPass(vh_id);
+
                     scApp.VehicleService.noticeVhPass(vh_id);
                 }
             });
@@ -1025,12 +1031,11 @@ namespace com.mirle.ibg3k0.bc.winform.UI
 
         private void btn_pause_Click(object sender, EventArgs e)
         {
-            //Equipment noticeCar = scApp.getEQObjCacheManager().getEquipmentByEQPTID(cmb_Vehicle.Text.Trim());
-            //AVEHICLE noticeCar = scApp.getEQObjCacheManager().getVehicletByVHID(cmb_Vehicle.Text.Trim());
+            recordViewLog("");
             string notice_vh_id = cmb_Vehicle.Text.Trim();
             Task.Run(() =>
             {
-                //if (noticeCar.sned_Str39(PauseEvent.Pause, PauseType.OhxC))
+
                 if (scApp.VehicleService.PauseRequest(notice_vh_id, PauseEvent.Pause, SCAppConstants.OHxCPauseType.Normal))
                 {
 
@@ -1049,7 +1054,6 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             cmb_toAddress.Visible = false;
             cmb_cycRunZone.Visible = false;
             btn_start.Enabled = false;
-            dgv_TaskCommand.Enabled = false;
             btn_AutoMove.Enabled = false;
             lbl_destinationName.Text = "To Address";
             E_CMD_TYPE cmd_type;
@@ -1062,7 +1066,6 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                 case E_CMD_TYPE.SystemOut:
                     cmb_toAddress.Visible = true;
                     btn_start.Enabled = true;
-                    dgv_TaskCommand.Enabled = true;
                     btn_AutoMove.Enabled = true;
                     break;
                 case E_CMD_TYPE.Round:
@@ -1071,11 +1074,6 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                     lbl_destinationName.Text = "Round Entry Adr.";
                     break;
                 case E_CMD_TYPE.LoadUnload:
-                    cmb_fromAddress.Enabled = true;
-                    cmb_toAddress.Visible = true;
-                    btn_start.Enabled = true;
-                    dgv_TaskCommand.Enabled = true;
-                    break;
                 case E_CMD_TYPE.Teaching:
                     cmb_fromAddress.Enabled = true;
                     cmb_toAddress.Visible = true;
@@ -1152,21 +1150,10 @@ namespace com.mirle.ibg3k0.bc.winform.UI
         private void OHT_Form_Load(object sender, EventArgs e)
         {
             ck_montor_vh.Checked = true;
+            cmsMCS_bindingSource.DataSource = cmd_mcs_obj_to_show;
             dgv_TransferCommand.DataSource = cmsMCS_bindingSource;
         }
 
-        private void btn_st1_Click(object sender, EventArgs e)
-        {
-            string vh_id = cmb_Vehicle.Text.Trim();
-            string mt_adr_id = "12299";
-            Task.Run(() =>
-            {
-                //AVEHICLE noticeCar = scApp.getEQObjCacheManager().getVehicletByVHID(vh_id);
-                //noticeCar.sned_S1();
-                //scApp.VehicleService.HostBasicVersionReport(vh_id);
-                scApp.VehicleService.doReservationVhToMaintainsBufferAddress(vh_id, mt_adr_id);
-            });
-        }
 
         private void cb_sectionThroughTimes_CheckedChanged(object sender, EventArgs e)
         {
@@ -1179,15 +1166,6 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             if (selected_park_zone_type == null) return;
             scApp.ParkBLL.doParkZoneTypeChange(selected_park_zone_type);
             MessageBox.Show("OK");
-        }
-
-        private void btn_recover_to_autoremote_Click(object sender, EventArgs e)
-        {
-            string vh_id = cmb_Vehicle.Text.Trim();
-            Task.Run(() =>
-            {
-                scApp.VehicleService.doRecoverModeStatusToAutoRemote(vh_id);
-            });
         }
 
         private void uctl_Map_Load(object sender, EventArgs e)

@@ -109,6 +109,7 @@ namespace com.mirle.ibg3k0.sc.Scheduler
                 scApp.CMDBLL.RemoteHCMD_OHTCByBatch(hcmd_ohtc_list); ;
             }
         }
+
     }
 
 }

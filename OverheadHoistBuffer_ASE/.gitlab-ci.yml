@@ -1,0 +1,105 @@
+variables:
+  GIT_DEPTH: 0
+  SONAR_KEY: ak0.ase_k21.OverheadHoistBuffer
+  PACKAGE_REGISTRY_URL: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic
+
+
+stages:
+  - build
+  - deploy
+
+
+build-merge-request:
+  stage: build
+  tags:
+    - windows-docker
+  image: mirle/sonarscan-dotnetframework4.8:latest
+  script:
+    - SonarScanner.MSBuild.exe begin `
+        /k:"$SONAR_KEY" `
+        /d:sonar.host.url=${SONAR_HOST_URL} `
+        /d:sonar.login=${SONAR_LOGIN} `
+        /d:sonar.sourceEncoding=UTF-8 `
+        /d:sonar.cs.dotcover.reportsPaths=.\TestResults\dotcover.html `
+        /d:sonar.qualitygate.wait=true
+    - dotnet add .\UnitTestForLoopEnhance\UnitTestForLoopEnhance.csproj package JunitXml.TestLogger
+    - nuget restore OverheadHoistBuffer_ASE.sln
+    - msbuild OverheadHoistBuffer_ASE.sln /p:Configuration=Release
+    - dotnet dotcover test .\UnitTestForLoopEnhance\bin\Release\UnitTestForLoopEnhance.dll `
+        --logger:"junit;LogFileName=unittest_junit.xml" --results-directory .\TestResults `
+        --dcOutput=".\TestResults\dotcover.html" --dcReportType="HTML"
+    - SonarScanner.MSBuild.exe end /d:sonar.login=${SONAR_LOGIN}
+    - Get-ChildItem .\BCWinForm\bin\Release -recurse -include *.pdb | remove-item
+  artifacts:
+    paths:
+      - BCWinForm/bin/Release
+    expire_in: 4 hrs
+    reports:
+      junit:
+        TestResults/unittest_junit.xml
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+
+build-main:
+  stage: build
+  tags:
+    - windows-docker
+  image: mirle/sonarscan-dotnetframework4.8:latest
+  script:
+    - SonarScanner.MSBuild.exe begin `
+        /k:"$SONAR_KEY" `
+        /d:sonar.host.url=${SONAR_HOST_URL} `
+        /d:sonar.login=${SONAR_LOGIN} `
+        /d:sonar.sourceEncoding=UTF-8 `
+        /d:sonar.cs.dotcover.reportsPaths=.\TestResults\dotcover.html `
+        /v:${CI_COMMIT_SHORT_SHA} 
+    - dotnet add .\UnitTestForLoopEnhance\UnitTestForLoopEnhance.csproj package JunitXml.TestLogger
+    - nuget restore OverheadHoistBuffer_ASE.sln
+    - msbuild OverheadHoistBuffer_ASE.sln /p:Configuration=Release
+    - dotnet dotcover test .\UnitTestForLoopEnhance\bin\Release\UnitTestForLoopEnhance.dll `
+        --logger:"junit;LogFileName=unittest_junit.xml" --results-directory .\TestResults `
+        --dcOutput=".\TestResults\dotcover.html" --dcReportType="HTML"
+    - SonarScanner.MSBuild.exe end /d:sonar.login=${SONAR_LOGIN}
+    - Get-ChildItem .\BCWinForm\bin\Release -recurse -include *.pdb | remove-item
+  artifacts:
+    paths:
+      - BCWinForm/bin/Release
+    expire_in: 4 hrs
+    reports:
+      junit:
+        TestResults/unittest_junit.xml
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "main"'
+
+
+build-release:
+  stage: build
+  tags:
+    - windows-docker
+  image: mirle/sonarscan-dotnetframework4.8:latest
+  script:
+    - nuget restore OverheadHoistBuffer_ASE.sln
+    - msbuild OverheadHoistBuffer_ASE.sln /p:Configuration=Release
+    - Get-ChildItem .\BCWinForm\bin\Release -recurse -include *.pdb | remove-item
+  artifacts:
+    paths:
+      - BCWinForm/bin/Release
+    expire_in: 4 hrs
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web" && $CI_COMMIT_TAG'
+
+
+upload-package:
+  stage: deploy
+  tags:
+    - windows-docker
+  image: mirle/sonarscan-dotnetframework4.8:latest
+  script:
+    - Set-Variable PACKAGE_NAME BCWinForm
+    - Set-Variable PACKAGE_FILE ${PACKAGE_NAME}_${CI_COMMIT_TAG}.zip
+    - Set-Variable URL ${PACKAGE_REGISTRY_URL}/${PACKAGE_NAME}/${CI_COMMIT_TAG}/${PACKAGE_FILE}
+    - Compress-Archive -Path BCWinForm\bin\Release -DestinationPath ${PACKAGE_FILE}
+    - Invoke-RestMethod -Headers @{ "JOB-TOKEN"="$CI_JOB_TOKEN" } -InFile ${PACKAGE_FILE} -uri "${URL}" -Method put
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web" && $CI_COMMIT_TAG'

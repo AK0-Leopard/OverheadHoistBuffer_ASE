@@ -21,10 +21,11 @@ using com.mirle.ibg3k0.bcf.App;
 using com.mirle.ibg3k0.sc.Data;
 using com.mirle.ibg3k0.sc.App;
 using com.mirle.ibg3k0.sc.Common;
+using com.mirle.ibg3k0.sc.BLL.Interface;
 
 namespace com.mirle.ibg3k0.sc.BLL
 {
-    public class PortDefBLL
+    public class PortDefBLL : IPortDefBLL
     {
         SCApplication scApp = null;
         PortDefDao portdefDao = null;
@@ -202,6 +203,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 return null;
             }
         }
+
         //A20.06.12
         public List<PortDef> GetAGVPortGroupDataByStationID(string ohbName, string stationID)
         {
@@ -376,11 +378,24 @@ namespace com.mirle.ibg3k0.sc.BLL
                                  FirstOrDefault();
                 return (port_def != null, port_def);
             }
-            public PortDef getCVPortDef(string portID)
+            public List<PortDef> loadPortDefByAdrID(string adrID)
+            {
+                var port_defs = objCacheManager.getPortDefs();
+                var port_def = port_defs.Where(port => SCUtility.isMatche(port.ADR_ID, adrID)).
+                                 ToList();
+                return port_def;
+            }
+            public PortDef getPortDef(string portID)
             {
                 var port_defs = objCacheManager.getPortDefs();
                 return port_defs.Where(port => SCUtility.isMatche(port.PLCPortID, portID)).
                                  FirstOrDefault();
+            }
+            public List<PortDef> getPortDefByAdr(string adrID)
+            {
+                var port_defs = objCacheManager.getPortDefs();
+                return port_defs.Where(port => SCUtility.isMatche(port.ADR_ID, adrID)).
+                                 ToList();
             }
             public (bool isInThisStation, PortDef portDef) isInAGVStByPortID(string agvStationID, string checkPortID)
             {
@@ -447,6 +462,16 @@ namespace com.mirle.ibg3k0.sc.BLL
                 return false;
             }
             return true;
+        }
+
+        public PortDef getPortDef(string portID)
+        {
+            return cache.getPortDef(portID);
+        }
+
+        PortDef IPortDefBLL.getPortDefByAdrID(string portID)
+        {
+            return cache.getPortDefByAdr(portID).FirstOrDefault();
         }
     }
 }

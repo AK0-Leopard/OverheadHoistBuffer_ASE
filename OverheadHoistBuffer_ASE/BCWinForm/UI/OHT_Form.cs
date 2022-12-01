@@ -161,15 +161,12 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                         SetHostControlState(line);
                     }
                     );
-            scApp.getNatsManager().Subscriber(SCAppConstants.NATS_SUBJECT_CURRENT_ALARM, SetCurrentAlarm);
+
         }
 
         private void SetCurrentAlarm(object sender, EventArgs e)
         {
-            List<ALARM> alarms = scApp.AlarmBLL.getCurrentAlarmsFromRedis();
-            Adapter.Invoke((obj) =>
-            {
-            }, null);
+
         }
 
         private void SetHostControlState(ALINE line)
@@ -758,6 +755,20 @@ namespace com.mirle.ibg3k0.bc.winform.UI
         }
         private void SetSCState(ALINE line)
         {
+            switch (line.SCStats)
+            {
+                case ALINE.TSCState.NONE:
+                    lbl_HoseMode.BackColor = Color.Gray;
+                    break;
+                case ALINE.TSCState.AUTO:
+                    lbl_HoseMode.BackColor = Color.Green;
+                    break;
+                case ALINE.TSCState.PAUSED:
+                case ALINE.TSCState.PAUSING:
+                case ALINE.TSCState.TSC_INIT:
+                    lbl_HoseMode.BackColor = Color.Yellow;
+                    break;
+            }
             lbl_HoseMode.Text = line.SCStats.GetDisplayName();
         }
 

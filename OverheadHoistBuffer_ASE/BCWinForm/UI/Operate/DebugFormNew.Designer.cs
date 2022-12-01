@@ -29,7 +29,17 @@
         private void InitializeComponent()
         {
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.grb_testAear = new System.Windows.Forms.GroupBox();
+            this.cb_testZoneCommandReqNoReply = new System.Windows.Forms.CheckBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.num_reserveRequestTimeout = new System.Windows.Forms.NumericUpDown();
+            this.label10 = new System.Windows.Forms.Label();
+            this.cb_openPostionSeqNumCheck = new System.Windows.Forms.CheckBox();
+            this.cb_isUsingRemoveReserveModule = new System.Windows.Forms.CheckBox();
+            this.num_passDisForBackVh = new System.Windows.Forms.NumericUpDown();
+            this.label9 = new System.Windows.Forms.Label();
+            this.cb_isByPassStraightReserve = new System.Windows.Forms.CheckBox();
+            this.cb_LoopEnhance = new System.Windows.Forms.CheckBox();
             this.num_priorityForBoxMove = new System.Windows.Forms.NumericUpDown();
             this.label8 = new System.Windows.Forms.Label();
             this.num_priorityWatershed = new System.Windows.Forms.NumericUpDown();
@@ -43,6 +53,7 @@
             this.cb_FroceReserveReject = new System.Windows.Forms.CheckBox();
             this.cb_FroceReservePass = new System.Windows.Forms.CheckBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.cb_id_31_timeout_test = new System.Windows.Forms.CheckBox();
             this.btn_closeSession = new com.mirle.ibg3k0.bc.winform.UI.Components.uctlButton();
             this.btn_resetODO = new System.Windows.Forms.Button();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
@@ -82,9 +93,11 @@
             this.cb_OperMode = new System.Windows.Forms.ComboBox();
             this.button3 = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.cb_id_136_retry_test = new System.Windows.Forms.CheckBox();
             this.tabPage1.SuspendLayout();
+            this.grb_testAear.SuspendLayout();
             this.groupBox6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.num_reserveRequestTimeout)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.num_passDisForBackVh)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.num_priorityForBoxMove)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.num_priorityWatershed)).BeginInit();
             this.group_cycleRun.SuspendLayout();
@@ -103,6 +116,7 @@
             // tabPage1
             // 
             this.tabPage1.AutoScroll = true;
+            this.tabPage1.Controls.Add(this.grb_testAear);
             this.tabPage1.Controls.Add(this.groupBox6);
             this.tabPage1.Controls.Add(this.cb_IsHandleBoxPassOff);
             this.tabPage1.Controls.Add(this.group_cycleRun);
@@ -116,8 +130,38 @@
             this.tabPage1.Text = "TcpIp Control";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // grb_testAear
+            // 
+            this.grb_testAear.Controls.Add(this.cb_testZoneCommandReqNoReply);
+            this.grb_testAear.Location = new System.Drawing.Point(774, 693);
+            this.grb_testAear.Name = "grb_testAear";
+            this.grb_testAear.Size = new System.Drawing.Size(416, 112);
+            this.grb_testAear.TabIndex = 60;
+            this.grb_testAear.TabStop = false;
+            this.grb_testAear.Text = "Test Area";
+            this.grb_testAear.Visible = false;
+            // 
+            // cb_testZoneCommandReqNoReply
+            // 
+            this.cb_testZoneCommandReqNoReply.AutoSize = true;
+            this.cb_testZoneCommandReqNoReply.Location = new System.Drawing.Point(28, 29);
+            this.cb_testZoneCommandReqNoReply.Name = "cb_testZoneCommandReqNoReply";
+            this.cb_testZoneCommandReqNoReply.Size = new System.Drawing.Size(339, 26);
+            this.cb_testZoneCommandReqNoReply.TabIndex = 62;
+            this.cb_testZoneCommandReqNoReply.Text = "Test Zone Command Req Not Reply";
+            this.cb_testZoneCommandReqNoReply.UseVisualStyleBackColor = true;
+            this.cb_testZoneCommandReqNoReply.CheckedChanged += new System.EventHandler(this.cb_testZoneCommandReqNoReply_CheckedChanged);
+            // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.num_reserveRequestTimeout);
+            this.groupBox6.Controls.Add(this.label10);
+            this.groupBox6.Controls.Add(this.cb_openPostionSeqNumCheck);
+            this.groupBox6.Controls.Add(this.cb_isUsingRemoveReserveModule);
+            this.groupBox6.Controls.Add(this.num_passDisForBackVh);
+            this.groupBox6.Controls.Add(this.label9);
+            this.groupBox6.Controls.Add(this.cb_isByPassStraightReserve);
+            this.groupBox6.Controls.Add(this.cb_LoopEnhance);
             this.groupBox6.Controls.Add(this.num_priorityForBoxMove);
             this.groupBox6.Controls.Add(this.label8);
             this.groupBox6.Controls.Add(this.num_priorityWatershed);
@@ -125,10 +169,105 @@
             this.groupBox6.Enabled = false;
             this.groupBox6.Location = new System.Drawing.Point(774, 335);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(428, 102);
+            this.groupBox6.Size = new System.Drawing.Size(416, 352);
             this.groupBox6.TabIndex = 59;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Parameter Setting";
+            // 
+            // num_reserveRequestTimeout
+            // 
+            this.num_reserveRequestTimeout.Location = new System.Drawing.Point(226, 271);
+            this.num_reserveRequestTimeout.Maximum = new decimal(new int[] {
+            600000,
+            0,
+            0,
+            0});
+            this.num_reserveRequestTimeout.Name = "num_reserveRequestTimeout";
+            this.num_reserveRequestTimeout.Size = new System.Drawing.Size(172, 30);
+            this.num_reserveRequestTimeout.TabIndex = 68;
+            this.num_reserveRequestTimeout.Value = new decimal(new int[] {
+            300000,
+            0,
+            0,
+            0});
+            this.num_reserveRequestTimeout.ValueChanged += new System.EventHandler(this.num_reserveRequestTimeout_ValueChanged);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(6, 273);
+            this.label10.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(224, 22);
+            this.label10.TabIndex = 67;
+            this.label10.Text = "預約Time out時間(ms):";
+            // 
+            // cb_openPostionSeqNumCheck
+            // 
+            this.cb_openPostionSeqNumCheck.AutoSize = true;
+            this.cb_openPostionSeqNumCheck.Location = new System.Drawing.Point(28, 242);
+            this.cb_openPostionSeqNumCheck.Name = "cb_openPostionSeqNumCheck";
+            this.cb_openPostionSeqNumCheck.Size = new System.Drawing.Size(344, 26);
+            this.cb_openPostionSeqNumCheck.TabIndex = 66;
+            this.cb_openPostionSeqNumCheck.Text = "開啟Postion Report的Seq Num確認";
+            this.cb_openPostionSeqNumCheck.UseVisualStyleBackColor = true;
+            this.cb_openPostionSeqNumCheck.CheckedChanged += new System.EventHandler(this.cb_openPostionSeqNumCheck_CheckedChanged);
+            // 
+            // cb_isUsingRemoveReserveModule
+            // 
+            this.cb_isUsingRemoveReserveModule.AutoSize = true;
+            this.cb_isUsingRemoveReserveModule.Location = new System.Drawing.Point(28, 210);
+            this.cb_isUsingRemoveReserveModule.Name = "cb_isUsingRemoveReserveModule";
+            this.cb_isUsingRemoveReserveModule.Size = new System.Drawing.Size(197, 26);
+            this.cb_isUsingRemoveReserveModule.TabIndex = 65;
+            this.cb_isUsingRemoveReserveModule.Text = "使用遠端預約模組";
+            this.cb_isUsingRemoveReserveModule.UseVisualStyleBackColor = true;
+            this.cb_isUsingRemoveReserveModule.CheckedChanged += new System.EventHandler(this.cb_isUsingRemoveReserveModule_CheckedChanged);
+            // 
+            // num_passDisForBackVh
+            // 
+            this.num_passDisForBackVh.Location = new System.Drawing.Point(226, 104);
+            this.num_passDisForBackVh.Maximum = new decimal(new int[] {
+            50000,
+            0,
+            0,
+            0});
+            this.num_passDisForBackVh.Name = "num_passDisForBackVh";
+            this.num_passDisForBackVh.Size = new System.Drawing.Size(172, 30);
+            this.num_passDisForBackVh.TabIndex = 64;
+            this.num_passDisForBackVh.ValueChanged += new System.EventHandler(this.num_passDisForBackVh_ValueChanged);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(22, 108);
+            this.label9.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(207, 22);
+            this.label9.TabIndex = 63;
+            this.label9.Text = "Pass給後車搬的距離:";
+            // 
+            // cb_isByPassStraightReserve
+            // 
+            this.cb_isByPassStraightReserve.AutoSize = true;
+            this.cb_isByPassStraightReserve.Location = new System.Drawing.Point(28, 176);
+            this.cb_isByPassStraightReserve.Name = "cb_isByPassStraightReserve";
+            this.cb_isByPassStraightReserve.Size = new System.Drawing.Size(239, 26);
+            this.cb_isByPassStraightReserve.TabIndex = 62;
+            this.cb_isByPassStraightReserve.Text = "關閉直線路段預約控制";
+            this.cb_isByPassStraightReserve.UseVisualStyleBackColor = true;
+            this.cb_isByPassStraightReserve.CheckedChanged += new System.EventHandler(this.cb_isByPassStraightReserve_CheckedChanged);
+            // 
+            // cb_LoopEnhance
+            // 
+            this.cb_LoopEnhance.AutoSize = true;
+            this.cb_LoopEnhance.Location = new System.Drawing.Point(28, 144);
+            this.cb_LoopEnhance.Name = "cb_LoopEnhance";
+            this.cb_LoopEnhance.Size = new System.Drawing.Size(229, 26);
+            this.cb_LoopEnhance.TabIndex = 60;
+            this.cb_LoopEnhance.Text = "Is Open Loop Enhance";
+            this.cb_LoopEnhance.UseVisualStyleBackColor = true;
+            this.cb_LoopEnhance.CheckedChanged += new System.EventHandler(this.cb_LoopEnhance_CheckedChanged);
             // 
             // num_priorityForBoxMove
             // 
@@ -175,11 +314,12 @@
             this.label7.Size = new System.Drawing.Size(173, 22);
             this.label7.TabIndex = 58;
             this.label7.Text = "Priority 分水嶺:";
+            this.label7.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.label7_MouseDoubleClick);
             // 
             // cb_IsHandleBoxPassOff
             // 
             this.cb_IsHandleBoxPassOff.AutoSize = true;
-            this.cb_IsHandleBoxPassOff.Location = new System.Drawing.Point(808, 256);
+            this.cb_IsHandleBoxPassOff.Location = new System.Drawing.Point(809, 295);
             this.cb_IsHandleBoxPassOff.Name = "cb_IsHandleBoxPassOff";
             this.cb_IsHandleBoxPassOff.Size = new System.Drawing.Size(249, 26);
             this.cb_IsHandleBoxPassOff.TabIndex = 58;
@@ -194,7 +334,7 @@
             this.group_cycleRun.Controls.Add(this.cb_StartGenAntoCmd);
             this.group_cycleRun.Location = new System.Drawing.Point(790, 98);
             this.group_cycleRun.Name = "group_cycleRun";
-            this.group_cycleRun.Size = new System.Drawing.Size(387, 136);
+            this.group_cycleRun.Size = new System.Drawing.Size(387, 146);
             this.group_cycleRun.TabIndex = 58;
             this.group_cycleRun.TabStop = false;
             this.group_cycleRun.Text = "Cycle Run";
@@ -203,7 +343,7 @@
             // combox_cycle_type
             // 
             this.combox_cycle_type.FormattingEnabled = true;
-            this.combox_cycle_type.Location = new System.Drawing.Point(18, 52);
+            this.combox_cycle_type.Location = new System.Drawing.Point(19, 56);
             this.combox_cycle_type.Name = "combox_cycle_type";
             this.combox_cycle_type.Size = new System.Drawing.Size(186, 30);
             this.combox_cycle_type.TabIndex = 27;
@@ -212,7 +352,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(15, 27);
+            this.label4.Location = new System.Drawing.Point(15, 31);
             this.label4.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(50, 22);
@@ -222,7 +362,7 @@
             // cb_StartGenAntoCmd
             // 
             this.cb_StartGenAntoCmd.AutoSize = true;
-            this.cb_StartGenAntoCmd.Location = new System.Drawing.Point(18, 94);
+            this.cb_StartGenAntoCmd.Location = new System.Drawing.Point(19, 98);
             this.cb_StartGenAntoCmd.Name = "cb_StartGenAntoCmd";
             this.cb_StartGenAntoCmd.Size = new System.Drawing.Size(349, 26);
             this.cb_StartGenAntoCmd.TabIndex = 18;
@@ -269,7 +409,7 @@
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.cb_id_136_retry_test);
+            this.groupBox4.Controls.Add(this.cb_id_31_timeout_test);
             this.groupBox4.Controls.Add(this.btn_closeSession);
             this.groupBox4.Controls.Add(this.btn_resetODO);
             this.groupBox4.Controls.Add(this.groupBox9);
@@ -296,6 +436,18 @@
             this.groupBox4.Text = "Specify Vehicle Action";
             this.groupBox4.Enter += new System.EventHandler(this.groupBox4_Enter);
             // 
+            // cb_id_31_timeout_test
+            // 
+            this.cb_id_31_timeout_test.AutoSize = true;
+            this.cb_id_31_timeout_test.Location = new System.Drawing.Point(352, 722);
+            this.cb_id_31_timeout_test.Name = "cb_id_31_timeout_test";
+            this.cb_id_31_timeout_test.Size = new System.Drawing.Size(209, 26);
+            this.cb_id_31_timeout_test.TabIndex = 61;
+            this.cb_id_31_timeout_test.Text = "ID_31_Timeout_test";
+            this.cb_id_31_timeout_test.UseVisualStyleBackColor = true;
+            this.cb_id_31_timeout_test.Visible = false;
+            this.cb_id_31_timeout_test.CheckedChanged += new System.EventHandler(this.cb_id_31_timeout_test_CheckedChanged);
+            // 
             // btn_closeSession
             // 
             this.btn_closeSession.Location = new System.Drawing.Point(352, 754);
@@ -315,6 +467,7 @@
             this.btn_resetODO.TabIndex = 59;
             this.btn_resetODO.Text = "Reset ODO";
             this.btn_resetODO.UseVisualStyleBackColor = true;
+            this.btn_resetODO.Visible = false;
             this.btn_resetODO.Click += new System.EventHandler(this.btn_resetODO_Click);
             // 
             // groupBox9
@@ -708,18 +861,6 @@
             this.tabControl1.Size = new System.Drawing.Size(1206, 865);
             this.tabControl1.TabIndex = 23;
             // 
-            // cb_id_136_retry_test
-            // 
-            this.cb_id_136_retry_test.AutoSize = true;
-            this.cb_id_136_retry_test.Location = new System.Drawing.Point(352, 722);
-            this.cb_id_136_retry_test.Name = "cb_id_136_retry_test";
-            this.cb_id_136_retry_test.Size = new System.Drawing.Size(199, 26);
-            this.cb_id_136_retry_test.TabIndex = 61;
-            this.cb_id_136_retry_test.Text = "ID_136_Retry_test";
-            this.cb_id_136_retry_test.UseVisualStyleBackColor = true;
-            this.cb_id_136_retry_test.Visible = false;
-            this.cb_id_136_retry_test.CheckedChanged += new System.EventHandler(this.cb_id_136_retry_test_CheckedChanged);
-            // 
             // DebugFormNew
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 22F);
@@ -734,8 +875,12 @@
             this.Load += new System.EventHandler(this.DebugForm_Load);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            this.grb_testAear.ResumeLayout(false);
+            this.grb_testAear.PerformLayout();
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.num_reserveRequestTimeout)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.num_passDisForBackVh)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.num_priorityForBoxMove)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.num_priorityWatershed)).EndInit();
             this.group_cycleRun.ResumeLayout(false);
@@ -815,6 +960,16 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.NumericUpDown num_priorityForBoxMove;
         private Components.uctlButton btn_closeSession;
-        private System.Windows.Forms.CheckBox cb_id_136_retry_test;
+        private System.Windows.Forms.CheckBox cb_id_31_timeout_test;
+        private System.Windows.Forms.CheckBox cb_LoopEnhance;
+        private System.Windows.Forms.GroupBox grb_testAear;
+        private System.Windows.Forms.CheckBox cb_testZoneCommandReqNoReply;
+        private System.Windows.Forms.CheckBox cb_isByPassStraightReserve;
+        private System.Windows.Forms.NumericUpDown num_passDisForBackVh;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.CheckBox cb_isUsingRemoveReserveModule;
+        private System.Windows.Forms.CheckBox cb_openPostionSeqNumCheck;
+        private System.Windows.Forms.NumericUpDown num_reserveRequestTimeout;
+        private System.Windows.Forms.Label label10;
     }
 }

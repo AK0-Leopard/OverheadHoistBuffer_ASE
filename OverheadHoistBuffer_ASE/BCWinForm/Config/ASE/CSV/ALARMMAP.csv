@@ -1,5 +1,6 @@
 ﻿OBJECT_ID,ALARM_ID,ALARM_LVL,ALARM_DESC
 OHCV_5,1,2,[M40001][SYS_A]
+OHCV_5,1,2,[M40001][SYS_A]
 OHCV_5,2,2,[M40002][SYS_A]Interlock
 OHCV_5,3,2,[M40003][SYS_A]AIR Low
 OHCV_5,4,2,[M40004][SYS_A]Vaccum Low
@@ -5040,11 +5041,7 @@ AGV,9956,1,[M49956][RFID4]
 AGV,9957,1,[M49957][RFID4]
 AGV,9958,1,[M49958][RFID4]
 AGV,9959,1,[M49959][RFID4]
-CRANE,70001,2,Master PLC network request timed out
-CRANE,89000,2,Double Storage
-CRANE,89001,2,Empty Retrieval
-CRANE,99999,2,OHT is offline
-CRANE,99990,2,OHT rejects command repeatedly
+LINE,70001,2,Master PLC network request timed out
 LINE,100015,2,Currently this device has command but the device has been IDLE time out.
 LINE,100016,2,"Queue Cmd hasn't been processed after recieve a while , TimeOut happened."
 LINE,100017,2,"AGV_has Cmds access but haven't wait in or change type , TimeOut happened."
@@ -5053,10 +5050,20 @@ LINE,100020,2,PORT_DOWN
 LINE,100021,2,BOX_NumberIsNotEnough
 LINE,100023,2,NotEmptyShelf
 LINE,100031,2,Vehicle has Command not complete in time.
+LINE,100032,2,Box status abnormal change to off
+LINE,100100,2,"Parse MCS Message Fail, Plases Restart OHBC System"
+CRANE,70001,2,Master PLC network request timed out
+CRANE,89000,2,Double Storage
+CRANE,89001,2,Empty Retrieval
+CRANE,99999,2,OHT is offline
+CRANE,99990,2,OHT rejects command repeatedly
+CRANE,100010,1,Interlock Error
 CRANE,100011,1,Vehicle Abort
+CRANE,100012,1,BCR_READER_FAIL_BOX
 CRANE,100013,1,PORT_BOXID_READ_FAIL
 CRANE,100014,1,PORT_CSTID_READ_FAIL
 CRANE,100022,1,OHT_IDMismatchUNKU
+CRANE,100101,2,OHT Long Time Reserve Request Fail
 AGV,100013,1,PORT_BOXID_READ_FAIL
 AGV,100014,1,PORT_CSTID_READ_FAIL
 AGV,100019,2,PORT_CIM_OFF 
@@ -5101,16 +5108,6 @@ OHCV_7,100027,2,PORT_BP3_WaitOutTimeOut
 OHCV_7,100028,2,PORT_BP4_WaitOutTimeOut
 OHCV_7,100029,2,PORT_BP5_WaitOutTimeOut
 OHCV_7,100030,2,PORT_LP_WaitOutTimeOut 
-LINE,100015,2,Currently this device has command but the device has been IDLE time out.
-LINE,100016,2,"Queue Cmd hasn't been processed after recieve a while , TimeOut happened."
-LINE,100017,2,"AGV_has Cmds access but haven't wait in or change type , TimeOut happened."
-LINE,100018,2,AGV Station is unable to accept AGV store CST. Due to dont have enough empty box.
-LINE,100020,2,PORT_DOWN
-LINE,100021,2,BOX_NumberIsNotEnough
-LINE,100023,2,NotEmptyShelf
-CRANE,100013,1,PORT_BOXID_READ_FAIL
-CRANE,100014,1,PORT_CSTID_READ_FAIL
-CRANE,100022,1,OHT_IDMismatchUNKU
 AGV,100013,1,PORT_BOXID_READ_FAIL
 AGV,100014,1,PORT_CSTID_READ_FAIL
 AGV,100019,2,PORT_CIM_OFF 

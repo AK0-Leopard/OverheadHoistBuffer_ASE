@@ -34,9 +34,11 @@ using System.Transactions;
 using com.mirle.ibg3k0.sc.Data.SECS.ASE;
 using System.Reflection;
 using System.Threading.Tasks;
+using com.mirle.ibg3k0.sc.Common.AOP;
 
 namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
 {
+    [TeaceMethodAspectAttribute]
     public class ASEMCSDefaultMapAction : IBSEMDriver, IValueDefMapAction
     {
         const string DEVICE_NAME_MCS = "MCS";
@@ -456,7 +458,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
 
                                 if (s2f50.HCACK == SECSConst.HCACK_Confirm)
                                 {
-                                    //isCreatScuess &= scApp.SysExcuteQualityBLL.creatSysExcuteQuality(cmdID, cstID, source, dest);//取消對於SystemQuality的紀錄
+                                    scApp.SysExcuteQualityBLL.creatSysExcuteQuality(cmdID, cstID, source, dest);
                                 }
 
                                 if (isCreatScuess)
@@ -531,6 +533,16 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                         //    }
                         //    break;
                 }
+                //ShowThreadPoolInfo();
+
+            }
+            catch (stc.Common.SECS.SECSFormatException ex)
+            {
+                scApp.TransferService.TransferServiceLogger.Error(
+                    DateTime.Now.ToString("HH:mm:ss.fff ") + "  S2F49ReceiveEnhancedRemoteCommandExtension\n" + ex);
+
+                logger.Error("MESDefaultMapAction has Error[Line Name:{0}],[Error method:{1}],[Error Message:{2}", line.LINE_ID, "S2F49_Receive_Remote_Command", ex);
+                GrandTotalSECSFormatParseFailTimes();
             }
             catch (Exception ex)
             {
@@ -540,7 +552,36 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 logger.Error("MESDefaultMapAction has Error[Line Name:{0}],[Error method:{1}],[Error Message:{2}", line.LINE_ID, "S2F49_Receive_Remote_Command", ex);
             }
         }
+        private void GrandTotalSECSFormatParseFailTimes()
+        {
+            try
+            {
+                ALINE line = scApp.getEQObjCacheManager().getLine();
+                line.SecsMessageParseFail++;
+            }
+            catch(Exception ex)
+            {
+                logger.Error("MESDefaultMapAction has Error[Line Name:{0}],[Error method:{1}],[Error Message:{2}", line.LINE_ID, "S2F49_Receive_Remote_Command", ex);
+            }
+        }
 
+        public void ShowThreadPoolInfo()
+        {
+            int workThreads, completionPortThreads;
+            System.Threading.ThreadPool.GetAvailableThreads(out workThreads, out completionPortThreads);
+            //Console.WriteLine($"GetAvailableThreads => workThreads:{workThreads};completionPortThreads:{completionPortThreads}");
+            scApp.TransferService.TransferServiceLogger.Info($"GetAvailableThreads => workThreads:{workThreads};completionPortThreads:{completionPortThreads}");
+
+            System.Threading.ThreadPool.GetMaxThreads(out workThreads, out completionPortThreads);
+            //Console.WriteLine($"GetMaxThreads => workThreads:{workThreads};completionPortThreads:{completionPortThreads}");
+            scApp.TransferService.TransferServiceLogger.Info($"GetMaxThreads => workThreads:{workThreads};completionPortThreads:{completionPortThreads}");
+
+            System.Threading.ThreadPool.GetMinThreads(out workThreads, out completionPortThreads);
+            //Console.WriteLine($"GetMinThreads => workThreads:{workThreads};completionPortThreads:{completionPortThreads}");
+            scApp.TransferService.TransferServiceLogger.Info($"GetMinThreads => workThreads:{workThreads};completionPortThreads:{completionPortThreads}");
+
+            Console.WriteLine();
+        }
 
         protected override void S2F41ReceiveHostCommand(object sender, SECSEventArgs e)
         {

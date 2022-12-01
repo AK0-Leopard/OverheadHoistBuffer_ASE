@@ -9,6 +9,7 @@
     <None Remove="ProtocolFormat\ManualPortFun.proto" />
     <None Remove="ProtocolFormat\OhbcNtbcGrpcSpec.proto" />
     <None Remove="ProtocolFormat\PortFun.proto" />
+    <None Remove="ProtocolFormat\ReserveModule.proto" />
     <None Remove="ProtocolFormat\ShelfFun.proto" />
     <None Remove="ProtocolFormat\TrackFun.proto" />
     <None Remove="ProtocolFormat\VehicleControlFun.proto" />
@@ -30,6 +31,7 @@
     <Protobuf Include="ProtocolFormat\PortFun.proto" />
     <Protobuf Include="ProtocolFormat\OhbcNtbcGrpcSpec.proto" />
     <Protobuf Include="ProtocolFormat\ManualPortFun.proto" />
+    <Protobuf Include="ProtocolFormat\ReserveModule.proto" GrpcServices="Client" />
     <Protobuf Include="ProtocolFormat\ShelfFun.proto" />
     <Protobuf Include="ProtocolFormat\TrackFun.proto" />
     <Protobuf Include="ProtocolFormat\VehicleControlFun.proto" />

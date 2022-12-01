@@ -54,11 +54,34 @@ namespace com.mirle.ibg3k0.sc
                 return 0;
             }
         }
+        public class ShelfDefCompareByAddressDistanceDesc : IComparer<ShelfDef>
+        {
+            public int Compare(ShelfDef shelfA, ShelfDef shelfB)
+            {
+                // 1. 先獲得各自 shelf 的 address 與起始 address的距離
+                if (shelfA.distanceFromHostSource == shelfB.distanceFromHostSource)
+                {
+                    return 0;
+                    //代表兩者相等，不動
+                }
+                if (shelfA.distanceFromHostSource > shelfB.distanceFromHostSource)
+                {
+                    return -1;
+                    //代表後者較優先，換位
+                }
+                if (shelfA.distanceFromHostSource < shelfB.distanceFromHostSource)
+                {
+                    return 1;
+                    //代表前者較優先，不動
+                }
+                return 0;
+            }
+        }
         public void put(ShelfDef ortherValue)
         {
             this.Enable = ortherValue.Enable;
             this.Remark = ortherValue.Remark;
-            this.TrnDT= ortherValue.TrnDT;
+            this.TrnDT = ortherValue.TrnDT;
 
         }
 

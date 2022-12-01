@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+option csharp_namespace = "Mirle.Protos.ReserveModule";
+
+package ReserveService;
+
+// The greeting service definition.
+service ReserveService {
+  // Sends a greeting
+  rpc TryAddReservedSection (ReserveInfo) returns (Result);
+  rpc GetCurrentReserveInfoMap (Empty) returns (ReserveMap);
+  rpc TryAddOrUpdateVehicle (VehicleInfo) returns (Result);
+  rpc RemoveManyReservedSectionsByVIDSID (RemoveManyReservedInfo) returns (Empty);
+  rpc RemoveVehicle (VehicleID) returns (Empty);
+  rpc GetCurrentReserveSection (VehicleID) returns (CurrentReserveSections);
+  rpc RemoveAllReservedSectionsByVehicleID (VehicleID) returns (Empty);
+  rpc RemoveAllReservedSections (Empty) returns (Empty);
+  rpc Alive (Empty) returns (Empty);
+}
+//string reservedVehicleID = null, string reservedSectionID = null,
+//HltDirection rsSensorDirection = HltDirection.None, HltDirection rsForkDirection = HltDirection.None, bool isAskOnly = false
+// The request message containing the user's name.
+
+message Empty {
+}
+message ReserveMap {
+bytes map_date =1;
+}
+
+
+
+enum  Direction
+{
+  Direction_none = 0;
+  Direction_Forward = 1;
+  Direction_Reverse = 2;
+  Direction_Left = 3;
+  Direction_Right = 4;
+  Direction_ForwardReverse = 5;
+  Direction_LeftRight = 6;
+  Direction_FRLR = 7;
+  Direction_North = 8;
+  Direction_East = 9;
+  Direction_South = 10;
+  Direction_West = 11;
+  Direction_NorthSouth = 12;
+  Direction_EastWest = 13;
+  Direction_NESW = 14;
+}
+message ReserveInfo {
+  string vehicle_id = 1;
+  string reserved_sec_id = 2;	
+  Direction secsor_direction = 3;
+  Direction fork_direction = 4;
+  bool is_ask = 5;
+}
+
+// The response message containing the greetings.
+message Result {
+  bool ok = 1;
+  string vehicle_id = 2;
+  string section_id = 3;
+  string description = 4;
+}
+//vhID, vehicleX, vehicleY, vehicleAngle, speedMmPerSecond, sensorDirection: sensorDir, forkDirection: forkDir
+message VehicleInfo {
+  string vehicle_id = 1;
+  double vehicle_x = 2;	
+  double vehicle_y = 3;
+  float vehicle_angle = 4;
+  double speed_mm_pre_second = 5;
+  Direction sensor_direction = 6;
+  Direction fork_direction = 7;
+}
+message RemoveManyReservedInfo {
+  string vehicle_id = 1;
+  string section_id = 2;	
+}
+message VehicleID {
+  string vehicle_id = 1;
+}
+message ReservedSection
+{
+	string vehicle_id =1;
+	string secion_id = 2;
+}
+message CurrentReserveSections {
+ repeated ReservedSection reserved_sections = 1;
+}

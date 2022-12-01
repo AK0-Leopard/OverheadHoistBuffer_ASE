@@ -3,6 +3,7 @@ using com.mirle.ibg3k0.sc.Data.VO;
 using com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage;
 using com.mirle.ibg3k0.stc.Data.SecsData;
 using Google.Protobuf;
+using Newtonsoft.Json.Linq;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -143,25 +144,6 @@ namespace com.mirle.ibg3k0.sc.Common
 
                 LogHelper.logger.Log(LogLevel, logObj.ToString());
 
-                SYSTEMPROCESS_INFO systemProc = new SYSTEMPROCESS_INFO();
-                systemProc.TIME = DateTime.Now.ToString(SCAppConstants.DateTimeFormat_23);
-                systemProc.SEQ = logObj.Sequence;
-                systemProc.LOGLEVEL = LogLevel.Name == null ? string.Empty : LogLevel.Name;
-                systemProc.CLASS = Class == null ? string.Empty : Class;
-                systemProc.METHOD = Method == null ? string.Empty : Method;
-                systemProc.DEVICE = Device == null ? string.Empty : Device;
-                systemProc.DATA = Data == null ? string.Empty : Data;
-                systemProc.VHID = VehicleID == null ? string.Empty : VehicleID;
-                systemProc.CRRID = CarrierID == null ? string.Empty : CarrierID;
-                systemProc.TYPE = Type.ToString();
-                systemProc.LOGID = LogID == null ? string.Empty : LogID;
-                systemProc.THREADID = logObj.ThreadID;
-                systemProc.LOT = Lot == null ? string.Empty : Lot;
-                systemProc.LEVEL = Level == null ? string.Empty : Level;
-                systemProc.XID = xid == null ? string.Empty : xid;
-                systemProc.TRXID = logObj.TransactionID;
-                systemProc.DETAILS = Details == null ? string.Empty : Details;
-                System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(SCApplication.getInstance().LineService.PublishSystemMsgInfo), systemProc);
             }
             catch (Exception e)
             {
@@ -172,8 +154,54 @@ namespace com.mirle.ibg3k0.sc.Common
                 LogObjPool.PutObject(logObj);
             }
         }
+        static Google.Protobuf.JsonFormatter jsonFormatter =
+        new JsonFormatter(new JsonFormatter.Settings(true).
+        WithFormatDefaultValues(true));
 
+        public static void RecordReportInfoNew(AVEHICLE vh, IMessage message, int seqNum, [CallerMemberName] string Method = "")
+        {
+            if (message == null)
+                return;
+            dynamic logEntry = new JObject();
+            DateTime nowDt = DateTime.Now;
+            string vhID = vh.VEHICLE_ID;
+            string current_excute_cmd_id = SCUtility.Trim(vh.OHTC_CMD, true);
+            string current_excute_cmd_mcs_id = SCUtility.Trim(vh.MCS_CMD, true);
+            string box_id = SCUtility.Trim(vh.BOX_ID, true);
+            //string detail = PrintMessage(message, current_excute_cmd_id, current_excute_cmd_mcs_id);
+            string detail = jsonFormatter.Format(message);
+            string function = getIMessageName(message);
+            logEntry.dateTime = nowDt.ToString(SCAppConstants.DateTimeFormat_23);
 
+            logEntry.eq_id = vhID;
+            logEntry.task_id = current_excute_cmd_id;
+            logEntry.transfer_id = current_excute_cmd_mcs_id;
+            logEntry.carrier_id = box_id;
+            logEntry.eq_id = vhID;
+            logEntry.name = function;
+            logEntry.seq_no = seqNum.ToString("000");
+            logEntry.type = "TcpIpTrx";
+            logEntry.detail = detail;
+            //detail = detail.Replace("\\\"", "\"");
+
+            var json = logEntry.ToString(Newtonsoft.Json.Formatting.None);
+            json = json.Replace("dateTime", "@t");
+            LogManager.GetLogger("RecordReportInfo").Info(json);
+        }
+        public static string getIMessageName(IMessage message)
+        {
+            var descriptor = message.Descriptor;
+            string name = descriptor.Name;
+            if (name.Contains('_'))
+            {
+                string[] name_temp = name.Split('_');
+                if (name_temp.Length >= 2)
+                {
+                    name = $"{name_temp[0]}_{name_temp[1].PadLeft(3, '0')}";
+                }
+            }
+            return name;
+        }
         public static void LogBCRReadInfo(string VehicleID, string portID, string mcsCmdID, string ohtcCmdID, string carrierID, string readCarrierID, ProtocolFormat.OHTMessage.BCRReadResult bCRReadResult,
                                           bool IsEnableIDReadFailScenario, [CallerMemberName] string Method = "")
         {

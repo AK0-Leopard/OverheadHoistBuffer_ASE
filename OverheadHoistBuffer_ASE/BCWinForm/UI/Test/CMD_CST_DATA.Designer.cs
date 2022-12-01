@@ -79,6 +79,8 @@
             this.button24 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
+            this.cmb_forceAssignVh = new System.Windows.Forms.ComboBox();
+            this.label14 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
@@ -175,7 +177,7 @@
             // button6
             // 
             this.button6.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.button6.Location = new System.Drawing.Point(798, 12);
+            this.button6.Location = new System.Drawing.Point(800, 43);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(63, 39);
             this.button6.TabIndex = 2;
@@ -187,7 +189,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("新細明體", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label2.Location = new System.Drawing.Point(309, 21);
+            this.label2.Location = new System.Drawing.Point(311, 52);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(76, 21);
             this.label2.TabIndex = 1;
@@ -197,7 +199,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("新細明體", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label4.Location = new System.Drawing.Point(557, 21);
+            this.label4.Location = new System.Drawing.Point(559, 52);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(76, 21);
             this.label4.TabIndex = 1;
@@ -207,7 +209,7 @@
             // 
             this.comboBox1.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(388, 19);
+            this.comboBox1.Location = new System.Drawing.Point(390, 50);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(163, 24);
             this.comboBox1.TabIndex = 3;
@@ -216,7 +218,7 @@
             // 
             this.comboBox2.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(629, 19);
+            this.comboBox2.Location = new System.Drawing.Point(631, 50);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(163, 24);
             this.comboBox2.TabIndex = 3;
@@ -648,12 +650,35 @@
             0,
             0});
             // 
+            // cmb_forceAssignVh
+            // 
+            this.cmb_forceAssignVh.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.cmb_forceAssignVh.FormattingEnabled = true;
+            this.cmb_forceAssignVh.Location = new System.Drawing.Point(390, 18);
+            this.cmb_forceAssignVh.Name = "cmb_forceAssignVh";
+            this.cmb_forceAssignVh.Size = new System.Drawing.Size(163, 24);
+            this.cmb_forceAssignVh.TabIndex = 35;
+            this.cmb_forceAssignVh.Visible = false;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("新細明體", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label14.Location = new System.Drawing.Point(326, 19);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(58, 21);
+            this.label14.TabIndex = 34;
+            this.label14.Text = "Vh：";
+            this.label14.Visible = false;
+            // 
             // CMD_CST_DATA
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(1484, 861);
+            this.Controls.Add(this.cmb_forceAssignVh);
+            this.Controls.Add(this.label14);
             this.Controls.Add(this.numericUpDown2);
             this.Controls.Add(this.numericUpDown1);
             this.Controls.Add(this.button22);
@@ -772,5 +797,7 @@
         private System.Windows.Forms.Button button24;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.NumericUpDown numericUpDown2;
+        private System.Windows.Forms.ComboBox cmb_forceAssignVh;
+        private System.Windows.Forms.Label label14;
     }
 }

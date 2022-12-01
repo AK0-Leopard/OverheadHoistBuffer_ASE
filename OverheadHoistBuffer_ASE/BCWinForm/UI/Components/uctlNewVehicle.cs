@@ -252,10 +252,11 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Components
             InitializeComponent();
             //  this.Size = Resources.Vehicle__Unconnected_.Size;
         }
-        public uctlNewVehicle(AVEHICLE _vh, uctl_Map uctl_Map, PictureBox alarmStatus, PictureBox cstloadStatus)
+        public uctlNewVehicle(int _num, AVEHICLE _vh, uctl_Map uctl_Map, PictureBox alarmStatus, PictureBox cstloadStatus)
         {
             InitializeComponent();
             //  this.Size = Resources.Vehicle__Unconnected_.Size;
+            num = _num;
             Uctl_Map = uctl_Map;
             vh = _vh;
 
@@ -281,6 +282,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Components
             registerEvent();
             _SetInitialVhToolTip();
             _SetRailToolTip();
+            updateVehiclePosition();
         }
 
         private void PicCSTLoadStatus_VisibleChanged(object sender, EventArgs e)
@@ -562,6 +564,8 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Components
             }, null);
 
         }
+        public const int UNKNOW_DEFAULT_X_LOCATION_VALUE = 50;
+        public const int UNKNOW_DEFAULT_Y_LOCATION_VALUE = 30;
 
         private void updateVehiclePosition()
         {
@@ -614,6 +618,11 @@ namespace com.mirle.ibg3k0.bc.winform.UI.Components
                         groupRails.VehicleEnterSection(this, vh.CUR_ADR_ID, vh.ACC_SEC_DIST);
 
                     }
+                    else
+                    {
+                        PrcSetLocation((UNKNOW_DEFAULT_X_LOCATION_VALUE * Num) + 2, UNKNOW_DEFAULT_Y_LOCATION_VALUE);
+                    }
+
                 }
                 catch (Exception ex)
                 {

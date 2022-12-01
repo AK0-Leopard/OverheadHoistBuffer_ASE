@@ -537,6 +537,9 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             //    mapAction.removeCmdTest(txt_remove_cst_id.Text, txt_remove_loc_id.Text);
             //});
             // bcApp.SCApplication.FlexsimCommandDao.setCommandToFlexsimDB("OHT01", "30103","1", "20311","1","CST01","0");
+
+
+
         }
 
 
@@ -1334,6 +1337,21 @@ namespace com.mirle.ibg3k0.bc.winform.UI
         {
             int pre_stage_wating_time = (int)num_preStageWatingTime.Value;
             sc.App.SystemParameter.setPreStageWatingTime_ms(pre_stage_wating_time);
+        }
+
+        private void btn_136_zoneCommandTest_Click(object sender, EventArgs e)
+        {
+            AVEHICLE vh = bcApp.SCApplication.VehicleBLL.cache.getVhByID("B7_OHBLINE3_CR1");
+            bool is_need_pause_first = cb_pauseFirst.Checked;
+            var id_136 = new sc.ProtocolFormat.OHTMessage.ID_136_TRANS_EVENT_REP()
+            {
+                EventType = sc.ProtocolFormat.OHTMessage.EventType.ZoneCommandReq,
+                ZoneCommandID = "ZC01"
+            };
+            Task.Run(() =>
+            {
+                bcApp.SCApplication.VehicleService.TranEventReport(bcApp.SCApplication.getBCFApplication(), vh, id_136, 0);
+            });
         }
     }
 }

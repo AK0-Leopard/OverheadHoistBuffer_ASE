@@ -5,15 +5,23 @@ using System;
 using System.Text;
 using System.Linq;
 using System.Collections.Generic;
+using com.mirle.ibg3k0.sc.BLL.Interface;
+using com.mirle.ibg3k0.sc.Common.Interface;
 
 namespace com.mirle.ibg3k0.sc.BLL
 {
-    public class ReserveBLL
+    public class ReserveBLL : IReserveBLL
     {
+
+        public event EventHandler<IReserveModule> ReserveMoudleChange;
+
         NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private Mirle.Hlts.ReserveSection.Map.ViewModels.HltMapViewModel mapAPI { get; set; }
-        private sc.Common.CommObjCacheManager commObjCacheManager { get; set; }
 
+        private sc.Common.CommObjCacheManager commObjCacheManager { get; set; }
+        private IReserveModule localReserveModule { get; set; }
+        private IReserveModule remoteReserveModule { get; set; }
+        private SCApplication scApp= null;
 
         private EventHandler reserveStatusChange;
         private object _reserveStatusChangeEventLock = new object();
@@ -48,30 +56,55 @@ namespace com.mirle.ibg3k0.sc.BLL
         {
             mapAPI = _app.getReserveSectionAPI();
             commObjCacheManager = _app.getCommObjCacheManager();
+            localReserveModule = _app.localReserveModule;
+            remoteReserveModule = _app.remoteReserveModule;
+            scApp = _app;
+        }
+        private IReserveModule CurrentUsingReserveModule = null;
+        private IReserveModule GetUsingReserveModule()
+        {
+
+            if (SystemParameter.IsUsingRemoteReserveModule)
+            {
+                if (scApp.getEQObjCacheManager().getLine().IsConnectionWithReserveModule)
+                {
+                    setCurrentUsingReserveModule(remoteReserveModule);
+                    return remoteReserveModule;
+                }
+                else
+                {
+                    setCurrentUsingReserveModule(localReserveModule);
+                    return localReserveModule;
+                }
+            }
+            else
+            {
+                setCurrentUsingReserveModule(localReserveModule);
+                return localReserveModule;
+            }
+        }
+        object lock_obj_set_reserve_module = new object();
+        private void setCurrentUsingReserveModule(IReserveModule reserveModule)
+        {
+            lock (lock_obj_set_reserve_module)
+            {
+                if (CurrentUsingReserveModule != reserveModule)
+                {
+                    CurrentUsingReserveModule = reserveModule;
+                    OnReserveMoudleChange(reserveModule);
+                }
+            }
         }
 
-        public bool DrawAllReserveSectionInfo()
+        private void OnReserveMoudleChange(IReserveModule reserveModule)
         {
-            bool is_success = false;
-            try
-            {
-                mapAPI.RedrawBitmap(false);
-                mapAPI.DrawOverlapRR();
-                mapAPI.RefreshBitmap();
-                mapAPI.ClearOverlapRR();
-                is_success = true;
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex, "Exception");
-                is_success = false;
-            }
-            return is_success;
+            ReserveMoudleChange?.Invoke(this, reserveModule);
         }
 
         public System.Windows.Media.Imaging.BitmapSource GetCurrentReserveInfoMap()
         {
-            return mapAPI.MapBitmapSource;
+            //DrawAllReserveSectionInfo();
+            return GetUsingReserveModule().GetCurrentReserveInfoMap();
         }
 
         public (bool isExist, double x, double y, bool isTR50) GetHltMapAddress(string adrID)
@@ -88,39 +121,33 @@ namespace com.mirle.ibg3k0.sc.BLL
                 return (false, 0, 0, false);
             }
         }
-        public HltResult TryAddVehicleOrUpdateResetSensorForkDir(string vhID)
-        {
-            var hltvh = mapAPI.HltVehicles.Where(vh => SCUtility.isMatche(vh.ID, vhID)).SingleOrDefault();
-            var clone_hltvh = hltvh.DeepClone();
-            clone_hltvh.SensorDirection = HltDirection.None;
-            clone_hltvh.ForkDirection = HltDirection.None;
-            HltResult result = mapAPI.TryAddOrUpdateVehicle(clone_hltvh);
-            return result;
-        }
         public HltResult TryAddVehicleOrUpdate(string vhID, string currentSectionID, double vehicleX, double vehicleY, float vehicleAngle, double speedMmPerSecond,
                                            HltDirection sensorDir, HltDirection forkDir)
         {
             LogHelper.Log(logger: logger, LogLevel: NLog.LogLevel.Debug, Class: nameof(ReserveBLL), Device: "AGV",
-               Data: $"add vh in reserve system: vh:{vhID},x:{vehicleX},y:{vehicleY},angle:{vehicleAngle},speedMmPerSecond:{speedMmPerSecond},sensorDir:{sensorDir},forkDir:{forkDir}",
+               Data: $"({getReserveMoudleSymbol()})add vh in reserve system: vh:{vhID},x:{vehicleX},y:{vehicleY},angle:{vehicleAngle},speedMmPerSecond:{speedMmPerSecond},sensorDir:{sensorDir},forkDir:{forkDir}",
                VehicleID: vhID);
-            //HltResult result = mapAPI.TryAddVehicleOrUpdate(vhID, vehicleX, vehicleY, vehicleAngle, sensorDir, forkDir);
+            var vh = new AVEHICLE();
+            vh.VEHICLE_ID = vhID;
+            vh.CUR_ADR_ID = "";
+            vh.CUR_SEC_ID = currentSectionID;
+            vh.CUR_SEG_ID = "";
+            vh.X_Axis = vehicleX;
+            vh.Y_Axis = vehicleY;
+            vh.Speed = speedMmPerSecond;
 
-            //20200508 暫時不要用小精靈方式釋放路徑
-            //var hlt_vh = new HltVehicle(vhID, vehicleX, vehicleY, vehicleAngle, speedMmPerSecond, sensorDirection: sensorDir, forkDirection: forkDir, currentSectionID: currentSectionID);
-            var hlt_vh = new HltVehicle(vhID, vehicleX, vehicleY, vehicleAngle, speedMmPerSecond, sensorDirection: sensorDir, forkDirection: forkDir);
-            HltResult result = mapAPI.TryAddOrUpdateVehicle(hlt_vh);
-            mapAPI.KeepRestSection(hlt_vh);
+            HltResult result = GetUsingReserveModule().TryAddOrUpdateVehicle(vh);
             onReserveStatusChange();
             return result;
         }
-        public HltResult TryAddVehicleOrUpdate(string vhID, string adrID)
-        {
-            var adr_obj = mapAPI.GetAddressObjectByID(adrID);
-            var hlt_vh = new HltVehicle(vhID, adr_obj.X, adr_obj.Y, 0, sensorDirection: Mirle.Hlts.Utils.HltDirection.Forward);
-            //HltResult result = mapAPI.TryAddVehicleOrUpdate(vhID, adr_obj.X, adr_obj.Y, 0, vehicleSensorDirection: Mirle.Hlts.Utils.HltDirection.NESW);
-            HltResult result = mapAPI.TryAddOrUpdateVehicle(hlt_vh);
-            onReserveStatusChange();
 
+        public HltResult TryAddVehicleOrUpdate(AVEHICLE vh)
+        {
+            LogHelper.Log(logger: logger, LogLevel: NLog.LogLevel.Debug, Class: nameof(ReserveBLL), Device: "AGV",
+               Data: $"({getReserveMoudleSymbol()})add vh in reserve system: vh:{vh.VEHICLE_ID},x:{vh.X_Axis},y:{vh.Y_Axis},angle:{0},speedMmPerSecond:{1},sensorDir:{HltDirection.None},forkDir:{HltDirection.None}",
+               VehicleID: vh.VEHICLE_ID);
+            HltResult result = GetUsingReserveModule().TryAddOrUpdateVehicle(vh);
+            onReserveStatusChange();
             return result;
         }
 
@@ -129,56 +156,35 @@ namespace com.mirle.ibg3k0.sc.BLL
             //int sec_id = 0;
             //int.TryParse(sectionID, out sec_id);
             string sec_id = SCUtility.Trim(sectionID);
-            mapAPI.RemoveManyReservedSectionsByVIDSID(vhID, sec_id);
+            GetUsingReserveModule().RemoveManyReservedSectionsByVIDSID(vhID, sec_id);
             onReserveStatusChange();
         }
 
         public void RemoveVehicle(string vhID)
         {
-            var vh = mapAPI.GetVehicleObjectByID(vhID);
-            if (vh != null)
-            {
-                mapAPI.RemoveVehicle(vh);
-            }
+            GetUsingReserveModule().RemoveVehicle(vhID);
         }
 
         public string GetCurrentReserveSection()
         {
             StringBuilder sb = new StringBuilder();
-            var current_reserve_sections = mapAPI.HltReservedSections;
+            var current_reserve_sections = GetUsingReserveModule().GetCurrentReserveSections("");
+            sb.AppendLine($"({getReserveMoudleSymbol()})");
             sb.AppendLine("Current reserve section");
             foreach (var reserve_section in current_reserve_sections)
             {
-                sb.AppendLine($"section id:{reserve_section.RSMapSectionID} vh id:{reserve_section.RSVehicleID}");
+                sb.AppendLine($"section id:{reserve_section.SectionID} vh id:{reserve_section.VehicleID}");
             }
             return sb.ToString();
         }
         public List<string> loadCurrentReserveSections(string vhID)
         {
             StringBuilder sb = new StringBuilder();
-            var current_reserve_sections = mapAPI.HltReservedSections;
-            var vh_of_current_reserve_sections = current_reserve_sections.
-                                                 Where(reserve_info => SCUtility.isMatche(reserve_info.RSVehicleID, vhID)).
-                                                 Select(reserve_info => reserve_info.RSMapSectionID).
-                                                 ToList();
-            return vh_of_current_reserve_sections;
-        }
-        public HltVehicle GetHltVehicle(string vhID)
-        {
-            return mapAPI.GetVehicleObjectByID(vhID);
+            var current_reserve_sections = GetUsingReserveModule().GetCurrentReserveSections(vhID);
+            var sec_ids = current_reserve_sections.Select(reserved_sec => reserved_sec.SectionID).ToList();
+            return sec_ids;
         }
 
-        //public HltResult TryAddReservedSection(string vhID, string sectionID, HltDirection sensorDir = HltDirection.Forward, HltDirection forkDir = HltDirection.None, bool isAsk = false)
-        //{
-        //    //int sec_id = 0;
-        //    //int.TryParse(sectionID, out sec_id);
-        //    string sec_id = SCUtility.Trim(sectionID);
-
-        //    HltResult result = mapAPI.TryAddReservedSection(vhID, sec_id, sensorDir, forkDir, isAsk);
-        //    onReserveStatusChange();
-
-        //    return result;
-        //}
         public HltResult TryAddReservedSection(string vhID, string sectionID, HltDirection sensorDir = HltDirection.Forward, HltDirection forkDir = HltDirection.None, bool isAsk = false)
         {
             HltResult result = null;
@@ -192,7 +198,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 int section_index = enhance_control_sections.IndexOf(sectionID);
                 for (int i = section_index; i < enhance_control_sections.Count; i++)
                 {
-                    result = mapAPI.TryAddReservedSection(vhID, enhance_control_sections[i], sensorDir, forkDir, true);
+                    result = GetUsingReserveModule().TryAddReservedSection(vhID, enhance_control_sections[i], sensorDir, forkDir, true);
                     if (!result.OK)
                     {
                         result.Description += $",section:{sectionID} is reserve enhance group:{reserve_enhance_info_check_result.info.GroupID}," +
@@ -201,7 +207,8 @@ namespace com.mirle.ibg3k0.sc.BLL
                     }
                 }
             }
-            result = mapAPI.TryAddReservedSection(vhID, sec_id, sensorDir, forkDir, isAsk);
+            result = GetUsingReserveModule().TryAddReservedSection(vhID, sec_id, sensorDir, forkDir, isAsk);
+            result.Description += $"({getReserveMoudleSymbol()})";
             onReserveStatusChange();
 
             return result;
@@ -218,48 +225,47 @@ namespace com.mirle.ibg3k0.sc.BLL
         }
 
 
-        public HltResult RemoveAllReservedSectionsBySectionID(string sectionID)
-        {
-            //int sec_id = 0;
-            //int.TryParse(sectionID, out sec_id);
-            string sec_id = SCUtility.Trim(sectionID);
-            HltResult result = mapAPI.RemoveAllReservedSectionsBySectionID(sec_id);
-            onReserveStatusChange();
-            return result;
-
-        }
 
         public void RemoveAllReservedSectionsByVehicleID(string vhID)
         {
-            mapAPI.RemoveAllReservedSectionsByVehicleID(vhID);
+            GetUsingReserveModule().RemoveAllReservedSectionsByVehicleID(vhID);
             onReserveStatusChange();
         }
         public void RemoveAllReservedSections()
         {
-            mapAPI.RemoveAllReservedSections();
+            GetUsingReserveModule().RemoveAllReservedSections();
             onReserveStatusChange();
         }
 
 
-
-        public bool IsR2000Address(string adrID)
-        {
-            var hlt_r2000_section_objs = mapAPI.HltMapSections.Where(sec => SCUtility.isMatche(sec.Type, HtlSectionType.R2000.ToString())).ToList();
-            bool is_r2000_address = hlt_r2000_section_objs.Where(sec => SCUtility.isMatche(sec.StartAddressID, adrID) || SCUtility.isMatche(sec.EndAddressID, adrID))
-                                                          .Count() > 0;
-            return is_r2000_address;
-        }
-        public bool IsR2000Section(string sectionID)
-        {
-            var hlt_section_obj = mapAPI.HltMapSections.Where(sec => SCUtility.isMatche(sec.ID, sectionID)).FirstOrDefault();
-            return SCUtility.isMatche(hlt_section_obj.Type, HtlSectionType.R2000.ToString());
-        }
 
         enum HtlSectionType
         {
             Horizontal,
             Vertical,
             R2000
+        }
+
+        public enum ReserveMoudleSymbol
+        {
+            None,
+            Local,
+            Remote,
+        }
+        public ReserveMoudleSymbol getReserveMoudleSymbol()
+        {
+            if (GetUsingReserveModule() == localReserveModule)
+            {
+                return ReserveMoudleSymbol.Local;
+            }
+            else if (GetUsingReserveModule() == remoteReserveModule)
+            {
+                return ReserveMoudleSymbol.Remote;
+            }
+            else
+            {
+                return ReserveMoudleSymbol.None;
+            }
         }
     }
 

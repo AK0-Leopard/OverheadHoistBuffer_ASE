@@ -97,6 +97,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Accessibility" />
+    <Reference Include="AspectInjector.Broker, Version=2.7.3.0, Culture=neutral, PublicKeyToken=a29e12442a3d3609, processorArchitecture=MSIL">
+      <HintPath>..\packages\AspectInjector.2.7.3\lib\netstandard2.0\AspectInjector.Broker.dll</HintPath>
+    </Reference>
     <Reference Include="AsyncIO, Version=0.1.69.0, Culture=neutral, PublicKeyToken=44a94435bd6f33f8, processorArchitecture=MSIL">
       <HintPath>..\packages\AsyncIO.0.1.69\lib\net40\AsyncIO.dll</HintPath>
     </Reference>
@@ -298,6 +301,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\BlockControlSystem_OHT\ScriptControl\DLL\Utility_LogQuery.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
     <Reference Include="Xceed.Wpf.Toolkit, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>DLL\Xceed.Wpf.Toolkit.dll</HintPath>
@@ -478,8 +482,18 @@
       <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="BLL\191204Test\CassetteDataBLL.cs" />
+    <Compile Include="BLL\Interface\ISequenceBLL.cs" />
+    <Compile Include="BLL\Interface\IShelfDefBLL.cs" />
+    <Compile Include="BLL\Interface\IPortDefBLL.cs" />
     <Compile Include="BLL\191204Test\ShelfDefBLL.cs" />
     <Compile Include="BLL\191204Test\ZoneDefBLL.cs" />
+    <Compile Include="BLL\Interface\IReserveBLL.cs" />
+    <Compile Include="BLL\Interface\IVehicleBLL.cs" />
+    <Compile Include="BLL\Interface\ISectionBLL.cs" />
+    <Compile Include="BLL\Interface\ICassetteDataBLL.cs" />
+    <Compile Include="BLL\Interface\IZoneCommandBLL.cs" />
+    <Compile Include="BLL\Interface\ICMDBLL.cs" />
+    <Compile Include="BLL\ZoneCommandBLL.cs" />
     <Compile Include="BLL\VAlarmBLL.cs" />
     <Compile Include="BLL\AlarmBLL.cs" />
     <Compile Include="BLL\BCSystemBLL.cs" />
@@ -516,17 +530,21 @@
     <Compile Include="CassetteData.cs">
       <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
+    <Compile Include="Common\AOP\TeaceMethodAspectAttribute.cs" />
     <Compile Include="Common\CheckSystemEventHandler.cs" />
     <Compile Include="Common\ClassAOPAspect.cs" />
     <Compile Include="Common\CommObjCacheManager.cs" />
     <Compile Include="Common\CountDownTimerByStopwatch.cs" />
     <Compile Include="Common\ElasticSearchManager.cs" />
     <Compile Include="Common\EQObjCacheManager.cs" />
+    <Compile Include="Common\Expansion\AVEHICLEExpansion.cs" />
+    <Compile Include="Common\Interface\IReserveModule.cs" />
     <Compile Include="Common\JsHelper.cs" />
     <Compile Include="Common\LogHelper.cs" />
     <Compile Include="Common\NatsManager.cs" />
     <Compile Include="Common\RedisCacheManager.cs" />
     <Compile Include="Common\ObjectPool.cs" />
+    <Compile Include="Common\ReserveModule.cs" />
     <Compile Include="Common\SCUtility.cs" />
     <Compile Include="Common\StateMachine.cs" />
     <Compile Include="Common\WebClientManager.cs" />
@@ -545,6 +563,7 @@
     <Compile Include="Data\DAO\191204Test\ZoneDefDao.cs" />
     <Compile Include="Data\DAO\ADDRESSDao.cs" />
     <Compile Include="Data\DAO\AddressDataDao.cs" />
+    <Compile Include="Data\DAO\ZoneCommandDao.cs" />
     <Compile Include="Data\DAO\VAlarmDao.cs" />
     <Compile Include="Data\DAO\EntityFramework\HCMD_MCSDao.cs" />
     <Compile Include="Data\DAO\EntityFramework\HCMD_OHTCDao.cs" />
@@ -610,6 +629,8 @@
     <Compile Include="Data\DAO\MCSReportQueueDao.cs" />
     <Compile Include="Data\DAO\HIDZoneMasterDao.cs" />
     <Compile Include="Data\DBConnection_EF.cs" />
+    <Compile Include="Data\Expansion\HltDirectionExpansion.cs" />
+    <Compile Include="Data\Expansion\HltResultExpansion.cs" />
     <Compile Include="Data\PLC_Functions\OHxCToPLC_SetSystemInfo.cs" />
     <Compile Include="Data\PLC_Functions\HIDToOHxC_TempAlarm.cs" />
     <Compile Include="Data\PLC_Functions\HIDToOHxC_PowerAlarm.cs" />
@@ -836,6 +857,10 @@
     <Compile Include="Data\ValueDefMapAction\ValueDefMapActionBase.cs" />
     <Compile Include="Data\ValueDefMapAction\EQTcpIpMapAction.cs" />
     <Compile Include="Data\VO\AlarmHisList.cs" />
+    <Compile Include="Data\VO\PartialVo\VehicleStatusInfo.cs" />
+    <Compile Include="Data\VO\ReservedSection.cs" />
+    <Compile Include="Data\VO\ZoneCommandGroup.cs" />
+    <Compile Include="Data\VO\ZoneCommandInfo.cs" />
     <Compile Include="Data\VO\Interface\IConnectionStatusChange.cs" />
     <Compile Include="Data\VO\Interface\IMaintainDevice.cs" />
     <Compile Include="Data\VO\OHCV.cs" />
@@ -965,7 +990,9 @@
     <Compile Include="HOPERATION.cs">
       <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
+    <Compile Include="Module\LoopTransferEnhance.cs" />
     <Compile Include="MQTTControl\MQTTControl.cs" />
+    <Compile Include="ObjectRelay\CassetteDataToShow.cs" />
     <Compile Include="ObjectRelay\ALARMObjToShow.cs" />
     <Compile Include="ObjectRelay\CMD_MCSObjToShow.cs" />
     <Compile Include="ObjectRelay\IDataGridUpdateNotify.cs" />
@@ -1005,6 +1032,7 @@
     <Compile Include="Service\BlockControlService.cs" />
     <Compile Include="Service\EmptyBoxHandlerService.cs" />
     <Compile Include="Service\FailOverService.cs" />
+    <Compile Include="Service\Interface\ITransferService.cs" />
     <Compile Include="Service\LineService.cs" />
     <Compile Include="Service\OHCVService.cs" />
     <Compile Include="Service\MTLService.cs" />
@@ -1046,9 +1074,9 @@
       <DependentUpon>OHTCContext.tt</DependentUpon>
     </Compile>
     <Compile Include="WebAPI\CSTBoxControl.cs" />
-    <Compile Include="WebAPI\Grpc\Port.cs" />
-    <Compile Include="WebAPI\Grpc\Shelf.cs" />
+    <Compile Include="WebAPI\Expansion\AVEHICLEExpansion.cs" />
     <Compile Include="WebAPI\MTSMTLInfo.cs" />
+    <Compile Include="WebAPI\ReserveModule.cs" />
     <Compile Include="WebAPI\TransferManagement.cs" />
     <Compile Include="WebAPI\ConnectionInfo.cs" />
     <Compile Include="WebAPI\UserControl.cs" />
@@ -1098,6 +1126,7 @@
     <Content Include="DLL\BlockControlFramework.pdb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="DLL\Cowboy.Sockets.pdb" />
     <Content Include="DLL\Mirle.Hlts.ReserveSection.Map.dll" />
     <Content Include="DLL\Mirle.Hlts.ReserveSection.Map.pdb" />
     <Content Include="DLL\Mirle.Hlts.ReserveSection.Vision.dll" />
@@ -1173,7 +1202,6 @@
       <LastGenOutput>OHTCContext.cs</LastGenOutput>
       <DependentUpon>OHTCContext.edmx</DependentUpon>
     </Content>
-    <Content Include="SQLFile\[2022_04_27]K21 View Create.sql" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
@@ -1204,9 +1232,15 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CommonMessage\CommonMessage.csproj">
-      <Project>{c5bf697f-3b2b-43b7-a72f-5d61a6669768}</Project>
+      <Project>{9cf98f3d-ca33-4989-99cb-e28824638a3d}</Project>
       <Name>CommonMessage</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\AspectInjector.2.7.3\analyzers\dotnet\cs\AspectInjector.Analyzer.dll" />
+    <Analyzer Include="..\packages\AspectInjector.2.7.3\analyzers\dotnet\cs\AspectInjector.Broker.dll" />
+    <Analyzer Include="..\packages\AspectInjector.2.7.3\analyzers\dotnet\cs\AspectInjector.Rules.dll" />
+    <Analyzer Include="..\packages\AspectInjector.2.7.3\analyzers\dotnet\cs\FluentIL.Common.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
@@ -1216,7 +1250,9 @@
       <ErrorText>此專案參考這部電腦上所缺少的 NuGet 套件。請啟用 NuGet 套件還原，以下載該套件。如需詳細資訊，請參閱 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的檔案是 {0}。</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Grpc.Core.2.45.0\build\net45\Grpc.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Grpc.Core.2.45.0\build\net45\Grpc.Core.targets'))" />
+    <Error Condition="!Exists('..\packages\AspectInjector.2.7.3\build\netstandard2.0\AspectInjector.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AspectInjector.2.7.3\build\netstandard2.0\AspectInjector.targets'))" />
   </Target>
+  <Import Project="..\packages\AspectInjector.2.7.3\build\netstandard2.0\AspectInjector.targets" Condition="Exists('..\packages\AspectInjector.2.7.3\build\netstandard2.0\AspectInjector.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

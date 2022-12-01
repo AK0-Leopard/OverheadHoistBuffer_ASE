@@ -142,6 +142,12 @@
       <HintPath>..\packages\KingAOP.1.0.0\lib\KingAOP.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Logrila.Logging, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Logrila.Logging.1.0.3.0\lib\net46\Logrila.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Logrila.Logging.NLogIntegration, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Logrila.Logging.NLogIntegration.1.0.3.0\lib\net46\Logrila.Logging.NLogIntegration.dll</HintPath>
+    </Reference>
     <Reference Include="M2Mqtt.Net">
       <HintPath>..\ScriptControl\DLL\M2Mqtt.Net.dll</HintPath>
     </Reference>
@@ -299,6 +305,12 @@
     <Compile Include="UI\Maintenance\AlarmEnablePopupForm.Designer.cs">
       <DependentUpon>AlarmEnablePopupForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\Maintenance\VehicleMaintenanceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Maintenance\VehicleMaintenanceForm.Designer.cs">
+      <DependentUpon>VehicleMaintenanceForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\Maintenance\ShelfMaintenanceForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -310,12 +322,6 @@
     </Compile>
     <Compile Include="UI\OHT_FormNew2.Designer.cs">
       <DependentUpon>OHT_FormNew2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\OHT_FormNew.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\OHT_FormNew.Designer.cs">
-      <DependentUpon>OHT_FormNew.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\Operate\DebugFormNew.cs">
       <SubType>Form</SubType>
@@ -639,6 +645,18 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Config\ASE\CSV\ALARMMAP.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE\CSV\ZONECOMMANDINFO.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE2\CSV\ZONECOMMANDINFO.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LINE3\CSV\ZONECOMMANDINFO.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ASE_LOOP\CSV\ZONECOMMANDINFO.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Config\ASE_TEST\AddressBaseDefs_simple.config">
@@ -1133,14 +1151,14 @@
     <EmbeddedResource Include="UI\Maintenance\AlarmEnablePopupForm.resx">
       <DependentUpon>AlarmEnablePopupForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UI\Maintenance\VehicleMaintenanceForm.resx">
+      <DependentUpon>VehicleMaintenanceForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\Maintenance\ShelfMaintenanceForm.resx">
       <DependentUpon>ShelfMaintenanceForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\OHT_FormNew2.resx">
       <DependentUpon>OHT_FormNew2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\OHT_FormNew.resx">
-      <DependentUpon>OHT_FormNew.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Operate\DebugFormNew.resx">
       <DependentUpon>DebugFormNew.cs</DependentUpon>

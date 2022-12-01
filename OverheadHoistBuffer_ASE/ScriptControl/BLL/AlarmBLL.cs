@@ -161,6 +161,8 @@ namespace com.mirle.ibg3k0.sc.BLL
                 //{
                 //    alarmEq = eq_id.Remove(0, 12);
                 //}
+                string adr_id = "";
+                string port_id = "";
 
                 if (IsAlarmExist(alarmEq, error_code)) return null;
                 string alarmUnitType = "LINE";
@@ -172,6 +174,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 else if (scApp.TransferService.isUnitType(eq_id, Service.UnitType.CRANE))
                 {
                     alarmUnitType = "CRANE";
+                    (adr_id, port_id) = trySetVehicleinfoWhenAlarmHappend(eq_id, mcsCmdData);
                 }
                 else if (scApp.TransferService.isUnitType(eq_id, Service.UnitType.NTB))
                 {
@@ -213,11 +216,13 @@ namespace com.mirle.ibg3k0.sc.BLL
                 }
 
 
+                //string strNow = BCFUtility.formatDateTime(DateTime.Now, SCAppConstants.TimestampFormat_19);
+                DateTime date_time_now = DateTime.Now;
 
                 ALARM alarm = new ALARM()
                 {
                     EQPT_ID = eq_id,
-                    RPT_DATE_TIME = DateTime.Now,
+                    RPT_DATE_TIME = date_time_now,
                     ALAM_CODE = error_code,
                     ALAM_LVL = alarmMap == null ? E_ALARM_LVL.Warn : alarmMap.ALARM_LVL,
                     ALAM_STAT = ProtocolFormat.OHTMessage.ErrorStatus.ErrSet,
@@ -228,11 +233,14 @@ namespace com.mirle.ibg3k0.sc.BLL
                     UnitState = "3",
                     RecoveryOption = "",
                     CMD_ID = "",
+                    ADDRESS_ID = adr_id,
+                    PORT_ID = port_id,
                 };
 
                 if (mcsCmdData != null)
                 {
                     alarm.CMD_ID = mcsCmdData.CMD_ID.Trim();
+                    alarm.CARRIER_ID = SCUtility.Trim(mcsCmdData.BOX_ID, true);
                 }
 
                 if (scApp.TransferService.isUnitType(eq_id, UnitType.CRANE))
@@ -267,6 +275,50 @@ namespace com.mirle.ibg3k0.sc.BLL
                 //}
 
                 return alarm;
+            }
+        }
+
+        private (string adr_id, string port_id) trySetVehicleinfoWhenAlarmHappend(string eq_id, ACMD_MCS cmdMCS)
+        {
+            try
+            {
+                var vh = scApp.VehicleBLL.cache.getVhByID(eq_id);
+                if (vh == null)
+                    return ("", "");
+                string current_adr_id = SCUtility.Trim(vh.CUR_ADR_ID);
+                string current_port_id = "";
+                if (cmdMCS == null)
+                {
+                    current_port_id = "";
+                }
+                else
+                {
+                    //var port_stations = scApp.PortStationBLL.OperateCatch.loadPortStationsByAdrID(current_adr_id);
+                    var port_stations = scApp.PortDefBLL.cache.loadPortDefByAdrID(current_adr_id);
+                    var port_stations_id = port_stations.Select(p => p.PLCPortID).ToList();
+                    if (port_stations_id.Contains(cmdMCS.HOSTSOURCE))
+                    {
+                        current_port_id = cmdMCS.HOSTSOURCE;
+                    }
+                    else if (port_stations_id.Contains(cmdMCS.HOSTDESTINATION))
+                    {
+                        current_port_id = cmdMCS.HOSTDESTINATION;
+                    }
+                    else if (port_stations_id.Contains(cmdMCS.RelayStation))
+                    {
+                        current_port_id = cmdMCS.RelayStation;
+                    }
+                    else
+                    {
+                        current_port_id = "";
+                    }
+                }
+                return (current_adr_id, current_port_id);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception:");
+                return ("", "");
             }
         }
 
@@ -319,9 +371,10 @@ namespace com.mirle.ibg3k0.sc.BLL
                     ALARM alarm = alarmDao.getSetAlarm(con, eq_id, error_code);
                     if (alarm != null)
                     {
-
+                        //string strNow = BCFUtility.formatDateTime(DateTime.Now, SCAppConstants.TimestampFormat_19);
+                        DateTime date_time_now = DateTime.Now;
                         alarm.ALAM_STAT = ProtocolFormat.OHTMessage.ErrorStatus.ErrReset;
-                        alarm.END_TIME = DateTime.Now;
+                        alarm.END_TIME = date_time_now;
                         alarmDao.updateAlarm(con, alarm);
 
                         CheckSetAlarm();

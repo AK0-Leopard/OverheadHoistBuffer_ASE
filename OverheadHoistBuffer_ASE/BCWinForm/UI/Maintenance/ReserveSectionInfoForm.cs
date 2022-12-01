@@ -24,7 +24,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
 
             List<string> lstVh = new List<string>();
             lstVh.Add(string.Empty);
-            lstVh.AddRange(bcApp.SCApplication.VehicleBLL.loadAllVehicle().Select(vh => vh.VEHICLE_ID).ToList());
+            lstVh.AddRange(bcApp.SCApplication.VehicleBLL.loadAllVehicle().Select(vh => sc.Common.SCUtility.Trim(vh.VEHICLE_ID, true)).ToList());
             string[] allVh = lstVh.ToArray();
             BCUtility.setComboboxDataSource(cmb_vh_ids, allVh);
 

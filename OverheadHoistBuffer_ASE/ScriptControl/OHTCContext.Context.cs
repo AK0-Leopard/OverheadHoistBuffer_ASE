@@ -12,8 +12,6 @@ namespace com.mirle.ibg3k0.sc
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.Core.Objects;
-    using System.Linq;
     
     public partial class OHTC_DevEntities : DbContext
     {
@@ -103,15 +101,5 @@ namespace com.mirle.ibg3k0.sc
         public virtual DbSet<VSECTION_100> VSECTION_100 { get; set; }
         public virtual DbSet<VALARM> VALARM { get; set; }
         public virtual DbSet<VHCMD_OHTC_MCS> VHCMD_OHTC_MCS { get; set; }
-    
-        public virtual ObjectResult<Nullable<System.Guid>> SqlQueryNotificationStoredProcedure_0864f1ca_8e0c_4f04_ba1a_6a30eca7dcef()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<System.Guid>>("SqlQueryNotificationStoredProcedure_0864f1ca_8e0c_4f04_ba1a_6a30eca7dcef");
-        }
-    
-        public virtual ObjectResult<Nullable<System.Guid>> SqlQueryNotificationStoredProcedure_2c8d3593_89e6_411b_aa38_e023612bf644()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<System.Guid>>("SqlQueryNotificationStoredProcedure_2c8d3593_89e6_411b_aa38_e023612bf644");
-        }
     }
 }

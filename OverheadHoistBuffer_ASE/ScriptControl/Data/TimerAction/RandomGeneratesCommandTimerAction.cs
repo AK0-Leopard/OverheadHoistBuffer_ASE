@@ -154,8 +154,9 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
                 string BC_CPU = Math.Round(bc_cpu.NextValue(), 2).ToString();
                 string CPU = $"{cpu.NextValue():n1}";
                 string Memory = $"{memory.NextValue():n0}";
-
-                string record_message = $"{DateTime.Now.ToString(SCAppConstants.DateTimeFormat_19)},{工作集_Process},{工作集},{私有工作集},{BC_CPU},{CPU},{Memory}";
+                var thread_pool_info = getThreadPoolInfo();
+                string record_message = $"{DateTime.Now.ToString(SCAppConstants.DateTimeFormat_19)},{工作集_Process},{工作集},{私有工作集},{BC_CPU},{CPU},{Memory}," +
+                                        $"{thread_pool_info.availableThreads},{thread_pool_info.availableThreadsAsyncIO},{thread_pool_info.maxThreads},{thread_pool_info.maxThreadsAsyncIO},{thread_pool_info.minThreads},{thread_pool_info.minThreadsAsyncIO}";
                 BCMemoryLog.Info(record_message);
 
                 //BCMemoryLog.Debug("{0}:{1}  {2:N}KB", ps.ProcessName, "工作集(Process)", ps.WorkingSet64 / 1024);
@@ -167,6 +168,34 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
                 //BCMemoryLog.Debug("Memory: {0:n0}%", memory.NextValue());
             }
             catch (Exception ex) { }
+        }
+
+        public (string availableThreads, string availableThreadsAsyncIO, string maxThreads, string maxThreadsAsyncIO, string minThreads, string minThreadsAsyncIO)
+                getThreadPoolInfo()
+        {
+            int workThreads, completionPortThreads;
+            System.Threading.ThreadPool.GetAvailableThreads(out workThreads, out completionPortThreads);
+            //Console.WriteLine($"GetAvailableThreads => workThreads:{workThreads};completionPortThreads:{completionPortThreads}");
+            //scApp.TransferService.TransferServiceLogger.Info($"GetAvailableThreads => workThreads:{workThreads};completionPortThreads:{completionPortThreads}");
+            string available_threads = workThreads.ToString();
+            string available_threads_async_io = completionPortThreads.ToString();
+
+            System.Threading.ThreadPool.GetMaxThreads(out workThreads, out completionPortThreads);
+            //Console.WriteLine($"GetMaxThreads => workThreads:{workThreads};completionPortThreads:{completionPortThreads}");
+            //scApp.TransferService.TransferServiceLogger.Info($"GetMaxThreads => workThreads:{workThreads};completionPortThreads:{completionPortThreads}");
+            string max_threads = workThreads.ToString();
+            string max_threads_async_io = completionPortThreads.ToString();
+
+            System.Threading.ThreadPool.GetMinThreads(out workThreads, out completionPortThreads);
+            //Console.WriteLine($"GetMinThreads => workThreads:{workThreads};completionPortThreads:{completionPortThreads}");
+            //scApp.TransferService.TransferServiceLogger.Info($"GetMinThreads => workThreads:{workThreads};completionPortThreads:{completionPortThreads}");
+            string min_threads = workThreads.ToString();
+            string min_threads_async_io = completionPortThreads.ToString();
+
+            return (available_threads, available_threads_async_io,
+                    max_threads, max_threads_async_io,
+                    min_threads, min_threads_async_io);
+
         }
 
 
@@ -243,14 +272,84 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
         }
         private void ShelfTestByOrder()
         {
+            if (ACMD_MCS.MCS_CMD_InfoList != null && ACMD_MCS.MCS_CMD_InfoList.Count >= 8)
+                return;
+            List<CassetteData> cassetteDatas = scApp.CassetteDataBLL.loadCassetteData();
+            if (cassetteDatas == null || cassetteDatas.Count() == 0) return;
+            //找一份目前儲位的列表
+            shelfDefs = scApp.ShelfDefBLL.LoadEnableShelf();
+            //如果取完還是空的 就跳出去
+            if (shelfDefs == null || shelfDefs.Count == 0)
+                return;
+
+            //取得目前當前在線內的Carrier
+            //找出在儲位中的Cassette
+
+            cassetteDatas = cassetteDatas.
+                Where(cst => scApp.TransferService.isShelfPort(cst.Carrier_LOC) &&
+                             SCUtility.isEmpty(cst.CSTID)).ToList();
+            List<string> current_cst_at_shelf_id = cassetteDatas.
+                Select(cst => SCUtility.Trim(cst.Carrier_LOC, true)).
+                ToList();
+            //刪除目前cst所在的儲位，讓他排除在Cycle Run的列表中
+            foreach (var shelf in shelfDefs.ToList())
+            {
+                if (current_cst_at_shelf_id.Contains(SCUtility.Trim(shelf.ShelfID)))
+                {
+                    shelfDefs.Remove(shelf);
+                }
+            }
+            foreach (var cst in cassetteDatas.ToList())
+            {
+                //if (cst.hasCommandExcute(scApp.CMDBLL))
+                if (scApp.CMDBLL.getCMD_ByBoxID(cst.BOXID) != null)
+                {
+                    cassetteDatas.Remove(cst);
+                }
+            }
+            //隨機找出一個要放置的Zone
+            CassetteData process_cst = cassetteDatas[0];
+            string cst_zone_id = process_cst.getZoneID(scApp.TransferService);
+
+            shelfDefs = shelfDefs.Where(shelf => !SCUtility.isMatche(shelf.ZoneID, cst_zone_id)).ToList();
+            List<string> orther_zone_ids = shelfDefs.Select(shelf => shelf.ZoneID).Distinct().ToList();
+            bool is_creat_zone_id = true;
+            string desc_name = "";
+            if (is_creat_zone_id)
+            {
+                int task_RandomIndex = rnd_Index.Next(orther_zone_ids.Count - 1);
+                desc_name = orther_zone_ids[task_RandomIndex];
+            }
+            else
+            {
+                int task_RandomIndex = rnd_Index.Next(shelfDefs.Count - 1);
+                ShelfDef target_shelf_def = shelfDefs[task_RandomIndex];
+                scApp.MapBLL.getAddressID(process_cst.Carrier_LOC, out string from_adr);
+                desc_name = from_adr;
+            }
+
+            bool isSuccess = true;
+            isSuccess = scApp.TransferService.Manual_InsertCmd(process_cst.Carrier_LOC, desc_name) == "OK";
+            //isSuccess &= scApp.CMDBLL.doCreatTransferCommand(vh.VEHICLE_ID, "", process_cst.CSTID.Trim(),
+            //                    E_CMD_TYPE.LoadUnload,
+            //                    process_cst.Carrier_LOC,
+            //                    target_shelf_def.ShelfID, 0, 0,
+            //                    process_cst.BOXID.Trim(), process_cst.LotID,
+            //                    from_adr, target_shelf_def.ADR_ID);
+            //shelfDefs.Remove(target_shelf_def);
+        }
+        private void ShelfTestByOrder_old()
+        {
+            if (ACMD_MCS.MCS_CMD_InfoList != null && ACMD_MCS.MCS_CMD_InfoList.Count >= 8)
+                return;
             List<AVEHICLE> vhs = scApp.VehicleBLL.cache.loadVhs();
             foreach (AVEHICLE vh in vhs)
             {
                 if (vh.isTcpIpConnect &&
                     vh.MODE_STATUS == ProtocolFormat.OHTMessage.VHModeStatus.AutoRemote &&
-                    vh.ACT_STATUS == ProtocolFormat.OHTMessage.VHActionStatus.NoCommand &&
-                    !SCUtility.isEmpty(vh.CUR_ADR_ID) &&
-                    !scApp.CMDBLL.isCMD_OHTCExcuteByVh(vh.VEHICLE_ID))
+                    //vh.ACT_STATUS == ProtocolFormat.OHTMessage.VHActionStatus.NoCommand &&
+                    SCUtility.isEmpty(vh.MCS_CMD) &&
+                    !SCUtility.isEmpty(vh.CUR_ADR_ID))
                 {
                     List<string> vh_has_been_excuted_shelf = cycleRunRecord_VhAndShelf[vh.VEHICLE_ID];
                     List<CassetteData> cassetteDatas = scApp.CassetteDataBLL.loadCassetteData();
@@ -290,16 +389,17 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
                     }
                     //隨機找出一個要放置的shelf
                     CassetteData process_cst = cassetteDatas[0];
-                    //int task_RandomIndex = rnd_Index.Next(shelfDefs.Count - 1);
-                    ShelfDef target_shelf_def = shelfDefs.First();
+                    int task_RandomIndex = rnd_Index.Next(shelfDefs.Count - 1);
+                    ShelfDef target_shelf_def = shelfDefs[task_RandomIndex];
                     scApp.MapBLL.getAddressID(process_cst.Carrier_LOC, out string from_adr);
                     bool isSuccess = true;
-                    isSuccess &= scApp.CMDBLL.doCreatTransferCommand(vh.VEHICLE_ID, "", process_cst.CSTID.Trim(),
-                                        E_CMD_TYPE.LoadUnload,
-                                        process_cst.Carrier_LOC,
-                                        target_shelf_def.ShelfID, 0, 0,
-                                        process_cst.BOXID.Trim(), process_cst.LotID,
-                                        from_adr, target_shelf_def.ADR_ID);
+                    isSuccess = scApp.TransferService.Manual_InsertCmd(process_cst.Carrier_LOC, target_shelf_def.ShelfID) == "OK";
+                    //isSuccess &= scApp.CMDBLL.doCreatTransferCommand(vh.VEHICLE_ID, "", process_cst.CSTID.Trim(),
+                    //                    E_CMD_TYPE.LoadUnload,
+                    //                    process_cst.Carrier_LOC,
+                    //                    target_shelf_def.ShelfID, 0, 0,
+                    //                    process_cst.BOXID.Trim(), process_cst.LotID,
+                    //                    from_adr, target_shelf_def.ADR_ID);
                     if (isSuccess)
                     {
                         cycleRunRecord_VhAndShelf[vh.VEHICLE_ID].Add(target_shelf_def.ShelfID);
@@ -426,7 +526,7 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
                         int target_port_num = is_even_num ? port_num - 1 : port_num + 1;
                         string target_port_id = $"B7_OHBLOOP_T{Convert.ToString(target_port_num, 16).PadLeft(2, '0')}";
 
-                        PortDef target_port = scApp.PortDefBLL.cache.getCVPortDef(target_port_id);
+                        PortDef target_port = scApp.PortDefBLL.cache.getPortDef(target_port_id);
                         string box_id = SCUtility.isEmpty(source_port_info.BoxID) ? "BOX01" : SCUtility.Trim(source_port_info.BoxID);
                         string cst_id = source_port_info.CassetteID.ToUpper().Contains("NO") ? "" : SCUtility.Trim(source_port_info.CassetteID);
                         bool is_success = scApp.CMDBLL.doCreatTransferCommand(vh.VEHICLE_ID, "", cst_id,

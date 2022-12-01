@@ -23,13 +23,14 @@ using com.mirle.ibg3k0.sc.Data.VO;
 using NLog;
 using com.mirle.ibg3k0.sc.Data;
 using System.Transactions;
+using com.mirle.ibg3k0.sc.BLL.Interface;
 
 namespace com.mirle.ibg3k0.sc.BLL
 {
     /// <summary>
     /// Class SequenceBLL.
     /// </summary>
-    public class SequenceBLL
+    public class SequenceBLL : ISequenceBLL
     {
         /// <summary>
         /// The sc application

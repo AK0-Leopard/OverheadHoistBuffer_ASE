@@ -266,8 +266,20 @@ namespace VehicleControl_Viewer.UI.Components
 
         public void resreshPosition()
         {
-            double display_x = vh.X_Axis - (this.ActualWidth / 2);
-            double display_y = vh.Y_Axis - (this.ActualHeight) - 150;
+
+
+            double display_x = 0;
+            double display_y = 0;
+            if (!vh.IS_INSTALLED && vh.X_Axis == 0 && vh.Y_Axis == 0)
+            {
+                display_x = 500 - (this.ActualWidth / 2);
+                display_y = -1000 - (this.ActualHeight) - 150;
+            }
+            else
+            {
+                display_x = vh.X_Axis - (this.ActualWidth / 2);
+                display_y = vh.Y_Axis - (this.ActualHeight) - 150;
+            }
             if (display_x != doubleAnimation_x.To || display_y != doubleAnimation_y.To)
             {
                 doubleAnimation_x.To = display_x;

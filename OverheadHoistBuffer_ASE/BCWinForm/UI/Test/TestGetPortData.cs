@@ -131,6 +131,12 @@ namespace com.mirle.ibg3k0.bc.winform
 
             GetPortData();
             openTime = DateTime.Now;
+
+            if (sc.Common.SCUtility.isMatche(BCApp.LoginUserID, App.BCAppConstants.ADMIN_USER_NAME))
+            {
+                button5.Enabled = true;
+            }
+
         }
         public void SetApp(App.BCApplication app)
         {
@@ -316,7 +322,15 @@ namespace com.mirle.ibg3k0.bc.winform
 
         private void button5_Click(object sender, EventArgs e)
         {
-            transferService.PortCommanding(comboBox1.Text, false);
+            string port_id = comboBox1.Text;
+            DialogResult confirmResult = MessageBox.Show(this, $"確認是否要取消Port ID:{port_id}的預約?",
+                App.BCApplication.getMessageString("CONFIRM"), MessageBoxButtons.YesNo);
+            if (confirmResult != System.Windows.Forms.DialogResult.Yes)
+            {
+                return;
+            }
+
+            transferService.PortCommanding(comboBox1.Text, false, "測試用 UI");
         }
 
         private async void button4_Click(object sender, EventArgs e)

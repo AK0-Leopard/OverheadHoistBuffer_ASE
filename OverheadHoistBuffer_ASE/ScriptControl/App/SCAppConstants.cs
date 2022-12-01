@@ -729,6 +729,19 @@ namespace com.mirle.ibg3k0.sc.App
         }
 
 
+        public enum SEND_CMD_OHTC_NG_TYPE
+        {
+            None,
+            InitialFail,
+            CheckCmdFail,
+            Timeout,
+            SendFail,
+            DataCheckFail,
+            VhReject
+        }
+
+
+
         #endregion Cmd Status
 
         #region Vehicle State Machine

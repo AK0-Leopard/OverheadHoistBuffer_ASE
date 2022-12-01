@@ -53,7 +53,7 @@ message Timestamp {
 	SYSTEMOUT = 11;
 	SYSTEMIN = 12;
 	TECHINGMOVE = 13;
-	ROUND=99;
+	CYCLEMOVE=31;
   }
    enum EventType {
     LoadArrivals = 0;
@@ -76,6 +76,7 @@ message Timestamp {
 	Scan = 17;
 	BlockRelease = 21;
 	HIDRelease = 22;
+	ZoneCommandReq = 31;
 	BlockHIDRelease = 23;
 	CommandComplete = 99;
   }
@@ -99,12 +100,18 @@ message Timestamp {
 	CmpStatusIDMisMatch = 23;
 	CmpStatusIDReadFailed = 24;
 	CmpStatusIDReadDuplicate = 25;
+	CmpStatusIDDoubleStorage = 26;
+	CmpStatusIDEmptyRetrival = 27;
+	CmpStatusIDCSTTypeMismatch = 28;
+	CmpStatusCycleMove = 31;
 	CmpStatusInterlockError = 64;
-
-	CmpStatusLongTimeInaction = 98;
-	CmpStatusForceFinishByOp = 99;
+	//C自己內部的 Code
+	CmpStatusCommandInitailFail = 96;
+	CmpStatusLongTimeInaction = 97;
+	CmpStatusForceAbnormalFinishByOp = 98;
+	CmpStatusForceNormalFinishByOp = 99;
   }
-  	enum CMDCancelType {
+  enum CMDCancelType {
 	CMD_None = 0;
 	CMD_Retry = 1;
 	CMD_Cancel = 20;
@@ -129,6 +136,7 @@ message Timestamp {
 	PauseType_ManualBlock = 7;
 	PauseType_ManualHID = 8;
 	PauseType_All = 9;
+	PauseType_SyncStartUp = 11;
   }
    enum VhGuideStatus{
     Unlock = 0;
@@ -176,15 +184,15 @@ message Timestamp {
 		int32 ReplyCode = 1;
   }
 
-   message ID_11_BASIC_INFO_REP {
-		int32 TravelBasicDataCount = 1;
-		int32 SectionDataCount = 2;
-		int32 AddressDataCount = 3;
-		int32 ScaleDataCount = 4;
-		int32 ContrlDataCount = 5;
-		int32 GuideDataCount = 6;
+
+  message ZoneCommandInfo {
+	string ZoneID = 1;
+	repeated string PortIDs = 2;
+   }
+   message ID_11_ZONE_COMMAND_INFO_REP {
+	repeated ZoneCommandInfo ZoneCommandInfos = 1;
   }
-   message ID_111_BASIC_INFO_RESPONSE {
+   message ID_111_ZONE_COMMAND_INFO_RESPONSE {
 		int32 ReplyCode = 1;
   }
 
@@ -461,6 +469,7 @@ message Timestamp {
 	string CurrentSecID = 13;
 	uint32 Sec_Distance = 14;
 	BCRReadResult BCRReadResult =15;
+	string ZoneCommandID =16;
   }
 
   message ID_36_TRANS_EVENT_RESPONSE {
@@ -473,6 +482,8 @@ message Timestamp {
 	string RenameLOTID = 7;
 	CMDCancelType ReplyActiveType = 8;
 	int32 ReplyCode = 9;				  
+	string ZoneCommandPortID = 10;				  
+    EventType EventType = 99;
   }
 
   message ID_37_TRANS_CANCEL_REQUEST {
@@ -731,6 +742,7 @@ message Timestamp {
    {
         Normal = 0;
         MTL = 1;
+        Curve = 2;
    }
 
    enum TSCState
@@ -1081,8 +1093,8 @@ message Timestamp {
 		ID_102_BASIC_INFO_VERSION_REP Basic_Info_Version_Rep = 102;
 		ID_2_BASIC_INFO_VERSION_RESPONSE Basic_Info_Version_Resp = 2;
 
-		ID_11_BASIC_INFO_REP Basic_Info_Rep = 11;
-		ID_111_BASIC_INFO_RESPONSE Basic_Info_Resp = 111;
+		ID_11_ZONE_COMMAND_INFO_REP Zone_Command_Info_Rep = 11;
+		ID_111_ZONE_COMMAND_INFO_RESPONSE Zone_Command_Info_Resp = 111;
 
 		ID_13_TAVELLING_DATA_REP Tavelling_Data_Rep = 13;
 		ID_113_TAVELLING_DATA_RESPONSE Tavelling_Data_Resp = 113;

@@ -39,11 +39,10 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
             }
         }
 
-        public void UpdateShelfDef(DBConnection_EF conn, ShelfDef shelfdef)
+        public void UpdateShelfDef(DBConnection_EF conn)
         {
             try
             {
-                shelfdef.TrnDT = DateTime.Now.ToString(sc.App.SCAppConstants.TimestampFormat_19);
                 conn.SaveChanges();
             }
             catch (Exception ex)
@@ -263,14 +262,16 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                 throw;
             }
         }
-        public List<ShelfDef> loadHasChangeShelfDefByAfterDateTime(DBConnection_EF conn, string afterDateTime)  //取得不是有改變狀態的儲位
+        public int getEnableShelfCountByZone(DBConnection_EF conn, string zoneID)
         {
             try
             {
                 var result = conn.ShelfDef
-                    .Where(x => x.TrnDT != "1" &&
-                                x.TrnDT.CompareTo(afterDateTime) >= 0)
-                    .ToList();
+                    .Where(x => x.ZoneID.Trim() == zoneID.Trim() &&
+                                x.ShelfState == ShelfDef.E_ShelfState.EmptyShelf &&
+                                x.Enable == "Y")
+                    .Count();
+                //.FirstOrDefault();
                 return result;
             }
             catch (Exception ex)

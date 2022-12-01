@@ -11,6 +11,7 @@
 //**********************************************************************************
 using com.mirle.ibg3k0.bcf.App;
 using com.mirle.ibg3k0.sc.App;
+using com.mirle.ibg3k0.sc.BLL.Interface;
 using com.mirle.ibg3k0.sc.Common;
 using com.mirle.ibg3k0.sc.Data;
 using com.mirle.ibg3k0.sc.Data.DAO;
@@ -34,7 +35,7 @@ using static com.mirle.ibg3k0.sc.ShelfDef; //A20.05.15
 
 namespace com.mirle.ibg3k0.sc.BLL
 {
-    public class CMDBLL
+    public class CMDBLL : ICMDBLL
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
         CMD_OHTCDao cmd_ohtcDAO = null;
@@ -742,12 +743,29 @@ namespace com.mirle.ibg3k0.sc.BLL
 
             return isSuccess;
         }
+
+        public bool isCMD_OHTCWillSending(string vhID)
+        {
+            var cmds_ohtc = ACMD_OHTC.loadCmdOhtcListOfCmdObj();
+            int count = cmds_ohtc.Where(cmd => SCUtility.isMatche(cmd.VH_ID, vhID) &&
+                                                    cmd.CMD_STAUS <= E_CMD_STATUS.Sending)
+                                        .Count();
+            return count != 0;
+
+            //int count = 0;
+            //using (DBConnection_EF con = DBConnection_EF.GetUContext())
+            //{
+            //    count = cmd_ohtcDAO.getVhWillSendingCMDConut(con, vhID);
+            //}
+            //return count != 0;
+        }
+
         //*************************************************
         //A20.05.15 此目的為得出一個以source到各shelf的距離大小的升冪list，讓原邏輯可以直接接續使用。
         //  doSortShelfDataByDistanceFromHostSource()
         //   判斷目前此筆命令的起點得到最近的port(若為loop 則需判斷順向問題)
         //   => 使用 address 或 X Y 座標去得到 shelfData 這個 list 中所有的 shelf 到 HostSource 的路徑長度對原本的 shelfData 進行排序去得到新的shelfData list
-        public List<ShelfDef> doSortShelfDataByDistanceFromHostSource(List<ShelfDef> originShelfData, string hostSource)
+        public List<ShelfDef> doSortShelfDataByDistanceFromHostSource(List<ShelfDef> originShelfData, string hostSource, IComparer<ShelfDef> sortObj)
         {
             try
             {
@@ -792,7 +810,8 @@ namespace com.mirle.ibg3k0.sc.BLL
                 //A20.05.15      O(N^2) 根據MSDN 的 list sort
                 // 3. 再來呼叫list的sort 去處理此list
                 // 此處之處理方式指定在partial ShelfDef.cs 中的 IComparer
-                sortedShelfData.Sort(new ShelfDefCompareByAddressDistance());
+                //sortedShelfData.Sort(new ShelfDefCompareByAddressDistance());
+                sortedShelfData.Sort(sortObj);
                 #endregion
 
 
@@ -1485,9 +1504,9 @@ namespace com.mirle.ibg3k0.sc.BLL
 
         public bool updateCMD_MCS_TranStatus2Queue(string cmd_id)
         {
-            return updateCMD_MCS_TranStatus2Queue(cmd_id, false);
+            return updateCMD_MCS_TranStatus2Queue(cmd_id, "", false);
         }
-        public bool updateCMD_MCS_TranStatus2Queue(string cmd_id, bool isKeepRelatSt)
+        public bool updateCMD_MCS_TranStatus2Queue(string cmd_id, string recoverDest, bool isKeepRelatSt)
         {
             bool isSuccess = true;
             try
@@ -1499,6 +1518,10 @@ namespace com.mirle.ibg3k0.sc.BLL
                     cmd.COMMANDSTATE = 0;
                     if (!isKeepRelatSt)
                         cmd.RelayStation = "";
+                    if (!SCUtility.isEmpty(recoverDest))
+                    {
+                        cmd.HOSTDESTINATION = recoverDest;
+                    }
                     cmd_mcsDao.update(con, cmd);
                 }
             }
@@ -2970,7 +2993,8 @@ namespace com.mirle.ibg3k0.sc.BLL
                     if (cmd_type == E_CMD_TYPE.MTLHome ||
                        cmd_type == E_CMD_TYPE.MoveToMTL ||
                        cmd_type == E_CMD_TYPE.SystemOut ||
-                       cmd_type == E_CMD_TYPE.SystemIn)
+                       cmd_type == E_CMD_TYPE.SystemIn ||
+                       cmd_type == E_CMD_TYPE.Round)
                     {
                         //not thing...
                     }
@@ -3042,24 +3066,30 @@ namespace com.mirle.ibg3k0.sc.BLL
                     }
                     else
                     {
-                        string result = "";
-                        if (!IsCommandWalkable(vh_id, cmd_type, vh_current_adr, source_address, destination_address, out result))
+                        if (cmd_type == E_CMD_TYPE.Round)
                         {
-                            check_result.Result.AppendLine(result);
-                            check_result.Result.AppendLine($" please check the segment is enable.");
-                            check_result.Result.AppendLine("");
-                            check_result.IsSuccess &= false;
+                            //not thing...
+                        }
+                        else
+                        {
+                            if (!IsCommandWalkable(vh_id, cmd_type, vh_current_adr, source_address, destination_address, out string result))
+                            {
+                                check_result.Result.AppendLine(result);
+                                check_result.Result.AppendLine($" please check the segment is enable.");
+                                check_result.Result.AppendLine("");
+                                check_result.IsSuccess &= false;
+                            }
                         }
                     }
                     //如果該筆Command是MCS Cmd，只需要檢查有沒有已經在Queue中的，有則不能Creat
                     if (!SCUtility.isEmpty(cmd_id_mcs) ||
                         cmd_type == E_CMD_TYPE.Move_MTPort)
                     {
-                        if (isCMD_OHTCQueueByVh(vh_id))
+                        if (isCMD_OHTCQueueOrSendingByVh(vh_id))
                         {
                             check_result.IsSuccess &= false;
                             check_result.Result.AppendLine($" want to creat mcs transfer command:{cmd_id_mcs} of ACMD_OHTC, " +
-                                                           $"but vh:{vh_id} has ACMD_OHTC in queue");
+                                                           $"but vh:{vh_id} has ACMD_OHTC in queue or sending");
                             check_result.Result.AppendLine("");
                         }
                     }
@@ -3089,6 +3119,17 @@ namespace com.mirle.ibg3k0.sc.BLL
                         LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(CMDBLL), Device: string.Empty,
                                       Data: check_result.Result.ToString(),
                                       XID: check_result.Num);
+                    }
+                    else
+                    {
+                        try
+                        {
+                            ACMD_OHTC.CMD_OHTC_InfoList.TryAdd(cmd_obj.CMD_ID, cmd_obj);
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.Error(ex, "Exception");
+                        }
                     }
                     setCallContext(CALL_CONTEXT_KEY_WORD_OHTC_CMD_CHECK_RESULT, check_result);
                 }
@@ -3176,46 +3217,7 @@ namespace com.mirle.ibg3k0.sc.BLL
 
 
 
-        public ACMD_OHTC doCreatTransferCommandObj(string vh_id, string cmd_id_mcs, string cst_id, E_CMD_TYPE cmd_type,
-                                    string source, string destination, int priority, int estimated_time, SCAppConstants.GenOHxCCommandType gen_cmd_type,
-                                    string box_id, string lot_id, string source_address, string destination_address)
-        {
-
-            try
-            {
-                if (SCUtility.isEmpty(vh_id))
-                {
-                    return null;
-                }
-                else if (SCUtility.isEmpty(cmd_id_mcs))
-                {
-
-                    if (isCMD_OHTCExcuteByVh(vh_id))
-                    {
-                        return null;
-                    }
-                }
-                //如果該筆Command是MCS Cmd，只需要檢查有沒有已經在Queue中的，有則不能Creat
-                else
-                {
-                    if (isCMD_OHTCQueueByVh(vh_id))
-                    {
-                        return null;
-                    }
-                }
-
-                return buildCommand_OHTC(vh_id, cmd_id_mcs, cmd_type,
-                                             box_id, cst_id, lot_id,
-                                             source, destination, source_address, destination_address,
-                                             priority, estimated_time, gen_cmd_type, false);
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex, "Exception");
-                return null;
-            }
-
-        }
+        
 
 
 
@@ -3403,6 +3405,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                         if (status >= E_CMD_STATUS.NormalEnd)
                             scApp.VehicleBLL.updateVehicleExcuteCMD(cmd.VH_ID, string.Empty, string.Empty);
 
+                        ACMD_OHTC.tryUpdateCMD_OHTCStatus(cmd_id, status);
                     }
                     isSuccess = true;
                 }
@@ -3416,7 +3419,48 @@ namespace com.mirle.ibg3k0.sc.BLL
 
         }
 
+        public bool updateOHTCCommandToFinishByCmdID(string cmd_id, E_CMD_STATUS status, CompleteStatus completeStatus, int travelDis = 0)
+        {
+            bool isSuccess = false;
+            //using (DBConnection_EF con = new DBConnection_EF())
 
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    ACMD_OHTC cmd = cmd_ohtcDAO.getByID(con, cmd_id);
+                    if (cmd != null)
+                    {
+                        cmd.CMD_PROGRESS = travelDis;
+                        cmd.CMD_END_TIME = DateTime.Now;
+                        cmd_ohtc_detailDAO.DeleteByBatch(con, cmd.CMD_ID);
+                        cmd.CMD_STAUS = status;
+
+                        if (cmd.COMPLETE_STATUS == CompleteStatus.CmpStatusIdemptyRetrival ||
+                            cmd.COMPLETE_STATUS == CompleteStatus.CmpStatusIddoubleStorage)
+                        {
+                            //如果命令狀態已經是空取、二重格
+                            //則不再對該欄位進行複寫
+                        }
+                        else
+                        {
+                            cmd.COMPLETE_STATUS = completeStatus;
+                        }
+
+                        cmd_ohtcDAO.Update(con, cmd);
+
+                        scApp.VehicleBLL.updateVehicleExcuteCMD(cmd.VH_ID, string.Empty, string.Empty);
+                    }
+                    isSuccess = true;
+                }
+                return isSuccess;
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return false;
+            }
+        }
         public bool updateCMD_OHxC_Status2ReadyToReWirte(string cmd_id, out ACMD_OHTC cmd_ohtc)
         {
             bool isSuccess = false;
@@ -3446,6 +3490,29 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
 
         }
+        public void updateCMD_OHTC_CompleteStatus(string cmdID, CompleteStatus completeStatus)
+        {
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    ACMD_OHTC cmd = cmd_ohtcDAO.getByID(con, cmdID);
+                    if (cmd != null)
+                    {
+                        cmd.COMPLETE_STATUS = completeStatus;
+                        cmd_ohtcDAO.Update(con, cmd);
+                    }
+                    else
+                    {
+                        logger.Warn($"want to update cmd ohtc of complete status,but obj not exist,cmd ID:{cmdID}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+            }
+        }
 
 
         public List<ACMD_OHTC> loadCMD_OHTCMDStatusIsQueue()
@@ -3474,6 +3541,13 @@ namespace com.mirle.ibg3k0.sc.BLL
             using (DBConnection_EF con = DBConnection_EF.GetUContext())
             {
                 return cmd_ohtcDAO.loadFinishCMD_OHT(con);
+            }
+        }
+        public List<ACMD_OHTC> loadUnfinishCMD_OHTC()
+        {
+            using (DBConnection_EF con = DBConnection_EF.GetUContext())
+            {
+                return cmd_ohtcDAO.loadUnfinishCMD_OHT(con);
             }
         }
         public void remoteCMD_OHTCByBatch(List<ACMD_OHTC> cmds)
@@ -3607,7 +3681,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 return null;
             }
         }
-        public bool isCMD_OHTCQueueByVh(string vh_id)
+        public bool isCMD_OHTCQueueOrSendingByVh(string vh_id)
         {
             int count = 0;
 
@@ -3617,7 +3691,7 @@ namespace com.mirle.ibg3k0.sc.BLL
             {
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
-                    count = cmd_ohtcDAO.getVhQueueCMDConut(con, vh_id);
+                    count = cmd_ohtcDAO.getVhQueueOrSendingCMDConut(con, vh_id);
                 }
                 return count != 0;
             }
@@ -3816,11 +3890,13 @@ namespace com.mirle.ibg3k0.sc.BLL
 
         }
 
-        public bool forceUpdataCmdStatus2FnishByVhID(string vh_id)
+        public bool forceUpdataCmdStatus2FnishByVhID(string vh_id, bool isByOp = true)
         {
             int count = 0;
             try
             {
+                CompleteStatus completeStatus = isByOp ? CompleteStatus.CmpStatusForceAbnormalFinishByOp :
+                                                         CompleteStatus.CmpStatusAbort;
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
                     List<ACMD_OHTC> cmds = cmd_ohtcDAO.loadExecuteCmd(con, vh_id);
@@ -3830,7 +3906,8 @@ namespace com.mirle.ibg3k0.sc.BLL
                         {
                             if (cmd.CMD_STAUS > E_CMD_STATUS.Queue)
                             {
-                                updateCommand_OHTC_StatusByCmdID(cmd.CMD_ID, E_CMD_STATUS.AbnormalEndByOHTC);
+                                //updateCommand_OHTC_StatusByCmdID(cmd.CMD_ID, E_CMD_STATUS.AbnormalEndByOHTC);
+                                updateOHTCCommandToFinishByCmdID(cmd.CMD_ID, E_CMD_STATUS.AbnormalEndByOHTC, completeStatus);
                                 if (!SCUtility.isEmpty(cmd.CMD_ID_MCS))
                                 {
                                     //scApp.CMDBLL.updateCMD_MCS_TranStatus2Complete(cmd.CMD_ID_MCS, E_TRAN_STATUS.Aborting);
@@ -3839,7 +3916,8 @@ namespace com.mirle.ibg3k0.sc.BLL
                             else
                             {
                                 ACMD_OHTC queue_cmd = cmd;
-                                updateCommand_OHTC_StatusByCmdID(queue_cmd.CMD_ID, E_CMD_STATUS.AbnormalEndByOHTC);
+                                //updateCommand_OHTC_StatusByCmdID(queue_cmd.CMD_ID, E_CMD_STATUS.AbnormalEndByOHTC);
+                                updateOHTCCommandToFinishByCmdID(queue_cmd.CMD_ID, E_CMD_STATUS.AbnormalEndByOHTC, completeStatus);
                                 if (!SCUtility.isEmpty(queue_cmd.CMD_ID_MCS))
                                 {
                                     ACMD_MCS pre_initial_cmd_mcs = getCMD_MCSByID(queue_cmd.CMD_ID_MCS);
@@ -3919,7 +3997,10 @@ namespace com.mirle.ibg3k0.sc.BLL
                         != SCAppConstants.AppServiceMode.Active)
                         return;
                     //找出目前再Queue的ACMD_OHTC
-                    List<ACMD_OHTC> CMD_OHTC_Queues = scApp.CMDBLL.loadCMD_OHTCMDStatusIsQueue();
+                    var unfinish_cmd_ohtc = scApp.CMDBLL.loadUnfinishCMD_OHTC();
+                    refreshACMD_OHTCInfoList(unfinish_cmd_ohtc);
+                    //List<ACMD_OHTC> CMD_OHTC_Queues = scApp.CMDBLL.loadCMD_OHTCMDStatusIsQueue();
+                    List<ACMD_OHTC> CMD_OHTC_Queues = unfinish_cmd_ohtc.Where(cmd => cmd.CMD_STAUS == E_CMD_STATUS.Queue).ToList();
                     if (CMD_OHTC_Queues == null || CMD_OHTC_Queues.Count == 0)
                         return;
                     foreach (ACMD_OHTC cmd in CMD_OHTC_Queues)
@@ -3929,6 +4010,23 @@ namespace com.mirle.ibg3k0.sc.BLL
 
                         string vehicle_id = cmd.VH_ID.Trim();
                         AVEHICLE assignVH = scApp.VehicleBLL.getVehicleByID(vehicle_id);
+                        //bool isLoopTransferEnhance = true;
+                        //if (isLoopTransferEnhance && cmd.IsCMD_MCS())
+                        //{
+                        //    if (scApp.LoopTransferEnhance.IsRunOver(assignVH, cmd.SOURCE))
+                        //    {
+                        //        scApp.TransferService.TransferServiceLogger.Info($"命令 ID:{cmd.CMD_ID} ,cmd mcs id:{cmd.CMD_ID_MCS} 由於車子跑過頭，因此回復到Queue的狀態等待重派");
+                        //        scApp.VehicleService.finishCommand(cmd);
+                        //        continue;
+                        //    }
+                        //}
+                        var check_force_finish_result = IsForceFinishQueueCMD_OHTC(assignVH, cmd);
+                        if (check_force_finish_result.isForceFinish)
+                        {
+                            scApp.TransferService.TransferServiceLogger.Info($"命令 ID:{cmd.CMD_ID} ,cmd mcs id:{cmd.CMD_ID_MCS}，強制結束命令。Reason:{check_force_finish_result.reason}");
+                            scApp.VehicleService.finishQueueCommand(cmd);
+                            continue;
+                        }
                         //if (!assignVH.isTcpIpConnect || assignVH.IsError || !SCUtility.isEmpty(assignVH.OHTC_CMD) || (assignVH.ACT_STATUS == VHActionStatus.Commanding))
                         if (!assignVH.isTcpIpConnect || assignVH.MODE_STATUS == VHModeStatus.Manual || assignVH.IsError || !SCUtility.isEmpty(assignVH.OHTC_CMD) || (assignVH.ACT_STATUS == VHActionStatus.Commanding))
                         {
@@ -3943,6 +4041,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                         if (is_send_success)
                         {
                             assignVH.AssignCommandFailTimes = 0;
+                            assignVH.CheckCommandIDFromCommandIDRequestFailTimes = 0;
                             if (cmd.CMD_TPYE == E_CMD_TYPE.LoadUnload || cmd.CMD_TPYE == E_CMD_TYPE.Unload)
                             {
                                 assignVH.IsNeedAttentionBoxStatus = true;
@@ -3951,6 +4050,8 @@ namespace com.mirle.ibg3k0.sc.BLL
                             {
                                 assignVH.IsNeedAttentionBoxStatus = false;
                             }
+                            assignVH.VehicleAlarmConfirmComplete();
+                            assignVH.PreAssignMCSCommandID = "";
                         }
                         else
                         {
@@ -3971,6 +4072,66 @@ namespace com.mirle.ibg3k0.sc.BLL
                     System.Threading.Interlocked.Exchange(ref ohxc_cmd_SyncPoint, 0);
                 }
             }
+        }
+        private (bool isForceFinish, string reason) IsForceFinishQueueCMD_OHTC(AVEHICLE vh, ACMD_OHTC cmdOhtc)
+        {
+            if (!vh.isTcpIpConnect)
+            {
+                return (true, $"vh:{vh.VEHICLE_ID} 目前已經斷線，強制結束Queue的命令:{cmdOhtc.CMD_ID}。");
+            }
+            if (vh.IsError)
+            {
+                return (true, $"vh:{vh.VEHICLE_ID} 目前已經異常，強制結束Queue的命令:{cmdOhtc.CMD_ID}。");
+            }
+            if (SystemParameter.isLoopTransferEnhance &&
+                cmdOhtc.IsCMD_MCS() &&
+                scApp.LoopTransferEnhance.IsRunOver(vh, cmdOhtc.SOURCE))
+            {
+                return (true, $"vh:{vh.VEHICLE_ID} 相對於:{cmdOhtc.SOURCE} 已經過頭，強制結束Queue的命令:{cmdOhtc.CMD_ID}。");
+            }
+            return (false, "");
+        }
+
+
+        private void refreshACMD_OHTCInfoList(List<ACMD_OHTC> currentExcuteCmdOhtc)
+        {
+            bool has_change = false;
+            List<string> new_current_excute_cmd_ohtc = currentExcuteCmdOhtc.Select(cmd => SCUtility.Trim(cmd.CMD_ID, true)).ToList();
+            //List<string> old_current_excute_cmd_ohtc = ACMD_OHTC.CMD_OHTC_InfoList.Keys.ToList();
+            List<string> old_current_excute_cmd_ohtc = ACMD_OHTC.loadCmdOhtcListOfCmdID();
+            List<string> new_add_cmds_ohtc = new_current_excute_cmd_ohtc.Except(old_current_excute_cmd_ohtc).ToList();
+            //1.新增多出來的命令
+            foreach (string new_cmd in new_add_cmds_ohtc)
+            {
+                ACMD_OHTC new_cmd_obj = new ACMD_OHTC();
+                var current_cmd = currentExcuteCmdOhtc.Where(cmd => SCUtility.isMatche(cmd.CMD_ID, new_cmd)).FirstOrDefault();
+                if (current_cmd == null) continue;
+                new_cmd_obj.put(current_cmd);
+                ACMD_OHTC.CMD_OHTC_InfoList.TryAdd(new_cmd, new_cmd_obj);
+                has_change = true;
+            }
+            //2.刪除以結束的命令
+            List<string> will_del_mcs_cmds = old_current_excute_cmd_ohtc.Except(new_current_excute_cmd_ohtc).ToList();
+            foreach (string old_cmd in will_del_mcs_cmds)
+            {
+                ACMD_OHTC.CMD_OHTC_InfoList.TryRemove(old_cmd, out ACMD_OHTC cmd_ohtc);
+                has_change = true;
+            }
+            //3.更新現有命令
+            foreach (var cmd_ohtc_item in ACMD_OHTC.CMD_OHTC_InfoList)
+            {
+                string cmd_ohtc_id = cmd_ohtc_item.Key;
+                ACMD_OHTC cmd_ohtc = currentExcuteCmdOhtc.Where(cmd => SCUtility.isMatche(cmd.CMD_ID, cmd_ohtc_id)).FirstOrDefault();
+                if (cmd_ohtc == null)
+                {
+                    continue;
+                }
+                if (cmd_ohtc_item.Value.put(cmd_ohtc))
+                {
+                    has_change = true;
+                }
+            }
+
         }
 
         public static T getOrSetCallContext<T>(string key)
@@ -4082,7 +4243,8 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
             catch (Exception ex)
             {
-                updateCommand_OHTC_StatusByCmdID(acmd_ohtc.CMD_ID, E_CMD_STATUS.AbnormalEndByOHTC);
+                //updateCommand_OHTC_StatusByCmdID(acmd_ohtc.CMD_ID, E_CMD_STATUS.AbnormalEndByOHTC);
+                updateOHTCCommandToFinishByCmdID(acmd_ohtc.CMD_ID, E_CMD_STATUS.AbnormalEndByOHTC, CompleteStatus.CmpStatusCommandInitailFail);
                 logger_VhRouteLog.Error(ex, "generateCmd_OHTC_Details happend");
                 return false;
             }
@@ -5281,6 +5443,24 @@ namespace com.mirle.ibg3k0.sc.BLL
             using (DBConnection_EF con = DBConnection_EF.GetUContext())
             {
                 hcmd_ohtcDao.RemoteByBatch(con, hcmdOHTC);
+            }
+        }
+
+        public bool hasExcuteCMDMCSByDestPort(string portID)
+        {
+            int count = 0;
+            try
+            {
+                using (DBConnection_EF con = new DBConnection_EF())
+                {
+                    count = cmd_mcsDao.getExcuteCMD_MCSByDestPort(con, portID);
+                }
+                return count > 0;
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return false;
             }
         }
 

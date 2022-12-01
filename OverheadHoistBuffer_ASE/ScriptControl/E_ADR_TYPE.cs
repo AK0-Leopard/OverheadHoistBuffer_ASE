@@ -16,6 +16,6 @@ namespace com.mirle.ibg3k0.sc
         Address = 1,
         Port = 2,
         Control = 3,
-        MTL = 5,
+        MTL = 5
     }
 }

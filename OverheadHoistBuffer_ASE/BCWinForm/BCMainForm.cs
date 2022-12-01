@@ -772,7 +772,7 @@ namespace com.mirle.ibg3k0.bc.winform
                     logger.Error(ex, "Exception");
                 }
             }
-        }
+        }     
         public void recordAction(string tipMessage, string confirmResult)
         {
             StringBuilder sb = new StringBuilder();
@@ -1095,6 +1095,11 @@ namespace com.mirle.ibg3k0.bc.winform
         private void transferHistoryQueryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openForm(typeof(HistoryCMD_MCS).Name, true, false);
+        }
+
+        private void vehicleMaintenanceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openForm(typeof(VehicleMaintenanceForm).Name, true, false);
         }
     }
 }

@@ -331,6 +331,13 @@
           <Property Name="UnitState" Type="varchar" MaxLength="2" />
           <Property Name="RecoveryOption" Type="varchar" MaxLength="20" />
           <Property Name="CMD_ID" Type="varchar" MaxLength="64" />
+          <Property Name="REMARK" Type="nvarchar(max)" />
+          <Property Name="CLASS" Type="int" />
+          <Property Name="ADDRESS_ID" Type="varchar" MaxLength="64" />
+          <Property Name="PORT_ID" Type="varchar" MaxLength="64" />
+          <Property Name="CARRIER_ID" Type="varchar" MaxLength="64" />
+          <Property Name="ALARM_MODULE" Type="int" />
+          <Property Name="IMPORTANCE_LVL" Type="int" />
         </EntityType>
         <!--產生期間發現錯誤:
 警告 6002: 資料表/檢視 'OHBC_ASE_K21_LINE1.dbo.ALARMMAP' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
@@ -1377,8 +1384,6 @@
           <Property Name="AREA_SECSOR" Type="int" />
           <Property Name="LAST_TECH_TIME" Type="datetime2" Precision="7" />
         </EntityType>
-        <Function Name="SqlQueryNotificationStoredProcedure_0864f1ca_8e0c_4f04_ba1a_6a30eca7dcef" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="SqlQueryNotificationStoredProcedure-0864f1ca-8e0c-4f04-ba1a-6a30eca7dcef" />
-        <Function Name="SqlQueryNotificationStoredProcedure_2c8d3593_89e6_411b_aa38_e023612bf644" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="SqlQueryNotificationStoredProcedure-2c8d3593-89e6-411b-aa38-e023612bf644" />
         <EntityContainer Name="OHTC_DevModelStoreContainer">
           <EntitySet Name="AADDRESS" EntityType="Self.AADDRESS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AADDRESS_DATA" EntityType="Self.AADDRESS_DATA" Schema="dbo" store:Type="Tables" />
@@ -1654,8 +1659,6 @@
           <EntitySet Name="VSECTION_100" EntityType="OHTC_DevModel.VSECTION_100" />
           <EntitySet Name="VALARM" EntityType="OHTC_DevModel.VALARM" />
           <EntitySet Name="VHCMD_OHTC_MCS" EntityType="OHTC_DevModel.VHCMD_OHTC_MCS" />
-          <FunctionImport Name="SqlQueryNotificationStoredProcedure_0864f1ca_8e0c_4f04_ba1a_6a30eca7dcef" ReturnType="Collection(Guid)" />
-          <FunctionImport Name="SqlQueryNotificationStoredProcedure_2c8d3593_89e6_411b_aa38_e023612bf644" ReturnType="Collection(Guid)" />
         </EntityContainer>
         <EntityType Name="ABASEDATA_VER">
           <Key>
@@ -1838,6 +1841,7 @@
           <Member Name="Address" Value="1" />
           <Member Name="Port" Value="2" />
           <Member Name="Control" Value="3" />
+          <Member Name="MTL" Value="5" />
         </EnumType>
         <EntityType Name="ASEQUENCE">
           <Key>
@@ -1955,7 +1959,7 @@
           <Property Name="BOX_ID" Type="String" MaxLength="64" FixedLength="true" Unicode="false" />
           <Property Name="LOT_ID" Type="String" MaxLength="64" FixedLength="true" Unicode="false" />
           <Property Name="CMD_INSER_TIME" Type="DateTime" Precision="7" />
-          <Property Name="COMPLETE_STATUS" Type="Int32" />
+          <Property Name="COMPLETE_STATUS" Type="OHTC_DevModel.CompleteStatus" />
         </EntityType>
         <EntityType Name="ACEID">
           <Key>
@@ -2748,7 +2752,7 @@
           </Key>
           <Property Name="EQPT_ID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="UNIT_NUM" Type="Int32" Nullable="false" />
-          <Property Name="RPT_DATE_TIME" Type="DateTime" Nullable="false" />
+          <Property Name="RPT_DATE_TIME" Type="DateTime" Nullable="false" Precision="7" />
           <Property Name="ALAM_CODE" Type="String" MaxLength="10" FixedLength="true" Unicode="false" Nullable="false" />
           <Property Name="ALAM_LVL" Type="OHTC_DevModel.E_ALARM_LVL" Nullable="false" />
           <Property Name="ALAM_STAT" Type="OHTC_DevModel.ErrorStatus" Nullable="false" />
@@ -2758,7 +2762,14 @@
           <Property Name="UnitState" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
           <Property Name="RecoveryOption" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="CMD_ID" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
-          <Property Name="END_TIME" Type="DateTime" />
+          <Property Name="END_TIME" Type="DateTime" Precision="7" />
+          <Property Name="REMARK" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CLASS" Type="Int32" />
+          <Property Name="ADDRESS_ID" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="PORT_ID" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="CARRIER_ID" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="ALARM_MODULE" Type="Int32" />
+          <Property Name="IMPORTANCE_LVL" Type="Int32" />
         </EntityType>
         <EnumType Name="E_ALARM_LVL">
           <Member Name="Warn" Value="1" />
@@ -2982,7 +2993,7 @@
           <Property Name="DESTINATION_ADR" Type="String" MaxLength="64" FixedLength="true" Unicode="false" />
           <Property Name="BOX_ID" Type="String" MaxLength="64" FixedLength="true" Unicode="false" />
           <Property Name="LOT_ID" Type="String" MaxLength="64" FixedLength="true" Unicode="false" />
-          <Property Name="COMPLETE_STATUS" Type="Int32" />
+          <Property Name="COMPLETE_STATUS" Type="OHTC_DevModel.CompleteStatus" />
         </EntityType>
         <EntityType Name="VACMD_MCS">
           <Key>
@@ -3130,6 +3141,7 @@
           <Property Name="HOSTSOURCE" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
           <Property Name="TRANSFERSTATE" Type="Int32" />
         </EntityType>
+        <EnumType Name="CompleteStatus" a:ExternalTypeName="com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage.CompleteStatus" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
         <EntityType Name="VHCMD_OHTC_MCS">
           <Key>
             <PropertyRef Name="CMD_ID_MCS" />
@@ -4169,7 +4181,14 @@
     <EntitySetMapping Name="ALARM">
       <EntityTypeMapping TypeName="IsTypeOf(OHTC_DevModel.ALARM)">
         <MappingFragment StoreEntitySet="ALARM">
-          <ScalarProperty Name="EQPT_ID" ColumnName="EQPT_ID" />
+          <ScalarProperty Name="IMPORTANCE_LVL" ColumnName="IMPORTANCE_LVL" />
+                <ScalarProperty Name="ALARM_MODULE" ColumnName="ALARM_MODULE" />
+                <ScalarProperty Name="CARRIER_ID" ColumnName="CARRIER_ID" />
+                <ScalarProperty Name="PORT_ID" ColumnName="PORT_ID" />
+                <ScalarProperty Name="ADDRESS_ID" ColumnName="ADDRESS_ID" />
+                <ScalarProperty Name="CLASS" ColumnName="CLASS" />
+                <ScalarProperty Name="REMARK" ColumnName="REMARK" />
+                <ScalarProperty Name="EQPT_ID" ColumnName="EQPT_ID" />
           <ScalarProperty Name="UNIT_NUM" ColumnName="UNIT_NUM" />
           <ScalarProperty Name="RPT_DATE_TIME" ColumnName="RPT_DATE_TIME" />
           <ScalarProperty Name="ALAM_CODE" ColumnName="ALAM_CODE" />
@@ -4510,8 +4529,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="SqlQueryNotificationStoredProcedure_0864f1ca_8e0c_4f04_ba1a_6a30eca7dcef" FunctionName="OHTC_DevModel.Store.SqlQueryNotificationStoredProcedure_0864f1ca_8e0c_4f04_ba1a_6a30eca7dcef" />
-          <FunctionImportMapping FunctionImportName="SqlQueryNotificationStoredProcedure_2c8d3593_89e6_411b_aa38_e023612bf644" FunctionName="OHTC_DevModel.Store.SqlQueryNotificationStoredProcedure_2c8d3593_89e6_411b_aa38_e023612bf644" />
     </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>

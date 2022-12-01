@@ -13,7 +13,7 @@ namespace com.mirle.ibg3k0.sc.ObjectRelay
     public class VehicleObjToShow : INotifyPropertyChanged
     {
         double distance2millimeter = 1000;
-        double km2millimeter = 1000000;
+        double km2millimeter = 1000;
 
 
         //public static BindingList<VehicleObjToShow> ObjectToShow_list = new BindingList<VehicleObjToShow>();

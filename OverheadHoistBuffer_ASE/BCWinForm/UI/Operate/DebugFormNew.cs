@@ -41,9 +41,19 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             cb_FroceReservePass.Checked = DebugParameter.isForcedPassReserve;
             cb_FroceReserveReject.Checked = DebugParameter.isForcedRejectBlockControl;
             cb_IsHandleBoxPassOff.Checked = DebugParameter.isHandleBoxAbnormalPassOff;
-            cb_id_136_retry_test.Checked = DebugParameter.Is_136_retry_test;
+            cb_id_31_timeout_test.Checked = DebugParameter.ID_31_TimeoutTest;
+            cb_testZoneCommandReqNoReply.Checked = DebugParameter.Is_136_ZoneCommandReq_retry_test;
+            cb_openPostionSeqNumCheck.Checked = DebugParameter.IsOpenPositionSeqNumCheck;
+
             num_priorityWatershed.Value = sc.App.SystemParameter.cmdPriorityWatershed;
             num_priorityForBoxMove.Value = sc.App.SystemParameter.BoxMovePriority;
+            num_passDisForBackVh.Value = (int)sc.App.SystemParameter.IgnoreTransferCommandDistanceWithBehindVh;
+            num_reserveRequestTimeout.Value = (int)sc.App.SystemParameter.MaxAllowReserveRequestFailTimeMS;
+            cb_LoopEnhance.Checked = sc.App.SystemParameter.isLoopTransferEnhance;
+            cb_isByPassStraightReserve.Checked = sc.App.SystemParameter.isReserveByPassOnStraight;
+            cb_isUsingRemoveReserveModule.Checked = sc.App.SystemParameter.IsUsingRemoteReserveModule;
+
+
             List<string> lstVh = new List<string>();
             lstVh.Add(string.Empty);
             lstVh.AddRange(bcApp.SCApplication.getEQObjCacheManager().getAllVehicle().Select(vh => vh.VEHICLE_ID).ToList());
@@ -82,6 +92,11 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                 group_cycleRun.Visible = true;
                 groupBox6.Enabled = true;
             }
+            if (sc.Service.VehicleService.IsOneVehicleSystem)
+            {
+                cb_LoopEnhance.Visible = false;
+                cb_isByPassStraightReserve.Visible = false;
+            }
 
         }
 
@@ -95,7 +110,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             TrunOffAllVhPLCControl();
             DebugParameter.IsDebugMode = false;
             mainForm.removeForm(typeof(DebugFormNew).Name);
-            cb_id_136_retry_test.Checked = false;
+            cb_id_31_timeout_test.Checked = false;
         }
 
 
@@ -398,7 +413,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
                 btn_open_tcp_port.Visible = true;
                 btn_close_tcp_port.Visible = true;
                 btn_closeSession.Visible = true;
-                cb_id_136_retry_test.Visible = true;
+                cb_id_31_timeout_test.Visible = true;
             }
         }
 
@@ -429,7 +444,6 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             try
             {
                 btn_resetODO.Enabled = false;
-                await Task.Run(() => bcApp.SCApplication.VehicleService.ResetODO(vh_id));
             }
             catch (Exception ex)
             {
@@ -469,10 +483,54 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             });
         }
 
-        private void cb_id_136_retry_test_CheckedChanged(object sender, EventArgs e)
+        private void cb_id_31_timeout_test_CheckedChanged(object sender, EventArgs e)
         {
-            DebugParameter.Is_136_retry_test = cb_id_136_retry_test.Checked;
+            DebugParameter.ID_31_TimeoutTest = cb_id_31_timeout_test.Checked;
         }
+
+        private void cb_LoopEnhance_CheckedChanged(object sender, EventArgs e)
+        {
+            sc.App.SystemParameter.setIsLoopTransferEnhanceFlag(cb_LoopEnhance.Checked);
+        }
+
+        private void cb_testZoneCommandReqNoReply_CheckedChanged(object sender, EventArgs e)
+        {
+            DebugParameter.Is_136_ZoneCommandReq_retry_test = cb_testZoneCommandReqNoReply.Checked;
+        }
+
+        private void label7_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left && (ModifierKeys & Keys.Control) == Keys.Control)
+            {
+                grb_testAear.Visible = true;
+            }
+        }
+
+        private void cb_isByPassStraightReserve_CheckedChanged(object sender, EventArgs e)
+        {
+            sc.App.SystemParameter.setIsReserveByPassOnStraight(cb_isByPassStraightReserve.Checked);
+        }
+
+        private void num_passDisForBackVh_ValueChanged(object sender, EventArgs e)
+        {
+            sc.App.SystemParameter.setIgnoreTransferCommandDistanceWithBehindVh((double)num_passDisForBackVh.Value);
+        }
+
+        private void cb_isUsingRemoveReserveModule_CheckedChanged(object sender, EventArgs e)
+        {
+            sc.App.SystemParameter.setIsUsingRemoveReserveModule(cb_isUsingRemoveReserveModule.Checked);
+        }
+
+        private void cb_openPostionSeqNumCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            DebugParameter.IsOpenPositionSeqNumCheck = cb_openPostionSeqNumCheck.Checked;
+        }
+
+        private void num_reserveRequestTimeout_ValueChanged(object sender, EventArgs e)
+        {
+            sc.App.SystemParameter.setMaxAllowReserveRequestFailTimeMS((int)num_reserveRequestTimeout.Value);
+        }
+
         //*************************************
         //A0.01
 

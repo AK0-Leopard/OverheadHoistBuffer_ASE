@@ -88,6 +88,14 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                         select cmd;
             return query.ToList();
         }
+        public List<ACMD_OHTC> loadUnfinishCMD_OHT(DBConnection_EF con)
+        {
+            var query = from cmd in con.ACMD_OHTC
+                        where cmd.CMD_STAUS < E_CMD_STATUS.NormalEnd
+                        select cmd;
+            return query.ToList();
+        }
+
 
         public ACMD_OHTC getByID(DBConnection_EF con, String cmd_id)
         {
@@ -140,11 +148,12 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
             return query.FirstOrDefault();
         }
 
-        public int getVhQueueCMDConut(DBConnection_EF con, string vh_id)
+        public int getVhQueueOrSendingCMDConut(DBConnection_EF con, string vh_id)
         {
             var query = from cmd in con.ACMD_OHTC.AsNoTracking()
                         where cmd.VH_ID == vh_id.Trim() &&
-                        cmd.CMD_STAUS == E_CMD_STATUS.Queue
+                        //cmd.CMD_STAUS == E_CMD_STATUS.Queue
+                        cmd.CMD_STAUS <= E_CMD_STATUS.Sending
                         select cmd;
             return query.Count();
         }
@@ -272,6 +281,15 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                 query = query.Where(x => x.VH_ID == VhID);
             }
             return query.ToList();
+        }
+
+        public int getVhWillSendingCMDConut(DBConnection_EF con, string vhID)
+        {
+            var query = from cmd in con.ACMD_OHTC.AsNoTracking()
+                        where cmd.VH_ID == vhID.Trim() &&
+                        cmd.CMD_STAUS <= E_CMD_STATUS.Sending
+                        select cmd;
+            return query.Count();
         }
     }
 }

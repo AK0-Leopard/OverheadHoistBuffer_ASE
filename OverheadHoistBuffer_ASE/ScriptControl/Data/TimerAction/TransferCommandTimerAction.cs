@@ -43,11 +43,11 @@ namespace com.mirle.ibg3k0.sc.Data.TimerAction
         {
             try
             {
-                if (DebugParameter.CanAutoRandomGeneratesCommand)
-                {
-                    NLog.LogManager.GetLogger("TransferServiceLogger").Info(" Cycle Run 測試中，跳出Tansfer Command派送流程");
-                    return;
-                }
+                //if (DebugParameter.CanAutoRandomGeneratesCommand)
+                //{
+                //    NLog.LogManager.GetLogger("TransferServiceLogger").Info(" Cycle Run 測試中，跳出Tansfer Command派送流程");
+                //    return;
+                //}
                 if (!line.MCSCommandAutoAssign)
                 {
                     if (line.MCSAutoAssignLastOffTime.AddSeconds(MCS_Auto_Assign_Keep_sec) < DateTime.Now)
