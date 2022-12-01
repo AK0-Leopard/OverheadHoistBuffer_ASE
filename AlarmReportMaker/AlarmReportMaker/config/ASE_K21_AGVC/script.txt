@@ -1,0 +1,19 @@
+﻿select top(100)
+	'U332MTB0' as 'workingNumber',
+	'日月光 K24 BE2 OHT' as 'workingName',
+	RPT_DATE_TIME,
+	CLEAR_DATE_TIME,
+	Rtrim(EQPT_ID) as 'EQPT_ID',
+	isnull(ALARM_MODULE, ' ') as 'ALARM_MODULE',
+	isnull(CLASS, ' ') as 'CLASS',
+	isnull(IMPORTANCE_LVL, ' ') as 'IMPORTANCE_LVL',
+	Rtrim(ALAM_CODE) as 'ALAM_CODE',
+	ALAM_DESC,
+	isnull(ADDRESS_ID, ' ') as 'ADDRESS_ID',
+	isnull(PORT_ID, ' ') as 'PORT_ID',
+	isnull(CARRIER_ID, ' ') as 'CARRIER_ID',
+	isnull(REMARK, ' ') as 'REMARK'
+from
+	ALARM
+where CLEAR_DATE_TIME is not null and RPT_DATE_TIME between @start and @end and ALAM_LVL = 2
+order by RPT_DATE_TIME desc

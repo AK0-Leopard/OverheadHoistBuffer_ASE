@@ -1,0 +1,18 @@
+﻿SELECT top(100)
+	'U332MTB0' as 'workingNumber',
+	'日月光 K24 BE2 OHT' as 'workingName',
+	RPT_DATE_TIME,
+	END_TIME,
+	EQPT_ID,
+	isnull(ALARM_MODULE, 0) as 'ALARM_MODULE',
+	isnull(CLASS, 0) as 'CLASS',
+	isnull(IMPORTANCE_LVL, 0) as 'IMPORTANCE_LVL',
+	ALAM_CODE,
+	ALAM_DESC,
+	isnull(ADDRESS_ID, '') as 'ADDRESS_ID',
+	isnull(PORT_ID, '') as 'PORT_ID',
+	isnull(CARRIER_ID, '') as 'CARRIER_ID',
+	isnull(REMARK, '') as 'REMARK'
+FROM AlarmViewExtension
+where END_TIME is not null and RPT_DATE_TIME between @start and @end
+order by RPT_DATE_TIME desc

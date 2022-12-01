@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<AlarmReportMaker>
+	<ReportDataLength_Days>1</ReportDataLength_Days>
+	<ReportMakeInterval_Hour>7</ReportMakeInterval_Hour>
+	<ReportOutputPath>D:\AlarmProcessReport\</ReportOutputPath>
+	<Reports>
+		<Report Title="ASE_K21_OHBC_LINE1" Config="ASE_K21_OHBC" DB_IP="127.0.0.1" DB_UserID="sa" DB_Password="p@ssw0rd" schema="OHBC_ASE_K21_LINE1"/>
+		<Report Title="ASE_K21_OHBC_LINE2" Config="ASE_K21_OHBC" DB_IP="127.0.0.1" DB_UserID="sa" DB_Password="p@ssw0rd" schema="OHBC_ASE_K21_LINE2"/>
+		<Report Title="ASE_K21_OHBC_LINE3" Config="ASE_K21_OHBC" DB_IP="127.0.0.1" DB_UserID="sa" DB_Password="p@ssw0rd" schema="OHBC_ASE_K21_LINE3_V3"/>
+		<Report Title="ASE_K21_OHBC_LOOP" Config="ASE_K21_OHBC" DB_IP="127.0.0.1" DB_UserID="sa" DB_Password="p@ssw0rd" schema="OHBC_ASE_K21_LOOP"/>
+		<Report Title="ASE_K21_AGVC" Config="ASE_K21_AGVC" DB_IP="127.0.0.1" DB_UserID="sa" DB_Password="p@ssw0rd" schema="AGVC_ASE_K21_v5"/>
+		<Report Title="ASE_K21_STKC01" Config="STKC_K21" DB_IP="127.0.0.1" DB_UserID="sa" DB_Password="p@ssw0rd" schema="B7_STK01"/>
+		<Report Title="ASE_K21_STKC02" Config="STKC_K21" DB_IP="127.0.0.1" DB_UserID="sa" DB_Password="p@ssw0rd" schema="B7_STK01"/>
+		<Report Title="ASE_K21_STKC03" Config="STKC_K21" DB_IP="127.0.0.1" DB_UserID="sa" DB_Password="p@ssw0rd" schema="B7_STK01"/>
+	</Reports>
+</AlarmReportMaker>

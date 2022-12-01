@@ -1,0 +1,372 @@
+﻿OBJECT_ID,ALARM_ID,ALARM_LVL,ALARM_DESC,ALARM_DESC_TW
+CRANE,13,2,Continued abnormality of incapacitation triggered by corner entry,入彎觸發失能持續異常
+CRANE,14,2,Turning speed exceeded,入彎速度超標
+CRANE,15,2,Turn right speed exceeded,入右彎速度超標
+CRANE,16,2,Turn left speed exceeded,入左彎速度超標
+CRANE,17,2,match speed abnormal in curve,
+CRANE,18,2,match speed abnormal in moving,
+CRANE,19,2,change position abnormal in moving,
+CRANE,20,2,Overspeed protection stop at the end of high speed,高速末段超速保護停止
+CRANE,21,2,when move back but speed over -350mm/s so protect and stop,走行後退超速保護停止
+CRANE,22,2,when move back but distance over -150mm so protect and stop,
+CRANE,23,2,when speed command different from speed feedback over 550mm/s so protect and stop,
+CRANE,87,2,The estimated distance is abnormal in the second repair of the arrival station,到站二修推估距離異常
+CRANE,88,2,Wrong way protection stopped,走錯路保護停止
+CRANE,89,2,Too big protection stops,偏過大保護停止
+CRANE,90,2,Protecd and stop that because OHT run over the final address,終站走過頭保護停止
+CRANE,98,1,Out-of-ctrl? monitor,Out-of-ctrl  monitor
+CRANE,99,2,OoC? HANG,Out-of-Ctrl  *HANG*
+CRANE,101,2,Disk C will don't has enough space,C槽儲存空間將不足
+CRANE,102,2,Disk D will don't has enough space,D槽儲存空間將不足
+CRANE,103,2,Disk C hasn't enough space,C槽儲存空間已不足
+CRANE,104,2,Disk D hasn't enough space,D槽儲存空間已不足
+CRANE,150,1,Connecting station - block corrections,接續站_閉塞段更正
+CRANE,220,2,HID exception is not hoisted,HID異常未卷揚
+CRANE,221,2,HID Stops Winning Abnormally,HID異常停卷揚
+CRANE,222,2,HID Exception_Shutdown,HID異常_關機
+CRANE,223,2,HID magnetic field is not hoisted,HID磁場異常未卷揚上貨
+CRANE,224,2,HID temperature is abnormal,HID溫度異常未卷揚上貨
+CRANE,225,2,HID magnetic field stopped winding and loading,HID磁場異常停卷揚上貨
+CRANE,226,2,HID temperature abnormally stopped winding and loading,HID溫度異常停卷揚上貨
+CRANE,227,2,HID magnetic field abnormal_shutdown,HID磁場異常_關機
+CRANE,228,2,HID temperature abnormal_shutdown,HID溫度異常_關機
+CRANE,230,2,Super Capacitor Abnormal_Shutdown,超級電容異常_關機
+CRANE,233,2,HID magnetic field is abnormal,HID磁場異常未卷揚下貨
+CRANE,234,2,HID temperature is abnormal,HID溫度異常未卷揚下貨
+CRANE,235,2,HID magnetic field abnormally stopped and hoisted,HID磁場異常停卷揚下貨
+CRANE,236,2,HID temperature abnormally stopped loading and unloading,HID溫度異常停卷揚下貨
+CRANE,300,2,Failure of lower optical radar device,下光學雷達裝置失效
+CRANE,301,2,Optical radar device failure,光學雷達裝置失效
+CRANE,302,2,Laser ranging device failed,鐳射測距裝置失效
+CRANE,303,2,Track BCR device failure,軌道BCR裝置失效
+CRANE,304,2,Failure of cargo BCR device,貨物BCR裝置失效
+CRANE,305,2,Multimeter device failure,多用電錶裝置失效
+CRANE,306,2,Temperature measuring device failure,溫度量測裝置失效
+CRANE,307,2,The wireless data transceiver device fails,無線資料收發裝置失效
+CRANE,308,2,RemoteIO device fails,RemoteIO裝置失效
+CRANE,309,2,S_Little L lost contact,S_小L失聯
+CRANE,310,2,P_Little C loses connection and disconnection,P_小C失聯掉線
+CRANE,432,2,P_Little C occlusion anti-collision protection,P_小C閉塞防撞保護
+CRANE,444,2,Running anti-collision protection trigger,走行防撞保護觸發
+CRANE,445,2,Before loading _ Doesn't exist bar code at load port,上貨前_終站無條碼
+CRANE,446,2,Before unloading _ Doesn't exist bar code at unload port,下貨前_終站無條碼
+CRANE,447,2,No barcode at terminal,終站無條碼
+CRANE,448,2,No barcode at the stop,停等站無條碼
+CRANE,480,2,ADLink axis card communication is abnormal,ADLink軸卡通訊異常
+CRANE,481,2,Moons drive communication is abnormal,Moons驅動器通訊異常
+CRANE,482,2,Abnormal gripper communication device,夾爪通訊裝置異常
+CRANE,501,2,There is no abnormal excitation of the traveling motor,走行馬達無激磁異常
+CRANE,502,2,No abnormal excitation of the winch motor,卷揚馬達無激磁異常
+CRANE,503,2,No abnormal excitation of side-shift motor,側移馬達無激磁異常
+CRANE,504,2,No abnormal excitation of the rotating motor,旋轉馬達無激磁異常
+CRANE,505,2,No abnormal excitation of the front steering motor,前轉向馬達無激磁異常
+CRANE,506,2,No abnormal excitation of the rear steering motor,後轉向馬達無激磁異常
+CRANE,507,2,The front anti-fall motor has no abnormal excitation,前防墜馬達無激磁異常
+CRANE,508,2,The rear anti-falling motor has no abnormal excitation,後防墜馬達無激磁異常
+CRANE,509,2,No abnormal excitation of gripper motor,夾爪馬達無激磁異常
+CRANE,511,2,There is no abnormal excitation of the anti-falling motor,上前防墜馬達無激磁異常
+CRANE,512,2,No abnormal excitation of the anti-falling motor after loading,上後防墜馬達無激磁異常
+CRANE,521,2,Axis report abnormal,走行軸回報異常
+CRANE,522,2,Winch shaft returns abnormally,卷揚軸回報異常
+CRANE,523,2,Sideshift report abnormal,側移軸回報異常
+CRANE,524,2,Rotating axis report abnormal,旋轉軸回報異常
+CRANE,525,2,The front steering axle reports abnormally,前轉向軸回報異常
+CRANE,526,2,Rear steering axle reports abnormal,後轉向軸回報異常
+CRANE,527,2,The front anti-falling axle reports an exception,前防墜軸回報異常
+CRANE,528,2,Rear anti-falling axle reports abnormality,後防墜軸回報異常
+CRANE,529,2,Gripper shaft reports abnormal,夾爪軸回報異常
+CRANE,531,2,The forward anti-falling axle reports an exception,上前防墜軸回報異常
+CRANE,532,2,The anti-falling axle reports abnormally after loading,上後防墜軸回報異常
+CRANE,541,2,"Sideshift axis,The origin is not triggered,Location is not safe before loading",上貨前_側移原點未觸發_位置不安全
+CRANE,542,2,"Sideshift axis,The origin is not triggered,Location is not safe before unloading",下貨前_側移原點未觸發_位置不安全
+CRANE,543,2,"Sideshift axis,The origin is not triggered,Location is not safe after loading",上貨後_側移原點未觸發_位置不安全
+CRANE,544,2,"Sideshift axis,The origin is not triggered,Location is not safe after unloading",下貨後_側移原點未觸發_位置不安全
+CRANE,545,2,"Sideshift axis,The origin is not triggered,Location is not safe before moveing",走行前_側移原點未觸發_位置不安全
+CRANE,546,2,"Sideshift axis,The origin is not triggered,Location is not safe during moveing",走行中_側移原點未觸發_位置不安全
+CRANE,547,2,"Sideshift axis,The origin is not triggered,Location is not safe after moveing",走行後_側移原點未觸發_位置不安全
+CRANE,548,2,Before loading _ side shift needs to recalibrate the origin position is abnormal,上貨前_側移需重校原點位置異常
+CRANE,549,2,Before unloading _ side shift needs to be recalibrated the origin position is abnormal,下貨前_側移需重校原點位置異常
+CRANE,550,2,Before running _ side shift needs to be re-calibrated the origin position is abnormal,走行前_側移需重校原點位置異常
+CRANE,551,2,"Rotation axis,The origin is not triggered,Location is not safe before loading",上貨前_旋轉原點未觸發_位置不安全
+CRANE,552,2,"Rotation axis,The origin is not triggered,Location is not safe before unloading",下貨前_旋轉原點未觸發_位置不安全
+CRANE,553,2,"Rotation axis,The origin is not triggered,Location is not safe after loading",上貨後_旋轉原點未觸發_位置不安全
+CRANE,554,2,"Rotation axis,The origin is not triggered,Location is not safe after unloading",下貨後_旋轉原點未觸發_位置不安全
+CRANE,555,2,"Rotation axis,The origin is not triggered,Location is not safe before moveing",走行前_旋轉原點未觸發_位置不安全
+CRANE,556,2,"Rotation axis,The origin is not triggered,Location is not safe during moveing",走行中_旋轉原點未觸發_位置不安全
+CRANE,557,2,"Rotation axis,The origin is not triggered,Location is not safe after moveing",走行後_旋轉原點未觸發_位置不安全
+CRANE,561,2,Travel axis action abnormal when go home,走行軸回報異常
+CRANE,562,2,Winch axis action abnormal when go home,卷揚軸回報異常
+CRANE,563,2,Sideshift axis action abnormal when go home,側移軸回報異常
+CRANE,564,2,Rotate axis action abnormal when go home,旋轉軸回報異常
+CRANE,565,2,Front turning axis action abnormal when go home,前轉向軸回報異常
+CRANE,566,2,Back turning axis action abnormal when go home,後轉向軸回報異常
+CRANE,567,2,Front fall prevention axis action abnormal when go home,前防墜軸回報異常
+CRANE,568,2,Back fall prevention axis action abnormal when go home,後防墜軸回報異常
+CRANE,569,2,Gripper axis action abnormal when go home,夾爪軸回報異常
+CRANE,571,2,Top front fall prevention axis action abnormal when go home,上前防墜軸回報異常
+CRANE,572,2,Top back fall prevention axis action abnormal when go home,上後防墜軸回報異常
+CRANE,601,2,Multi-meter _ current overrun abnormal,多用電錶_電流超限異常
+CRANE,602,2,Multi-meter_Voltage over-limit abnormal,多用電錶_電壓超限異常
+CRANE,603,2,Multimeter _ power overrun abnormal,多用電錶_功率超限異常
+CRANE,621,2,Super Capacitor_Temperature Abnormal,超級電容_溫度異常
+CRANE,622,2,Traveling drive_ abnormal temperature,走行驅動器_溫度異常
+CRANE,623,2,Travel Motor_Temperature Abnormal,走行馬達_溫度異常
+CRANE,624,2,Traveling pick-up resistance_ abnormal temperature,走行回升電阻_溫度異常
+CRANE,625,2,Hoisting resistance_ abnormal temperature,卷揚回升電阻_溫度異常
+CRANE,626,2,Traveling reducer_ abnormal temperature,走行減速機_溫度異常
+CRANE,627,2,Rotating motor_ abnormal temperature,旋轉馬達_溫度異常
+CRANE,628,2,Side shift motor_ abnormal temperature,側移馬達_溫度異常
+CRANE,629,2,Winding motor_ abnormal temperature,卷揚馬達_溫度異常
+CRANE,705,2,Step forward to prevent falling_extension abnormal,上前防墜_伸出異常
+CRANE,706,2,Step forward to prevent falling _ abnormal folding,上前防墜_收合異常
+CRANE,707,2,Anti-falling after going up_extension abnormal,上後防墜_伸出異常
+CRANE,708,2,Anti-falling after loading_abnormal folding,上後防墜_收合異常
+CRANE,710,2,The time-out of moving off the ground on the hoist is abnormal,卷揚取物上_離地移動逾時異常
+CRANE,711,2,The hoist is placed on the _ the ground movement timed out abnormally,卷揚置物上_離地移動逾時異常
+CRANE,731,2,"Before unloading,The gripper does not maintain abnormal closure",欲下貨前_夾爪未維持閉合異常
+CRANE,732,2,"Before loading,The gripper does not maintain an abnormal opening",欲上貨前_夾爪未維持打開異常
+CRANE,733,2,"Unloading error,vehicle has no cst",車內帳無貨_欲令下貨異常
+CRANE,734,2,"Loading error,vehicle already has cst",車內帳有貨_欲令上貨異常
+CRANE,735,1,EQ side PIO pre-handshake abnormal warning,EQ側PIO前交握異常警告
+CRANE,736,1,"Before PIO delivery, receive EQ and send HO_AVBL abnormal Lo",PIO上貨前_收EQ發HO_AVBL異常Lo
+CRANE,737,1,"Before PIO is delivered, receive EQ and send ES exception",PIO上貨前_收EQ發ES異常
+CRANE,738,1,"Before PIO release, receive EQ and send HO_AVBL abnormal Lo",PIO下貨前_收EQ發HO_AVBL異常Lo
+CRANE,739,1,"Before PIO release, receive EQ and send ES exception",PIO下貨前_收EQ發ES異常
+CRANE,743,2,Hoisting shaft_ Move to the reading position abnormally after picking up the object,卷揚軸_取物後移至讀碼位置異常
+CRANE,744,2,Read the code position after picking up_the gripper has no cargo abnormality,取物後讀碼位置_夾爪無貨物異常
+CRANE,745,2,Winch shaft_down to CST gear lever unlock position is abnormal,卷揚軸_下至CST擋杆開鎖位置異常
+CRANE,746,2,Gripper_CST gear lever unlock action abnormal,夾爪_CST擋杆開鎖動作異常
+CRANE,747,2,Winch shaft_up to CST block lever locked position is abnormal,卷揚軸_上至CST擋杆閉鎖位置異常
+CRANE,748,2,Gripper_CST block lever locking action abnormal,夾爪_CST擋杆閉鎖動作異常
+CRANE,749,2,Reading position of the gripper_abnormal closure of the holder,夾爪讀碼位置_置物中閉合異常
+CRANE,750,2,Reading position of the gripper_abnormal closure of the fetched material,夾爪讀碼位置_取物中閉合異常
+CRANE,751,2,Down AreaSnr frontal low obstacle detection,下AreaSnr正面低障礙檢知
+CRANE,752,2,Down AreaSnr frontal high obstacle detection,下AreaSnr正面高障礙檢知
+CRANE,781,2,Side shift axis-hardware positive limit trigger abnormal,側移軸-硬體正極限觸發異常
+CRANE,782,2,Side shift axis-hardware negative limit trigger abnormal,側移軸-硬體負極限觸發異常
+CRANE,794,2,The upper anti-falling is not closed_the hoist wants to move abnormally,上防墜未收合_卷揚欲移動異常
+CRANE,795,2,The upper anti-falling is not closed _ side shift wants to move abnormally,上防墜未收合_側移欲移動異常
+CRANE,796,2,The upper anti-falling is not closed _ rotation wants to move abnormally,上防墜未收合_旋轉欲移動異常
+CRANE,797,2,The upper anti-falling is not closed _ rotation and side shift want to move abnormally,上防墜未收合_旋轉側移欲移動異常
+CRANE,799,2,The second repair is abnormal in the grouping area of ??the cargo station,貨站群聚範圍走行二修異常
+CRANE,800,2,The times of secondary positioning of walking reaches the upper limit,走行二次定位累積次數達上限異常
+CRANE,801,2,Sideshift axis - abnormal operation position of moving to fixed point,側移軸-移至定點作業位置異常
+CRANE,802,2,Sideshift axis - abnormal move to walkable position,側移軸-移至可行走位置異常
+CRANE,803,2,Rotation axis - abnormal operation position of moving to fixed point,旋轉軸-移至定點作業位置異常
+CRANE,804,2,Rotation axis - abnormal move to walkable position,旋轉軸-移至可行走位置異常
+CRANE,805,2,Front tailgate - abnormal extension,前防墜-伸出異常
+CRANE,806,2,Front tailgate - abnormal closing,前防墜-收合異常
+CRANE,807,2,Back tailgate - abnormal extension,後防墜-伸出異常
+CRANE,808,2,Back tailgate - abnormal closing,後防墜-收合異常
+CRANE,811,2,Hoist axis - abnormal position before catching the objects?,卷揚軸-置物前移至定點作業位置異常
+CRANE,812,2,Hoist axis - abnormal position after catching the objects?,卷揚軸-置物後移至可行走位置異常
+CRANE,813,2,Gripper - abnormal opening in unloading,卷揚軸-取物前移至定點作業位置異常
+CRANE,814,2,Gripper - abnormal closing in unloading,卷揚軸-取物後移至可行走位置異常
+CRANE,815,2,Gripper - abnormal opening in loading,夾爪-置物中打開異常
+CRANE,816,2,Gripper - abnormal closing in loading,夾爪-置物中閉合異常
+CRANE,817,2,Gripper - abnormal opening in loading,夾爪-取物中打開異常
+CRANE,818,2,Gripper - abnormal closing in loading,夾爪-取物中閉合異常
+CRANE,819,2,Before loading - gripper without tray,置物前_夾爪無貨物異常
+CRANE,820,2,After unloading - gripper still has tray,置物後_夾爪有貨物異常
+CRANE,821,2,Before loading - gripper has tray in abnormal,取物前_夾爪有貨物異常
+CRANE,822,2,After unloading - gripper without tray in abnormal,取物後_夾爪無貨物異常
+CRANE,823,2,Abnormal detection of falling objects,防墜過物檢知異常
+CRANE,824,2,Upper anti-falling object detection abnormal,上防墜過物檢知異常
+CRANE,825,2,Running_Gripper cargo detection abnormality,走行中_夾爪貨物檢知異常
+CRANE,826,2,Before opening the claw_cargo inspection abnormal,置物開爪前_貨物檢知異常
+CRANE,827,2,Before fetching and closing the paw_cargo inspection abnormal,取物閉爪前_貨物檢知異常
+CRANE,828,2,"The hoist moves down,the gripper cst detection abnormality",卷揚下移中_夾爪貨物檢知異常
+CRANE,829,2,"The hoist moves up,the gripper cst detection abnormality",卷揚上移中_夾爪貨物檢知異常
+CRANE,831,2,Before placing_the gripper cargo is detected abnormally,置物前_夾爪貨物檢知異常
+CRANE,832,2,"After picking up the goods, the gripper cargo is detected abnormally",取物後_夾爪貨物檢知異常
+CRANE,833,2,Before discharging_the gripper has no cargo abnormality,欲下貨前_夾爪無貨物異常
+CRANE,834,2,Before loading _ there is an abnormality in the gripper,欲上貨前_夾爪有貨物異常
+CRANE,835,2,Before you want to drop off the goods _ anti-falling object detection abnormal,欲下貨前_防墜過物檢知異常
+CRANE,836,2,Before you want to ship the goods,欲上貨前_防墜過物檢知異常
+CRANE,837,2,"Before discharging the goods, the upper anti-falling object detection is abnormal",欲下貨前_上防墜過物檢知異常
+CRANE,838,2,"Before loading the goods, the upper anti-falling object detection is abnormal",欲上貨前_上防墜過物檢知異常
+CRANE,839,1,Before storage_OHB has cargo abnormality,置物前_OHB有貨物異常
+CRANE,840,1,After placing the goods _OHB no abnormal goods,置物後_OHB無貨物異常
+CRANE,841,1,Before fetching_OHB no cargo abnormality,取物前_OHB無貨物異常
+CRANE,842,1,After picking up the goods _OHB there is an abnormality of the goods,取物後_OHB有貨物異常
+CRANE,843,1,Before fetching_OHB cargo type is abnormal,取物前_OHB貨物型式異常
+CRANE,844,1,After placing the item_OHB cargo type judgment is abnormal,置物後_OHB貨物型式判斷異常
+CRANE,845,2,Turn forward and raise hand and detach_not in place abnormal,前轉舉手脫離_未到位異常
+CRANE,846,2,Turn and raise your hand to detach_not in place abnormal,後轉舉手脫離_未到位異常
+CRANE,850,2,Hardware occlusion card control_non-INP abnormal,硬體閉塞卡控_非INP異常
+CRANE,851,2,Left occlusion card control _L point non-INP abnormal,左閉塞卡控_L點非INP異常
+CRANE,852,2,Right occlusion card control _R point non-INP abnormal,右閉塞卡控_R點非INP異常
+CRANE,853,1,"when loading, type sensor and command's type is exception on left OHB",欲令上貨型態檢知衝突_左OHB
+CRANE,854,1,"when loading, type sensor and command's type is exception on right OHB",欲令上貨型態檢知衝突_右OHB
+CRANE,855,2,"when loading, type sensor and command's type is persistent exception on left OHB",欲上貨型態檢知持續異常_左OHB
+CRANE,856,2,"when loading, type sensor and command's type is persistent exception on right OHB",欲上貨型態檢知持續異常_右OHB
+CRANE,857,2,when enter right cruve trigger sensor abnormal,起站入右彎Snr觸發狀態異常
+CRANE,858,2,when enter left cruve trigger sensor abnormal,起站入左彎Snr觸發狀態異常
+CRANE,861,2,_FOUP loading cover is abnormally falling off before loading,上貨前_FOUP載物蓋板脫落異常
+CRANE,862,2,Before unloading _FOUP loading cover is abnormally falling off,下貨前_FOUP載物蓋板脫落異常
+CRANE,863,2,"After loading, the FOUP loading cover is abnormally off",上貨後_FOUP載物蓋板脫落異常
+CRANE,864,2,"After unloading, the FOUP loading cover is abnormally off",下貨後_FOUP載物蓋板脫落異常
+CRANE,865,2,Before walking _FOUP loading cover is abnormally falling off,走行前_FOUP載物蓋板脫落異常
+CRANE,866,2,Moving _FOUP loading cover is abnormally falling off,走行中_FOUP載物蓋板脫落異常
+CRANE,867,2,"After walking, the FOUP loading cover is abnormally off",走行後_FOUP載物蓋板脫落異常
+CRANE,868,2,Gripper_After the CST stop lever is unlocked_no cargo abnormality,夾爪_CST擋杆開鎖後_無貨物異常
+CRANE,869,2,Gripper_After the CST stop lever is locked_no cargo abnormality,夾爪_CST擋杆閉鎖後_無貨物異常
+CRANE,872,2,Trigger an offline Local exception artificially,人為觸發離線Local異常
+CRANE,873,2,Manually trigger offline offline exception,人為觸發離線Offline異常
+CRANE,874,2,Artificially trigger Stop exception,人為觸發Stop異常
+CRANE,875,2,Artificially trigger EMS abnormalities,人為觸發EMS異常
+CRANE,888,2,OHTC request ForceFinish,OHTC要求強制終結_ForceFinish
+CRANE,889,2,Gripper_CST lever before unlocking_no cargo abnormality,夾爪_CST擋杆開鎖前_無貨物異常
+CRANE,890,2,Gripper_Before the CST stop lever is locked_No cargo abnormality,夾爪_CST擋杆閉鎖前_無貨物異常
+CRANE,891,2,Before loading _ CST block lever is abnormally in place,上貨前_CST擋杆到位異常
+CRANE,892,2,"Before unloading, the CST block lever is abnormally in place",下貨前_CST擋杆到位異常
+CRANE,893,2,"After loading, the CST block lever is abnormally in place",上貨後_CST擋杆到位異常
+CRANE,894,2,"After unloading, the CST block lever is abnormally in place",下貨後_CST擋杆到位異常
+CRANE,895,2,Before walking _ CST gear lever is abnormally in place,走行前_CST擋杆到位異常
+CRANE,896,2,Moving _ CST gear lever is abnormal,走行中_CST擋杆到位異常
+CRANE,897,2,"After walking, the CST gear lever is abnormally in place",走行後_CST擋杆到位異常
+CRANE,898,2,The loading station is not compatible with the cargo type,上貨站與貨物型態不相容
+CRANE,899,2,The drop off station is not compatible with the cargo type,下貨站與貨物型態不相容
+CRANE,900,1,BCR Read Fail,貨物BCR讀碼失敗
+CRANE,901,1,BCR Read Fail after loading,上貨後BCR讀碼失敗
+CRANE,902,1,BCR Read Fail before shipment,下貨前BCR讀碼失敗
+CRANE,903,2,This stage can not be load or unlad,站點除能不准上下貨
+CRANE,905,2,Exceeding the grouping scope of the loading station,超出上貨站群聚範圍
+CRANE,906,2,Beyond the definition of loading station,超出上貨站定義範圍
+CRANE,907,2,Beyond the terminal cluster,超出終貨站群聚範圍
+CRANE,908,2,PIO download_TP3 timeout_wait for EQ to send L_REQ_Lo,PIO下貨_TP3逾時_等EQ發L_REQ_Lo
+CRANE,909,2,PIO upload_TP3 timeout_wait for EQ to send U_REQ_Lo,PIO上貨_TP3逾時_等EQ發U_REQ_Lo
+CRANE,910,1,PIO (before Busy-ON) handshake failure,PIO(Busy-ON前)交握失敗
+CRANE,911,1,PIO (after Busy-OFF) handshake failure,PIO(Busy-OFF後)交握失敗
+CRANE,912,2,PIO Set CH ID Fail before delivery,上貨前PIO_Set_CH_ID_Fail
+CRANE,913,2,PIO Se CH ID Fail before ordering,下貨前PIO_Set_CH_ID_Fail
+CRANE,914,2,Torque is over limit in winch is loading,卷扬取物上_扭力超限异常
+CRANE,915,2,Torque is over limit in winch is unloading,卷扬置物上_扭力超限异常
+CRANE,916,2,off ground box sensor check abnormal in winch is loading,卷扬取物上_离地货物检知异常
+CRANE,917,2,off ground box sensor check abnormal in winch is unloading,卷扬置物上_离地货物检知异常
+CRANE,918,2,Abnormal tension of rear belt 1,後皮帶1張力異常
+CRANE,919,2,Abnormal tension of rear belt 2,後皮帶2張力異常
+CRANE,920,2,Side-shift rotation anti-fall exception,側移旋轉防墜異常
+CRANE,921,2,Loading process is abnormal,上貨流程異常
+CRANE,922,2,Unloading process is abnormal,下貨流程異常
+CRANE,923,2,Before loading - Abnormal operation position of running fixed point,上貨前-走行定點作業位置異常
+CRANE,924,2,Before unloading - Abnormal operation position of running fixed point,下貨前-走行定點作業位置異常
+CRANE,925,2,Exceeding the range of the drop-off station cluster,超出下貨站群聚範圍
+CRANE,926,2,Out-Of-Adr Space,超出下貨站定義範圍
+CRANE,927,1,Illegal AdrType,網站型態不允許上下貨
+CRANE,928,1,Unmatched Adr,現在貨站跟指定不符
+CRANE,929,1,Illegal AdrID,指定貨站未定義
+CRANE,930,2,Gripper motor communication abnormal,夾爪馬達通訊異常
+CRANE,931,2,Belt tension abnormal,皮帶張力異常
+CRANE,932,2,Back belt tension abnormal,後皮帶張力異常
+CRANE,933,2,Skew detection abnormal,偏擺檢知異常
+CRANE,934,2,Belt rewinding abnormal,皮帶反繞異常
+CRANE,935,2,EQ side PIO handshake abnormal,EQ側PIO交握異常
+CRANE,936,2,HO_AVBL exception on PIO received EQ,PIO上貨中_收EQ發HO_AVBL異常
+CRANE,937,2,PIO loading EQ sends ES exception,PIO上貨中_收EQ發ES異常
+CRANE,938,2,HO_AVBL Exception When PIO Receives Delivery,PIO下貨中_收EQ發HO_AVBL異常
+CRANE,939,2,PIO receives EQ and receives ES exception,PIO下貨中_收EQ發ES異常
+CRANE,940,1,PIO drop off and other EQ issued L_REQ timeout Hi,PIO下貨_TA1逾時_等EQ發L_REQ_Hi
+CRANE,941,1,PIO drop off and other EQs issued READY timeout Hi,PIO下貨_TA2逾時_等EQ發READY_Hi
+CRANE,942,1,EIO sends READY timeout when PIO orders off,PIO下貨_TA3逾時_等EQ發READY_Lo
+CRANE,943,1,EIO sends U_REQ timeout when PIO is shipped,PIO上貨_TA1逾時_等EQ發U_REQ_Hi
+CRANE,944,1,EIO sends READY timeout when PIO is shipped,PIO上貨_TA2逾時_等EQ發READY_Hi
+CRANE,945,1,EIO sends READY timeout when PIO is released,PIO上貨_TA3逾時_等EQ發READY_Lo
+CRANE,946,1,PIO receives BUSY Hi before receiving EQ and sends HO_AVBL abnormal Lo,PIO上貨BUSY Hi 前收EQ發HO_AVBL異常Lo
+CRANE,947,1,PIO receives BUSY Hi before receiving EQ and sends ES abnormal Lo,PIO上貨BUSY Hi 前收EQ發ES異常Lo
+CRANE,948,1,PIO releases BUSY Hi before receiving EQ and sending HO_AVBL abnormal Lo,PIO下貨BUSY Hi 前收EQ發HO_AVBL異常Lo
+CRANE,949,1,PIO releases BUSY Hi before receiving EQ and sending ES abnormal Lo,PIO下貨BUSY Hi 前收EQ發ES異常Lo
+CRANE,950,2,In remote maintenance mode,遙控維護模式中
+CRANE,951,2,Abnormal right orbit of starting station,起站右天軌異常
+CRANE,952,2,Abnormal left sky orbit,起站左天軌異常
+CRANE,953,2,Turn right and do n’t change hands,入右彎沒換完手
+CRANE,954,2,Turn left and never change hands,入左彎沒換完手
+CRANE,955,2,Turn right forward start exclusive trigger exception,前右轉啟動_互斥觸發異常
+CRANE,956,2,Turn left forward start exclusive trigger exception,前左轉啟動_互斥觸發異常
+CRANE,957,2,Turn right backward start exclusive trigger exception,後右轉啟動_互斥觸發異常
+CRANE,958,2,Turn left backward start exclusive trigger exception,後左轉啟動_互斥觸發異常
+CRANE,960,2,Turn right before starting abnormally,前右轉 啟動異常
+CRANE,961,2,Turn left before starting abnormally,前左轉 啟動異常
+CRANE,962,2,Turn right after start abnormal,後右轉 啟動異常
+CRANE,963,2,Turn left after starting abnormally,後左轉 啟動異常
+CRANE,964,2,Turn right before,前右轉 到位異常
+CRANE,965,2,Turn left forward,前左轉 到位異常
+CRANE,966,2,Turn right after being in place,後右轉 到位異常
+CRANE,967,2,Turn left back into place abnormal,後左轉 到位異常
+CRANE,968,2,Forward rotation abnormal,前轉 到位異常
+CRANE,969,2,After turning in place abnormal,後轉 到位異常
+CRANE,971,2,Abnormal Sky Track,起站天軌異常
+CRANE,972,2,Not turning hands,入彎沒換完手
+CRANE,973,2,Forward start abnormal,前轉 啟動異常
+CRANE,974,2,Turn back abnormally,後轉 啟動異常
+CRANE,975,2,Abnormal movement for too long when cornering,過彎移動過久異常
+CRANE,976,2,Non local delivery delay,非原地 上貨延遲
+CRANE,977,2,Off site delivery delay,非原地 下貨延遲
+CRANE,978,2,"Slow stop, EMS","緩停不及,EMS"
+CRANE,979,2,"Deceleration V1 is not enough, EMS","降速V1不及,EMS"
+CRANE,980,2,"Deceleration V2 is not enough, EMS","降速V2不及,EMS"
+CRANE,981,2,The winch position is not safe,卷揚原點未觸發_位置不安全
+CRANE,983,2,area senser switch error,AreaSnr切換運作異常
+CRANE,984,2,Switching of AreaSnr works abnormally,下AreaSnr切換運作異常
+CRANE,985,2,Steering status is abnormal,轉向狀態異常
+CRANE,986,2,The status of the second repair at the station is abnormal,到站二修狀態異常
+CRANE,987,2,Running steering status is abnormal,走行轉向狀態異常
+CRANE,988,2,He You_Upper falling guard is not extended_Want to move abnormally,荷有_上防墜未伸出_走行欲移動異常
+CRANE,989,2,He You_The fall prevention is not extended_Want to move abnormally,荷有_防墜未伸出_走行欲移動異常
+CRANE,990,2,The clamp is not in a safe position,閉夾沒在安全位置
+CRANE,991,2,The open clip is not in a safe position,開夾沒在安全位置
+CRANE,992,2,Unsafe side shift position,側移原點未觸發_位置不安全
+CRANE,993,2,Unsafe rotation position,旋轉原點未觸發_位置不安全
+CRANE,994,2,Anti-falling not closed_winch wants to move abnormally,防墜未收合_卷揚欲移動異常
+CRANE,995,2,Fall prevention not closed _ side shift wants to move abnormally,防墜未收合_側移欲移動異常
+CRANE,996,2,Anti-falling not folded_rotation to move abnormally,防墜未收合_旋轉欲移動異常
+CRANE,997,2,Fall prevention not closed _ rotation side shift to move abnormally,防墜未收合_旋轉側移欲移動異常
+CRANE,998,1,Vehicle stop at place too long,台車同點停留時間過久
+CRANE,999,2,System internal exception,系統內部異常
+CRANE,70001,2,Master PLC network request timed out,Master PLC通訊異常
+CRANE,89000,2,Double Storage,OHT-二重格異常
+CRANE,89001,2,Empty Retrieval,OHT-空取異常
+CRANE,99999,2,OHT is offline,OHT離線
+CRANE,99990,2,OHT rejects command repeatedly,OHT多次拒絕命令
+CRANE,100010,1,OHT_INTERLOCK_ERROR,OHT-Interlock異常
+CRANE,100011,1,OHT_VEHICLE_ABORT,OHT-命令異常
+CRANE,100012,1,OHT_BCR_READ_FAIL,OHT-BCR Read失敗
+CRANE,100013,1,PORT_BOXID_READ_FAIL,Port-BoxID讀取失敗
+CRANE,100014,1,PORT_CSTID_READ_FAIL,Port-CSTID讀取失敗
+CRANE,100016,1,OHT_QueueCmdTimeOut,OHBC-Queue 命令超時
+CRANE,100022,1,OHT_IDMismatchUNKU,
+LINE,100015,1,OHT_IDLE_HasCMD_TimeOut,OHBC-有閒置車輛但無派送命令
+LINE,100031,1,OHT_CommandNotFinishedInTime,OHT-命令執行超時
+LINE,100016,1,Queue command time out,OHBC-Queue 命令超時
+TRACK,1,2,TrackAlarm_EMO_Error,換軌器-EMO
+TRACK,2,2,TrackAlarm_Servo_No_On,換軌器-Servo No ON
+TRACK,3,2,TrackAlarm_Servo_NotGoHome,換軌器-Servo NotGoHome
+TRACK,4,2,TrackAlarm_CarOut_Timeout,換軌器-出車Timeout
+TRACK,5,2,TrackAlarm_ServoOn_Timeout,換軌器-Servo ServoOn Timeout
+TRACK,6,2,TrackAlarm_ServoOff_Timeout,換軌器-Servo ServoOff Timeout
+TRACK,7,2,TrackAlarm_GoHome_TimeOut,換軌器-回原點Timeout
+TRACK,8,2,TrackAlarm_Pos1Move_TimeOut,換軌器-Pos1Move_TimeOut
+TRACK,9,2,TrackAlarm_Pos2Move_TimeOut,換軌器-Pos2Move_TimeOut
+TRACK,10,2,TrackAlarm_PosLimit_Error,換軌器-PosLimit_Error
+TRACK,11,2,TrackAlarm_NegLimit_Error,換軌器-NegLimit_Error
+TRACK,12,2,TrackAlarm_Drive_Error,換軌器-驅動異常
+TRACK,13,2,TrackAlarm_PosSensorAllOn,換軌器-PosSensorAllOn
+TRACK,14,2,TrackAlarm_CarInTrackCantAuto,換軌器-CarInTrackCantAuto
+TRACK,15,2,TrackAlarm_TrackIsManual,換軌器-手動模式
+TRACK,16,2,TrackAlarm_BlockClosInManual,換軌器-BlockClosInManual
+MANUALPORT,1,2,EMO_Abnormal,EMO
+MANUALPORT,41,2,"Stage_PositionAbnormal(X0, X1, X2)","Stage 位置異常(X0,X1,X2)"
+MANUALPORT,42,2,Stage close door time out(X11),Stage 關門Timeout(X11)
+MANUALPORT,43,2,Stage close door time out(X10),Stage 關門Timeout(X10)
+MANUALPORT,44,2,Light gate is abnormal,Light gate 異常
+MANUALPORT,45,2,Air sensor is abnormal,Air sensor 異常
+MANUALPORT,46,2,Door sensor is abnormal,Door sensor 異常
+MANUALPORT,497,1,PLC battery is abnormal,PLC 電池異常
+MANUALPORT,511,1,TP1 TR_Req on time out,TP1 TR_Req on超時
+MANUALPORT,512,1,TP2 Busy on time out,TP2 Busy on超時
+MANUALPORT,513,1,TP3 action time out,TP3 action超時
+MANUALPORT,514,1,TP4 Busy off time out,TP4 Busy off超時
+MANUALPORT,515,1,TP5 VAL off time out,TP5 VAL off超時
+MANUALPORT,521,1,Out mode was over 10min but nobady take it out,維持Out mode狀態超過10分鐘
+MANUALPORT,522,1,RFID read is abnormal,RFID讀取異常
+MANUALPORT,523,1,RFID read time out,RFID讀取超時

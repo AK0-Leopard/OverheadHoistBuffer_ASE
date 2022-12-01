@@ -1,0 +1,1772 @@
+OBJECT_ID,ALARM_ID,ALARM_LVL,ALARM_DESC,ALARM_DESC_TW
+Charger1,32,2,Charging pile. no abnormalities in receiving and sending out,[INCOM-2] 充電樁 受入送出動作無 異常
+Charger1,33,2,Charging pile motor forward inspection abnormal,[INCOM-2] 充電樁 馬達前進檢 異常
+Charger1,34,2,Charging pile motor back check abnormal,[INCOM-2] 充電樁 馬達後退檢 異常
+Charger1,35,2,Charging pile motor abnormal,[INCOM-2] 充電樁 馬達異常
+Charger1,36,2,Charging pile charging control abnormal,[INCOM-2] 充電樁 充電控制 異常
+Charger1,37,2,Charging pile distance perception abnormal,[INCOM-2] 充電樁 距離感知 異常
+Charger1,38,2,Charging pile temperature perception abnormal,[INCOM-2] 充電樁 溫度感知 異常
+Charger1,39,1,Charging pile measuring voltage at the front end,[INCOM-2] 充電樁 前進端量測電壓無
+Charger1,40,2,Charging pile The charging head is not positioned,[INCOM-2] 充電樁 充電頭未定位
+Charger1,41,2,Charger execution command timeout,[INCOM-2] 充電機 執行指令超時
+Charger1,42,2,,
+Charger1,43,2,,
+Charger1,44,2,,
+Charger1,45,2,,
+Charger1,46,2,,
+Charger1,47,2,,
+Charger1,48,2,Charger abnormal,[INCOM-2] 充電機 異常
+Charger1,49,2,Charger communication is abnormal,[INCOM-2] 充電機 通訊異常
+Charger1,50,2,Abnormal power supply of the charger,[INCOM-2] 充電機 送電異常
+Charger1,51,2,Charger output current,[INCOM-2] 充電機 輸出電流無
+Charger1,52,2,Charger Non-power transmission process No load power transmission abnormal,[INCOM-2] 充電機 非送電流程 無負載送電異常
+Charger1,53,2,,　
+Charger1,54,2,,　
+Charger1,55,2,,　
+Charger1,56,2,,  
+Charger1,57,2,,　
+Charger1,58,2,,　
+Charger1,59,2,,　
+Charger1,60,2,,　
+Charger1,61,2,,　
+Charger1,62,2,,　
+Charger1,63,2,,  
+Charger1,10201,1,Coupler position not safety,
+Charger2,64,2,Charging pile. no abnormalities in receiving and sending out,[INCOM-1] 充電樁 受入送出動作無 異常
+Charger2,65,2,Charging pile motor forward inspection abnormal,[INCOM-1] 充電樁 馬達前進檢 異常
+Charger2,66,2,Charging pile motor back check abnormal,[INCOM-1] 充電樁 馬達後退檢 異常
+Charger2,67,2,Charging pile motor abnormal,[INCOM-1] 充電樁 馬達異常
+Charger2,68,2,Charging pile charging control abnormal,[INCOM-1] 充電樁 充電控制 異常
+Charger2,69,2,Charging pile distance perception abnormal,[INCOM-1] 充電樁 距離感知 異常
+Charger2,70,2,Charging pile temperature perception abnormal,[INCOM-1] 充電樁 溫度感知 異常
+Charger2,71,1,Charging pile measuring voltage at the front end,[INCOM-1] 充電樁 前進端量測電壓無
+Charger2,72,2,Charging pile The charging head is not positioned,[INCOM-1] 充電樁 充電頭未定位
+Charger2,73,2,Charger execution command timeout,[INCOM-1] 充電機 執行指令超時
+Charger2,74,2,,
+Charger2,75,2,,
+Charger2,76,2,,
+Charger2,77,2,,
+Charger2,78,2,,
+Charger2,79,2,,
+Charger2,80,1,Charger abnormal,[INCOM-1] 充電機 異常
+Charger2,81,2,Charger communication is abnormal,[INCOM-1] 充電機 通訊異常
+Charger2,82,2,Abnormal power supply of the charger,[INCOM-1] 充電機 送電異常
+Charger2,83,2,Charger output current,[INCOM-1] 充電機 輸出電流無
+Charger2,84,2,Charger Non-power transmission process No load power transmission abnormal,[INCOM-1] 充電機 非送電流程 無負載送電異常
+Charger2,85,2,,
+Charger2,86,2,,
+Charger2,87,2,,
+Charger2,88,2,,
+Charger2,89,2,,
+Charger2,90,2,,
+Charger2,91,2,,
+Charger2,92,2,,
+Charger2,93,2,,
+Charger2,94,2,,
+Charger2,95,2,,
+Charger2,10201,1,Coupler position not safety,
+Charger3,96,2,Charging pile. no abnormalities in receiving and sending out,[PHOTO-2] 充電樁 受入送出動作無 異常
+Charger3,97,2,Charging pile motor forward inspection abnormal,[PHOTO-2] 充電樁 馬達前進檢 異常
+Charger3,98,2,Charging pile motor back check abnormal,[PHOTO-2] 充電樁 馬達後退檢 異常
+Charger3,99,2,Charging pile motor abnormal,[PHOTO-2] 充電樁 馬達異常
+Charger3,100,2,Charging pile charging control abnormal,[PHOTO-2] 充電樁 充電控制 異常
+Charger3,101,2,Charging pile distance perception abnormal,[PHOTO-2] 充電樁 距離感知 異常
+Charger3,102,2,Charging pile temperature perception abnormal,[PHOTO-2] 充電樁 溫度感知 異常
+Charger3,103,1,Charging pile measuring voltage at the front end,[PHOTO-2] 充電樁 前進端量測電壓無
+Charger3,104,2,Charging pile The charging head is not positioned,[PHOTO-2] 充電樁 充電頭未定位
+Charger3,105,2,Charger execution command timeout,[PHOTO-2] 充電機 執行指令超時
+Charger3,106,2,,
+Charger3,107,2,,
+Charger3,108,2,,
+Charger3,109,2,,
+Charger3,110,2,,
+Charger3,111,2,,
+Charger3,112,2,Charger abnormal,[PHOTO-2] 充電機 異常
+Charger3,113,2,Charger communication is abnormal,[PHOTO-2] 充電機 通訊異常
+Charger3,114,2,Abnormal power supply of the charger,[PHOTO-2] 充電機 送電異常
+Charger3,115,2,Charger output current,[PHOTO-2] 充電機 輸出電流無
+Charger3,116,2,Charger Non-power transmission process No load power transmission abnormal,[PHOTO-2] 充電機 非送電流程 無負載送電異常
+Charger3,117,2,,
+Charger3,118,2,,
+Charger3,119,2,,
+Charger3,120,2,,
+Charger3,121,2,,
+Charger3,122,2,,
+Charger3,123,2,,
+Charger3,124,2,,
+Charger3,125,2,,
+Charger3,126,2,,
+Charger3,127,2,,
+Charger3,10201,1,Coupler position not safety,
+Charger4,128,2,Charging pile. no abnormalities in receiving and sending out,[PHOTO-1] 充電樁 受入送出動作無 異常
+Charger4,129,2,Charging pile motor forward inspection abnormal,[PHOTO-1] 充電樁 馬達前進檢 異常
+Charger4,130,2,Charging pile motor back check abnormal,[PHOTO-1] 充電樁 馬達後退檢 異常
+Charger4,131,2,Charging pile motor abnormal,[PHOTO-1] 充電樁 馬達異常
+Charger4,132,2,Charging pile charging control abnormal,[PHOTO-1] 充電樁 充電控制 異常
+Charger4,133,2,Charging pile distance perception abnormal,[PHOTO-1] 充電樁 距離感知 異常
+Charger4,134,2,Charging pile temperature perception abnormal,[PHOTO-1] 充電樁 溫度感知 異常
+Charger4,135,1,Charging pile measuring voltage at the front end,[PHOTO-1] 充電樁 前進端量測電壓無
+Charger4,136,2,Charging pile The charging head is not positioned,[PHOTO-1] 充電樁 充電頭未定位
+Charger4,137,2,Charger execution command timeout,[PHOTO-1] 充電機 執行指令超時
+Charger4,138,2,,
+Charger4,139,2,,
+Charger4,140,2,,
+Charger4,141,2,,
+Charger4,142,2,,
+Charger4,143,2,,
+Charger4,144,2,Charger abnormal,[PHOTO-1] 充電機 充電機 異常
+Charger4,145,2,Charger communication is abnormal,[PHOTO-1] 充電機 充電機 通訊異常
+Charger4,146,2,Abnormal power supply of the charger,[PHOTO-1] 充電機 充電機 送電異常
+Charger4,147,2,Charger output current,[PHOTO-1] 充電機 充電機 輸出電流無
+Charger4,148,2,Charger Non-power transmission process No load power transmission abnormal,[PHOTO-1] 充電機 非送電流程 無負載送電異常
+Charger4,149,2,,
+Charger4,150,2,,
+Charger4,151,2,,
+Charger4,152,2,,
+Charger4,153,2,,
+Charger4,154,2,,
+Charger4,155,2,,
+Charger4,156,2,,
+Charger4,157,2,,
+Charger4,158,2,,
+Charger4,159,2,,
+Charger4,10201,1,Coupler position not safety,
+Charger5,160,2,Charging pile. no abnormalities in receiving and sending out,[PHOTO-A-2] 充電樁 受入送出動作無 異常
+Charger5,161,2,Charging pile motor forward inspection abnormal,[PHOTO-A-2] 充電樁 馬達前進檢 異常
+Charger5,162,2,Charging pile motor back check abnormal,[PHOTO-A-2] 充電樁 馬達後退檢 異常
+Charger5,163,2,Charging pile motor abnormal,[PHOTO-A-2] 充電樁 馬達異常
+Charger5,164,2,Charging pile charging control abnormal,[PHOTO-A-2] 充電樁 充電控制 異常
+Charger5,165,2,Charging pile distance perception abnormal,[PHOTO-A-2] 充電樁 距離感知 異常
+Charger5,166,2,Charging pile temperature perception abnormal,[PHOTO-A-2] 充電樁 溫度感知 異常
+Charger5,167,1,Charging pile measuring voltage at the front end,[PHOTO-A-2] 充電樁 前進端量測電壓無
+Charger5,168,2,Charging pile The charging head is not positioned,[PHOTO-A-2] 充電樁 充電頭未定位
+Charger5,169,2,Charger execution command timeout,[PHOTO-A-2] 充電機 執行指令超時
+Charger5,170,2,,
+Charger5,171,2,,
+Charger5,172,2,,
+Charger5,173,2,,
+Charger5,174,2,,
+Charger5,175,2,,
+Charger5,176,2,Charger abnormal,[PHOTO-A-2] 充電機 異常
+Charger5,177,2,Charger communication is abnormal,[PHOTO-A-2] 充電機 通訊異常
+Charger5,178,2,Abnormal power supply of the charger,[PHOTO-A-2] 充電機 送電異常
+Charger5,179,2,Charger output current,[PHOTO-A-2] 充電機 輸出電流無
+Charger5,180,2,Charger Non-power transmission process No load power transmission abnormal,[PHOTO-A-2] 充電機 非送電流程 無負載送電異常
+Charger5,181,2,,
+Charger5,182,2,,
+Charger5,183,2,,
+Charger5,184,2,,
+Charger5,185,2,,
+Charger5,186,2,,
+Charger5,187,2,,
+Charger5,188,2,,
+Charger5,189,2,,
+Charger5,190,2,,
+Charger5,191,2,,
+Charger5,10201,1,Coupler position not safety,
+Charger6,192,2,Charging pile. no abnormalities in receiving and sending out,[PLATER-1] 充電樁 受入送出動作無 異常
+Charger6,193,2,Charging pile motor forward inspection abnormal,[PLATER-1] 充電樁 馬達前進檢 異常
+Charger6,194,2,Charging pile motor back check abnormal,[PLATER-1] 充電樁 馬達後退檢 異常
+Charger6,195,2,Charging pile motor abnormal,[PLATER-1] 充電樁 馬達異常
+Charger6,196,2,Charging pile charging control abnormal,[PLATER-1] 充電樁 充電控制 異常
+Charger6,197,2,Charging pile distance perception abnormal,[PLATER-1] 充電樁 距離感知 異常
+Charger6,198,2,Charging pile temperature perception abnormal,[PLATER-1] 充電樁 溫度感知 異常
+Charger6,199,1,Charging pile measuring voltage at the front end,[PLATER-1] 充電樁 前進端量測電壓無
+Charger6,200,2,Charging pile The charging head is not positioned,[PLATER-1] 充電樁 充電頭未定位
+Charger6,201,2,Charger execution command timeout,[PLATER-1] 充電機 執行指令超時
+Charger6,202,2,,
+Charger6,203,2,,
+Charger6,204,2,,
+Charger6,205,2,,
+Charger6,206,2,,
+Charger6,207,2,,
+Charger6,208,2,Charger abnormal,[PLATER-1] 充電機 異常
+Charger6,209,2,Charger communication is abnormal,[PLATER-1] 充電機 通訊異常
+Charger6,210,2,Abnormal power supply of the charger,[PLATER-1] 充電機 送電異常
+Charger6,211,2,Charger output current,[PLATER-1] 充電機 輸出電流無
+Charger6,212,2,Charger Non-power transmission process No load power transmission abnormal,[PLATER-1] 充電機 非送電流程 無負載送電異常
+Charger6,213,2,,
+Charger6,214,2,,
+Charger6,215,2,,
+Charger6,216,2,,
+Charger6,217,2,,
+Charger6,218,2,,
+Charger6,219,2,,
+Charger6,220,2,,
+Charger6,221,2,,
+Charger6,222,2,,
+Charger6,223,2,,
+Charger6,10201,1,Coupler position not safety,
+Charger7,224,2,Charging pile. no abnormalities in receiving and sending out,[COUP-H5] 充電樁 受入送出動作無 異常
+Charger7,225,2,Charging pile motor forward inspection abnormal,[COUP-H5] 充電樁 馬達前進檢 異常
+Charger7,226,2,Charging pile motor back check abnormal,[COUP-H5] 充電樁 馬達後退檢 異常
+Charger7,227,2,Charging pile motor abnormal,[COUP-H5] 充電樁 馬達異常
+Charger7,228,2,Charging pile charging control abnormal,[COUP-H5] 充電樁 充電控制 異常
+Charger7,229,2,Charging pile distance perception abnormal,[COUP-H5] 充電樁 距離感知 異常
+Charger7,230,2,Charging pile temperature perception abnormal,[COUP-H5] 充電樁 溫度感知 異常
+Charger7,231,1,Charging pile measuring voltage at the front end,[COUP-H5] 充電樁 前進端量測電壓無
+Charger7,232,2,Charging pile The charging head is not positioned,[COUP-H5] 充電樁 充電頭未定位
+Charger7,233,2,Charger execution command timeout,[COUP-H5] 充電機 執行指令超時
+Charger7,234,2,,
+Charger7,235,2,,
+Charger7,236,2,,
+Charger7,237,2,,
+Charger7,238,2,,
+Charger7,239,2,,
+Charger7,240,2,Charger abnormal,[COUP-H5] 充電機 異常
+Charger7,241,2,Charger communication is abnormal,[COUP-H5] 充電機 通訊異常
+Charger7,242,2,Abnormal power supply of the charger,[COUP-H5] 充電機 送電異常
+Charger7,243,2,Charger output current,[COUP-H5] 充電機 輸出電流無
+Charger7,244,2,Charger Non-power transmission process No load power transmission abnormal,[COUP-H5] 充電機 非送電流程 無負載送電異常
+Charger7,245,2,,
+Charger7,246,2,,
+Charger7,247,2,,
+Charger7,248,2,,
+Charger7,249,2,,
+Charger7,250,2,,
+Charger7,251,2,,
+Charger7,252,2,,
+Charger7,253,2,,
+Charger7,254,2,,
+Charger7,255,2,,
+Charger7,10201,1,Coupler position not safety,
+Charger8,256,2,Charging pile. no abnormalities in receiving and sending out,[STK-1] 充電樁 受入送出動作無 異常
+Charger8,257,2,Charging pile motor forward inspection abnormal,[STK-1] 充電樁 馬達前進檢 異常
+Charger8,258,2,Charging pile motor back check abnormal,[STK-1] 充電樁 馬達後退檢 異常
+Charger8,259,2,Charging pile motor abnormal,[STK-1] 充電樁 馬達異常
+Charger8,260,2,Charging pile charging control abnormal,[STK-1] 充電樁 充電控制 異常
+Charger8,261,2,Charging pile distance perception abnormal,[STK-1] 充電樁 距離感知 異常
+Charger8,262,2,Charging pile temperature perception abnormal,[STK-1] 充電樁 溫度感知 異常
+Charger8,263,1,Charging pile measuring voltage at the front end,[STK-1] 充電樁 前進端量測電壓無
+Charger8,264,2,Charging pile The charging head is not positioned,[STK-1] 充電樁 充電頭未定位
+Charger8,265,2,Charger execution command timeout,[STK-1] 充電機 執行指令超時
+Charger8,266,2,,
+Charger8,267,2,,
+Charger8,268,2,,
+Charger8,269,2,,
+Charger8,270,2,,
+Charger8,271,2,,
+Charger8,272,2,Charger abnormal,[STK-1] 充電機 異常
+Charger8,273,2,Charger communication is abnormal,[STK-1] 充電機 通訊異常
+Charger8,274,2,Abnormal power supply of the charger,[STK-1] 充電機 送電異常
+Charger8,275,2,Charger output current,[STK-1] 充電機 輸出電流無
+Charger8,276,2,Charger Non-power transmission process No load power transmission abnormal,[STK-1] 充電機 非送電流程 無負載送電異常
+Charger8,277,2,,
+Charger8,278,2,,
+Charger8,279,2,,
+Charger8,280,2,,
+Charger8,281,2,,
+Charger8,282,2,,
+Charger8,283,2,,
+Charger8,284,2,,
+Charger8,285,2,,
+Charger8,286,2,,
+Charger8,287,2,,
+Charger8,10201,1,Coupler position not safety,
+Charger9,288,2,Charging pile. no abnormalities in receiving and sending out,[SPUTTER-1] 充電樁 受入送出動作無 異常
+Charger9,289,2,Charging pile motor forward inspection abnormal,[SPUTTER-1] 充電樁 馬達前進檢 異常
+Charger9,290,2,Charging pile motor back check abnormal,[SPUTTER-1] 充電樁 馬達後退檢 異常
+Charger9,291,2,Charging pile motor abnormal,[SPUTTER-1] 充電樁 馬達異常
+Charger9,292,2,Charging pile charging control abnormal,[SPUTTER-1] 充電樁 充電控制 異常
+Charger9,293,2,Charging pile distance perception abnormal,[SPUTTER-1] 充電樁 距離感知 異常
+Charger9,294,2,Charging pile temperature perception abnormal,[SPUTTER-1] 充電樁 溫度感知 異常
+Charger9,295,1,Charging pile measuring voltage at the front end,[SPUTTER-1] 充電樁 前進端量測電壓無
+Charger9,296,2,Charging pile The charging head is not positioned,[SPUTTER-1] 充電樁 充電頭未定位
+Charger9,297,2,Charger execution command timeout,[SPUTTER-1] 充電機 執行指令超時
+Charger9,298,2,,
+Charger9,299,2,,
+Charger9,300,2,,
+Charger9,301,2,,
+Charger9,302,2,,
+Charger9,303,2,,
+Charger9,304,2,Charger abnormal,[SPUTTER-1] 充電機 異常
+Charger9,305,2,Charger communication is abnormal,[SPUTTER-1] 充電機 通訊異常
+Charger9,306,2,Abnormal power supply of the charger,[SPUTTER-1] 充電機 送電異常
+Charger9,307,2,Charger output current,[SPUTTER-1] 充電機 輸出電流無
+Charger9,308,2,Charger Non-power transmission process No load power transmission abnormal,[SPUTTER-1] 充電機 非送電流程 無負載送電異常
+Charger9,309,2,,
+Charger9,310,2,,
+Charger9,311,2,,
+Charger9,312,2,,
+Charger9,313,2,,
+Charger9,314,2,,
+Charger9,315,2,,
+Charger9,316,2,,
+Charger9,317,2,,
+Charger9,318,2,,
+Charger9,319,2,,
+Charger9,10201,1,Coupler position not safety,
+Charger10,320,2,Charging pile. no abnormalities in receiving and sending out,[SPUTTER-2] 充電樁 受入送出動作無 異常
+Charger10,321,2,Charging pile motor forward inspection abnormal,[SPUTTER-2] 充電樁 馬達前進檢 異常
+Charger10,322,2,Charging pile motor back check abnormal,[SPUTTER-2] 充電樁 馬達後退檢 異常
+Charger10,323,2,Charging pile motor abnormal,[SPUTTER-2] 充電樁 馬達異常
+Charger10,324,2,Charging pile charging control abnormal,[SPUTTER-2] 充電樁 充電控制 異常
+Charger10,325,2,Charging pile distance perception abnormal,[SPUTTER-2] 充電樁 距離感知 異常
+Charger10,326,2,Charging pile temperature perception abnormal,[SPUTTER-2] 充電樁 溫度感知 異常
+Charger10,327,1,Charging pile measuring voltage at the front end,[SPUTTER-2] 充電樁 前進端量測電壓無
+Charger10,328,2,Charging pile The charging head is not positioned,[SPUTTER-2] 充電樁 充電頭未定位
+Charger10,329,2,Charger execution command timeout,[SPUTTER-2] 充電機 執行指令超時
+Charger10,330,2,,
+Charger10,331,2,,
+Charger10,332,2,,
+Charger10,333,2,,
+Charger10,334,2,,
+Charger10,335,2,,
+Charger10,336,2,Charger abnormal,[SPUTTER-2] 充電機 異常
+Charger10,337,2,Charger communication is abnormal,[SPUTTER-2] 充電機 通訊異常
+Charger10,338,2,Abnormal power supply of the charger,[SPUTTER-2] 充電機 送電異常
+Charger10,339,2,Charger output current,[SPUTTER-2] 充電機 輸出電流無
+Charger10,340,2,Charger Non-power transmission process No load power transmission abnormal,[SPUTTER-2] 充電機 非送電流程 無負載送電異常
+Charger10,341,2,,
+Charger10,342,2,,
+Charger10,343,2,,
+Charger10,344,2,,
+Charger10,345,2,,
+Charger10,346,2,,
+Charger10,347,2,,
+Charger10,348,2,,
+Charger10,349,2,,
+Charger10,350,2,,
+Charger10,351,2,,
+Charger10,10201,1,Coupler position not safety,
+AGV_NODE,14024494,2,Overcurrent in DCBUS,DCBUS? 過電流
+AGV_NODE,14004409,2,Failed to turn into Safe OP Mode in the EtherCAT Loop.,EtherCAT無法進入安全操作模式
+AGV_NODE,14006882,2,Calculating the generalized Cartesian force acting on robot's TCP failed,計算作用於工具中心點上的卡氏空間廣義施力
+AGV_NODE,14004407,2,Clear Robot Alarm Failure,無法清除軸關節警報
+AGV_NODE,14004406,2,Absolution Position Calibration Failure in the Joint Drivers.,軸關節驅動器絕對位置校正失敗
+AGV_NODE,14004405,2,Joint Drivers Alarm,軸關節驅動器警報
+AGV_NODE,14004403,2,TCP Speed over the criterion on the manual mode,在手動模式教導中，終端速度超過安全速度
+AGV_NODE,14004402,2,Disconnect with safety monitor module,監控模組失聯
+AGV_NODE,14004401,2,Safety function initialized failure,初始化安全功能失敗
+AGV_NODE,14004400,2,"Over Current in the Power Supply 24V, I/O Board Alarm","輸出入控制板,24V電源使用超出限定電流"
+AGV_NODE,14004375,2,"Forward Kinematics Failure, Interpolation Points Issue",點位插補時順向運動學失敗
+AGV_NODE,14004374,2,Motion Failure due to Max Points Counts Issue in the NURBS,以時間長短為運動參數的計算錯誤
+AGV_NODE,14004377,2,Timeout in Steady State Error in Motion Process.,等待誤差收斂逾時
+AGV_NODE,14004376,2,Inverse Jacobian Matrices Failure jacobian,逆矩陣失敗
+AGV_NODE,14004371,2,PTP function Failure in Driver,驅動器點對點模式失敗
+AGV_NODE,14004370,2,"Inverse Kinematics Failure, Interpolation Points Issue",點位插補時，逆向運動學失敗
+AGV_NODE,14004373,2,Create Circle Path Failed,圓形軌跡產生失敗
+AGV_NODE,14004372,2,Over Range Between the Interpolation Points,插補點位間隔過大
+AGV_NODE,14000035,2,Arm_GripperObject1,Arm_GripperObject1(手臂_夾爪物件種類1)
+AGV_NODE,14004378,2,Motion Failure when Moving at Constant Speed,執行等速移動的時發生錯誤
+AGV_NODE,14024492,2,The initial angle of three phase of motor is not correct,馬達三相初始相角錯誤
+AGV_NODE,13004145,2,AutoWhenE84On,AutoWhenE84On
+AGV_NODE,13004144,2,AutoWhenNotStandby,AutoWhenNotStandby
+AGV_NODE,13004147,2,movewhengrip,movewhengrip
+AGV_NODE,13004146,2,ChargingWhenE84Off,ChargingWhenE84Off
+AGV_NODE,13004149,2,RobotCmdInManualMode,RobotCmdInManualMode
+AGV_NODE,13004148,2,LeaveStationFail,LeaveStationFail
+AGV_NODE,14004408,2,Failed to turn Servo On in Joint Driver,軸關節伺服啟動失敗
+AGV_NODE,14065290,2,[Error][Safety Function]J2 Velocity exceeds limit,第 2 軸速度超過限制
+AGV_NODE,14019228,2,[Error][External Device]Force-Torque sensor open failed,力感測器裝置開啟失敗
+AGV_NODE,13004131,2,LoadUnloadNotReady,LoadUnloadNotReady
+AGV_NODE,12000069,2,ES off.,ES off.(請確認EQ端訊號)
+AGV_NODE,14016428,2,[System][Error]Project Compile failed,專案編譯有誤
+AGV_NODE,14016429,2,[Error][System]Project Run failed,專案執行錯誤
+AGV_NODE,14016426,2,[Error][Flow]Project does not exist,沒有這樣的專案
+AGV_NODE,14016427,2,[System][Error]Project File Load Error,專案加載錯誤
+AGV_NODE,14016424,2,Project Is Running,專案正在運行
+AGV_NODE,14016425,2,Project Is Editing,專案正在編輯
+AGV_NODE,14016422,2,Robot Cmd failed,手臂控制指令執行失敗
+AGV_NODE,14016423,2,[Error][External Device]USB Error,存在 USB 無法執行專案
+AGV_NODE,14016420,2,Internal Error,內部錯誤
+AGV_NODE,14016421,2,Incorrect Control Mode,控制器模式不正確
+AGV_NODE,14005725,2,Rotate around Z axis failed,手臂繞工具 Z 軸旋轉失敗
+AGV_NODE,14005724,2,Move along X axis failed,手臂沿工具 X 軸移動失敗
+AGV_NODE,14005727,2,Set EIH transform failed,設定 EIH 轉換矩陣失敗
+AGV_NODE,14005726,2,Get EIH transform failed,取得 EIH 轉換矩陣失敗
+AGV_NODE,14005721,2,Illegal camera extrinsic parameter matrix,相機內部參數矩陣錯誤
+AGV_NODE,14005720,2,Record each robot and camera posture in EIH calibration failed,"於 EIH? 校正程序中,紀錄手臂與相機姿態組失敗"
+AGV_NODE,14065479,2,Runin process R2: AB signal is NG,Runin R2 UVWABZ 訊號確認? - AB 訊號個數不對
+AGV_NODE,14065478,2,Runin process R2: the sequence of UVW is NG,Runin R2 UVWABZ 訊號確認? - UVW 訊號順序錯誤
+AGV_NODE,14065477,2,Runin process R2: W signal NG,Runin R2 UVWABZ 訊號確認? - W 訊號個數異常
+AGV_NODE,14065476,2,Runin process R2: V signal NG,Runin R2 UVWABZ 訊號確認? - V 訊號個數異常
+AGV_NODE,14065475,2,Runin process R2: U signal NG,Runin R2 UVWABZ 訊號確認? - U 訊號個數異常
+AGV_NODE,14065474,2,Runin process R2: multi Z index happened,Runin R2 UVWABZ 訊號確認? -? 一圈出現多個 Z
+AGV_NODE,14065473,2,Runin process R2: Z index miss,Runin R2 UVWABZ 訊號確認? -? 沒有 Z 訊號
+AGV_NODE,14065472,2,The deviation is too high when initializing joint coordinate,"轉換絕對位置時,第 2,3 相偏差過大"
+AGV_NODE,12008263,2,GO off.,GO off.(請確認EQ端訊號)
+AGV_NODE,12008262,2,ES off.,ES off.(請確認EQ端訊號)
+AGV_NODE,14004458,2,It is a test command to disconnect with safety monitor board,停止與安全監控版通訊
+AGV_NODE,13008336,2,WrongRunningID,WrongRunningID
+AGV_NODE,14065511,2,Runin process: the process of g sensor calibration is NG,Runin: 加速規校正過程出錯(產線生產使用)
+AGV_NODE,14000272,2,Arm_LDULD_Sensor_Check_NG,Arm_LDULD_Sensor_Check_NG(LD_ULD時Sensor異常)
+AGV_NODE,14012289,2,[Error][User Setting]Invalid plane points,無效的平面設定點位
+AGV_NODE,14017409,2,Actioner Run failed,Actioner 執行失敗
+AGV_NODE,14017408,2,Actioner Start failed,Actioner 啟動失敗
+AGV_NODE,11000048,2,Arm_VisionFixedFail,Arm_VisionFixedFail
+AGV_NODE,11000147,2,Arm_RBMoveing_DI2_Fash,Arm_RBMoveing_DI2_Fash
+AGV_NODE,14065515,2,[Hardware][Error]The voltage of 12V is NG,
+AGV_NODE,14024519,2,Runin process R2: AB signal is NG,Runin R2 UVWABZ 訊號確認? - AB 訊號個數不對
+AGV_NODE,15000001,2,BatteryPortOpenFail,BatteryPortOpenFail
+AGV_NODE,14017028,2,"ProxyServer initialize failure, SystemFile error",Server 啟動 SystemFile 失敗
+AGV_NODE,14012549,2,Invalid Point,無效的點位
+AGV_NODE,14005026,2,Quaternion setting failed,四元素設定失敗
+AGV_NODE,14005027,2,Quaternion transfer to angle-axis failed,四元素轉換成角-軸表示法失敗
+AGV_NODE,14005024,2,Illegal dimension of a quaternion,四元素維度錯誤
+AGV_NODE,14024529,2,The data is abnormal when reading magnetic encoder.,磁性編碼器資料讀取異常
+AGV_NODE,14005022,2,No initial guessing matrix,沒有初始值矩陣
+AGV_NODE,14005023,2,Transform type mismatch,轉換類別錯誤
+AGV_NODE,14005020,2,Specific axis are parallel,某些特定向量軸向平行
+AGV_NODE,14005021,2,Solve A =XBY failed,解矩陣方程式 A = XBY 失敗
+AGV_NODE,14006650,2,DH calibration moving guided by vision failed,視覺引導之 DH 校正手臂移動失敗
+AGV_NODE,14006651,2,TCP calibration move failed,"於 DH 校正程序中,? 工具中心點? 校正移動失敗"
+AGV_NODE,14006652,2,DH align error over 0.3 mm,DH 校正結果誤差值超過規範
+AGV_NODE,14024521,2,The electrical angle of motor is not correct (warning),馬達電氣角錯誤? (警告)
+AGV_NODE,14024526,2,The compensation of encoder signal is too high,光編碼器 AB 相補償過大
+AGV_NODE,14024527,2,The protection is on for motor hold (type 2),馬達鎖定保護(型態 2)
+AGV_NODE,14024524,2,The Z index signal is missing,單圈過 Z 訊號遺失
+AGV_NODE,14024525,2,Encoder connection failed,編碼器連結失敗
+AGV_NODE,14004399,2,Pose error by g-sensor g sensor,感測的姿態與實際不符
+AGV_NODE,14004398,2,gear ratio is not match the model,軸關節減數比不符合預期
+AGV_NODE,11004117,2,MoveEMOStop,MoveEMOStop
+AGV_NODE,21000017,2,FrontCameraNoFrame,FrontCameraNoFrame(前方相機無回應請斷電重開)
+AGV_NODE,14004392,2,Driver mode switching timeout.,驅動器模式切換逾時
+AGV_NODE,14004397,2,Joint Signature mismatch with vendor,軸關節供應商不符合預期
+AGV_NODE,13008208,2,GripperInitialError,GripperInitialError
+AGV_NODE,13008209,2,GripperInitialFail,GripperInitialFail
+AGV_NODE,14024559,2,The parameters of magnetic encoder are abnorma,磁性編碼器參數異常
+AGV_NODE,14065280,2,Self-Collision,自我碰撞
+AGV_NODE,12000068,2,HO_AVBL off.,HO_AVBL off.(請確認EQ端訊號)
+AGV_NODE,14005509,2,Failed to check whether robot can flip,確認手臂腕部是否能翻轉失敗
+AGV_NODE,14005508,2,Robot flipping failed,手臂腕部翻轉(適用於前 3+後 3 型態)失敗
+AGV_NODE,14032779,2,[Error][Safety Function] Discrepancy was detected between dual channels of Robot Internal Protective Stop Output Port.,機器人內部保護性停止輸出埠之雙通道間偵測到不相符結果
+AGV_NODE,14000025,2,Arm_GripperReleaseSensorError,Arm_GripperReleaseSensorError(手臂_開夾爪到位Sensor異常)
+AGV_NODE,14000024,2,Arm_GripperTooDeep,Arm_GripperTooDeep(手臂_夾爪過壓)
+AGV_NODE,14005507,2,Move distance with respect to base frame failed,手臂相對於座標系移動一段差量失敗
+AGV_NODE,14005506,2,"DH compensation stops, this will not affect robot moving","DH 校正? 補償停止,? 但不影響移動"
+AGV_NODE,14005501,2,teach point transfer on task space failed,教導點位於任一工作空間座標的轉換失敗
+AGV_NODE,14005500,2,Task space coordinates transfer failed : from HMI to RTX,工作空間座標點位轉換失敗(從 HMI 到 RTX)
+AGV_NODE,14005503,2,Move to target with respect to tool base failed,手臂相對於工具座標系移動失敗
+AGV_NODE,14005502,2,Target approaching failed,手臂移動至目標點失敗
+AGV_NODE,11000051,2,Arm_TM_Var2NG,Arm_TM_Var2NG
+AGV_NODE,11000050,2,Arm_TM_VarNG,Arm_TM_VarNG
+AGV_NODE,14065283,2,Collaboration Area,協作區
+AGV_NODE,14024557,2,The compensation of encoder signal is too high in ABS mode,The compensation of encoder signal is too high in ABS mode
+AGV_NODE,14018944,2,TMManager object initialization error,TMManager 物件初始化錯誤
+AGV_NODE,14012550,2,Invalid Parameter,無效的參數
+AGV_NODE,14012551,2,Over angle limit,超過角度極限
+AGV_NODE,14016385,2,Undefined error code,未定義的錯誤代碼
+AGV_NODE,14065286,2,[Error][Safety Function]J1 Position exceeds limit,第 1 軸位置超過限制
+AGV_NODE,14019461,2,[Flow][Warning]Warning for Network path could not be access,警告，無法有效存取網路路徑
+AGV_NODE,14019460,2,[Flow][Warning]Warning for String Format include Variables,警告，字串內含有變數使用
+AGV_NODE,11004099,2,MoveManualCancel,MoveManualCancel
+AGV_NODE,14006878,2,Align the x-y plane of tool frame with that of task frame failed,將工具座標系的 Z 軸垂直於工作座標系的 XY 平面失敗
+AGV_NODE,14006879,2,Acquiring object avoidance point failed,取得避障點失敗
+AGV_NODE,11004098,2,ResetProcessFail,ResetProcessFail
+AGV_NODE,14006874,2,Parallel list number should be large than 1 in one dimension,"於方陣排列應用中,? 每個維度都至少要有 1 點"
+AGV_NODE,14006875,2,Align the x-y plane of tool frame with that of base frame failed,將工具座標系的 x-y 平面與座標系的 x-y 平面對齊失敗
+AGV_NODE,14006876,2,Illegal geometric plane data,幾何平面的資料錯誤
+AGV_NODE,14006877,2,Align the x-y plane of tool frame with that of user defined frame failed,將工具座標系的 Z 軸垂直於使用者定義的 XY 平面失敗
+AGV_NODE,12008320,2,ES off.,ES off.(請確認EQ端訊號)
+AGV_NODE,12008321,2,GO off.,GO off.(請確認EQ端訊號)
+AGV_NODE,14006872,2,Acquiring parallel list position failed,取得方陣排列點位失敗
+AGV_NODE,14006873,2,"In parallel list application, at least two points coincides","於方陣排列應用中,? 至少有兩點重合"
+AGV_NODE,13004105,2,LoadUnloadFail,LoadUnloadFail
+AGV_NODE,13004104,2,DockNG,DockNG
+AGV_NODE,13004100,2,e84chargeabnormal,e84chargeabnormal
+AGV_NODE,13004103,2,chargerofffail,chargerofffail
+AGV_NODE,13004102,2,chargeronfail,chargeronfail
+AGV_NODE,14005471,2,Illegal robot configuration number,手臂姿態總數錯誤
+AGV_NODE,14005470,2,Save robot configure file failed,儲存手臂參數檔失敗
+AGV_NODE,14005473,2,Jacobian calculation failed,jacobian 矩陣計算失敗
+AGV_NODE,14005472,2,"This function is dummy, just used for override","此函式無作用,? 僅提供 C++覆寫"
+AGV_NODE,14005475,2,Speed transfer via Jacobian failed,經由 jacobian 矩陣轉換手臂速度失敗
+AGV_NODE,14005474,2,Jacobian inverse failed,逆 jacobian 矩陣比計算失敗
+AGV_NODE,14005477,2,Differential orientation transfer failed,方向微動量轉換失敗
+AGV_NODE,14005476,2,Robot is at singular point,手臂位於奇異點
+AGV_NODE,14005479,2,Forward dynamics computation failed,順向動力學計算失敗
+AGV_NODE,14005478,2,The transfer between geometric and analytical Jacobian failed,解析與幾何 jacobian 互換失敗
+AGV_NODE,14019218,2,[Error][Software]Missing Right Parentheses,缺少右括號? )
+AGV_NODE,14019219,2,[Error][Flow]Missing Right Brackets,缺少右括號? ]
+AGV_NODE,14005715,2,Visual move06 failed,支援視覺移動方式? move06? 失敗
+AGV_NODE,14019210,2,[Error][Flow]Calculation is not a Number,運算必須是個數值
+AGV_NODE,14019211,2,[Error][Flow]Calculation is not an Integer Number,運算必須是個整數值
+AGV_NODE,14019212,2,[Error][Flow]Calculation is not a Variables,運算必須是個變數
+AGV_NODE,14019213,2,[Flow][Error]Calculation is not an Integer Variables,運算必須是個整數變數
+AGV_NODE,14019214,2,[Error][Software]Calculation is not a Boolean,運算必須是個布林值
+AGV_NODE,14019215,2,"[Error][Flow]Data type is different, can not assign operation",型別不符合，無法做賦值指派
+AGV_NODE,14019216,2,"[Error][Software]Data type is different, can not compare operation",型別不符合，無法做邏輯比對
+AGV_NODE,14019217,2,[Error][Flow]Invalid Number Range,非法的型別數值範圍
+AGV_NODE,14017920,2,[info.]Modbus object initializing,Modbus 物件初始化
+AGV_NODE,14017921,2,Modbus socket read,Modbus socket 讀取
+AGV_NODE,14017922,2,Modbus erro,Modbus 錯誤
+AGV_NODE,14017923,2,[info.][com.]Modbus data wrote,Modbus 數據寫入
+AGV_NODE,14017924,2,Modbus data received,收到 Modbus 數據
+AGV_NODE,14017925,2,[info.]Modbus serial port open,Modbus serial port 開啟
+AGV_NODE,14024503,2,Brake release failed.,制動器釋放的功能失效
+AGV_NODE,11004105,2,ArmWorkAbnormal,ArmWorkAbnormal
+AGV_NODE,14017417,2,Actioner execute robot failed,Actioner? 執行手臂失敗
+AGV_NODE,14017026,2,"ProxyServer initialize failure, ServerParams error",Server 啟動 ServerParams 失敗
+AGV_NODE,14065288,2,[Error][Safety Function]J1 Torque exceeds limit,第 1 軸力矩超過限制
+AGV_NODE,14024490,2,The overcurrent is protected by current sensor of V phase,"V 相電流感應器,過電流保護"
+AGV_NODE,14004592,2,HIM Command to shout down the robot system,系統正常關閉之命令
+AGV_NODE,14024497,2,The communication of SPI is timeout,SPI? 通訊逾時
+AGV_NODE,14004470,2,There is an Alarm in Blending Process in the Vision Servoing Block,視覺伺服運動路徑擬合過程中，產生錯誤
+AGV_NODE,14024495,2,The communication of EtherCAT is timeout,EtherCAT 通訊逾時
+AGV_NODE,11004103,2,ChargePoseInitFail,ChargePoseInitFail
+AGV_NODE,14005236,2,End effector reconnection with robot failed,末端工具與手臂重新連結失敗
+AGV_NODE,14024499,2,The watch dog of MCU is timeout,MCU 的看門狗計時器逾時
+AGV_NODE,11004102,2,CameraInvokeAprilTagNG,
+AGV_NODE,14024505,2,MOFSET NG,Mosfet 元件異常
+AGV_NODE,14006643,2,Transfer between frame 0 and (i-1) failed,均質轉換於連桿座標 0 到 (i-1) 失敗
+AGV_NODE,14008193,2,Camera in use,流程可能使用多線程且有發生編輯上邏輯錯誤
+AGV_NODE,14008192,2,[Error][Hardware]Camera NOT found,找不到相機
+AGV_NODE,14008195,2,[Error][Hardware]Camera is disconnected. Please check whether the connection of camera is broken or the USB slots are overloaded.,相機斷線
+AGV_NODE,14008194,2,Unexpected error,不明原因
+AGV_NODE,14008197,2,[Warning][User Setting]Missing Dongle Key: ??,授權鎖權限不足
+AGV_NODE,14008196,2,Unmatched job version. The job was made by PreAPR version but current Vision is APR version,任務版本不合
+AGV_NODE,14008199,2,Vision error,視覺錯誤
+AGV_NODE,14008198,2,Grab image failed,取像錯誤紀錄
+AGV_NODE,14024537,2,The connection sequence of UVW of motor is not correct,馬達 UVW 接線順序異常
+AGV_NODE,12008251,2,VS_1 on.,VS_1 on.(請確認EQ端訊號)
+AGV_NODE,11000129,2,Arm_RBNotInInitPos,Arm_RBNotInInitPos
+AGV_NODE,11000128,2,Arm_NoRunning,Arm_NoRunning
+AGV_NODE,14024536,2,The resistance of UVW of motor is abnormal,馬達 UVW 量測阻值異常
+AGV_NODE,14005718,2,Illegal number of taking image data,"於 EIH? 校正程序中,? 取像次數錯誤"
+AGV_NODE,14005719,2,The link frame attached with EIH camera does not match user's definition,相機連結的手臂連桿座標序號與使用者設定不同
+AGV_NODE,14005714,2,Visual move15 failed,支援視覺移動方式? move15? 失敗
+AGV_NODE,14024531,2,The origin of joint module is out of preset,"關節模組機構原點,超過機構零點範圍"
+AGV_NODE,14005716,2,Visual move07 failed,支援視覺移動方式? move07? 失敗
+AGV_NODE,14005717,2,Visual move17 failed,支援視覺移動方式? move17? 失敗
+AGV_NODE,14005710,2,Inverse the interaction matrix failed,反? interaction? 矩陣失敗
+AGV_NODE,14005711,2,Visual move03 failed,支援視覺移動方式? move03? 失敗
+AGV_NODE,11004097,2,ResetArmDoorFail,ResetArmDoorFail
+AGV_NODE,14024530,2,The magnet is NG judged by magnetic encoder,磁性編碼器偵測到磁鐵異常
+AGV_NODE,12008254,2,GO off.,GO off.(請確認EQ端訊號)
+AGV_NODE,12008255,2,L_REQ on.,L_REQ on.(請確認EQ端訊號)
+AGV_NODE,12008256,2,U_REQ on.,U_REQ on.(請確認EQ端訊號)
+AGV_NODE,12008257,2,VA on.,VA on.(請確認EQ端訊號)
+AGV_NODE,12008250,2,VS_0 on.,VS_0 on.(請確認EQ端訊號)
+AGV_NODE,14024533,2,The parameters for joint module are abnormal,馬達關節模組參數異常
+AGV_NODE,12008252,2,HO_AVBL off.,HO_AVBL off.(請確認EQ端訊號)
+AGV_NODE,12008253,2,ES off.,ES off.(請確認EQ端訊號)
+AGV_NODE,14024532,2,The data in EEPROM is dislocated,EEPROM 內容有錯位
+AGV_NODE,12008258,2,READY off.,READY off.(請確認EQ端訊號)
+AGV_NODE,21000020,2,LeftCameraNoFrame,LeftCameraNoFrame(左側相機無回應請斷電重開)
+AGV_NODE,14024552,2,The output of g sensor is NG,加速規輸出異常
+AGV_NODE,14000342,2,Arm_Not found active,Arm_Not found active(手臂_無此Active)
+AGV_NODE,14005723,2,Rotate around Y axis failed,手臂繞工具 Y 軸旋轉失敗
+AGV_NODE,14006162,2,The visual servo damping factor should be positive,視覺伺服的收斂參數應為正
+AGV_NODE,14006163,2,Acquiring joint velocity command (via two feature points) failed,經由兩個特徵點計算軸速度命令失敗
+AGV_NODE,14006160,2,The DOF of image point must be 2,影像點自由度應為 2
+AGV_NODE,14006161,2,Camera should be attached with flange/tool frame,相機應該與手臂法蘭或工具固定
+AGV_NODE,14006164,2,Visual servo simulation test failed,視覺伺服模擬失敗
+AGV_NODE,12008259,2,VS_0 on.,VS_0 on.(請確認EQ端訊號)
+AGV_NODE,13000080,2,VisitStepPrecheckException,VisitStepPrecheckException
+AGV_NODE,13000081,2,CstPositionError,CstPositionError
+AGV_NODE,13000082,2,RecvRobotCommandEnd,RecvRobotCommandEnd
+AGV_NODE,13000083,2,RobotErrorBeforeLDUD,RobotErrorBeforeLDUD
+AGV_NODE,14005233,2,End effector parameters acquisition from end effector object failed,透過手臂物件取得末端工具參數失敗
+AGV_NODE,12004166,2,GO off.,GO off.(請確認EQ端訊號)
+AGV_NODE,14017414,2,Actioner write file error,Actioner? 寫檔錯誤
+AGV_NODE,12004164,2,HO_AVBL off.,HO_AVBL off.(請確認EQ端訊號)
+AGV_NODE,12004165,2,ES off.,ES off.(請確認EQ端訊號)
+AGV_NODE,12004162,2,VS_0 on.,VS_0 on.(請確認EQ端訊號)
+AGV_NODE,12004163,2,VS_1 on.,VS_1 on.(請確認EQ端訊號)
+AGV_NODE,12004160,2,VA on.,VA on.(請確認EQ端訊號)
+AGV_NODE,14004996,2,Illegal skew matrix,此矩陣不是反對稱矩陣
+AGV_NODE,12000049,2,VS_0 on.,VS_0 on.(請確認EQ端訊號)
+AGV_NODE,12000048,2,READY off.,READY off.(請確認EQ端訊號)
+AGV_NODE,12065530,2,Gate type error.(Please check AGVM setting),Gate type error.(請確認EQ端訊號)(Please check AGVM setting)
+AGV_NODE,12000047,2,VA on.,VA on.(請確認EQ端訊號)
+AGV_NODE,12000046,2,U_REQ on.,U_REQ on.(請確認EQ端訊號)
+AGV_NODE,12008260,2,VS_1 on.,VS_1 on.(請確認EQ端訊號)
+AGV_NODE,14005232,2,Setting end effector parameters to robot object failed,末端工具參數設定失敗
+AGV_NODE,11000019,2,Arm_GripError,Arm_GripError
+AGV_NODE,11000018,2,Arm_GripLoss,Arm_GripLoss
+AGV_NODE,11000017,2,Arm_GripInitFail,Arm_GripInitFail
+AGV_NODE,11000016,2,Arm_GripInitError,Arm_GripInitError
+AGV_NODE,14005722,2,Illegal number of changing robot posture,"於 EIH? 校正程序中,? 手臂改變姿態的次數錯誤"
+AGV_NODE,14065491,2,[Error][Hardware]The origin of joint module is out of preset,"關節模組機構原點,超過機構零點範圍"
+AGV_NODE,14065490,2,[Error][Hardware]The magnet is NG judged by magnetic encoder,磁性編碼器偵測到磁鐵異常
+AGV_NODE,14065493,2,The parameters for joint module are abnormal,馬達關節模組參數異常
+AGV_NODE,21000019,2,RightCameraNoFrame,RightCameraNoFrame(右側相機無回應請斷電重開)
+AGV_NODE,14065495,2,Runin process R2: index calibration failed,Runin R2 index 校正失敗
+AGV_NODE,14065494,2,The process of I2C control flow is out of control,I2C 控制流程發生異常
+AGV_NODE,14065497,2,[Hardware][Error]The connection sequence of UVW of motor is not correct,馬達 UVW 接線順序異常
+AGV_NODE,14065496,2,[Hardware][Error]The resistance of UVW of motor is abnormal,馬達 UVW 量測阻值異常
+AGV_NODE,14065499,2,Runin process R4: UVW calibration result is out of limit,Runin R4: UVW 校正結果超過範圍
+AGV_NODE,14065498,2,Runin process R2: the current in UVW phase is NG,Runin R2: UVW 電流相位大小異常
+AGV_NODE,11004147,2,VisualServoWriteNG,VisualServoWriteNG
+AGV_NODE,11004146,2,DefaultRouteStopStaionEmpty,DefaultRouteStopStaionEmpty
+AGV_NODE,11004145,2,ArmDoorActionNG,ArmDoorActionNG
+AGV_NODE,11004144,2,DoorActionNG,DoorActionNG
+AGV_NODE,14017667,2,[Vision][Error]Vision Job file error,視覺任務文件錯誤
+AGV_NODE,14017666,2,Vision SmartPick error,視覺智慧夾取功能錯誤
+AGV_NODE,14017665,2,Vision is not initialized,視覺未校正
+AGV_NODE,14017664,2,Vision server error,視覺服務器錯誤
+AGV_NODE,14017669,2,Vision command format error,視覺命令格式錯誤
+AGV_NODE,14017668,2,[Vision][Error]Vison job file not found,找不到視覺任務的檔案
+AGV_NODE,13008256,2,J6PoseAbnormal,J6PoseAbnormal
+AGV_NODE,11000262,2,Arm_AGVLPortPUTFail,Arm_AGVLPortPUTFail
+AGV_NODE,14016398,2,Under FreeBot,FreeBot 中
+AGV_NODE,11000260,2,Arm_CoverSensorError,Arm_CoverSensorError
+AGV_NODE,11000261,2,Arm_AGVLPortGETFail,Arm_AGVLPortGETFail
+AGV_NODE,14000151,2,Arm_DataSortNotSame,Arm_DataSortNotSame(手臂_原始資料排序不一)
+AGV_NODE,14000150,2,Arm_DI2_SensorError,Arm_DI2_SensorError(手臂_DI2 Sensor 異常
+AGV_NODE,11000264,2,Arm_EQPortPUTFail,Arm_EQPortPUTFail
+AGV_NODE,14016399,2,[Error][Software]Delete project failed,刪除專案失敗
+AGV_NODE,14000016,2,Arm_GripInitError,Arm_GripInitError(手臂_夾爪初始化異常)
+AGV_NODE,14000017,2,Arm_GripInitFail,Arm_GripInitFail(手臂_夾爪初始化失敗)
+AGV_NODE,14020480,2,No Error,無錯誤
+AGV_NODE,14000018,2,Arm_GripLoss,Arm_GripLoss(手臂_夾爪夾取沒夾好)
+AGV_NODE,14000019,2,Arm_GripError,Arm_GripError(手臂_夾爪夾取異常)
+AGV_NODE,14065506,2,The magnetic encoder data is not stable in the position initialization process,位置校正過程編碼器圈數取值不穩定
+AGV_NODE,14005703,2,Get current robot Cartesian posture failed,取得手臂目前卡式空間點位失敗
+AGV_NODE,12008234,2,VS_1 on.,VS_1 on.(請確認EQ端訊號)
+AGV_NODE,14004432,2,Power Board Lost Connection,電源控制板失去連線
+AGV_NODE,14004433,2,Power Board Over Heat,電源控制板溫度超規
+AGV_NODE,14004430,2,The S/N of the Joints does not match the default setting,軸關節序號與設定不符合
+AGV_NODE,14004431,2,Power Board is Missing,電源控制板偵測失敗
+AGV_NODE,14004436,2,The Current is still out of range under current limit constrain,48V電源已經限電流的情況下，再度超出限定電流
+AGV_NODE,14004437,2,The Current is out of range in the 24V Power Supply,24V電源供應電流超規
+AGV_NODE,14004434,2,?Robot performed Cat.1 stop.??,機器人一類停機
+AGV_NODE,14004435,2,The Current or Voltage in the 48V Power Supply is out of range,48V電源供應的電流或是電壓超規
+AGV_NODE,14018176,2,[Error][External Device]USB with correct name does not exist.,不存在正確名稱的 USB
+AGV_NODE,14018177,2,[Error][Software]No Space for External Device,外部裝置空間不足
+AGV_NODE,14004438,2,I/O Board Lost Connection,輸出入控制板失去連線
+AGV_NODE,14004439,2,Joints Lost Connection,軸關節模組失去連線
+AGV_NODE,14016391,2,[Hardware][Error]Robot is not connected,手臂未連接
+AGV_NODE,13004137,2,AutoWhenRobotNotHome,AutoWhenRobotNotHome
+AGV_NODE,12008235,2,TP3 timeout or EQ error.(HO_AVBL off),TP3 timeout or EQ error.(請確認EQ端訊號)(HO_AVBL off)
+AGV_NODE,14019234,2,Parameter key is not exist,參數化索引鍵值不存在
+AGV_NODE,14000128,2,Arm_NoRunning,Arm_NoRunning(手臂_沒有這個Running編號)
+AGV_NODE,14000129,2,Arm_RBNotInInitPos,Arm_RBNotInInitPos(手臂_Robot沒有在初始位置)
+AGV_NODE,13004136,2,ToPortIsFull,ToPortIsFull
+AGV_NODE,14019235,2,Parameter value is invalid,參數化資料值錯誤
+AGV_NODE,13004130,2,IncorrectRobotCommand,IncorrectRobotCommand
+AGV_NODE,14005688,2,Illegal DOF of eye in hand transform,EIH? 轉換維度錯誤
+AGV_NODE,13004132,2,AGVMConnectionAbnormal,AGVMConnectionAbnormal
+AGV_NODE,13004133,2,RobotCmdWrongStation,RobotCmdWrongStation
+AGV_NODE,17000004,2,DriverBoardExceptionError,DriverBoardExceptionError
+AGV_NODE,14019232,2,[Error][Com.]Modbus read failed,Modbus 讀取失敗
+AGV_NODE,14005689,2,Initialization of EIH calibration process failed,EIH? 校正程序初始化失敗
+AGV_NODE,17000001,2,DriverBoardPortOpenFail,DriverBoardPortOpenFail
+AGV_NODE,17000002,2,DriverBoardReadTimeout,DriverBoardReadTimeout
+AGV_NODE,14019233,2,[Error][Com.]Modbus write failed,Modbus 寫入失敗
+AGV_NODE,14016431,2,[info.]Connected to a new Proxy Server,連接到一個新的代理伺服器
+AGV_NODE,14016430,2,[info.][System]Project Locked,專案已被鎖定
+AGV_NODE,14016433,2,[Error][External Device]Force-Torque sensor open failed,力感測器裝置開啟失敗
+AGV_NODE,14016432,2,Force-Torque sensor is not found,力感測器不存在
+AGV_NODE,14016435,2,Delete Modbus Device failed,刪除 Modbus 裝置時錯誤
+AGV_NODE,14016434,2,Set Modbus Device failed,設定 Modbus 裝置時錯誤
+AGV_NODE,14016437,2,[Error][External Device]Force-Torque sensor data does not response,無法收到力感測器數據
+AGV_NODE,14016436,2,Force-Torque sensor data is not updated,力感測器數據沒有變化
+AGV_NODE,14016439,2,[Error][System]Set watch node failed,設定時間測試節點失敗
+AGV_NODE,14016438,2,[info.]Point Type is Offline,點位是離線編程資料
+AGV_NODE,14019231,2,[Error][Flow]Exception Error,專案執行錯誤
+AGV_NODE,14065282,2,[Error][Safety Function]Power exceeds limit,
+AGV_NODE,14065442,2,The acceleration on X direction of G sensor is out of range,加速規? X? 方向加速度超標
+AGV_NODE,14065443,2,The acceleration on Y direction of G sensor is out of range,加速規? Y? 方向加速度超標
+AGV_NODE,14065440,2,[Error][Hardware]The voltage on DCBUS is too low (40V),DCBUS? 低電壓? (40V)
+AGV_NODE,14065441,2,[Error][Hardware]The voltage on DCBUS is too high (60V),DCBUS? 高電壓? (60V)
+AGV_NODE,14065446,2,[Error][Hardware]The current in U phase of motor is too high,馬達 U 相過電流
+AGV_NODE,14065447,2,[Error][Hardware]The current in V phase of motor is too high,馬達 V 相過電流
+AGV_NODE,12016387,2,TA4 timeout(robot timeout).,TA4 timeout(robot timeout).(請確認EQ端訊號)
+AGV_NODE,14065445,2,[Error][Hardware]The temperature on PCB is too high (90 degree Celsius),印刷電路板溫度超標(90 度 C)
+AGV_NODE,14065448,2,[Error][Hardware]The current in W phase of motor is too high,馬達 W 相過電流
+AGV_NODE,14065449,2,The overcurrent is protected by current sensor of U phase,"U 相電流感應器,過電流保護"
+AGV_NODE,13008321,2,RobotNotAtInitPose,RobotNotAtInitPose
+AGV_NODE,13008320,2,NoRunningID,NoRunningID
+AGV_NODE,13008323,2,PSPLSensorAbnormal,PSPLSensorAbnormal
+AGV_NODE,13008322,2,GripperNotRelease,GripperNotRelease
+AGV_NODE,14005228,2,Illegal end effector serial number,此末端工具序號錯誤
+AGV_NODE,14005229,2,This end effector is not on our list,此末端工具不在內建資料檔中
+AGV_NODE,14005224,2,End effector data file does not yet been loaded,末端工具資料檔未載入
+AGV_NODE,14005225,2,The end effector has existed already,此末端工具已經存在
+AGV_NODE,14005226,2,At least one end effector should be selected for your task,你至少得選擇一個末端工具
+AGV_NODE,14005227,2,Illegal end effector data format,此末端工具資料格式錯誤
+AGV_NODE,14000263,2,Arm_EQPortGETFail,
+AGV_NODE,14000262,2,Arm_AGVLPortPUTFail,
+AGV_NODE,14000261,2,Arm_AGVLPortGETFail,
+AGV_NODE,14000260,2,Arm_CoverSensorError,Arm_CoverSensorError(手臂_AGV開蓋Sesor異常)
+AGV_NODE,14065312,2,[Error][Hardware]Solenoid current is NG,電磁閥電流異常
+AGV_NODE,14065313,2,[Error][Hardware]Joint movement range is NG in brake release status,"解煞車時,關節模組轉動範圍異常"
+AGV_NODE,14000265,2,Arm_RB_IPC_LAG,Arm_RB_IPC_LAG(RB_IPC_Lag請斷電重開)
+AGV_NODE,14000264,2,Arm_EQPortPUTFail,Arm_EQPortPUTFail(EQ Port 置物失敗)
+AGV_NODE,14012295,2,Detection point is out of safety space,偵測點落於安全空間之外
+AGV_NODE,14012294,2,Incorrect command format,不正確的指令格式
+AGV_NODE,14024353,2,Joint movement range is NG in brake release status,"解煞車時,關節模組轉動範圍異常"
+AGV_NODE,14024352,2,Solenoid current is NG,電磁閥電流異常
+AGV_NODE,14012291,2,[Error][User Setting]Failed to build operation space with the new plane,新增的安全平面在合併成工作區間時失敗
+AGV_NODE,14012290,2,[Error][User Setting]Invalid cube points,無效的六面體設定點位
+AGV_NODE,14012293,2,Invalid selected planes,選取特徵面無效
+AGV_NODE,14012292,2,[Error][User Setting]Failed to build operation space with the new stop plane,新增的停止平面在合併成工作區間時失敗
+AGV_NODE,13004135,2,FromPortIsEmpty,FromPortIsEmpty
+AGV_NODE,14000037,2,Arm_GripperObject3,Arm_GripperObject3(手臂_夾爪物件種類3)
+AGV_NODE,16000001,2,EncoderDataReadFail,EncoderDataReadFail
+AGV_NODE,14004412,2,This Model is not supported,不支援目前此型別的機械手臂
+AGV_NODE,14065285,2,[Error][Safety Function]TCP force exceeds limit,末端作用力超過限制
+AGV_NODE,11000020,2,Arm_GripFail,Arm_GripFail
+AGV_NODE,15000004,2,BatteryExceptionError,BatteryExceptionError
+AGV_NODE,12008200,2,ES off.,ES off.(請確認EQ端訊號)
+AGV_NODE,15000002,2,BatteryReadTimeout,BatteryReadTimeout
+AGV_NODE,15000003,2,BatteryFormatError,BatteryFormatError
+AGV_NODE,11000021,2,Arm_ReleaseError,Arm_ReleaseError
+AGV_NODE,14006649,2,DH compensation failed,DH 補償失敗
+AGV_NODE,14006648,2,Calculate DH compensation terms failed,DH 校正補償量計算失敗
+AGV_NODE,14024539,2,Runin process R4: UVW calibration result is out of limit,Runin R4: UVW 校正結果超過範圍
+AGV_NODE,14024538,2,Runin process R2: the current in UVW phase is NG,
+AGV_NODE,11004101,2,ResetRouteInWrongState,
+AGV_NODE,11004100,2,MoveManualCancelFail,
+AGV_NODE,12008193,2,ES off.,ES off.(請確認EQ端訊號)
+AGV_NODE,14024534,2,The process of I2C control flow is out of control,
+AGV_NODE,14006641,2,Initialization of DH calibration process has not yet been done,DH 校正程序初始化尚未完成
+AGV_NODE,14006640,2,Initialization of DH calibration process failed,DH 校正程序初始化失敗
+AGV_NODE,14006647,2,DH calibration calculation (for 6DOF type robot) failed,"DH 校正計算失敗, 6 軸以上型態手臂"
+AGV_NODE,14006646,2,DH calibration calculation (for SCARA type robot) failed,"DH 校正計算失敗, SCARA 型態手臂"
+AGV_NODE,14006645,2,Transfer between frame 0 and i failed,均質轉換於連桿座標 0 到 i 失敗
+AGV_NODE,14006644,2,Transfer between frame i and N failed,均質轉換於連桿座標 i 到 N 失敗
+AGV_NODE,19000002,2,CassetteDoorAbnormalFail,CassetteDoorAbnormalFail
+AGV_NODE,19000003,2,CassetteDoorCommandFail,CassetteDoorCommandFail
+AGV_NODE,19000001,2,CassetteDoorInitFail,CassetteDoorInitFail
+AGV_NODE,19000004,2,CassetteDoorNoSensorInfo,CassetteDoorNoSensorInfo
+AGV_NODE,19000005,2,CassetteDoorControllerNoAnswer,CassetteDoorControllerNoAnswer
+AGV_NODE,13008215,2,GripFailAfterRetry,GripFailAfterRetry
+AGV_NODE,13008214,2,ReleaseFail,ReleaseFail
+AGV_NODE,13008217,2,ReleaseSensorAbnormal,ReleaseSensorAbnormal
+AGV_NODE,13008216,2,GripperOverPressure,GripperOverPressure
+AGV_NODE,13008211,2,GripError,GripError
+AGV_NODE,13008210,2,GripLoss,GripLoss
+AGV_NODE,13008213,2,ReleaseError,ReleaseError
+AGV_NODE,13008212,2,GripFail,GripFail
+AGV_NODE,14016394,2,[info.]Robot is locked,手臂被鎖定
+AGV_NODE,14016395,2,Set System Time failed,系統時間設定失敗
+AGV_NODE,14016396,2,Set TCP failed,設定工具中心點失敗
+AGV_NODE,14016397,2,File Transfer failed,傳檔失敗
+AGV_NODE,14016390,2,Write SystemFile.ini failed,寫 SystemFile.ini fail
+AGV_NODE,14004427,2,The Slave Numbers does not Match the Default Numbers,EtherCAT 偵測到的Slaves數量與預期的不符合
+AGV_NODE,14016392,2,Illegal Privilege,必須具有管理身分
+AGV_NODE,14016393,2,Log In/Out failed,管理者登入/登出失敗
+AGV_NODE,14065287,2,[Error][Safety Function]J1 Velocity exceeds limit,第 1 軸速度超過限制
+AGV_NODE,12000070,2,GO off.,GO off.(請確認EQ端訊號)
+AGV_NODE,14005920,2,Move camera to target failed,移動相機至目標失敗
+AGV_NODE,14017030,2,"ProxyServer initialize failure, OpenService error",Server 啟動 Service 失敗
+AGV_NODE,11000024,2,Arm_GripperTooDeep,Arm_GripperTooDeep
+AGV_NODE,11000025,2,Arm_GripperReleaseSensorError,Arm_GripperReleaseSensorError
+AGV_NODE,14012545,2,Send data to Viewer failed,資料送達檢視錯誤
+AGV_NODE,14012544,2,[Error][System]Can not connect to Viewer,無法連線檢視
+AGV_NODE,14012547,2,Get invalid data from Viewer,取得檢視資料無效
+AGV_NODE,14012546,2,Receive data from Viewer failed,接收檢視資料錯誤
+AGV_NODE,22000004,2,LeftCameraNoFrame,
+AGV_NODE,14012548,2,Get no data from Viewer,無取得檢視資料
+AGV_NODE,14006642,2,Record Robot posture failed in DH calibration,"於 DH 校正程序中,? 紀錄手臂姿態失敗"
+AGV_NODE,22000001,2,FrontCameraNoFrame,
+AGV_NODE,22000002,2,BackCameraNoFrame,
+AGV_NODE,22000003,2,RightCameraNoFrame,
+AGV_NODE,14024548,2,"The position initialization process is timeout (""Z search"" is not finished)",位置校正逾時 (尚未完成 Z? 搜索)
+AGV_NODE,14024549,2,The position initialization process is timeout,位置校正逾時
+AGV_NODE,14019458,2,[Warning][Flow]Warning for String Format,警告，字串未使用雙引號
+AGV_NODE,14019459,2,[Warning][Flow]Warning for Number Value maybe missing,警告，數值運算可能會有遺失
+AGV_NODE,14024540,2,Runin process : G sensor calibration result is out of limit,Runin: 加速規校正結果超過範圍
+AGV_NODE,14019457,2,[Warning][Flow]Warning Counter,警告訊息數量
+AGV_NODE,14024542,2,Changing EtherCAT ESM when PDS is in OP mode,EtherCAT ESM 通訊狀態切換於 PDS OP? 工作狀態
+AGV_NODE,14024543,2,Unknown EtherCAT ESM command,未知的 EtherCAT ESM 狀態切換指令
+AGV_NODE,14024544,2,The voltage of DC bus is low in EtherCAT OP mode,"EtherCAT 即時通訊建立完成後,DC BUS? 電壓低"
+AGV_NODE,14032780,2,[Error][Safety Function] Discrepancy was detected between dual channels of Robot Encoder Standstill Output Port.,機器人編碼器靜止輸出埠之雙通道間偵測到不相符結果
+AGV_NODE,14024546,2,The magnetic encoder data is not stable in the position initialization process,位置校正過程編碼器圈數取值不穩定
+AGV_NODE,14024547,2,"The joint angle between ""power on"" and ""position initialization"" exceeds limit",進入校正位置過程與開電位置距離超過範圍
+AGV_NODE,12008339,2,L_REQ on.,L_REQ on.(請確認EQ端訊號)
+AGV_NODE,12008338,2,GO off.,GO off.(請確認EQ端訊號)
+AGV_NODE,12008337,2,ES off.,ES off.(請確認EQ端訊號)
+AGV_NODE,12008336,2,TP3 timeout or EQ error.(HO_AVBL off),TP3 timeout or EQ error.(請確認EQ端訊號)(HO_AVBL off)
+AGV_NODE,12008335,2,VS_1 on.,VS_1 on.(請確認EQ端訊號)
+AGV_NODE,12008334,2,VS_0 on.,VS_0 on.(請確認EQ端訊號)
+AGV_NODE,12008333,2,READY off.,READY off.(請確認EQ端訊號)
+AGV_NODE,12008332,2,VA on.,VA on.(請確認EQ端訊號)
+AGV_NODE,12008331,2,U_REQ on.,U_REQ on.(請確認EQ端訊號)
+AGV_NODE,12008330,2,GO off.,GO off.(請確認EQ端訊號)
+AGV_NODE,14065492,2,The data in EEPROM is dislocated,EEPROM 內容有錯位
+AGV_NODE,14017411,2,Actioner Warning,Actioner 執行警告
+AGV_NODE,14024541,2,An error occurs when command changes the control mode.,位置模式切換控制模式時發生錯誤
+AGV_NODE,14000001,2,Arm_Running,Arm_Running(手臂_運轉中)
+AGV_NODE,14000049,2,Arm_VisionServoingFail,Arm_VisionServoingFail(手臂_TMROBOT拍照失敗)
+AGV_NODE,14000048,2,Arm_VisionFixedFail,Arm_VisionFixedFail(手臂_TMROBOT拍照失敗)
+AGV_NODE,14018189,2,UNC path could not be access,路徑無法存取
+AGV_NODE,14018188,2,[Hardware][Error]No Space for Application Directory,系統空間不足
+AGV_NODE,14018187,2,[Error][Com.]Configure network failed,配置網絡失敗
+AGV_NODE,13004166,2,MoveTimeoutRVLidar,右側垂直Lidar偵測到障礙
+AGV_NODE,14018185,2,Command timeout,發送命令，服務器無法及時回覆
+AGV_NODE,14018184,2,[Error][Com.]Client send command failed,客戶端發送命令失敗
+AGV_NODE,14018183,2,[Error][Com.]Client connection failed,客戶端連接失敗
+AGV_NODE,14018182,2,[Error][Com.]Client connect server failed,客戶連接伺服器失敗
+AGV_NODE,14018181,2,[Error][Com.]Read data file failed,讀數據檔案失敗
+AGV_NODE,14024545,2,Online multiturn calibration failed,oniline multiturn? 校正失敗(產線校正使用)
+AGV_NODE,14019209,2,[Error][Flow]Array Index is not an integer number,陣列索引值不是整數值
+AGV_NODE,14019208,2,[Error][Flow]Array operation is not allowed,陣列不允許運算使用
+AGV_NODE,11000265,2,Arm_Robot_IPC_Lag,Arm_Robot_IPC_Lag
+AGV_NODE,14019202,2,[Flow][Error]Duplicated cases of switch,有重複的判斷條件式
+AGV_NODE,14019201,2,[Flow][Error]Invalid number format,非法的數字格式
+AGV_NODE,14000000,2,Arm_NoError,Arm_NoError(手臂_無錯誤)
+AGV_NODE,14019207,2,[Flow][Error]Function operation is not allowed,函數不允許運算使用
+AGV_NODE,14019206,2,[Error][Flow]Undefined functions,未定義的函數使用
+AGV_NODE,14016386,2,HMI server error,HMI 服務器錯誤
+AGV_NODE,14019204,2,[Error][Flow]Invalid expression error,錯誤的運算式使用
+AGV_NODE,14004469,2,Vision Servoing failed to get image,視覺伺服中沒有影像
+AGV_NODE,14004468,2,Operation Mode Switching Failure occurred in the Joint Drivers during Vision Servoing,軸關節驅動器模式切換錯誤
+AGV_NODE,14004463,2,3D Viewer Lost Connection,三維機器人模擬器失去連線
+AGV_NODE,12008341,2,VA on.,VA on.(請確認EQ端訊號)
+AGV_NODE,14004465,2,Stop the Vision Servoing Process,執行停止視覺伺服的命令
+AGV_NODE,14004464,2,Vision Servoing Failure,視覺伺服失敗
+AGV_NODE,14004467,2,Alarms occurred in Data Flow in Vision Servoing,視覺伺服使用的資料流發生錯誤
+AGV_NODE,14004466,2,The Pose of the Robot Over the Position or Close to the Singularity during Vision Servoing Process,視覺伺服超過位置或靠近奇異點
+AGV_NODE,14024485,2,The temperature on PCB is too high (90 degree Celsius),印刷電路板溫度超標(90 度 C)
+AGV_NODE,14024484,2,The acceleration on Z direction of G sensor is out of range,加速規? Z? 方向加速度超標
+AGV_NODE,14024487,2,The current in V phase of motor is too high,馬達 V 相過電流
+AGV_NODE,11000022,2,Arm_ReleaseFail,
+AGV_NODE,14018433,2,Application update is not executed,未執行軟體更新
+AGV_NODE,14018432,2,[Error][Software]Incomplete update,
+AGV_NODE,14024483,2,The acceleration on Y direction of G sensor is out of range,加速規? Y? 方向加速度超標
+AGV_NODE,14024482,2,The acceleration on X direction of G sensor is out of range,加速規? X? 方向加速度超標
+AGV_NODE,14004357,2,Stop Motion Command,手臂運動停止命令已下達
+AGV_NODE,14004353,2,"Inverse Kinematics Failure, Working Range Issue","逆向運動學失敗,末端可能超出手臂運動範圍"
+AGV_NODE,14004352,2,No Alarm,無錯誤
+AGV_NODE,13004168,2,MoveTimeoutRHLidar,後側水平Lidar偵測到障礙
+AGV_NODE,14001365,2,Arm_ModbusDisconnected,Arm_ModbusDisconnected
+AGV_NODE,13004163,2,StopByAGVM,上位系統下令停止
+AGV_NODE,13004162,2,LowVoltage,LowVoltage
+AGV_NODE,13004161,2,AutoWhenRobotNotInitial,AutoWhenRobotNotInitial
+AGV_NODE,13004160,2,PauseTimeout,PauseTimeout
+AGV_NODE,14008201,2,[Error][Vision]Actioner is busy,Actioner 忙碌
+AGV_NODE,14008200,2,[Error][Vision]Job NOT found,找不到任務
+AGV_NODE,14008203,2,Servoing and Vision-IO threads conflict,視覺伺服任務與視覺 IO 任務運行衝突
+AGV_NODE,14008202,2,This job can only be run on X64 platform,該任務僅支援 X64 平台
+AGV_NODE,14016408,2,[Error][Software]Base is in use,座標系正在使用中
+AGV_NODE,11000023,2,Arm_GripperRetryFail,Arm_GripperRetryFail
+AGV_NODE,12000052,2,ES off.,ES off.(請確認EQ端訊號)
+AGV_NODE,14016400,2,Generate file error,生成文件錯誤
+AGV_NODE,14016401,2,[Error][Motion]Step run failed,單步執行失敗
+AGV_NODE,14016402,2,Changed base failed,更改座標系失敗
+AGV_NODE,14016403,2,[Error][Motion]Change TCP failed,更改工具中心點失敗
+AGV_NODE,14016404,2,[Error][System]Generate Prog File failed,生成專案檔案失敗
+AGV_NODE,14016405,2,[Warning][Hardware]Fan rpm less than 1000,風扇低於 1000 轉
+AGV_NODE,14016406,2,[User Setting][Error]Invalid Parameter,參數錯誤
+AGV_NODE,14016407,2,Base Not Found,未找到座標系
+AGV_NODE,11004114,2,NormalRouteOrChargeRouteEmpty,NormalRouteOrChargeRouteEmpty
+AGV_NODE,14005709,2,EIH calibration should be done first,EIH? 校正應該先完成
+AGV_NODE,14005708,2,Visual move02 failed,支援視覺移動方式? move02? 失敗
+AGV_NODE,14005707,2,Visual move11 failed,支援視覺移動方式? move11? 失敗
+AGV_NODE,14005706,2,Visual move01 failed,支援視覺移動方式? move01? 失敗
+AGV_NODE,14005705,2,Change robot tip's orientation failed,變更手臂端點方向失敗
+AGV_NODE,14005704,2,Change tool parameters failed,變更工具參數失敗
+AGV_NODE,11000150,2,Arm_DI2_SensorError,Arm_DI2_SensorError
+AGV_NODE,14024528,2,The UVW signal of encoder is NG,偵測編碼器 UVW 訊號是否異常
+AGV_NODE,13000020,2,StopChargeTimeout,StopChargeTimeout
+AGV_NODE,11000153,2,Arm_ModbusTCPError,Arm_ModbusTCPError
+AGV_NODE,12008247,2,L_REQ on.,L_REQ on.(請確認EQ端訊號)
+AGV_NODE,12008246,2,GO off.,GO off.(請確認EQ端訊號)
+AGV_NODE,12008245,2,ES off.,ES off.(請確認EQ端訊號)
+AGV_NODE,14005025,2,Illegal string format of a quaternion,
+AGV_NODE,12008243,2,VS_1 on.,VS_1 on.(請確認EQ端訊號)
+AGV_NODE,12008242,2,VS_0 on.,VS_0 on.(請確認EQ端訊號)
+AGV_NODE,12008241,2,READY off.,READY off.(請確認EQ端訊號)
+AGV_NODE,12008240,2,VA on.,VA on.(請確認EQ端訊號)
+AGV_NODE,14017412,2,Actioner exception when Start Or Pause,Actioner 執行開始/暫停出現例外
+AGV_NODE,12008249,2,READY off.,READY off.(請確認EQ端訊號)
+AGV_NODE,12008248,2,VA on.,VA on.(請確認EQ端訊號)
+AGV_NODE,14004995,2,Illegal homogeneous transformation,此矩陣不是均質轉換矩陣
+AGV_NODE,14000352,2,Arm_Unable to initialize,Arm_Unable to initialize(手臂_無法再復位)
+AGV_NODE,14004496,2,Process Line Motion Failure,線段執行串聯運動失敗
+AGV_NODE,21000018,2,BackCameraNoFrame,BackCameraNoFrame(後方相機無回應請斷電重開)
+AGV_NODE,14000357,2,First code is not 1 or 2,First code is not 1 or 2(手臂_第一碼需要1或2)
+AGV_NODE,11004112,2,NormalProcessAbnormal,NormalProcessAbnormal
+AGV_NODE,14004993,2,At least one element of a matrix or vector is with illegal index,"矩陣或向量內至少有一個 a[i,j]，其 i,j 的值在維度範圍外"
+AGV_NODE,14004992,2,Illegal dimension of a matrix or vector,矩陣或向量維度不正確
+AGV_NODE,11004113,2,RouteFileEmpty,RouteFileEmpty
+AGV_NODE,14004999,2,Illegal norm value,此數值非為模數
+AGV_NODE,14004998,2,Matrix inverse failed,反矩陣運算失敗
+AGV_NODE,14018186,2,[Error][Com.]TCP listener error,TCP 監聽器錯誤，會帶訊息
+AGV_NODE,14024522,2,Multi Z index happened in encoder output,"偵測到,編碼器單圈出現複數 Z 訊號"
+AGV_NODE,14004521,2,[Warning][External Device] Discrapency was detected between dual channels of Safeguard Port A.,安全埠 A 之雙通道間偵測到不相符結果
+AGV_NODE,12004161,2,READY off.,READY off.(請確認EQ端訊號)
+AGV_NODE,14024523,2,The deviation between command and current position is too high,位置命令相差過大
+AGV_NODE,11000132,2,Arm_RunningNotTeach,Arm_RunningNotTeach
+AGV_NODE,14024520,2,Failure in loading data from EEPROM,EPRROM 載入資料失敗
+AGV_NODE,11000133,2,Arm_RBNotInPosition,Arm_RBNotInPosition
+AGV_NODE,14006653,2,Error on joint 1-5 over 1 degree!,DH 校正結果某一軸超過規範
+AGV_NODE,14005457,2,The total number of robot parameters is illegal,手臂參數總數錯誤
+AGV_NODE,14005456,2,Illegal DOF of robot,手臂維度/關節數錯誤
+AGV_NODE,14024535,2,Runin process R2: index calibration failed,Runin R2 index 校正失敗
+AGV_NODE,14017029,2,"ProxyServer initialize failure, OpenActioner error",Server 啟動 Actioner 失敗
+AGV_NODE,14005028,2,Failed to get rotation vector via quaternion,使用四元素進行向量旋轉失敗
+AGV_NODE,13000055,2,AgvcCallEms,AgvcCallEms
+AGV_NODE,14017025,2,"ProxyServer initialize failure, TcpListener error",Server 啟動 TcpListener 失敗
+AGV_NODE,14017024,2,ProxyServer initialize failure,Server 啟動失敗
+AGV_NODE,14017027,2,"ProxyServer initialize failure, ConfigData error",Server 啟動 ConfigData 失敗
+AGV_NODE,14005029,2,Failed to solve sub-block Eigen value,
+AGV_NODE,14005000,2,Householder transformation failed,
+AGV_NODE,14005001,2,Eigen value calculation failed,特徵值計算失敗
+AGV_NODE,14005002,2,Illegal number of Eigen values,特徵值個數錯誤
+AGV_NODE,14005003,2,Matrix is singular,此矩陣是奇異矩陣
+AGV_NODE,11004104,2,PoseSetAbnormal,PoseSetAbnormal
+AGV_NODE,14005005,2,Elementary matrix operation failed,矩陣基本行列運算失敗
+AGV_NODE,14005006,2,Gaussian Elimination failed,高斯消去法失敗
+AGV_NODE,14005007,2,Null space does not exist,零空間不存在
+AGV_NODE,14005008,2,QR decomposition failed,QR 分解失敗
+AGV_NODE,14005009,2,QR iteration diverged,QR 迭代發散
+AGV_NODE,14024504,2,Gate Driver NG,Gate Driver? 元件異常
+AGV_NODE,13000039,2,ForkNotHome,ForkNotHome
+AGV_NODE,14024506,2,Current Sensor NG,電流感測器異常
+AGV_NODE,11004118,2,TMMovingNG,
+AGV_NODE,14024500,2,The initialization of joint coordinate is timeout,"根據紀錄的絕對位置,初始化關節座標系統超出時間限制"
+AGV_NODE,14024501,2,FW version doesn't match HW version,FW 版本與硬體電路板相互不符合
+AGV_NODE,14024502,2,The process in main loop is timeout,主程式迴路執行逾時
+AGV_NODE,11000146,2,Arm_RBMoveing_DI1_Fash,Arm_RBMoveing_DI1_Fash
+AGV_NODE,11000145,2,Arm_RBMoveing_DI0_Fash,Arm_RBMoveing_DI0_Fash
+AGV_NODE,14004519,2,[Error][Safety Function] Discrapency was detected between dual channels Encoder Standstill Output.,編碼器停止輸出埠之雙通道間偵測到不相符結果
+AGV_NODE,14007105,2,Left arm failed,左臂錯誤
+AGV_NODE,14007104,2,Right arm failed,右臂錯誤
+AGV_NODE,11004119,2,TMRunningIDWrong,TMRunningIDWrong
+AGV_NODE,14000153,2,Arm_ModbusTCPError,Arm_ModbusTCPError(ModbusTCP通訊異常)
+AGV_NODE,14024486,2,The current in U phase of motor is too high,馬達 U 相過電流
+AGV_NODE,14005004,2,Illegal upper/lower triangular matrix,此矩陣不是上三角或下三角矩陣
+AGV_NODE,14005521,2,Check robot configuration failed,檢查手臂姿態失敗
+AGV_NODE,14005520,2,At least one joint position will reach boundary,至少有一軸位置即將到達邊界
+AGV_NODE,14004525,2,[Error][Safety Function] Discrapency was detected between dual channels of Emergency Stop Output.,緊急停止輸出埠之雙通道間偵測到不相符結果
+AGV_NODE,14004516,2,[Error][Safety Function]Violate Encoder Standstill in stop area,在安全停止區間偵測到軸關節位移
+AGV_NODE,14019247,2,Ethernet Slave (TCP/IP Server) Item name does not exist,Ethernet Slave (TCP/IP Server) 讀寫項目名稱不存在
+AGV_NODE,14019246,2,Ethernet Slave (TCP/IP Server) is disabled,Ethernet Slave (TCP/IP Server) 未啟動
+AGV_NODE,14019245,2,Array start index is invalid,陣列起始索引位址不正確
+AGV_NODE,14019244,2,Array size is max,陣列容量達上限
+AGV_NODE,14019243,2,"Array datatype is different, could not operation",陣列型別不同，無法運算
+AGV_NODE,14019242,2,File operation error,檔案讀寫操作錯誤
+AGV_NODE,14019241,2,File delete error,刪除檔案錯誤
+AGV_NODE,14019240,2,File create error,新檔檔案錯誤
+AGV_NODE,14000152,2,Arm_ProjectError,Arm_ProjectError(手臂_程式有誤)
+AGV_NODE,14024481,2,The voltage on DCBUS is too high (60V),DCBUS? 高電壓? (60V)
+AGV_NODE,14019248,2,Ethernet Slave (TCP/IP Server) Item value is error,Ethernet Slave (TCP/IP Server) 項目寫入值不正確
+AGV_NODE,14004425,2,Power supply 48V failure,48V電源供應失效
+AGV_NODE,14004424,2,the 48V power NG on the ESM-OP mode,"EtherCAT ESM-OP模式下,48V 供電異常"
+AGV_NODE,14019968,2,Common Info,通知
+AGV_NODE,14004426,2,Timeout in the EtherCAT Loop,即時迴路運算逾時
+AGV_NODE,14004421,2,Joint in the boot mode is waiting for flash the firmware.,
+AGV_NODE,14004420,2,Failed to turn into DC SYNC in the EtherCAT Loop,EtherCAT無法進入DC SYNC模式
+AGV_NODE,14004518,2,[Error][Safety Function] Discrapency was detected between dual channels Internal Protective Output.,內部保護輸出埠之雙通道間偵測到不相符結果
+AGV_NODE,14004429,2,Failed to Access Live Data,讀取即時資訊失敗
+AGV_NODE,14004428,2,Failed to Access EEPROM Data in the Power Board,存取電源控制板記憶體失敗
+AGV_NODE,12008346,2,ES off.,ES off.(請確認EQ端訊號)
+AGV_NODE,12008347,2,GO off.,GO off.(請確認EQ端訊號)
+AGV_NODE,12008344,2,VS_1 on.,VS_1 on.(請確認EQ端訊號)
+AGV_NODE,12008345,2,TP4 timeout or EQ error.(HO_AVBL off),TP4 timeout or EQ error.(請確認EQ端訊號)(HO_AVBL off)
+AGV_NODE,12008342,2,READY off.,READY off.(請確認EQ端訊號)
+AGV_NODE,12008343,2,VS_0 on.,VS_0 on.(請確認EQ端訊號)
+AGV_NODE,12008340,2,U_REQ on.,U_REQ on.(請確認EQ端訊號)
+AGV_NODE,11000263,2,Arm_EQPortGETFail,Arm_EQPortGETFail
+AGV_NODE,14024480,2,The voltage on DCBUS is too low (40V),
+AGV_NODE,14065518,2,The deviation is too high between latching index and position initialization process,"驅動器進入絕對位置模式,MCU 取索引值偏移量過大"
+AGV_NODE,14018180,2,[Error][Com.]File not found,並無需要交換的資料
+AGV_NODE,14065519,2,The parameters of magnetic encoder are abnormal,磁性編碼器參數異常
+AGV_NODE,14005459,2,"Illegal DOF of joint position, velocity, or acceleration","手臂關節空間狀態(位置,速度,加速度)維度錯誤"
+AGV_NODE,14005458,2,"Illegal DOF of generalized Cartesian position, velocity, or acceleration","手臂卡式空間狀態(位置,速度,加速度)維度錯誤"
+AGV_NODE,13004121,2,MoveFail,MoveFail
+AGV_NODE,13004120,2,IncorrectCoordinate,IncorrectCoordinate
+AGV_NODE,14000133,2,Arm_RBNotInPosition,Arm_RBNotInPosition(手臂_Robot不再三點之一)
+AGV_NODE,14000132,2,Arm_RunningNotTeach,Arm_RunningNotTeach(手臂_此Running尚未教點)
+AGV_NODE,14000131,2,Arm_PresentSensorError,Arm_PresentSensorError(AGV槽位在席Sensor異常)
+AGV_NODE,14000130,2,Arm_GripperNotRelease,Arm_GripperNotRelease(手臂_夾爪未開)
+AGV_NODE,14000137,2,Arm_AGV_LDULD_AddressError,Arm_AGV_LDULD_AddressError(手臂_取放命令和AGV位置異常)
+AGV_NODE,14006155,2,The working depth on optic axis can not be zero,沿相機光軸的工作深度不可為 0
+AGV_NODE,14000135,2,Arm_InitializeError,Arm_InitializeError(手臂_RB初始化失敗)
+AGV_NODE,14000134,2,Arm_RunningVisionFail,Arm_RunningVisionFail(手臂_無法不做視覺任務)
+AGV_NODE,14016444,2,NotActive,viewer 未連線
+AGV_NODE,14016445,2,SendDataFail,傳送命令至 viewer 失敗
+AGV_NODE,14016446,2,ReceiveDataFail,自 viewer 接收指令失敗
+AGV_NODE,14016447,2,InvalidReturnValue,
+AGV_NODE,14016440,2,[Error]Node is in offline mode,節點是離線編程資料
+AGV_NODE,14016441,2,Base name is not accepted,Base 名稱不被接受
+AGV_NODE,14016442,2,[Error][User Setting]Over maximum loading,在此負載的限制總合超過機器人的負載限制
+AGV_NODE,14016443,2,[Error][User Setting]Over maximum loading with TCP loading,在此負載的限制總合超過機器人的負載限制
+AGV_NODE,14006154,2,Establishing interaction matrix of a single image point failed,建立單影像點的互動矩陣失敗
+AGV_NODE,14016448,2,GetNoDataFromEmulator,Viewer 無回傳值
+AGV_NODE,14016449,2,CheckOptimalSpeed,計算最佳速度發生錯誤
+AGV_NODE,14065455,2,[Error][System]The communication of EtherCAT is timeout,EtherCAT 通訊逾時
+AGV_NODE,14065454,2,[Error][Hardware]Overcurrent in DCBUS,DCBUS? 過電流
+AGV_NODE,14065457,2,[Error][System]The communication of SPI is timeout,SPI? 通訊逾時
+AGV_NODE,14065517,2,[Error][Hardware]The compensation of encoder signal is too high in ABS mode,The compensation of encoder signal is too high in ABS mode
+AGV_NODE,14065451,2,[Error][Hardware]The protection is on for motor hold,馬達鎖定保護
+AGV_NODE,14065450,2,The overcurrent is protected by current sensor of V phase,"V 相電流感應器,過電流保護"
+AGV_NODE,14065453,2,The index angle of encoder is not calibrated,編碼器索引未校正
+AGV_NODE,14065452,2,The initial angle of three phase of motor is not correct,馬達三相初始相角錯誤
+AGV_NODE,14018688,2,Web command error,網路命令錯誤
+AGV_NODE,14004515,2,[Error][Safety Function]Violate Encoder Standstill when no motion is allowed.,控制器偵測到軸關節位移
+AGV_NODE,14004513,2,[Error][Safety Function]Violate Encoder Standstill when error occurred.,
+AGV_NODE,14004512,2,[Error][Safety Function]Violate Encoder Standstill when no motion is allowed.,專案禁止移動時，偵測到軸關節移動
+AGV_NODE,14065459,2,The watch dog of MCU is timeout,MCU 的看門狗計時器逾時
+AGV_NODE,14065458,2,Illegal interrupt to MCU,MCU 收到不合法的插斷處理
+AGV_NODE,14065512,2,[Hardware][Error]The output of g sensor is NG,加速規輸出異常
+AGV_NODE,14004514,2,[Error][Safety Function]Violate Encoder Standstill when Safeguard Port A triggered,"安全暫停開關尚未解除時,偵測到軸關節移動"
+AGV_NODE,14004450,2,The Pose of the Robot is closer to the singularity in the manual mode,"在手動模式下(有 fixed DOF時),太靠近奇異點"
+AGV_NODE,14019203,2,[Flow][Error]Duplicate declaration,
+AGV_NODE,14004484,2,TmSync : Robot ID Conflict In The Group,TmSync群組內Robot名稱設定錯誤
+AGV_NODE,12004152,2,READY off.,READY off.(請確認EQ端訊號)
+AGV_NODE,14005237,2,End effector data lost,
+AGV_NODE,14065300,2,[Error][Safety Function]J5 Torque exceeds limit,
+AGV_NODE,14005235,2,End effector has connected with robot,末端工具已經與手臂連結
+AGV_NODE,14005234,2,End effector connection with robot failed,末端工具與手臂連結失敗
+AGV_NODE,14065305,2,J7 Velocity exceeds limit,
+AGV_NODE,18000001,2,RFIDSerialTimeOut,RFIDSerialTimeOut
+AGV_NODE,14005231,2,End effector should be disconnected,
+AGV_NODE,14005230,2,End effector should be connected,
+AGV_NODE,14000256,2,Arm_LDPort1StatusError,Arm_LDPort1StatusError(手臂_Load Port1狀態異常)
+AGV_NODE,14000257,2,Arm_LDPort2StatusError,Arm_LDPort2StatusError(手臂_Load Port2狀態異常)
+AGV_NODE,14006883,2,Calculating the effective norm of the generalized Cartesian force acting on robot's TCP failed,計算作用於工具中心點上的卡氏空間廣義有效施力的模數(norm)
+AGV_NODE,14019200,2,[Error][Flow]Invalid syntax error,未知的語法使用
+AGV_NODE,14019205,2,Undefined variables,未定義的變數使用
+AGV_NODE,14004451,2,The Pose of the Robot is closer to the singularity in the Compliance Mode,"在順應模式下(有 fixed DOF時),太靠近奇異點"
+AGV_NODE,13000071,2,RobotStateErrorPreAuto,RobotStateErrorPreAuto
+AGV_NODE,14004480,2,TmSync : Group Members Over Specification,TmSync參數設定錯誤
+AGV_NODE,14000258,2,Arm_ULDPort1StatusError,Arm_ULDPort1StatusError(手臂_UnLoad Port1狀態異常)
+AGV_NODE,13000070,2,MoveStateErrorPreAuto,MoveStateErrorPreAuto
+AGV_NODE,14006159,2,Illegal number of image errors,影像誤差個數錯誤
+AGV_NODE,13000072,2,RobotIsNotHomePreAuto,RobotIsNotHomePreAuto
+AGV_NODE,14065301,2,[Error][Safety Function]J6 Position exceeds limit,第 6 軸位置超過限制
+AGV_NODE,14065302,2,[Error][Safety Function]J6 Velocity exceeds limit,第 6 軸速度超過限制
+AGV_NODE,11000064,2,Arm_PostureError,Arm_PostureError
+AGV_NODE,16000002,2,EncoderDataEmpty,EncoderDataEmpty
+AGV_NODE,14005505,2,DH compensation failed,DH 校正? 補償失敗
+AGV_NODE,12008238,2,L_REQ on.,L_REQ on.(請確認EQ端訊號)
+AGV_NODE,14005504,2,Move to target with respect to base failed,手臂相對於座標系移動失敗
+AGV_NODE,11004132,2,CassetteDoor2CloseNG,CassetteDoor2CloseNG
+AGV_NODE,11004133,2,CassetteDoorOpenOpenNG,CassetteDoorOpenOpenNG
+AGV_NODE,11004130,2,CassetteDoor1CloseNG,CassetteDoor1CloseNG
+AGV_NODE,11004131,2,CassetteDoor2OpenNG,CassetteDoor2OpenNG
+AGV_NODE,11004136,2,CassetteDoorCloseCloseNG,CassetteDoorCloseCloseNG
+AGV_NODE,11004137,2,CassetteDoorControlException,CassetteDoorControlException
+AGV_NODE,11004134,2,CassetteDoorOpenCloseNG,CassetteDoorOpenCloseNG
+AGV_NODE,11004135,2,CassetteDoorCloseOpenNG,CassetteDoorCloseOpenNG
+AGV_NODE,21000007,2,ABCS charge station off failed.,ABCS charge station off failed.
+AGV_NODE,21000006,2,ABCS battery unlock failed.,ABCS battery unlock failed.
+AGV_NODE,21000005,2,ABCS battery lock failed.,ABCS battery lock failed.
+AGV_NODE,21000004,2,ABCS head charger off failed.,ABCS head charger off failed.
+AGV_NODE,21000003,2,ABCS head charger on failed.,ABCS head charger on failed.
+AGV_NODE,21000002,2,ABCS battery info. off failed.,ABCS battery info. off failed.
+AGV_NODE,21000001,2,ABCS battery info. on failed.,ABCS battery info. on failed.
+AGV_NODE,14000021,2,Arm_ReleaseError,Arm_ReleaseError(手臂_夾爪放開異常)
+AGV_NODE,14032773,2,[Warning][External Device] Discrepancy was detected between dual channels of User Connected ESTOP Input Port without Robot ESTOP Output.,使用者外接不觸發緊急停止輸出之緊急停止輸入埠之雙通道間偵測到不相符結果
+AGV_NODE,14004462,2,[Error][Safety Function]Encoder Standstill function activated,編碼器停止保護啟動
+AGV_NODE,14000020,2,Arm_GripFail,
+AGV_NODE,12004148,2,ES off.,ES off.(請確認EQ端訊號)
+AGV_NODE,12004149,2,GO off.,GO off.(請確認EQ端訊號)
+AGV_NODE,13000068,2,SectionLostPreAuto,SectionLostPreAuto
+AGV_NODE,13000069,2,AddressLostPreAuto,AddressLostPreAuto
+AGV_NODE,14000023,2,Arm_GripperRetryFail,Arm_GripperRetryFail(手臂_夾爪嘗試3次夾取失敗)
+AGV_NODE,12000053,2,GO off.,GO off.(請確認EQ端訊號)
+AGV_NODE,14065303,2,[Error][Safety Function]J6 Torque exceeds limit,第 6 軸力矩超過限制
+AGV_NODE,12004141,2,L_REQ on.,L_REQ on.(請確認EQ端訊號)
+AGV_NODE,12004142,2,U_REQ off.,
+AGV_NODE,14000022,2,Arm_ReleaseFail,Arm_ReleaseFail(手臂_夾爪放開失敗)
+AGV_NODE,12004144,2,READY off.,READY off.(請確認EQ端訊號)
+AGV_NODE,12004145,2,VS_0 on.,VS_0 on.(請確認EQ端訊號)
+AGV_NODE,12004146,2,VS_1 on.,VS_1 on.(請確認EQ端訊號)
+AGV_NODE,12004147,2,TP3 timeout or EQ error.(HO_AVBL off),TP3 timeout or EQ error.(請確認EQ端訊號)(HO_AVBL off)
+AGV_NODE,14006881,2,Acquiring robot's joint position corresponding to its flange's generalized Cartesian position failed,根據手臂法蘭的點位取得相對應的軸座標失敗
+AGV_NODE,14005494,2,Task frame establishing process initialization has not yet been done,
+AGV_NODE,14005488,2,TCP calibration process initialization failed,工具中心點校正程序初始化失敗
+AGV_NODE,14005489,2,TCP calibration process initialization has done,工具中心點校正程序初始化已經完成
+AGV_NODE,14016389,2,[Error][Flow]Program Exception,程式出現錯誤
+AGV_NODE,14016388,2,Undefined Signal,訊號未被定義
+AGV_NODE,14016387,2,Robot is unlocked,機器人解鎖
+AGV_NODE,14005493,2,TCP computation failed,工具中心點校正量計算失敗
+AGV_NODE,14005486,2,Acquiring equivalent axis-angle rotation matrix between two frames failed,取得兩座標間等效角-軸旋轉矩陣失敗
+AGV_NODE,14016384,2,Client is not connected to any proxy server,客戶端沒有連接到任何代理服務器
+AGV_NODE,14005480,2,Inertia tensor computation failed,慣性張量矩陣計算失敗
+AGV_NODE,14005481,2,Inverse dynamics computation failed,逆向動力學計算失敗
+AGV_NODE,14005482,2,Robot dynamic parameter ID matrix computation failed,手臂動態參數 ID 矩陣計算失敗
+AGV_NODE,14005492,2,Record Robot posture failed in TCP calibration,"工具中心點校正程序中,? 紀錄手臂姿態失敗"
+AGV_NODE,12000067,2,VS_1 on.,VS_1 on.(請確認EQ端訊號)
+AGV_NODE,12000066,2,VS_0 on.,VS_0 on.(請確認EQ端訊號)
+AGV_NODE,12000065,2,READY off.,READY off.(請確認EQ端訊號)
+AGV_NODE,12000064,2,VA on.,VA on.(請確認EQ端訊號)
+AGV_NODE,14017159,2,Simulate mode error,模擬模式錯誤
+AGV_NODE,14017158,2,RETEX4 build failed,RETEX4 建立失敗
+AGV_NODE,12000061,2,GO off.,GO off.(請確認EQ端訊號)
+AGV_NODE,12000060,2,ES off.,ES off.(請確認EQ端訊號)
+AGV_NODE,14017155,2,[Error][Motion]Robot motion error,機器人運動錯誤
+AGV_NODE,14017154,2,[Error][System]Internal high speed communication failure,內部高速通訊錯誤
+AGV_NODE,14017157,2,EtherCAT error,Ethercat 錯誤
+AGV_NODE,14017156,2,EtherCAT command error,Ethercat 命令錯誤
+AGV_NODE,14065514,2,[Hardware][Error]The voltage of 5V is NG,5V 電壓超過異常
+AGV_NODE,14017153,2,FreeBot error,
+AGV_NODE,14017152,2,EtherCAT mode error,
+AGV_NODE,11000037,2,Arm_GripperObject3,Arm_GripperObject3
+AGV_NODE,11000036,2,Arm_GripperObject2,Arm_GripperObject2
+AGV_NODE,11000035,2,Arm_GripperObject1,Arm_GripperObject1
+AGV_NODE,11000034,2,Arm_GripperInitializeERROR,Arm_GripperInitializeERROR
+AGV_NODE,11000033,2,Arm_GripperOutOfRange,Arm_GripperOutOfRange
+AGV_NODE,11000032,2,Arm_GripperPosError,Arm_GripperPosError
+AGV_NODE,11004116,2,ChargeRouteEmpty,ChargeRouteEmpty
+AGV_NODE,13004128,2,RFIDReaderAbnormal,
+AGV_NODE,14005697,2,"Camera does not move, but image changes","相機沒有移動, 但影像改變了"
+AGV_NODE,14032770,2,[Warning][External Device] Discrepancy was detected between dual channels of User Connected External Safeguard Input Port.,使用者外接安全防護輸入埠之雙通道間偵測到不相符結果
+AGV_NODE,14065289,2,[Error][Safety Function]J2 Position exceeds limit,第 2 軸位置超過限制
+AGV_NODE,14032772,2,[Warning][External Device] Discrepancy was detected between dual channels of User Connected Enabling Device Input Port.,使用者外接手柄啟用開關輸入埠之雙通道間偵測到不相符結果
+AGV_NODE,14024558,2,The deviation is too high between latching index and position initialization process,
+AGV_NODE,14032774,2,[Warning][External Device] Discrepancy was detected between dual channels of Safeguard Port.,安全埠之雙通道間偵測到不相符結果
+AGV_NODE,14032775,2,[Warning][External Device] Discrepancy was detected between dual channels of Safeguard Port.,安全埠之雙通道間偵測到不相符結果
+AGV_NODE,14032776,2,[Error][Safety Function] Discrepancy was detected between dual channels of Robot ESTOP Output Port.,機器人緊急停止輸出埠之雙通道間偵測到不相符結果
+AGV_NODE,14032777,2,[Error][Safety Function] Discrepancy was detected between dual channels of User Connected External Safeguard Output Port.,使用者外接安全防護輸出埠之雙通道間偵測到不相符結果
+AGV_NODE,14024553,2,The check sum result from EEPROM data is abnormal,EEPROM 檢驗碼異常
+AGV_NODE,14065281,2,[Error][Safety Function]Momentum exceeds limit,手臂動量超過限制
+AGV_NODE,14024551,2,Runin process: the process of g sensor calibration is NG,Runin: 加速規校正過程出錯(產線生產使用)
+AGV_NODE,14024550,2,The result is NG in position initialization process,
+AGV_NODE,14065284,2,[Error][Safety Function]TCP speed exceeds limit,末端速度超過限制
+AGV_NODE,14024556,2,The ADC compensation is out of limit,"補償 ADC 飄移,超出範圍"
+AGV_NODE,14024555,2,The voltage of 12V is NG,12V 電壓超過異常
+AGV_NODE,14024554,2,The voltage of 5V is NG,5V 電壓超過異常
+AGV_NODE,14019230,2,Serial Port open failed,
+AGV_NODE,14017413,2,Actioner exception when Stop,Actioner 執行停止出現例外
+AGV_NODE,14065304,2,J7 Position exceeds limit,J7 位置超出限制
+AGV_NODE,14065516,2,The ADC compensation is out of limit,"補償 ADC 飄移,超出範圍"
+AGV_NODE,14000259,2,Arm_ULDPort2StatusError,Arm_ULDPort2StatusError(手臂_UnLoad Port1狀態異常)
+AGV_NODE,14018178,2,No support offered,無此項服務
+AGV_NODE,14024489,2,The overcurrent is protected by current sensor of U phase,"U 相電流感應器,過電流保護"
+AGV_NODE,14018179,2,[Error][com.]Data exchange failed. File may be accessed.,資料交換失敗，檔案可能被占用
+AGV_NODE,14005552,2,Load delta DH file failed,載入 DH 校正檔失敗
+AGV_NODE,14005553,2,"At least one joint position is not in the range , -180 deg~ 180 deg",至少有一軸位置不在正負 180 度內
+AGV_NODE,14005550,2,Failed to calculate Jacobian due to DH error,DH 誤差模型 jacobian 計算失敗
+AGV_NODE,14024488,2,The current in W phase of motor is too high,馬達 W 相過電流
+AGV_NODE,14005551,2,Generalized Cartesian position transfer between frames failed,卡式空間點位於不同座標系間的轉換失敗
+AGV_NODE,14019238,2,File is read only,唯讀檔案
+AGV_NODE,14019239,2,"File is exists, could not write",無法寫入已存在的檔案
+AGV_NODE,14019236,2,File does not exist,檔案不存在
+AGV_NODE,14019237,2,File size is too large,檔案大小太大
+AGV_NODE,14016644,2,MD5 file is not existed.,MD5 檔案不存在
+AGV_NODE,14016645,2,"MD5 is not matched, the file may be damaged.","MD5 不相符,檔案可能已毀損."
+AGV_NODE,14016642,2,[Warning][User Setting]Host and client versions conflict,主機與客戶端版本衝突
+AGV_NODE,14016643,2,"[Error][User Setting]Certification does not match. Please get the certification file from the product provider, and put it under TMflow folder located under the installation directory to enable TMflow Editor.",憑證不符40103
+AGV_NODE,14016640,2,Certification does not match,憑證不符40100
+AGV_NODE,14016641,2,Certification does not match,憑證不符40101
+AGV_NODE,14032778,2,[Error][Safety Function] Discrepancy was detected between dual channels of User Connected External Safeguard Output Port for Human ??Machine Safety Settings.,使用者外接安全防護輸出埠觸發人機安全設定之雙通道間偵測到不相符結果
+AGV_NODE,14004418,2,Failed to read Manufacturer ID,無法取得驅動器製造商 ID
+AGV_NODE,14004419,2,Failed to initialize EtherCAT,EtherCAT初始化失敗
+AGV_NODE,14004414,2,the 48V power NG on the ESM-PreOP mode,"EtherCAT ESM-PreOP 模式下,48V供電異常"
+AGV_NODE,14005698,2,Current image data is invalid,目前影像資訊無效
+AGV_NODE,14004416,2,Joint ESI does not match the Default Setting,EtherCAT設定檔與實際狀況不符
+AGV_NODE,14004417,2,Failed to execute SDO command,EtherCAT執行SDO命令異常
+AGV_NODE,14004410,2,Failed to turn into OP Mode in the EtherCAT Loop.,EtherCAT無法進入操作模式
+AGV_NODE,14004411,2,The Joint Numbers of the Robot does not match the Default Setting,實際手臂軸數與設定檔不合
+AGV_NODE,14065306,2,J7 Torque exceeds limit,J7 扭力超出限制
+AGV_NODE,14004413,2,Emergency Button Pressed before the Robot Initialization finished.,初始化過程中，按壓緊急開關
+AGV_NODE,14004362,2,Cartesian Space Move Failure From Robot Base Space,對機器人座標系做卡式空間運動失敗
+AGV_NODE,14004361,2,Robot Controller Function Library Issue,QsiRCFL函式庫運算錯誤
+AGV_NODE,14065510,2,The result is NG in position initialization process,校正位置的位置計算值誤差過大
+AGV_NODE,14004368,2,Tool Connected Failure With Robot,工具連結手臂失敗
+AGV_NODE,14004369,2,"Inverse Kinematics Failure, Motion Blending Issue","運動線段擬合的過程中,逆向運動學失敗"
+AGV_NODE,14017416,2,Actioner variable type mismatch,Actioner? 變數型態不相匹配
+AGV_NODE,13004152,2,AutoWhenRobotStatusNotReset,AutoWhenRobotStatusNotReset
+AGV_NODE,13004153,2,AutoWhenRobotStatusNotReady,AutoWhenRobotStatusNotReady
+AGV_NODE,13004150,2,PoseNotInit,PoseNotInit
+AGV_NODE,13004151,2,BatteryReadTimeout,BatteryReadTimeout
+AGV_NODE,14016419,2,[Error][User Setting]Line teach failed,直線教導失敗
+AGV_NODE,14016418,2,[Error][User Setting]Compliance teach failed,順應性教導時錯誤
+AGV_NODE,14005712,2,Visual move04 failed,支援視覺移動方式? move04? 失敗
+AGV_NODE,14065487,2,[Error][Hardware]The protection is on for motor hold (type 2),
+AGV_NODE,14016413,2,Failed to re-record the point to another base,無法將點位座標系變更至另外的座標系
+AGV_NODE,14016412,2,[Error][Flow]Start Node Not Connected,開始節點沒有連接項目
+AGV_NODE,14016411,2,Set Component List failed,設定元件列表失敗
+AGV_NODE,14016410,2,Operation Space Binding failed,結合安全空間錯誤
+AGV_NODE,14016417,2,[Error][Software]New Base failed,新座標系失敗
+AGV_NODE,14016416,2,Only can owner delete ownership,非擁有者無法刪除擁有權
+AGV_NODE,14016415,2,[Error][User Setting]Ownership has been acquired,擁有權已被他人取得
+AGV_NODE,14016414,2,[Error][User Setting]User number over limit,使用者數量超過限制
+AGV_NODE,11000149,2,Arm_DI1_SensorError,Arm_DI1_SensorError
+AGV_NODE,11000148,2,Arm_DI0_SensorError,Arm_DI0_SensorError
+AGV_NODE,14065464,2,[Error][Hardware]Gate Driver NG,Gate Driver 元件異常
+AGV_NODE,14065465,2,[Error][Hardware]MOFSET NG,Mosfet 元件異常
+AGV_NODE,14065466,2,[Error][Hardware]Current Sensor NG,電流感測器異常
+AGV_NODE,11000144,2,Arm_RunningError,Arm_RunningError
+AGV_NODE,14065460,2,The initialization of joint coordinate is timeout,"根據紀錄的絕對位置,初始化關節座標系統超出時間限制"
+AGV_NODE,14065461,2,FW version doesn't match HW version,FW 版本與硬體電路板相互不符合
+AGV_NODE,14065462,2,The process in main loop is timeout,主程式迴路執行逾時
+AGV_NODE,14065463,2,Brake release failed.,制動器釋放的功能失效
+AGV_NODE,14004520,2,[Warning][External Device] Discrapency was detected between dual channels of Emergency Stop Port.,緊急停止埠之雙通道間偵測到不相符結果
+AGV_NODE,11001365,2,Arm_ModbusDisconnected,Arm_ModbusDisconnected
+AGV_NODE,14004522,2,[Warning][External Device] Discrapency was detected between dual channels of Safeguard Port B.,安全埠 B 之雙通道間偵測到不相符結果
+AGV_NODE,14004523,2,[Warning][External Device] Discrapency was detected between dual channels of Enabling Device Ports.,手柄啟用開關埠之雙通道間偵測到不相符結果
+AGV_NODE,14005713,2,Visual move05 failed,支援視覺移動方式? move05? 失敗
+AGV_NODE,13004165,2,MoveTimeoutLVLidar,左側垂直Lidar偵測到障礙
+AGV_NODE,14004526,2,[Error][Safety Function] Discrapency was detected between dual channels of Safeguard Port A Output.,
+AGV_NODE,14004527,2,[Error][Safety Function] Discrapency was detected between dual channels of Safeguard Port B Output.,安全埠 B 輸出之雙通道間偵測到不相符結果
+AGV_NODE,12008328,2,TP3 timeout or EQ error.(HO_AVBL off),TP3 timeout or EQ error.(請確認EQ端訊號)(HO_AVBL off)
+AGV_NODE,13004164,2,MoveStuckedTimeout,移動命令執行超時
+AGV_NODE,12008244,2,TP3 timeout or EQ error.(HO_AVBL off),
+AGV_NODE,12008329,2,ES off.,ES off.(請確認EQ端訊號)
+AGV_NODE,14017410,2,Actioner Pause failed,Actioner 暫停失敗
+AGV_NODE,14004486,2,TmSync : Enable networking with specified NIC Failure,TmSync網卡啟動錯誤
+AGV_NODE,14004485,2,TmSync : MacID Conflict In The Group,TmSync群組內網卡錯誤
+AGV_NODE,14006158,2,Illegal number of feature points,特徵點個數錯誤
+AGV_NODE,14004483,2,TmSync : Robot Lost connection,TmSync異常斷線
+AGV_NODE,14004482,2,TmSync : Group Members Lost Connection,TmSync群組組員斷線
+AGV_NODE,14004481,2,TmSync : Group Members Alarm,TmSync群組組員發生錯誤
+AGV_NODE,14016409,2,Point Not Found,點位沒有找到
+AGV_NODE,14017418,2,Error during project warp,專案間跳躍時發生錯誤
+AGV_NODE,14017419,2,Variable is not found,
+AGV_NODE,14017676,2,Vision job is already running,視覺任務已經在執行
+AGV_NODE,14065513,2,The check sum result from EEPROM data is abnormal,EEPROM 檢驗碼異常
+AGV_NODE,12008324,2,VA on.,VA on.(請確認EQ端訊號)
+AGV_NODE,14017677,2,Vision actioner initialization fail,
+AGV_NODE,12008325,2,READY off.,READY off.(請確認EQ端訊號)
+AGV_NODE,12008326,2,VS_0 on.,VS_0 on.(請確認EQ端訊號)
+AGV_NODE,11004161,2,MoveTimeOut,MoveTimeOut
+AGV_NODE,12008327,2,VS_1 on.,VS_1 on.(請確認EQ端訊號)
+AGV_NODE,11004160,2,PathPlanningFail,PathPlanningFail
+AGV_NODE,14019712,2,Could not Play if Previous Project is not stopped,
+AGV_NODE,14017673,2,Vision found nothing,視覺未找到的物件
+AGV_NODE,11004163,2,LOAD PL/PS Not Empty,LOAD PL/PS Not Empty
+AGV_NODE,11004162,2,UNLOAD PL/PS Empty,UNLOAD PL/PS Empty
+AGV_NODE,12008322,2,L_REQ off.,L_REQ off.(請確認EQ端訊號)
+AGV_NODE,14005017,2,Solve A sin(x) + B cos(x) = C failed,解此方程式? A sin(x) + B cos(x) = C? 失敗
+AGV_NODE,12008323,2,U_REQ on.,U_REQ on.(請確認EQ端訊號)
+AGV_NODE,14065291,2,[Error][Safety Function]J2 Torque exceeds limit,第 2 軸力矩超過限制
+AGV_NODE,11004164,2,PL/PS Port Unknow,PL/PS Port Unknow
+AGV_NODE,14005013,2,Kalman filter initialization need to be done,需先初始化卡曼濾波器
+AGV_NODE,14005012,2,Kalman gain calculation failed,卡曼濾波器增益值計算失敗
+AGV_NODE,14005011,2,Circle path planning initialization failed,圓弧路徑規劃初始化失敗
+AGV_NODE,14005010,2,Circle path center calculation failed,圓弧路徑中心計算失敗
+AGV_NODE,11004165,2,Process Time Out,Process Time Out
+AGV_NODE,14005016,2,Illegal size/format of function returned variables,函式回傳變數的維度或格式錯誤
+AGV_NODE,14005015,2,Illegal size/format of function input variables,函式輸入變數的維度或格式錯誤
+AGV_NODE,14005014,2,Illegal index to get/set a component of a matrix/vector,"取得一矩陣或向量內任一元素? a[i,j]的 i,j 值超出維度"
+AGV_NODE,14017678,2,Vision calibration error,視覺校正錯誤
+AGV_NODE,14005019,2,Effective data is not enough,有效資料數不足
+AGV_NODE,14005018,2,Solve AX = XB failed,解矩陣方程式 AX = XB 失敗
+AGV_NODE,14004388,2,Shock Alarm in the Robot,機械手臂受到撞擊
+AGV_NODE,14024516,2,Runin process R2: V signal NG,Runin R2 UVWABZ 訊號確認? - V 訊號個數異常
+AGV_NODE,14024515,2,Runin process R2: U signal NG,Runin R2 UVWABZ 訊號確認? - U 訊號個數異常
+AGV_NODE,14024514,2,Runin process R2: multi Z index happened,Runin R2 UVWABZ 訊號確認? -? 一圈出現多個 Z
+AGV_NODE,14024513,2,Runin process R2: Z index miss,Runin R2 UVWABZ 訊號確認? -? 沒有 Z 訊號
+AGV_NODE,14024512,2,The deviation is too high when initializing joint coordinate,"轉換絕對位置時,第 2,3 相偏差過大"
+AGV_NODE,14032771,2,[Warning][External Device] Discrepancy was detected between dual channels of User Connected External Safeguard Input Port for Human ??Machine Safety Settings.,使用者外接安全防護輸入埠觸發人機安全設定之雙通道間偵測到不相符結果
+AGV_NODE,14065294,2,[Error][Safety Function]J3 Torque exceeds limit,第 3 軸力矩超過限制
+AGV_NODE,14004385,2,Velocity or Angular Velocity Over Range,速度或角速度超過設定值上限
+AGV_NODE,14004386,2,Force or Torque Over Range,力或力矩超過設定值上限
+AGV_NODE,14004387,2,Both Alarm in Error(HEX)21 and Error(HEX)22,速度與力矩同時超過設定值上限
+AGV_NODE,14017675,2,[Error][VISION]Vision actioner reply data is not applicable,
+AGV_NODE,11000152,2,Arm_ProjectError,Arm_ProjectError
+AGV_NODE,12008239,2,U_REQ off.,U_REQ off.(請確認EQ端訊號)
+AGV_NODE,14024493,2,The index angle of encoder is not calibrated,編碼器索引未校正
+AGV_NODE,12008236,2,ES off.,
+AGV_NODE,14005518,2,Homing check failed,歸零點確認失敗
+AGV_NODE,14005519,2,Modify IK solution failed,修正逆向運動學解失敗
+AGV_NODE,12008237,2,GO off.,GO off.(請確認EQ端訊號)
+AGV_NODE,14005512,2,Outer workspace limit,外工作空間極限
+AGV_NODE,14005513,2,Wrist singularity,腕部奇異點?
+AGV_NODE,14005510,2,IK solution jumping,逆向運動學跳解
+AGV_NODE,17000003,2,DriverBoardFormatError,
+AGV_NODE,14005516,2,Infinite solution. No solution is selected,逆向運動學無窮多解
+AGV_NODE,14005517,2,Undefined error,未定義錯誤?
+AGV_NODE,14005514,2,Out of outer workspace,超過外工作空間
+AGV_NODE,14005515,2,Out of inner workspace,超過內工作空間
+AGV_NODE,14005691,2,Obtaining initial posture 'P0' failed in EIH calibration,"於 EIH? 校正程序中,? 無法取得初始姿態"
+AGV_NODE,14005690,2,Initialization of EIH calibration process has not yet been done,EIH? 校正程序初始化尚未執行
+AGV_NODE,14005693,2,Data pattern processing failed in SCARA's EIH calibration,"於 EIH? 校正程序中,? 影像資料處理失敗"
+AGV_NODE,14005692,2,Moving to next posture 'Pi' failed in EIH calibration,"於 EIH? 校正程序中,? 無法將手臂移動至下一個姿態"
+AGV_NODE,14005695,2,EIH transform calculation failed,EIH 校正計算失敗
+AGV_NODE,14005694,2,Forward/Inverse indexing of data pattern processing failed in SCARA's EIH calibration,"於 EIH? 校正程序中,? 手臂端資料處理失敗"
+AGV_NODE,14017162,2,Rtx lincense failure,Rtx? 授權錯誤
+AGV_NODE,11000049,2,Arm_VisionServoingFail,Arm_VisionServoingFail
+AGV_NODE,14005699,2,Initialization of camera intrinsic parameter calibration process failed,相機內部參數校正程序初始化失敗
+AGV_NODE,12008232,2,READY off.,READY off.(請確認EQ端訊號)
+AGV_NODE,12008233,2,VS_0 on.,VS_0 on.(請確認EQ端訊號)
+AGV_NODE,12008230,2,U_REQ off.,U_REQ off.(請確認EQ端訊號)
+AGV_NODE,12008231,2,VA on.,VA on.(請確認EQ端訊號)
+AGV_NODE,14005702,2,Initialization of camera intrinsic parameter calibration process has not yet been done,相機內部參數校正程序初始化尚未完成
+AGV_NODE,13000024,2,MapCheckFail,MapCheckFail
+AGV_NODE,12008319,2,TP3 timeout or EQ error.(HO_AVBL off),TP3 timeout or EQ error.(請確認EQ端訊號)(HO_AVBL off)
+AGV_NODE,14024491,2,The protection is on for motor hold,馬達鎖定保護
+AGV_NODE,12008261,2,TP4 timeout or EQ error.(HO_AVBL off),TP4 timeout or EQ error.(請確認EQ端訊號)(HO_AVBL off)
+AGV_NODE,11000151,2,Arm_DataSortNotSame,Arm_DataSortNotSame
+AGV_NODE,13008324,2,NotTeachYet,NotTeachYet
+AGV_NODE,13004118,2,LoadUnloadMacroIncorrect,LoadUnloadMacroIncorrect
+AGV_NODE,13004119,2,LoadUnloadE84Fail,LoadUnloadE84Fail
+AGV_NODE,14005701,2,Initialization of camera intrinsic parameter calibration process failed,
+AGV_NODE,13004112,2,movewhencharging,movewhencharging
+AGV_NODE,14024517,2,Runin process R2: W signal NG,Runin R2 UVWABZ 訊號確認? - W 訊號個數異常
+AGV_NODE,14005700,2,"There are constraints on the effective robot moving area, please change the initial robot posture or the virtual radius","手臂移動區域被限制,? 請改變初始姿態或虛擬半徑/深度"
+AGV_NODE,13004115,2,BattOT,BattOT
+AGV_NODE,12065527,2,Serial port error.(Please check USB hub),Serial port error.(請確認EQ端訊號)(Please check USB hub)
+AGV_NODE,14005468,2,Robot status update failed,手臂狀態更新失敗
+AGV_NODE,14005469,2,Load robot configure file failed,載入手臂參數檔失敗
+AGV_NODE,14005466,2,At least one joint position is not in its working range,至少有一軸位置超出工作範圍
+AGV_NODE,14005467,2,This function supports only robots with 6 DOF or above,此函式只支援 6 軸以上手臂
+AGV_NODE,14005464,2,Inverse kinematics calculation failed,逆向運動學計算失敗
+AGV_NODE,14005465,2,Illegal Robot ID,手臂 ID 錯誤
+AGV_NODE,14005462,2,Forward kinematics calculation failed,順向運動學計算失敗
+AGV_NODE,14005463,2,Illegal robot configuration (dimension or content),手臂姿態變數(內容或維度)錯誤
+AGV_NODE,14005460,2,Joint type mismatch,手臂關節型態錯誤
+AGV_NODE,14005461,2,Illegal link frame SN,手臂連桿座標序號錯誤
+AGV_NODE,14016456,2,"This project has existed, could not create new project",
+AGV_NODE,14016455,2,Robot TCP and/or elbow exceeds Cartesian limit,手臂 TCP 與/或肘關節位置超過 Cartesian Limit 限制
+AGV_NODE,14016454,2,Out of Cartesian limits set. Please check if the TCP or elbow is out of the Cartesian limits,超出安全空間設定，請檢查手臂 TCP 與手臂肘關節是否超出設定範圍
+AGV_NODE,14016453,2,Step run failed because of variables parameter,單步執行不支援使用變數
+AGV_NODE,14016452,2,Save Tool to F/T Sensor error,寫入檔案錯誤
+AGV_NODE,14016451,2,Compute Tool Mass and Centroid for F/T Sensor error,無法計算工具重量及質心
+AGV_NODE,14016450,2,Move Pose for F/T Sensor error,移動至手臂恣態錯誤
+AGV_NODE,14024518,2,Runin process R2: the sequence of UVW is NG,Runin R2 UVWABZ 訊號確認? - UVW 訊號順序錯誤
+AGV_NODE,10000000,2,OdometryEncoderMiss,OdometryEncoderMiss
+AGV_NODE,14065509,2,The position initialization process is timeout,位置校正逾時
+AGV_NODE,14065508,2,"[Error][System]The position initialization process is timeout (""Z search"" is not finished)",位置校正逾時 (尚未完成 Z 搜索)
+AGV_NODE,14065507,2,"The joint angle between ""power on"" and ""position initialization"" exceeds limit",進入校正位置過程與開電位置距離超過範圍
+AGV_NODE,14000400,2,Arm_Unable to Return,Arm_Unable to Return(手臂_不可退回)
+AGV_NODE,14065505,2,Online multiturn calibration failed,oniline multiturn? 校正失敗(產線校正使用)
+AGV_NODE,14065504,2,[Hardware][Error]The voltage of DC bus is low in EtherCAT OP mode,
+AGV_NODE,14065503,2,Unknown EtherCAT ESM command,未知的 EtherCAT ESM 狀態切換指令
+AGV_NODE,14065502,2,Changing EtherCAT ESM when PDS is in OP mode,EtherCAT ESM 通訊狀態切換於 PDS OP? 工作狀態
+AGV_NODE,14065501,2,An error occurs when command changes the control mode.,位置模式切換控制模式時發生錯誤
+AGV_NODE,14065500,2,Runin process : G sensor calibration result is out of limit,Runin: 加速規校正結果超過範圍
+AGV_NODE,14004443,2,Motion Stopped by Robot Stick key,機器人控制棒已按下停止鈕
+AGV_NODE,14004442,2,System Shut Down,系統關閉
+AGV_NODE,14004441,2,System Reset,系統重置
+AGV_NODE,14004440,2,HMI Lost Connection with Robot Controller,人機介面與機器人控制器失去連線
+AGV_NODE,14004447,2,An Alarm is triggered by Input Pin in the Safety Monitor Board,
+AGV_NODE,14004446,2,An alarm occurs in the Safety Monitor Board,安全監控版發出警告
+AGV_NODE,14004445,2,EtherCAT Loop Lost Connection,Please reboot the robot
+AGV_NODE,14004444,2,Buzzer Failure in the Robot Stick Key,機器人控制棒內蜂鳴器異常
+AGV_NODE,14004449,2,The Motion Command Executed with Compliance Mode at the same time,"在順應模式下,有其他運動命令送入控制器"
+AGV_NODE,14004448,2,The Motion Command Executed with manual mode at the same time,"在手動模式下,有其他運動命令送入控制器"
+AGV_NODE,14065444,2,The acceleration on Z direction of G sensor is out of range,加速規? Z? 方向加速度超標
+AGV_NODE,11004166,2,Initial Process NG,Initial Process NG
+AGV_NODE,14000147,2,Arm_RBMoveing_DI2_Fash,Arm_RBMoveing_DI2_Fash(手臂_Robot移動中DI2有變化)
+AGV_NODE,11004115,2,MainRouteEmpty,
+AGV_NODE,12000055,2,VA on.,
+AGV_NODE,14000145,2,Arm_RBMoveing_DI0_Fash,Arm_RBMoveing_DI0_Fash(手臂_Robot移動中DI0有變化)
+AGV_NODE,14017415,2,Actioner code error,Actioner? 程式碼錯誤
+AGV_NODE,14004994,2,Illegal rotation matrix,
+AGV_NODE,14004997,2,Illegal square matrix,
+AGV_NODE,11000137,2,Arm_AGV_LDULD_AddressError,Arm_AGV_LDULD_AddressError
+AGV_NODE,11000134,2,Arm_RunningVisionFail,Arm_RunningVisionFail
+AGV_NODE,11000135,2,Arm_InitializeError,Arm_InitializeError
+AGV_NODE,11004129,2,CassetteDoor1OpenNG,CassetteDoor1OpenNG
+AGV_NODE,11004128,2,RobotHomeNG,RobotHomeNG
+AGV_NODE,11000130,2,Arm_GripperNotRelease,Arm_GripperNotRelease
+AGV_NODE,11000131,2,Arm_PresentSensorError,Arm_PresentSensorError
+AGV_NODE,12008229,2,L_REQ on.,L_REQ on.(請確認EQ端訊號)
+AGV_NODE,11004121,2,MainRouteVSCurrentRouteDisconnect,MainRouteVSCurrentRouteDisconnect
+AGV_NODE,11004120,2,MainRouteVSGoalRouteDisconnect,
+AGV_NODE,12008316,2,READY off.,
+AGV_NODE,12004143,2,VA on.,
+AGV_NODE,14005495,2,Task frame establishing calculation failed,工作空間座標建立計算失敗
+AGV_NODE,13000067,2,AgvlTryAutoFail,
+AGV_NODE,14006157,2,Acquiring joint velocity command failed,計算軸速度命令失敗
+AGV_NODE,14006156,2,The camera focus can not be zero,相機焦距不可為 0
+AGV_NODE,12004159,2,U_REQ on.,U_REQ on.(請確認EQ端訊號)
+AGV_NODE,12004158,2,L_REQ on.,L_REQ on.(請確認EQ端訊號)
+AGV_NODE,14006153,2,Feature point coordinates transfer (robot base frame to camera frame) failed,特徵點座標轉換(由機器人座標系至相機)失敗
+AGV_NODE,14006152,2,Feature point coordinates transfer (robot base frame to image frame) failed,特徵點座標轉換(由機器人座標系至影像平面)失敗
+AGV_NODE,13004129,2,PositionError,PositionError
+AGV_NODE,12004153,2,VS_0 on.,VS_0 on.(請確認EQ端訊號)
+AGV_NODE,18000002,2,RFIDAbnormalFail,
+AGV_NODE,12004151,2,VA on.,VA on.(請確認EQ端訊號)
+AGV_NODE,12004150,2,L_REQ on.,L_REQ on.(請確認EQ端訊號)
+AGV_NODE,12004157,2,GO off.,
+AGV_NODE,12004156,2,ES off.,
+AGV_NODE,12004155,2,TP4 timeout or EQ error.(HO_AVBL off),TP4 timeout or EQ error.(請確認EQ端訊號)(HO_AVBL off)
+AGV_NODE,12004154,2,VS_1 on.,
+AGV_NODE,12000058,2,VS_1 on.,VS_1 on.(請確認EQ端訊號)
+AGV_NODE,12000059,2,TP4 timeout or EQ error.(HO_AVBL off),TP4 timeout or EQ error.(請確認EQ端訊號)(HO_AVBL off)
+AGV_NODE,14005499,2,Task space coordinates transfer failed : from RTX to HMI,工作空間座標點位轉換失敗(從 RTX 到 HMI)
+AGV_NODE,14005498,2,Illegal number of task parameters,工作空間座標參數個數錯誤
+AGV_NODE,14005497,2,Linking task frame failed,連結工作空間座標系失敗
+AGV_NODE,14005496,2,"At least one of Position, Px, or Py is not recorded in task frame establishing process",至少有一點位於工作空間座標建立時未紀錄
+AGV_NODE,12000050,2,VS_1 on.,VS_1 on.(請確認EQ端訊號)
+AGV_NODE,12000051,2,TP3 timeout or EQ error.(HO_AVBL off),TP3 timeout or EQ error.(請確認EQ端訊號)(HO_AVBL off)
+AGV_NODE,12000056,2,READY off.,READY off.(請確認EQ端訊號)
+AGV_NODE,12000057,2,VS_0 on.,
+AGV_NODE,14005491,2,TCP calibration process initialization has not done yet,
+AGV_NODE,14005490,2,Illegal number of changing robot postures for TCP calibration,"工具中心點校正程序中,? 手臂改變姿態數錯誤"
+AGV_NODE,14000032,2,Arm_GripperPosError,Arm_GripperPosError(手臂_夾爪位置異常)
+AGV_NODE,14000033,2,Arm_GripperOutOfRange,Arm_GripperOutOfRange(手臂_夾爪過行程)
+AGV_NODE,13004134,2,RobotCmdWhenMoving,RobotCmdWhenMoving
+AGV_NODE,11000000,2,Arm_NoError,Arm_NoError
+AGV_NODE,11000001,2,Arm_Running,Arm_Running
+AGV_NODE,14024498,2,Illegal interrupt to MCU,
+AGV_NODE,13004167,2,MoveTimeoutLHLidar,前側水平Lidar偵測到障礙
+AGV_NODE,14005511,2,Inner workspace limit,內工作空間極限
+AGV_NODE,14065488,2,The UVW signal of encoder is NG,偵測編碼器 UVW 訊號是否異常
+AGV_NODE,14065489,2,[Error][Hardware]The data is abnormal when reading magnetic encoder.,磁性編碼器資料讀取異常
+AGV_NODE,14065486,2,[Error][Hardware]The compensation of encoder signal is too high,光編碼器 AB 相補償過大
+AGV_NODE,14000036,2,Arm_GripperObject2,Arm_GripperObject2(手臂_夾爪物件種類2)
+AGV_NODE,14065484,2,[Error][Hardware]The Z index signal is missing,單圈過 Z 訊號遺失
+AGV_NODE,14065485,2,[Error][Hardware]Encoder connection failed,編碼器連結失敗
+AGV_NODE,14065482,2,[Error][Hardware]Multi Z index happened in encoder output,"偵測到,編碼器單圈出現複數 Z 訊號"
+AGV_NODE,14065483,2,The deviation between command and current position is too high,位置命令相差過大
+AGV_NODE,14065480,2,Failure in loading data from EEPROM,EPRROM 載入資料失敗
+AGV_NODE,14065481,2,The electrical angle of motor is not correct (warning),馬達電氣角錯誤? (警告)
+AGV_NODE,14017674,2,Vision actioner time-out,視覺作業逾時
+AGV_NODE,14005484,2,ID parameter format can not be formed,ID 參數格式無法形成
+AGV_NODE,14065299,2,[Error][Safety Function]J5 Velocity exceeds limit,
+AGV_NODE,14065298,2,[Error][Safety Function]J5 Position exceeds limit,第 5 軸位置超過限制
+AGV_NODE,14017670,2,[Error][Hardware]Vision reply message error,視訊回覆訊息錯誤
+AGV_NODE,14017671,2,Vision job is not started,視覺任務未開始
+AGV_NODE,14017672,2,Vision unknown command received,視覺未知命令收到
+AGV_NODE,14005485,2,Cartesian/Joint space trajectory transfer failed,卡式與關節空間軌跡互換失敗
+AGV_NODE,14065293,2,[Error][Safety Function]J3 Velocity exceeds limit,第 3 軸速度超過限制
+AGV_NODE,14065292,2,[Error][Safety Function]J3 Position exceeds limit,第 3 軸位置超過限制
+AGV_NODE,14032769,2,[Warning][External Device] Discrepancy was detected between dual channels of User Connected ESTOP Input Port.,使用者外接緊急停止輸入埠之雙通道間偵測到不相符結果
+AGV_NODE,14032768,2,[Warning][External Device] Discrepancy was detected between dual channels of Robot Stick ESTOP Port.,機器人控制棒緊急停止埠之雙通道間偵測到不相符結果
+AGV_NODE,14065297,2,[Error][Safety Function]J4 Torque exceeds limit,第 4 軸力矩超過限制
+AGV_NODE,14065296,2,[Error][Safety Function]J4 Velocity exceeds limit,第 4 軸速度超過限制
+AGV_NODE,14065295,2,[Error][Safety Function]J4 Position exceeds limit,第 4 軸位置超過限制
+AGV_NODE,14000050,2,Arm_TM_VarNG,"Arm_TM_VarNG(手臂_TMROBOT拍照失敗,請檢查車身有無停到位)"
+AGV_NODE,12008315,2,VA on.,VA on.(請確認EQ端訊號)
+AGV_NODE,12008314,2,U_REQ on.,U_REQ on.(請確認EQ端訊號)
+AGV_NODE,12008317,2,VS_0 on.,VS_0 on.(請確認EQ端訊號)
+AGV_NODE,14005487,2,Task/object frame establishing failed,工作空間/物件座標建立失敗
+AGV_NODE,12008313,2,L_REQ off.,L_REQ off.(請確認EQ端訊號)
+AGV_NODE,13004098,2,roboterror,roboterror
+AGV_NODE,13004096,2,emergentstop,emergentstop
+AGV_NODE,14006880,2,The robot configuration does not match that used in vision system,
+AGV_NODE,12000054,2,U_REQ on.,U_REQ on.(請確認EQ端訊號)
+AGV_NODE,12008318,2,VS_1 on,
+AGV_NODE,14000148,2,Arm_DI0_SensorError,Arm_DI0_SensorError(手臂_DI0 Sensor 異常)
+AGV_NODE,14000149,2,Arm_DI1_SensorError,Arm_DI1_SensorError(手臂_DI1 Sensor 異常
+AGV_NODE,13008242,2,TMVarNG,TMVarNG
+AGV_NODE,13008243,2,TMVar2NG,TMVar2NG
+AGV_NODE,13008240,2,VisionFixedFail,VisionFixedFail
+AGV_NODE,13008241,2,VisionServoingFail,VisionServoingFail
+AGV_NODE,14017160,2,[Error][Motion]Over Working Area,手臂超出工作區間
+AGV_NODE,14005483,2,End effector dynamic parameter ID matrix computation failed,
+AGV_NODE,14000146,2,Arm_RBMoveing_DI1_Fash,Arm_RBMoveing_DI1_Fash(手臂_Robot移動中DI1有變化)
+AGV_NODE,14000051,2,Arm_TM_Var2NG,Arm_TM_Var2NG(手臂_TMROBOT補償值穩定度不足)
+AGV_NODE,14000144,2,Arm_RunningError,Arm_RunningError(手臂_Riunning格式有誤)
+AGV_NODE,14017161,2,Rtx start failure,
+AGV_NODE,11000257,2,Arm_LDPort2StatusError,Arm_LDPort2StatusError
+AGV_NODE,11000256,2,Arm_LDPort1StatusError,Arm_LDPort1StatusError
+AGV_NODE,14000065,2,Arm_Initialize RB Pos Error,Arm_Initialize RB Pos Error(手臂_位置異常無法復歸)
+AGV_NODE,14000064,2,Arm_PostureError,
+AGV_NODE,14005547,2,Acquiring robot flange generalized position failed,取得手臂法蘭位置失敗
+AGV_NODE,14005546,2,Set robot parameter from string failed,從字串設定手臂參數失敗
+AGV_NODE,14005549,2,Series frames transform failed,手臂連桿座標連續均質轉換失敗
+AGV_NODE,14005548,2,Acquiring robot tool generalized position failed,取得手臂工具端位置失敗
+AGV_NODE,14005696,2,"Camera is attached with the translational axis, and it does not move",
+AGV_NODE,11000259,2,Arm_ULDPort2StatusError,Arm_ULDPort2StatusError
+AGV_NODE,11000258,2,Arm_ULDPort1StatusError,Arm_ULDPort1StatusError
+AGV_NODE,14019221,2,[Error][Flow]Target Node is not exist,目標節點不存在
+AGV_NODE,14019220,2,[Error][Flow]Missing Right Brace,缺少右括號? }
+AGV_NODE,14019223,2,[info.][Flow]Modulo by Zero,
+AGV_NODE,14019222,2,[info.][Flow]Division by Zero,除以零
+AGV_NODE,14019225,2,Invalid Type Value,非法的型別設定
+AGV_NODE,14019224,2,[Error][Flow]Invalid Array Index,ROBOTControllerAbmormal(機器手臂控制器異常)
+AGV_NODE,14019227,2,[Error][Flow]Invalid Number Value,非法的數字值
+AGV_NODE,14019226,2,Invalid Index Value,非法的索引值存取
+AGV_NODE,14019229,2,[Error][Com.]Modbus open failed,Modbus 裝置開啟失敗
+AGV_NODE,12000063,2,U_REQ on.,
+AGV_NODE,14000034,2,Arm_GripperInitializeERROR,Arm_GripperInitializeERROR(手臂_夾爪原點復歸異常)
+AGV_NODE,12000062,2,L_REQ on.,L_REQ on.(請確認EQ端訊號)
+AGV_NODE,92012294,1,Discharge timeout.(Please check charger HP signal),Discharge timeout.(Please check charger HP signal)
+AGV_NODE,92012293,1,Charge timeout.,Charge timeout.
+AGV_NODE,92012292,1,Charge GO off.,Charge GO off.
+AGV_NODE,92012291,1,Charge REQ free.,Charge REQ free.
+AGV_NODE,92012290,1,Charge full.,Charge full.
+AGV_NODE,92000042,1,VS_1 on.,VS_1 on.
+AGV_NODE,92065534,1,Exception found in action loop.,Exception found in action loop.
+AGV_NODE,92065535,1,Loop timeout.,Loop timeout.
+AGV_NODE,92008218,1,ES off.,ES off.
+AGV_NODE,92004140,1,GO off.,GO off.
+AGV_NODE,92000017,1,ES off.,ES off.
+AGV_NODE,92000014,1,VS_0 on.,VS_0 on.
+AGV_NODE,92000015,1,VS_1 on.,VS_1 on.
+AGV_NODE,92000012,1,VA on.,VA on.
+AGV_NODE,92000013,1,READY on.,READY on.
+AGV_NODE,92000010,1,GO off.,GO off.
+AGV_NODE,92000011,1,EQ is not empty while loading CST to EQ.(U_REQ on),EQ is not empty while loading CST to EQ.(U_REQ on)
+AGV_NODE,92008360,1,VS_1 on.,VS_1 on.
+AGV_NODE,92008361,1,HO_AVBL off.,HO_AVBL off.
+AGV_NODE,92008362,1,ES off.,ES off.
+AGV_NODE,92000018,1,GO off.,GO off.
+AGV_NODE,92000019,1,EQ err,EQ err
+AGV_NODE,92065532,1,Checksum error.,Checksum error.
+AGV_NODE,92008219,1,GO off.,GO off.
+AGV_NODE,92065533,1,Header error.,Header error.
+AGV_NODE,92008272,1,L_REQ on.,L_REQ on.
+AGV_NODE,92008273,1,VA on.,VA on.
+AGV_NODE,92008270,1,ES off.,ES off.
+AGV_NODE,92008271,1,GO off.,GO off.
+AGV_NODE,92008276,1,VS_1 on.,VS_1 on.
+AGV_NODE,92008277,1,HO_AVBL off.,HO_AVBL off.
+AGV_NODE,92008274,1,READY on.,READY on.
+AGV_NODE,92008275,1,VS_0 on.,VS_0 on.
+AGV_NODE,92000043,1,HO_AVBL off.,HO_AVBL off.
+AGV_NODE,92008278,1,GO off.,GO off.
+AGV_NODE,92008279,1,L_REQ on.,L_REQ on.
+AGV_NODE,92000025,1,VS_1 on.,VS_1 on.
+AGV_NODE,92000009,1,ES off.,ES off.
+AGV_NODE,92000008,1,EQ not in auto mode.(HO_AVBL off),EQ not in auto mode.(HO_AVBL off)
+AGV_NODE,92000001,1,ES off.,ES off.
+AGV_NODE,92000000,1,EQ not in auto mode.(HO_AVBL off),EQ not in auto mode.(HO_AVBL off)
+AGV_NODE,92000003,1,U_REQ on.,U_REQ on.
+AGV_NODE,92000002,1,L_REQ on.,L_REQ on.
+AGV_NODE,92000005,1,READY on.,READY on.
+AGV_NODE,92000004,1,VA on.,VA on.
+AGV_NODE,92000007,1,VS_1 on.,VS_1 on.
+AGV_NODE,92000006,1,VS_0 on.,VS_0 on.
+AGV_NODE,92004098,1,L_REQ on.,L_REQ on.
+AGV_NODE,92004099,1,U_REQ on.,U_REQ on.
+AGV_NODE,92008288,1,U_REQ on.,U_REQ on.
+AGV_NODE,92004096,1,EQ not in auto mode.(HO_AVBL off),EQ not in auto mode.(HO_AVBL off)
+AGV_NODE,92004097,1,ES off.,ES off.
+AGV_NODE,92000081,1,READY on.,READY on.
+AGV_NODE,92000080,1,VA on.,VA on.
+AGV_NODE,92000083,1,VS_1 on.,VS_1 on.
+AGV_NODE,92000082,1,VS_0 on.,VS_0 on.
+AGV_NODE,92000085,1,ES off.,ES off.
+AGV_NODE,92000084,1,HO_AVBL off.,HO_AVBL off.
+AGV_NODE,92004108,1,VA on.,VA on.
+AGV_NODE,92004109,1,READY on.,READY on.
+AGV_NODE,92008265,1,U_REQ on.,U_REQ on.
+AGV_NODE,92008264,1,L_REQ on.,L_REQ on.
+AGV_NODE,92008267,1,VS_0 on.,VS_0 on.
+AGV_NODE,92008266,1,VA on.,VA on.
+AGV_NODE,92008269,1,HO_AVBL off.,HO_AVBL off.
+AGV_NODE,92008268,1,VS_1 on.,VS_1 on.
+AGV_NODE,92000071,1,L_REQ on.,L_REQ on.
+AGV_NODE,92000078,1,GO off.,GO off.
+AGV_NODE,92000079,1,U_REQ on.,U_REQ on.
+AGV_NODE,92065529,1,EQ not in auto mode.,EQ not in auto mode.
+AGV_NODE,92065528,1,Controller response timeout.,Controller response timeout.
+AGV_NODE,92000074,1,VS_0 on.,VS_0 on.
+AGV_NODE,92000075,1,VS_1 on.,VS_1 on.
+AGV_NODE,92000076,1,HO_AVBL off.,HO_AVBL off.
+AGV_NODE,92000077,1,ES off.,ES off.
+AGV_NODE,92004106,1,GO off.,GO off.
+AGV_NODE,92065531,1,Exception found in controller loop.,Exception found in controller loop.
+AGV_NODE,92000073,1,VA on.,VA on.
+AGV_NODE,92004167,1,L_REQ on.,L_REQ on.
+AGV_NODE,92004107,1,EQ is empty while unloading CST from EQ.(L_REQ on),EQ is empty while unloading CST from EQ.(L_REQ on)
+AGV_NODE,92004101,1,READY on.,READY on.
+AGV_NODE,92008348,1,L_REQ on.,L_REQ on.
+AGV_NODE,92008349,1,U_REQ on.,U_REQ on.
+AGV_NODE,92004168,1,U_REQ on.,U_REQ on.
+AGV_NODE,92004169,1,VA on.,VA on.
+AGV_NODE,92000016,1,EQ not in auto mode.(HO_AVBL off),EQ not in auto mode.(HO_AVBL off)
+AGV_NODE,92004179,1,VS_1 on.,VS_1 on.
+AGV_NODE,92008211,1,GO off.,GO off.
+AGV_NODE,92008212,1,L_REQ on.,L_REQ on.
+AGV_NODE,92008213,1,U_REQ off.,U_REQ off.
+AGV_NODE,92008214,1,VA on.,VA on.
+AGV_NODE,92008215,1,VS_0 on.,VS_0 on.
+AGV_NODE,92008195,1,U_REQ on.,U_REQ on.
+AGV_NODE,92008194,1,L_REQ on.,L_REQ on.
+AGV_NODE,92004171,1,VS_1 on.,VS_1 on.
+AGV_NODE,92004170,1,VS_0 on.,VS_0 on.
+AGV_NODE,92004173,1,ES off.,ES off.
+AGV_NODE,92004172,1,HO_AVBL off.,HO_AVBL off.
+AGV_NODE,92004175,1,L_REQ on.,L_REQ on.
+AGV_NODE,92004174,1,GO off.,GO off.
+AGV_NODE,92004177,1,READY on.,READY on.
+AGV_NODE,92004176,1,VA on.,VA on.
+AGV_NODE,92008298,1,VA on.,VA on.
+AGV_NODE,92008299,1,VS_0 on.,VS_0 on.
+AGV_NODE,92008353,1,HO_AVBL off.,HO_AVBL off.
+AGV_NODE,92008352,1,VS_1 on.,VS_1 on.
+AGV_NODE,92008355,1,GO off.,GO off.
+AGV_NODE,92008354,1,ES off.,ES off.
+AGV_NODE,92008357,1,VA on.,VA on.
+AGV_NODE,92008192,1,EQ not in auto mode.(HO_AVBL off),EQ not in auto mode.(HO_AVBL off)
+AGV_NODE,92008290,1,READY on.,READY on.
+AGV_NODE,92008291,1,VS_0 on.,VS_0 on.
+AGV_NODE,92008292,1,VS_1 on.,VS_1 on.
+AGV_NODE,92008293,1,HO_AVBL off.,HO_AVBL off.
+AGV_NODE,92008294,1,ES off.,ES off.
+AGV_NODE,92008295,1,GO off.,GO off.
+AGV_NODE,92008296,1,L_REQ off.,L_REQ off.
+AGV_NODE,92008297,1,U_REQ on.,U_REQ on.
+AGV_NODE,92004136,1,VS_0 on.,VS_0 on.
+AGV_NODE,92008282,1,VS_0 on.,VS_0 on.
+AGV_NODE,92008197,1,READY on.,READY on.
+AGV_NODE,92008196,1,VA on.,VA on.
+AGV_NODE,92008216,1,VS_1 on.,VS_1 on.
+AGV_NODE,92008227,1,ES off.,ES off.
+AGV_NODE,92008287,1,L_REQ off.,L_REQ off.
+AGV_NODE,92008217,1,HO_AVBL off.,HO_AVBL off.
+AGV_NODE,92008203,1,L_REQ on.,L_REQ on.
+AGV_NODE,92008202,1,GO off.,GO off.
+AGV_NODE,92008200,1,HO_AVBL off.,HO_AVBL off.
+AGV_NODE,92008207,1,VS_0 on.,VS_0 on.
+AGV_NODE,92008206,1,READY on.,READY on.
+AGV_NODE,92008205,1,VA on.,VA on.
+AGV_NODE,92008204,1,U_REQ off.,U_REQ off.
+AGV_NODE,92004104,1,EQ not in auto mode.(HO_AVBL off),EQ not in auto mode.(HO_AVBL off)
+AGV_NODE,92004105,1,ES off.,ES off.
+AGV_NODE,92008209,1,HO_AVBL off.,HO_AVBL off.
+AGV_NODE,92008208,1,VS_1 on.,VS_1 on.
+AGV_NODE,92004100,1,VA on.,VA on.
+AGV_NODE,92008199,1,VS_1 off.,VS_1 off.
+AGV_NODE,92004102,1,VS_0 on.,VS_0 on.
+AGV_NODE,92004103,1,VS_1 on.,VS_1 on.
+AGV_NODE,92008289,1,VA on.,VA on.
+AGV_NODE,92008198,1,VS_0 off.,VS_0 off.
+AGV_NODE,92008283,1,VS_1 on.,VS_1 on.
+AGV_NODE,92008311,1,ES off.,ES off.
+AGV_NODE,92008281,1,READY on.,READY on.
+AGV_NODE,92008280,1,VA on.,VA on.
+AGV_NODE,92008210,1,ES off.,ES off.
+AGV_NODE,92008286,1,GO off.,GO off.
+AGV_NODE,92008285,1,ES off.,ES off.
+AGV_NODE,92008310,1,HO_AVBL off.,HO_AVBL off.
+AGV_NODE,92004180,1,HO_AVBL off.,HO_AVBL off.
+AGV_NODE,92004181,1,ES off.,ES off.
+AGV_NODE,92008351,1,VS_0 on.,VS_0 on.
+AGV_NODE,92008350,1,VA on.,VA on.
+AGV_NODE,93036871,1,JoyPause,JoyPause
+AGV_NODE,93036872,1,GetLoadUnloadCmdWhenLoadUnload,GetLoadUnloadCmdWhenLoadUnload
+AGV_NODE,93036873,1,ChargeWhenMoving,ChargeWhenMoving
+AGV_NODE,93036866,1,BatteryOverVolt,BatteryOverVolt
+AGV_NODE,92000045,1,GO off.,GO off.
+AGV_NODE,92000044,1,ES off.,ES off.
+AGV_NODE,92004125,1,U_REQ on.,U_REQ on.
+AGV_NODE,91000001,1,CameraNameEmpty,CameraNameEmpty
+AGV_NODE,92000041,1,VS_0 on.,VS_0 on.
+AGV_NODE,92000040,1,READY off.,READY off.
+AGV_NODE,92004119,1,VS_0 on.,VS_0 on.
+AGV_NODE,92004118,1,READY on.,READY on.
+AGV_NODE,92004117,1,VA on.,VA on.
+AGV_NODE,92004116,1,U_REQ off.,U_REQ off.
+AGV_NODE,92004115,1,L_REQ on.,L_REQ on.
+AGV_NODE,92004114,1,GO off.,GO off.
+AGV_NODE,92004113,1,ES off.,ES off.
+AGV_NODE,92004112,1,EQ not in auto mode.(HO_AVBL off),EQ not in auto mode.(HO_AVBL off)
+AGV_NODE,92004111,1,VS_1 on.,VS_1 on.
+AGV_NODE,92004110,1,VS_0 on.,VS_0 on.
+AGV_NODE,93036884,1,VehicleStucked,移動停頓過久
+AGV_NODE,93036881,1,movewhenmanual,movewhenmanual
+AGV_NODE,93036880,1,movewhenrobotnothome,movewhenrobotnothome
+AGV_NODE,93036883,1,ChargingSignalLoss,ChargingSignalLoss
+AGV_NODE,93036882,1,notinchargeposition,notinchargeposition
+AGV_NODE,92008225,1,VS_1 on.,VS_1 on.
+AGV_NODE,92008356,1,U_REQ on.,U_REQ on.
+AGV_NODE,92004120,1,VS_1 on.,VS_1 on.
+AGV_NODE,92008359,1,VS_0 on.,VS_0 on.
+AGV_NODE,92004121,1,HO_AVBL off.,HO_AVBL off.
+AGV_NODE,92008358,1,READY on.,READY on.
+AGV_NODE,92008228,1,GO off.,GO off.
+AGV_NODE,93036869,1,BatteryFullCharge,BatteryFullCharge
+AGV_NODE,93036868,1,BatteryOverTemperature,BatteryOverTemperature
+AGV_NODE,92008221,1,U_REQ off.,U_REQ off.
+AGV_NODE,92008220,1,L_REQ on.,L_REQ on.
+AGV_NODE,92008223,1,READY off.,READY off.
+AGV_NODE,92008222,1,VA on.,VA on.
+AGV_NODE,93036867,1,BatteryOverCurrent,BatteryOverCurrent
+AGV_NODE,92008224,1,VS_0 on.,VS_0 on.
+AGV_NODE,93036865,1,InterLockError,InterLockError
+AGV_NODE,92008226,1,HO_AVBL off.,HO_AVBL off.
+AGV_NODE,92004122,1,ES off.,ES off.
+AGV_NODE,92004123,1,GO off.,GO off.
+AGV_NODE,92008308,1,VS_0 on.,VS_0 on.
+AGV_NODE,92008309,1,VS_1 on.,VS_1 on.
+AGV_NODE,92004126,1,VA on.,VA on.
+AGV_NODE,92004127,1,VS_0 on.,VS_0 on.
+AGV_NODE,92004124,1,L_REQ on.,L_REQ on.
+AGV_NODE,81000000,1,Component_Warning,Component_Warning
+AGV_NODE,92008302,1,ES off.,ES off.
+AGV_NODE,92008303,1,GO off.,GO off.
+AGV_NODE,92004128,1,VS_1 on.,VS_1 on.
+AGV_NODE,92008301,1,HO_AVBL off.,HO_AVBL off.
+AGV_NODE,92016385,1,TA2 timeout.,TA2 timeout.
+AGV_NODE,92016384,1,TA1 timeout.,TA1 timeout.
+AGV_NODE,92008304,1,L_REQ off.,L_REQ off.
+AGV_NODE,92016386,1,TA3 timeout.,TA3 timeout.
+AGV_NODE,92000030,1,U_REQ on.,U_REQ on.
+AGV_NODE,92000031,1,VA on.,VA on.
+AGV_NODE,92000032,1,VS_0 on.,VS_0 on.
+AGV_NODE,92004129,1,HO_AVBL off.,HO_AVBL off.
+AGV_NODE,92000034,1,HO_AVBL off.,HO_AVBL off.
+AGV_NODE,92000035,1,ES off.,ES off.
+AGV_NODE,92000036,1,GO off.,GO off.
+AGV_NODE,92000037,1,L_REQ off.,L_REQ off.
+AGV_NODE,92000038,1,U_REQ on.,U_REQ on.
+AGV_NODE,92008306,1,VA on.,VA on.
+AGV_NODE,92004178,1,VS_0 on.,VS_0 on.
+AGV_NODE,92008307,1,READY off.,READY off.
+AGV_NODE,92000072,1,U_REQ on.,U_REQ on.
+AGV_NODE,92008284,1,HO_AVBL off.,HO_AVBL off.
+AGV_NODE,92008305,1,U_REQ on.,U_REQ on.
+AGV_NODE,92012288,1,Charge error.,Charge error.
+AGV_NODE,92012289,1,Charge OP low.,Charge OP low.
+AGV_NODE,92004135,1,READY off.,READY off.
+AGV_NODE,92004134,1,VA on.,VA on.
+AGV_NODE,92004137,1,VS_1 on.,VS_1 on.
+AGV_NODE,92000033,1,VS_1 on.,VS_1 on.
+AGV_NODE,92004131,1,GO off.,GO off.
+AGV_NODE,92004130,1,ES off.,ES off.
+AGV_NODE,92004133,1,U_REQ off.,U_REQ off.
+AGV_NODE,92004132,1,L_REQ on.,L_REQ on.
+AGV_NODE,92004139,1,ES off.,ES off.
+AGV_NODE,92004138,1,HO_AVBL off.,HO_AVBL off.
+AGV_NODE,92008312,1,GO off.,GO off.
+AGV_NODE,92000023,1,READY on.,READY on.
+AGV_NODE,92000022,1,VA on.,VA on.
+AGV_NODE,92000021,1,U_REQ on.,U_REQ on.
+AGV_NODE,92000020,1,L_REQ off.,L_REQ off.
+AGV_NODE,92000027,1,ES off.,ES off.
+AGV_NODE,92000026,1,HO_AVBL off.,HO_AVBL off.
+AGV_NODE,91000004,1,NoCameraFrameFound,NoCameraFrameFound
+AGV_NODE,92000024,1,VS_0 on.,VS_0 on.
+AGV_NODE,92000029,1,L_REQ off.,L_REQ off.
+AGV_NODE,92000028,1,GO off.,GO off.
+AGV_NODE,98000001,1,RFIDSerialTimeOut,RFIDSerialTimeOut
+AGV_NODE,92000039,1,VA on.,VA on.
+AGV_NODE,92008300,1,VS_1 on.,VS_1 on.
+AGV_NODE,92061433,1,TA3_TimeOut.,
+AGV_NODE,92004147,2,TP3 timeout or EQ error.(HO_AVBL off).,
+AGV_NODE,92008345,2,TP4 timeout or EQ error.(HO_AVBL off).,
+AGV_NODE,1,1,Agv already have a transfer command on middler get new transfer command.,
+AGV_NODE,2,1,Battery capacity enter low power threshold.,
+AGV_NODE,3,1,Loading is off after load finished.,
+AGV_NODE,4,1,Carrier ID is EMPTY after load finished.,
+AGV_NODE,5,1,Carrier ID is ERROR after load finished.,
+AGV_NODE,6,1,Move finish fail.,
+AGV_NODE,7,1,Loading is ON after unload finished.,
+AGV_NODE,8,1,Fork command is exist before unload.,
+AGV_NODE,9,1,Vehicle is not in unload position and cannot unload.,
+AGV_NODE,10,1,Fork command is exist before load.,
+AGV_NODE,11,1,Vehicle is not in guide sections.,
+AGV_NODE,12,1,This address is a couple but no charge direction.,
+AGV_NODE,13,1,Charging is OFF after send start charge command to plc.,
+AGV_NODE,14,2,Charging is ON after send stop charge command to plc.,
+AGV_NODE,15,1,Vehicle is not in load position and cannot load.,
+AGV_NODE,16,1,Vehicle already have cassette cannot load.,
+AGV_NODE,17,1,Vehicle has no cassette to unload.,
+AGV_NODE,18,2,AgvcMoveCommand is not match the map to move.,
+AGV_NODE,19,1,Vehicle is not in transfer reject override.,
+AGV_NODE,20,1,Vehicle is not in moving-step reject override.,
+AGV_NODE,21,1,Vehicle is not pause by reserve reject override.,
+AGV_NODE,22,1,Unload address unmatch current command unload address.,
+AGV_NODE,23,1,Load address unmatch current command load address.,
+AGV_NODE,24,1,ToUnloadSections is empty.,
+AGV_NODE,25,1,ToLoadSections is empty.,
+AGV_NODE,26,1,Exception happened in override-check.,
+AGV_NODE,27,2,Fork not home reject transfer command.,
+AGV_NODE,28,1,Carrier ID is mismatch after load finished.,
+AGV_NODE,29,1,Carrier ID read reply is timeout,
+AGV_NODE,30,1,Vehicle has alarm cannot do transfer command.,
+AGV_NODE,31,1,MoveControl status is not idle cannot switch to auto mode.,
+AGV_NODE,32,1,Real position is null cannot switch to auto mode.,
+AGV_NODE,33,1,Vehicle is not in transfer reject avoid.,
+AGV_NODE,34,1,Vehicle is not in moving-step reject avoid.,
+AGV_NODE,35,1,Vehicle is not pause by reserve reject avoid.,
+AGV_NODE,36,1,Exception happened in avoid-check.,
+AGV_NODE,37,2,Get EMS from AGVC.,
+AGV_NODE,38,1,Agvc maybe disconnected.,
+AGV_NODE,40,1,AgvlError,
+AGV_NODE,42,1,Nearly address in no section.,
+AGV_NODE,43,2,Please check agvl try auto fail reason in agvm.,
+AGV_NODE,44,2,Agvm can not find section in manual.,
+AGV_NODE,45,2,Agvm can not find address in manual.,
+AGV_NODE,46,2,MoveState is not idle or block can not switch to auto.,
+AGV_NODE,47,2,RobotState is not idle can not switch to auto.,
+AGV_NODE,48,2,Robot is not home can not switch to auto.,
+AGV_NODE,49,1,InterlockError.,
+AGV_NODE,50,2,Visit Step Precheck Exception.,
+AGV_NODE,51,2,Agvl report cst position error.,
+AGV_NODE,52,2,Agvl report robot command end but not in robot step.,
+AGV_NODE,53,2,Agvl report robot state not ready to load or unlaod.,
+AGV_NODE,54,2,Agvl initial position is too far to address.,
+AGV_NODE,55,1,Vehicle in move step but position unchange too long.,
+AGV_NODE,56,1,Agvc disconnect when sending command.,
+AGV_NODE,57,1,Local disconnect when sending command.,
+AGV_NODE,58,1,ChargeWhenMove.,
+AGV_NODE,59,1,Manual.,
+AGVC,10121,1,AGVC has trnasfer commmand in queue over time,
+CHARGE_NODE,10201,2,Coupler position not safety,

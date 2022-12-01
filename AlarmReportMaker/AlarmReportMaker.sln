@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlarmReportMaker", "AlarmReportMaker\AlarmReportMaker.csproj", "{1E977DAB-306D-48E1-842C-9E739A2AB938}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jobScheduler", "jobScheduler\jobScheduler.csproj", "{65D647E1-B244-44E4-B42C-79EC224755D3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1E977DAB-306D-48E1-842C-9E739A2AB938}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E977DAB-306D-48E1-842C-9E739A2AB938}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E977DAB-306D-48E1-842C-9E739A2AB938}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E977DAB-306D-48E1-842C-9E739A2AB938}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65D647E1-B244-44E4-B42C-79EC224755D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65D647E1-B244-44E4-B42C-79EC224755D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65D647E1-B244-44E4-B42C-79EC224755D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65D647E1-B244-44E4-B42C-79EC224755D3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {666F8D50-37BC-44C3-A581-868B3D50AA30}
+	EndGlobalSection
+EndGlobal
