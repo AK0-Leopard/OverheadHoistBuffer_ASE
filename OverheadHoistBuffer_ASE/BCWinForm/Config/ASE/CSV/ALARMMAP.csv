@@ -5055,6 +5055,7 @@ LINE,100100,2,"Parse MCS Message Fail, Plases Restart OHBC System"
 CRANE,70001,2,Master PLC network request timed out
 CRANE,89000,2,Double Storage
 CRANE,89001,2,Empty Retrieval
+CRANE,99991,2,OHT is long time offline
 CRANE,99999,2,OHT is offline
 CRANE,99990,2,OHT rejects command repeatedly
 CRANE,100010,1,Interlock Error
@@ -5245,8 +5246,8 @@ CRANE,321001,2,There is a belt rewind
 CRANE,321002,2,vehicle mounted station's runout sensors turn ON
 CRANE,321003,2,Error in belt tension
 CRANE,321007,2,Error in checking box sensor turns ON
-CRANE,321008,1,Defense Succeed.Hoist value is too short.
-CRANE,321009,1,Defense Succeed.Hoist value is too long.
+CRANE,321008,2,Defense Succeed.Hoist value is too short.
+CRANE,321009,2,Defense Succeed.Hoist value is too long.
 CRANE,331001,2,Fail to threw out the back anti-dropping device
 CRANE,331002,2,Fail to threw out the front anti-dropping device
 CRANE,331003,2,Fail to take back the back anti-dropping device

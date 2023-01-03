@@ -119,13 +119,38 @@ namespace com.mirle.ibg3k0.sc.Service
                 vh.ExcuteCommandStatusNotMatch += Vh_ExcuteCommandStatusNotMatch;
                 //vh.CycleMovePausing += Vh_CycleMovePausing;
                 vh.HasReserveRequestRetryOverTimes += Vh_HasReserveRequestRetryOverTimes;
-                vh.LongTimeReserveRequestFailHappend += Vh_LongTimeReserveRequestFailHappend; ;
+                vh.LongTimeReserveRequestFailHappend += Vh_LongTimeReserveRequestFailHappend;
+                vh.LongTimeDisconnectionHappend += Vh_LongTimeDisconnectionHappend;
                 vh.TimerActionStart();
             }
             transferService = app.TransferService;
             IsOneVehicleSystem = this.JudgeIsOneVehicleSystem();
             scApp.ReserveBLL.ReserveMoudleChange += ReserveBLL_ReserveMoudleChange;
             setDefaultReserveByPassOnStraightFlag();
+        }
+
+        private void Vh_LongTimeDisconnectionHappend(object sender, bool isHappend)
+        {
+            try
+            {
+                AVEHICLE vh = sender as AVEHICLE;
+                if (isHappend)
+                {
+                    scApp.TransferService.TransferServiceLogger.
+                        Info($"vh:{vh.VEHICLE_ID} over {AVEHICLE.LONG_TIME_DISCONNECTION_JUDGE_TIME_SECOND} times(s)處於斷線狀態，上報給MCS");
+                    scApp.TransferService.OHBC_AlarmSet(vh.VEHICLE_ID, SystemAlarmCode.OHT_Issue.OHTLongTimeDisconnectionWarning);
+                }
+                else
+                {
+                    scApp.TransferService.TransferServiceLogger.
+                        Info($"vh:{vh.VEHICLE_ID} over {SystemParameter.MaxAllowReserveRequestFailTimeMS} times(s)處於斷線狀態，上報異常結束給MCS");
+                    scApp.TransferService.OHBC_AlarmCleared(vh.VEHICLE_ID, SystemAlarmCode.OHT_Issue.OHTLongTimeDisconnectionWarning);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception:");
+            }
         }
 
         private void Vh_LongTimeReserveRequestFailHappend(object sender, bool isHappend)
@@ -1409,7 +1434,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         {
                             LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: string.Empty,
                                Data: $"can't generate command road data, something is null,id:{SCUtility.Trim(cmd.CMD_ID)},vh id:{SCUtility.Trim(cmd.VH_ID)} current status not allowed." +
-                               $"assignVH.CUR_ADR_ID:{assignVH.CUR_ADR_ID }, assignVH.CUR_SEC_ID:{assignVH.CUR_SEC_ID } , current assign ohtc cmd id:{assignVH.OHTC_CMD}." +
+                               $"assignVH.CUR_ADR_ID:{assignVH.CUR_ADR_ID}, assignVH.CUR_SEC_ID:{assignVH.CUR_SEC_ID} , current assign ohtc cmd id:{assignVH.OHTC_CMD}." +
                                $"assignVH.ACT_STATUS:{assignVH.ACT_STATUS}.");
                             //return isSuccess;
                             return false;
@@ -1442,7 +1467,7 @@ namespace com.mirle.ibg3k0.sc.Service
                         {
                             LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: string.Empty,
                                Data: $"can't generate command road data, something is null,id:{SCUtility.Trim(cmd.CMD_ID)},vh id:{SCUtility.Trim(cmd.VH_ID)} current status not allowed." +
-                               $"assignVH.CUR_ADR_ID:{assignVH.CUR_ADR_ID }, assignVH.CUR_SEC_ID:{assignVH.CUR_SEC_ID } , current assign ohtc cmd id:{assignVH.OHTC_CMD}." +
+                               $"assignVH.CUR_ADR_ID:{assignVH.CUR_ADR_ID}, assignVH.CUR_SEC_ID:{assignVH.CUR_SEC_ID} , current assign ohtc cmd id:{assignVH.OHTC_CMD}." +
                                $"assignVH.ACT_STATUS:{assignVH.ACT_STATUS}.");
                             //return isSuccess;
                             return false;

@@ -512,6 +512,7 @@ namespace com.mirle.ibg3k0.sc.App
             public class OHT_Issue
             {
                 public const string RejectCommandAlarm = "99990";
+                public const string OHTLongTimeDisconnectionWarning = "99991";
                 public const string OHTAccidentOfflineWarning = "99999";
                 public const string DoubleStorage = "89000";
                 public const string EmptyRetrieval = "89001";

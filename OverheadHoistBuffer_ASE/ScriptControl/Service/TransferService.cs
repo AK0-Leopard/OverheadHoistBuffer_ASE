@@ -9563,7 +9563,7 @@ namespace com.mirle.ibg3k0.sc.Service
             {
                 return false;
             }
-
+            List<string> in_mode_change_port = new List<string>();
             bool isSuccess = false;
             foreach (PortDef AGVPortData in AGVPortDatas)
             {
@@ -9577,6 +9577,7 @@ namespace com.mirle.ibg3k0.sc.Service
                 if ((AGVPortData.PortType == E_PortType.Out && portData.IsCSTPresence == false) || (isEmergency == true && AGVPortData.PortType == E_PortType.Out))
                 {
                     isSuccess = PortTypeChange(AGVPortData.PLCPortID, E_PortType.In, "InputModeChange");
+                    in_mode_change_port.Add(AGVPortData.PLCPortID);
                 }
                 else if (AGVPortData.PortType == E_PortType.In)
                 {
@@ -9587,7 +9588,7 @@ namespace com.mirle.ibg3k0.sc.Service
             SpinWait.SpinUntil(() => false, 200);
             Task.Run(() =>
             {
-                CyclingCheckReplenishment(AGVPortDatas);
+                CyclingCheckReplenishment(AGVPortDatas, in_mode_change_port);
             });
             return isSuccess;
         }
@@ -9762,10 +9763,12 @@ namespace com.mirle.ibg3k0.sc.Service
         /// 用來重複確認AGV port 狀態，以進行補空盒動作。
         /// </summary>
         /// <param name="AGVPortDatas"></param>
-        private void CyclingCheckReplenishment(List<PortDef> AGVPortDatas)
+        private void CyclingCheckReplenishment(List<PortDef> AGVPortDatas, List<string> needWaitInModePort)
         {
             try
             {
+                string sneed_wait_in_mode_port = string.Join(",", needWaitInModePort);
+                AGVCTriggerLogger.Info($"{DateTime.Now.ToString("HH:mm:ss.fff")} 開始等待:{sneed_wait_in_mode_port} 轉成in put mode...");
                 bool AGVPortReady = false;
                 while (AGVPortReady == false)
                 {
@@ -9773,6 +9776,8 @@ namespace com.mirle.ibg3k0.sc.Service
                     //取得目前PLC資料
                     foreach (PortDef AGVPortData in AGVPortDatas)
                     {
+                        if (!needWaitInModePort.Contains(AGVPortData.PLCPortID))
+                            continue;
                         PortPLCInfo portPLCStatus = GetPLC_PortData(AGVPortData.PLCPortID);
                         portPLCDatas.Add(portPLCStatus);
                     }
@@ -9787,7 +9792,8 @@ namespace com.mirle.ibg3k0.sc.Service
                         else
                         {
                             AGVPortReady = false;
-                            continue;
+                            //continue;
+                            break;
                         }
                     }
 
@@ -9803,6 +9809,7 @@ namespace com.mirle.ibg3k0.sc.Service
                     }
                     Thread.Sleep(1000);
                 }
+                AGVCTriggerLogger.Info($"{DateTime.Now.ToString("HH:mm:ss.fff")} 開始等待:{sneed_wait_in_mode_port} 轉成in put mode結束。");
             }
             catch (Exception ex)
             {

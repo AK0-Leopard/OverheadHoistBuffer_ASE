@@ -72,6 +72,7 @@ namespace com.mirle.ibg3k0.sc
         public static UInt16 MAX_ALLOW_ACTION_TIME_SECOND { get; private set; } = 300;
         public static UInt16 MAX_ALLOW_IMPORTANT_EVENT_RETRY_COUNT { get; private set; } = 3;
         public static UInt16 MAX_ALLOW_VH_IDLE_TIME_MMILLI_SECOND { get; private set; } = 5_000;
+        public static UInt16 LONG_TIME_DISCONNECTION_JUDGE_TIME_SECOND { get; private set; } = 300;
 
         public event EventHandler<LocationChangeEventArgs> LocationChange;
         public event EventHandler<SegmentChangeEventArgs> SegmentChange;
@@ -90,6 +91,7 @@ namespace com.mirle.ibg3k0.sc
         public event EventHandler<ACMD_OHTC> ExcuteCommandStatusNotMatch;
         public event EventHandler HasReserveRequestRetryOverTimes;
         public event EventHandler<bool> LongTimeReserveRequestFailHappend;
+        public event EventHandler<bool> LongTimeDisconnectionHappend;
 
 
         VehicleTimerAction vehicleTimer = null;
@@ -148,6 +150,10 @@ namespace com.mirle.ibg3k0.sc
         public void onExcuteCommandStatusNotMatch(ACMD_OHTC cmd)
         {
             ExcuteCommandStatusNotMatch?.Invoke(this, cmd);
+        }
+        public void onLongTimeDisconnection(bool isHappend)
+        {
+            LongTimeDisconnectionHappend?.Invoke(this, isHappend);
         }
 
 
@@ -463,6 +469,8 @@ namespace com.mirle.ibg3k0.sc
                 }
             }
         }
+        public bool isLongTimeDisconnection { get; private set; }
+
 
 
         [BaseElement(NonChangeFromOtherVO = true)]
@@ -1705,6 +1713,8 @@ namespace com.mirle.ibg3k0.sc
                             vh.onLongTimeNoCommuncation();
                         }
 
+                        checkIsLongTimeDisconnection();
+
                         if (!vh.isTcpIpConnect) return;
                         //檢查是否這台車是否有命令是處於Sending狀態
                         if (!vh.IsCommandSending)
@@ -1731,6 +1741,28 @@ namespace com.mirle.ibg3k0.sc
                         System.Threading.Interlocked.Exchange(ref syncPoint, 0);
                     }
 
+                }
+            }
+
+            private void checkIsLongTimeDisconnection()
+            {
+                double disconnection_time = vh.getDisconnectionIntervalTime(scApp.getBCFApplication());
+                //if (from_last_comm_time > AVEHICLE.MAX_ALLOW_NO_COMMUNICATION_TIME_SECOND)
+                if (disconnection_time > AVEHICLE.LONG_TIME_DISCONNECTION_JUDGE_TIME_SECOND)
+                {
+                    if (!vh.isLongTimeDisconnection)
+                    {
+                        vh.isLongTimeDisconnection = true;
+                        vh.onLongTimeDisconnection(true);
+                    }
+                }
+                else
+                {
+                    if (vh.isLongTimeDisconnection)
+                    {
+                        vh.isLongTimeDisconnection = false;
+                        vh.onLongTimeDisconnection(false);
+                    }
                 }
             }
 
