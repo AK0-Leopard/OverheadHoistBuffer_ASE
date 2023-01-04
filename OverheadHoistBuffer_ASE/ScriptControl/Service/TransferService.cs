@@ -9776,14 +9776,18 @@ namespace com.mirle.ibg3k0.sc.Service
                     //取得目前PLC資料
                     foreach (PortDef AGVPortData in AGVPortDatas)
                     {
-                        if (!needWaitInModePort.Contains(AGVPortData.PLCPortID))
-                            continue;
                         PortPLCInfo portPLCStatus = GetPLC_PortData(AGVPortData.PLCPortID);
                         portPLCDatas.Add(portPLCStatus);
                     }
                     //以目前資料判斷是否已經轉向完成
                     foreach (PortPLCInfo portPLCStatus in portPLCDatas)
                     {
+                        if (!needWaitInModePort.Contains(portPLCStatus.EQ_ID))
+                        {
+                            AGVPortReady = true;
+                            AGVCTriggerLogger.Info($"{DateTime.Now.ToString("HH:mm:ss.fff")} port id:{portPLCStatus.EQ_ID} 不在切換In Mode的名單中，不需進行等待轉換");
+                            continue;
+                        }
                         if ((portPLCStatus.IsReadyToLoad == true && portPLCStatus.IsInputMode == true) || //若該port為input mode且 is ready to load 為 true; (可以被補空盒)
                             (portPLCStatus.IsReadyToUnload == true && portPLCStatus.IsInputMode == true)) //或者為input mode 且 is ready to unload 為true;   (上已有盒)
                         {
