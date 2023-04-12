@@ -76,6 +76,7 @@ namespace com.mirle.ibg3k0.sc.Service
         PORT_LP_WaitOutTimeOut = 100030,
         OHT_CommandNotFinishedInTime = 100031,
         OHT_BoxStatusAbnormalPassOff = 100032,
+        OHT_ObstaclingTimeOut = 100033,
         OHBC_Parse_SECS_Format_Fail = 100100,
         OHT_LONG_TIME_RESERVE_REQUEST_FAIL = 100101,
     }
@@ -121,6 +122,11 @@ namespace com.mirle.ibg3k0.sc.Service
                 vh.HasReserveRequestRetryOverTimes += Vh_HasReserveRequestRetryOverTimes;
                 vh.LongTimeReserveRequestFailHappend += Vh_LongTimeReserveRequestFailHappend;
                 vh.LongTimeDisconnectionHappend += Vh_LongTimeDisconnectionHappend;
+
+                vh.LongTimeObstacling += Vh_LongTimeObstacling;
+                vh.LongTimeObstacleFinish += Vh_LongTimeObstacleFinish;
+
+
                 vh.TimerActionStart();
             }
             transferService = app.TransferService;
@@ -128,7 +134,46 @@ namespace com.mirle.ibg3k0.sc.Service
             scApp.ReserveBLL.ReserveMoudleChange += ReserveBLL_ReserveMoudleChange;
             setDefaultReserveByPassOnStraightFlag();
         }
-
+        private void Vh_LongTimeObstacling(object sender, EventArgs e)
+        {
+            AVEHICLE vh = sender as AVEHICLE;
+            if (vh == null) return;
+            try
+            {
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                   Data: $"Process vehicle long time obstacling",
+                   VehicleID: vh.VEHICLE_ID,
+                   CarrierID: vh.CST_ID);
+                scApp.TransferService.OHBC_AlarmSet(vh.VEHICLE_ID, ((int)AlarmLst.OHT_ObstaclingTimeOut).ToString());
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                   Data: ex,
+                   VehicleID: vh.VEHICLE_ID,
+                   CarrierID: vh.CST_ID);
+            }
+        }
+        private void Vh_LongTimeObstacleFinish(object sender, EventArgs e)
+        {
+            AVEHICLE vh = sender as AVEHICLE;
+            if (vh == null) return;
+            try
+            {
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Debug, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                   Data: $"Process vehicle long time obstacle finish",
+                   VehicleID: vh.VEHICLE_ID,
+                   CarrierID: vh.CST_ID);
+                scApp.TransferService.OHBC_AlarmCleared(vh.VEHICLE_ID, ((int)AlarmLst.OHT_ObstaclingTimeOut).ToString());
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Log(logger: logger, LogLevel: LogLevel.Warn, Class: nameof(VehicleService), Device: DEVICE_NAME_OHx,
+                   Data: ex,
+                   VehicleID: vh.VEHICLE_ID,
+                   CarrierID: vh.CST_ID);
+            }
+        }
         private void Vh_LongTimeDisconnectionHappend(object sender, bool isHappend)
         {
             try
@@ -6463,8 +6508,6 @@ namespace com.mirle.ibg3k0.sc.Service
                         scApp.ReserveBLL.RemoveVehicle(vhID);
 
                     }
-
-
                 }
                 List<AMCSREPORTQUEUE> reportqueues = new List<AMCSREPORTQUEUE>();
                 is_success = is_success && scApp.ReportBLL.newReportVehicleRemoved(vhID, reportqueues);

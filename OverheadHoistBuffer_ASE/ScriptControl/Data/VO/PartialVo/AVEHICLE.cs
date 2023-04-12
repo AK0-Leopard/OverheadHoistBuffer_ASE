@@ -73,6 +73,7 @@ namespace com.mirle.ibg3k0.sc
         public static UInt16 MAX_ALLOW_IMPORTANT_EVENT_RETRY_COUNT { get; private set; } = 3;
         public static UInt16 MAX_ALLOW_VH_IDLE_TIME_MMILLI_SECOND { get; private set; } = 5_000;
         public static UInt16 LONG_TIME_DISCONNECTION_JUDGE_TIME_SECOND { get; private set; } = 300;
+        public static UInt16 MAX_ALLOW_OBSTACLING_TIME_SECOND { get; private set; } = 180;
 
         public event EventHandler<LocationChangeEventArgs> LocationChange;
         public event EventHandler<SegmentChangeEventArgs> SegmentChange;
@@ -92,11 +93,14 @@ namespace com.mirle.ibg3k0.sc
         public event EventHandler HasReserveRequestRetryOverTimes;
         public event EventHandler<bool> LongTimeReserveRequestFailHappend;
         public event EventHandler<bool> LongTimeDisconnectionHappend;
+        public event EventHandler LongTimeObstacling;
+        public event EventHandler LongTimeObstacleFinish;
 
 
         VehicleTimerAction vehicleTimer = null;
         private Stopwatch CurrentCommandExcuteTime;
         private Stopwatch IdleTime;
+        private Stopwatch CurrentObstaclingTime;
 
         public void onCommandComplete(CompleteStatus cmpStatus)
         {
@@ -155,6 +159,14 @@ namespace com.mirle.ibg3k0.sc
         {
             LongTimeDisconnectionHappend?.Invoke(this, isHappend);
         }
+        public void onLongTimeObstacling()
+        {
+            LongTimeObstacling?.Invoke(this, EventArgs.Empty);
+        }
+        public void onLongTimeObstacleFinish()
+        {
+            LongTimeObstacleFinish?.Invoke(this, EventArgs.Empty);
+        }
 
 
         public AVEHICLE()
@@ -167,6 +179,7 @@ namespace com.mirle.ibg3k0.sc
             initialVhErrorStateMachine();
             CurrentCommandExcuteTime = new Stopwatch();
             IdleTime = new Stopwatch();
+            CurrentObstaclingTime = new Stopwatch();
             vehicleStatusInfo = new VehicleStatusInfo(this);
             //VhRecentRequestSection = new Google.Protobuf.Collections.RepeatedField<ReserveInfo>();
         }
@@ -581,6 +594,7 @@ namespace com.mirle.ibg3k0.sc
             get { return ERROR == VhStopSingle.StopSingleOn; }
             set { }
         }
+        private bool isLongTimeObstacling { get; set; }
 
         public Stopwatch watchHIDTime = new Stopwatch();
         [JsonIgnore]
@@ -1728,6 +1742,7 @@ namespace com.mirle.ibg3k0.sc
                         checkHasBoxOnVhWhenNoCommand();
                         checkIsCycleMovePausing();
                         checkHasReserveRequestFailLongTimeHappend();
+                        checkObstacleStateAndIsLongTime();
                     }
                     catch (Exception ex)
                     {
@@ -1867,6 +1882,55 @@ namespace com.mirle.ibg3k0.sc
                     {
                         vh.IdleTime.Reset();
                         vh.IdleTime.Stop();
+                    }
+                }
+            }
+            private void checkObstacleStateAndIsLongTime()
+            {
+                checkObstacleState();
+                LongTimeObstaclingCheck();
+            }
+
+            private void checkObstacleState()
+            {
+                try
+                {
+                    if (vh.IsObstacle)
+                    {
+
+                        if (!vh.CurrentObstaclingTime.IsRunning)
+                        {
+                            vh.CurrentObstaclingTime.Restart();
+                        }
+                    }
+                    else
+                    {
+                        vh.CurrentObstaclingTime.Reset();
+                        vh.CurrentObstaclingTime.Stop();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex, "Exception:");
+                }
+            }
+            private void LongTimeObstaclingCheck()
+            {
+                double obstacling_time = vh.CurrentObstaclingTime.Elapsed.TotalSeconds;
+                if (obstacling_time > AVEHICLE.MAX_ALLOW_OBSTACLING_TIME_SECOND)
+                {
+                    if (!vh.isLongTimeObstacling)
+                    {
+                        vh.isLongTimeObstacling = true;
+                        vh.onLongTimeObstacling();
+                    }
+                }
+                else
+                {
+                    if (vh.isLongTimeObstacling)
+                    {
+                        vh.isLongTimeObstacling = false;
+                        vh.onLongTimeObstacleFinish();
                     }
                 }
             }
