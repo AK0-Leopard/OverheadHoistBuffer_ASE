@@ -163,7 +163,7 @@ namespace com.mirle.ibg3k0.sc.Service
         Abort = 1,
         Transfer = 2,
     }
-    [TeaceMethodAspectAttribute]
+    //[TeaceMethodAspectAttribute]
     public class TransferService : ITransferService
     {
         #region 屬性

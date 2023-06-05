@@ -40,7 +40,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
     /// <summary>
     /// </summary>
     /// <seealso cref="com.mirle.ibg3k0.sc.Data.ValueDefMapAction.ValueDefMapActionBase" />
-    [TeaceMethodAspectAttribute]
+    //[TeaceMethodAspectAttribute]
     public class EQTcpIpMapAction : ValueDefMapActionBase
     {
 

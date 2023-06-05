@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 
 namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
 {
-    [TeaceMethodAspectAttribute]
+    //[TeaceMethodAspectAttribute]
     public class PortValueDefMapAction : IValueDefMapAction
     {
         public const string DEVICE_NAME_PORT = "PORT";

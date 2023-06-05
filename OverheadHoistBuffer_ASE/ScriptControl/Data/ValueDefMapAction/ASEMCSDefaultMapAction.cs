@@ -38,7 +38,7 @@ using com.mirle.ibg3k0.sc.Common.AOP;
 
 namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
 {
-    [TeaceMethodAspectAttribute]
+    //[TeaceMethodAspectAttribute]
     public class ASEMCSDefaultMapAction : IBSEMDriver, IValueDefMapAction
     {
         const string DEVICE_NAME_MCS = "MCS";
@@ -559,7 +559,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                 ALINE line = scApp.getEQObjCacheManager().getLine();
                 line.SecsMessageParseFail++;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger.Error("MESDefaultMapAction has Error[Line Name:{0}],[Error method:{1}],[Error Message:{2}", line.LINE_ID, "S2F49_Receive_Remote_Command", ex);
             }

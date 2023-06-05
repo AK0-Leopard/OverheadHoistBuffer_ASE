@@ -80,7 +80,7 @@ namespace com.mirle.ibg3k0.sc.Service
         OHBC_Parse_SECS_Format_Fail = 100100,
         OHT_LONG_TIME_RESERVE_REQUEST_FAIL = 100101,
     }
-    [TeaceMethodAspectAttribute]
+    //[TeaceMethodAspectAttribute]
     public class VehicleService
     {
         public const string DEVICE_NAME_OHx = "OHx";

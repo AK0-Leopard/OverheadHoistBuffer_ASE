@@ -1051,7 +1051,8 @@ namespace com.mirle.ibg3k0.sc.Common
             AVEHICLE vh = null;
             try
             {
-                vh = vhList.Where(e => e.VEHICLE_ID.Trim() == vh_id.Trim()).FirstOrDefault();
+                //vh = vhList.Where(e => e.VEHICLE_ID.Trim() == vh_id.Trim()).FirstOrDefault();
+                vh = vhList.Where(e => SCUtility.isMatche(e.VEHICLE_ID, vh_id)).FirstOrDefault();
             }
             catch (Exception ex)
             {

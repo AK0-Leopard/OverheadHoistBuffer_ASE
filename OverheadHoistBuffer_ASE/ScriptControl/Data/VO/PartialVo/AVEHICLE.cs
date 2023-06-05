@@ -45,7 +45,7 @@ namespace com.mirle.ibg3k0.sc
             LeaveSegment = leaveSegment;
         }
     }
-    [TeaceMethodAspectAttribute]
+    //[TeaceMethodAspectAttribute]
     public partial class AVEHICLE : BaseEQObject, IConnectionStatusChange
     {
         public VehicleStateMachine vhStateMachine;
@@ -1688,7 +1688,7 @@ namespace com.mirle.ibg3k0.sc
         }
 
         #endregion Vehicle Error Status
-        [TeaceMethodAspectAttribute]
+        //[TeaceMethodAspectAttribute]
         public class VehicleTimerAction : ITimerAction
         {
             private static Logger VehicleStatusInfoLogger = NLog.LogManager.GetLogger("VehicleStatusInfo");
