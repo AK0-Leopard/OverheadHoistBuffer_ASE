@@ -44,7 +44,7 @@ namespace com.mirle.ibg3k0.sc.WebAPI
             if (!Service.VehicleService.IsOneVehicleSystem)
             {
                 removeReserveModuleTimerAction = new RemoveReserveModuleTimerAction(this, line, "RemoveReserveModuleTimerAction", 1000);
-                removeReserveModuleTimerAction.start();
+                //removeReserveModuleTimerAction.start();
             }
         }
 

@@ -222,6 +222,7 @@
             this.cb_isUsingRemoveReserveModule.TabIndex = 65;
             this.cb_isUsingRemoveReserveModule.Text = "使用遠端預約模組";
             this.cb_isUsingRemoveReserveModule.UseVisualStyleBackColor = true;
+            this.cb_isUsingRemoveReserveModule.Visible = false;
             this.cb_isUsingRemoveReserveModule.CheckedChanged += new System.EventHandler(this.cb_isUsingRemoveReserveModule_CheckedChanged);
             // 
             // num_passDisForBackVh

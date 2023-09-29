@@ -183,7 +183,7 @@
             // 
             this.cmb_zoneID.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.cmb_zoneID.FormattingEnabled = true;
-            this.cmb_zoneID.Location = new System.Drawing.Point(177, 31);
+            this.cmb_zoneID.Location = new System.Drawing.Point(177, 26);
             this.cmb_zoneID.Name = "cmb_zoneID";
             this.cmb_zoneID.Size = new System.Drawing.Size(385, 30);
             this.cmb_zoneID.TabIndex = 4;

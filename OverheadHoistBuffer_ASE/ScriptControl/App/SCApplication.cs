@@ -2283,7 +2283,7 @@ namespace com.mirle.ibg3k0.sc.App
         }
         public static bool isReserveByPassOnStraight { private set; get; } = true;
         public static double IgnoreTransferCommandDistanceWithBehindVh { private set; get; } = 15_000;
-        public static bool IsUsingRemoteReserveModule { private set; get; } = true;
+        public static bool IsUsingRemoteReserveModule { private set; get; } = false;
         public static int MaxAllowReserveRequestFailTimeMS { private set; get; } = 300_000;
 
         /// <summary>

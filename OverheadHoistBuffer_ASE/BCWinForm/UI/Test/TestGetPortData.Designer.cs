@@ -123,7 +123,7 @@
             this.label1.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.label1.Location = new System.Drawing.Point(7, 18);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(86, 16);
+            this.label1.Size = new System.Drawing.Size(85, 16);
             this.label1.TabIndex = 3;
             this.label1.Text = "PortName：";
             // 
@@ -148,7 +148,7 @@
             this.label2.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.label2.Location = new System.Drawing.Point(86, 8);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(81, 16);
+            this.label2.Size = new System.Drawing.Size(80, 16);
             this.label2.TabIndex = 3;
             this.label2.Text = "Port狀態：";
             // 
@@ -249,7 +249,7 @@
             this.label3.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.label3.Location = new System.Drawing.Point(417, 8);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(88, 16);
+            this.label3.Size = new System.Drawing.Size(87, 16);
             this.label3.TabIndex = 3;
             this.label3.Text = "帳料資訊：";
             // 
@@ -476,7 +476,7 @@
             this.label4.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.label4.Location = new System.Drawing.Point(822, 8);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(154, 16);
+            this.label4.Size = new System.Drawing.Size(153, 16);
             this.label4.TabIndex = 3;
             this.label4.Text = "AGV Port 專有訊號：";
             // 
@@ -588,7 +588,7 @@
             this.label5.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.label5.Location = new System.Drawing.Point(6, 17);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(89, 16);
+            this.label5.Size = new System.Drawing.Size(88, 16);
             this.label5.TabIndex = 3;
             this.label5.Text = "AGVZone：";
             // 
@@ -598,7 +598,7 @@
             this.label10.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.label10.Location = new System.Drawing.Point(820, 265);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(77, 16);
+            this.label10.Size = new System.Drawing.Size(76, 16);
             this.label10.TabIndex = 12;
             this.label10.Text = "ST03訊息:";
             // 
@@ -608,7 +608,7 @@
             this.label9.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.label9.Location = new System.Drawing.Point(820, 236);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(77, 16);
+            this.label9.Size = new System.Drawing.Size(76, 16);
             this.label9.TabIndex = 11;
             this.label9.Text = "ST02訊息:";
             // 
@@ -644,7 +644,7 @@
             this.label11.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.label11.Location = new System.Drawing.Point(820, 391);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(120, 16);
+            this.label11.Size = new System.Drawing.Size(119, 16);
             this.label11.TabIndex = 3;
             this.label11.Text = "單取單放狀態：";
             this.label11.Visible = false;
@@ -655,7 +655,7 @@
             this.label6.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.label6.Location = new System.Drawing.Point(820, 359);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(120, 16);
+            this.label6.Size = new System.Drawing.Size(119, 16);
             this.label6.TabIndex = 3;
             this.label6.Text = "關聯實際狀態：";
             this.label6.Visible = false;
@@ -666,7 +666,7 @@
             this.label8.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.label8.Location = new System.Drawing.Point(820, 208);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(77, 16);
+            this.label8.Size = new System.Drawing.Size(76, 16);
             this.label8.TabIndex = 3;
             this.label8.Text = "ST01訊息:";
             // 
@@ -676,7 +676,7 @@
             this.label7.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.label7.Location = new System.Drawing.Point(820, 327);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(124, 16);
+            this.label7.Size = new System.Drawing.Size(123, 16);
             this.label7.TabIndex = 3;
             this.label7.Text = "強制讓貨先出去:";
             this.label7.Visible = false;
@@ -921,7 +921,7 @@
             this.dataGridView5.Name = "dataGridView5";
             this.dataGridView5.ReadOnly = true;
             this.dataGridView5.RowTemplate.Height = 24;
-            this.dataGridView5.Size = new System.Drawing.Size(315, 119);
+            this.dataGridView5.Size = new System.Drawing.Size(303, 119);
             this.dataGridView5.TabIndex = 35;
             this.dataGridView5.Visible = false;
             // 
