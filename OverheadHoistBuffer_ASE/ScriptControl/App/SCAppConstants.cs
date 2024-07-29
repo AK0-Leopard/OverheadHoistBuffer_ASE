@@ -138,6 +138,8 @@ namespace com.mirle.ibg3k0.sc.App
         /// </summary>
         public static readonly string X_FLAG = "X";
 
+        public static readonly string OK_FLAG = "OK";
+
         /// <summary>
         /// The timestamp format_19
         /// </summary>

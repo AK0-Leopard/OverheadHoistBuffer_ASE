@@ -99,6 +99,10 @@ namespace com.mirle.ibg3k0.sc.Service
         public string timeOutForAutoInZone { get; set; }    //timeOutForAutoUD 超過時間自動搬到哪個 Zone
         public string timeOutLog { get; set; }
 
+        /// <summary>
+        /// 是否還再處理Port流向變更的相關流程
+        /// </summary>
+        public bool IsProcessPortDirectionChange { get; set; }
         #endregion 
         #region AGV Port 才有用到的屬性
 
@@ -576,8 +580,18 @@ namespace com.mirle.ibg3k0.sc.Service
                 if (isUnitType(portName, UnitType.AGV))
                 {
                     PortPLCInfo portValue = GetPLC_PortData(portName);
-
-                    PLC_AGV_Station(portValue, "updateAGVStation");
+                    PortINIData portINIData = GetPortIniData(portName);
+                    if (portINIData.IsProcessPortDirectionChange)
+                    {
+                        TransferServiceLogger.Info
+                        (
+                            DateTime.Now.ToString("HH:mm:ss.fff ") + $"IsProcessPortDirectionChange = {portINIData.IsProcessPortDirectionChange} 暫時不進行Timer定期處理"
+                        );
+                    }
+                    else
+                    {
+                        PLC_AGV_Station(portValue, "updateAGVStation");
+                    }
                 }
             }
         }
@@ -5487,7 +5501,20 @@ namespace com.mirle.ibg3k0.sc.Service
                     }
 
                     //Manual_InsertCmd(cmdSource, cmdDest, 45, "BoxMovCmd", CmdType.AGVStation);
-                    Manual_InsertCmd(cmdSource, cmdDest, SystemParameter.BoxMovePriority, "BoxMovCmd", CmdType.AGVStation);
+                    string resutl = Manual_InsertCmd(cmdSource, cmdDest, SystemParameter.BoxMovePriority, "BoxMovCmd", CmdType.AGVStation);
+                    if (!SCUtility.isMatche(resutl, SCAppConstants.OK_FLAG))
+                    {
+                        if (destUnitType == UnitType.SHELF)
+                        {
+                            TransferServiceLogger.Info
+                            (
+                                DateTime.Now.ToString("HH:mm:ss.fff ")
+                                + " PLC >> OHB|BoxMovCmd  "
+                                + $"儲位:{cmdDest} 由於產生命令失敗，將其改為N"
+                            );
+                            shelfDefBLL.updateStatus(cmdDest, ShelfDef.E_ShelfState.EmptyShelf);
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -8072,7 +8099,8 @@ namespace com.mirle.ibg3k0.sc.Service
                 if (cmdBLL.creatCommand_MCS(datainfo))
                 {
                     reportBLL.ReportOperatorInitiatedAction(datainfo.CMD_ID, reportMCSCommandType.Transfer.ToString());
-                    return "OK";
+                    //return "OK";
+                    return SCAppConstants.OK_FLAG;
                 }
                 else
                 {
@@ -8637,6 +8665,17 @@ namespace com.mirle.ibg3k0.sc.Service
         }
         #endregion
         #region 取得 Port 資料
+        public PortINIData GetPortIniData(string portID)
+        {
+            if (portINIData == null)
+                return new PortINIData();
+            if (portINIData.TryGetValue(portID, out PortINIData portData))
+            {
+                return portData;
+            }
+            return new PortINIData();
+        }
+
         public List<PortINIData> GetCVPort()
         {
             return portINIData.Values.Where(data => data.Stage == data.nowStage

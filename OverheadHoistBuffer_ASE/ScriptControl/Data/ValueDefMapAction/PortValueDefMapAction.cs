@@ -965,8 +965,10 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
         public virtual void Port_onDirectionStatusChangeToOutput(object sender, ValueChangedEventArgs args)
         {
             var function = scApp.getFunBaseObj<PortPLCInfo>(port.PORT_ID) as PortPLCInfo;
+            PortINIData portINIData = scApp.TransferService.GetPortIniData(port.PORT_ID);
             try
             {
+                portINIData.IsProcessPortDirectionChange = true;
                 //1.建立各個Function物件
                 function.Read(bcfApp, port.EqptObjectCate, port.PORT_ID);
                 //2.read log
@@ -993,6 +995,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
                     {
                         scApp.TransferService.DeleteOHCVPortCst(function.EQ_ID, log);
                     }
+                    portINIData.IsProcessPortDirectionChange = false;
 
                     if (scApp.TransferService.isUnitType(function.EQ_ID, Service.UnitType.AGV))
                     {
@@ -1007,6 +1010,7 @@ namespace com.mirle.ibg3k0.sc.Data.ValueDefMapAction
             finally
             {
                 scApp.putFunBaseObj<PortPLCInfo>(function);
+                portINIData.IsProcessPortDirectionChange = false;
             }
         }
 
