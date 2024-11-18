@@ -724,6 +724,21 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
             return isSuccess;
         }
+        public void DeleteBefer6MonthAlarmByAlarmIDBatch()
+        {
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    alarmDao.DeleteBefer6MonthAlarmByAlarmIDBatch(con);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex, "Exception:");
+            }
+        }
+
 
         public List<ALARM> loadAlarms(DateTime startTime, DateTime endTime)
         {

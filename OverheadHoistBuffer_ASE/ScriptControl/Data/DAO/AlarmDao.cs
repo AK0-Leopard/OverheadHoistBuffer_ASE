@@ -25,6 +25,8 @@ using NLog;
 using com.mirle.ibg3k0.sc.ProtocolFormat.OHTMessage;
 using System.Globalization;
 using System.Data.Entity;
+using System.Data;
+using System.Drawing;
 
 namespace com.mirle.ibg3k0.sc.Data.DAO
 {
@@ -319,5 +321,10 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
             }
         }
 
+        public void DeleteBefer6MonthAlarmByAlarmIDBatch(DBConnection_EF conn)
+        {
+            string commandString = $"DELETE FROM ALARM WHERE END_TIME <= DATEADD(month, -6, GETDATE())";
+            int result = conn.Database.ExecuteSqlCommand(commandString);
+        }
     }
 }

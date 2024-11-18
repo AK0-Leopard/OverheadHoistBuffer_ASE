@@ -60,6 +60,12 @@ namespace com.mirle.ibg3k0.sc.Scheduler
                     {
                         DeleteHCMD_OHTC();
                     }
+                    SpinWait.SpinUntil(() => false, 5000);
+                    using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                    {
+                        DeleteAlarm();
+                    }
+
                 }
                 catch (Exception ex)
                 {
@@ -108,6 +114,11 @@ namespace com.mirle.ibg3k0.sc.Scheduler
             {
                 scApp.CMDBLL.RemoteHCMD_OHTCByBatch(hcmd_ohtc_list); ;
             }
+        }
+
+        private void DeleteAlarm()
+        {
+            scApp.AlarmBLL.DeleteBefer6MonthAlarmByAlarmIDBatch();
         }
 
     }
