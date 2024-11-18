@@ -102,5 +102,12 @@ namespace com.mirle.ibg3k0.sc
                 return seq_no;
             }
         }
+        public string IDAndState
+        {
+            get
+            {
+                return $"{ShelfID}({ShelfState})";
+            }
+        }
     }
 }

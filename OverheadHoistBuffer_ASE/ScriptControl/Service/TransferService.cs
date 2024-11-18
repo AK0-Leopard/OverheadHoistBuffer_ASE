@@ -445,30 +445,44 @@ namespace com.mirle.ibg3k0.sc.Service
         {
             try
             {
+                TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + $"確認Zone:{zoneID}儲位預約狀態...");
                 var reserved_shelf = scApp.ShelfDefBLL.GetReserved(zoneID);
                 if (!reserved_shelf.Any())
                     return;
+                string reserved_shelf_ids = string.Join(",", reserved_shelf.Select(s => s.IDAndState));
+                TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + $"shelf ids:{reserved_shelf_ids} state is reserved");
                 var no_complete_transfer = scApp.CMDBLL.LoadCmdData();
                 foreach (var shelf in reserved_shelf)
                 {
                     var get_cache = tryGetShelfObj(shelf.ShelfID);
                     if (!get_cache.isExist)
+                    {
                         continue;
+                    }
                     if (!IsStateKeepTimeout(get_cache.portIniData))
+                    {
+                        TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + $"shelf id:{shelf.ShelfID} 尚未超過預約Timeout時間，不進行Shelf State更改");
                         continue;
+                    }
                     CassetteData cstData = cassette_dataBLL.loadCassetteDataByLoc(shelf.ShelfID);
                     if (cstData != null)
+                    {
+                        TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + $"shelf id:{shelf.ShelfID} 有帳料存在:{cstData.BOXID}，不進行Shelf State更改");
                         continue;
+                    }
                     var get_no_finish_cmd_mcs_by_source_result = HasNoCompleteCmdMcsBySource(no_complete_transfer, shelf.ShelfID);
                     if (get_no_finish_cmd_mcs_by_source_result.hasMcsCmd)
                     {
+                        TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + $"shelf id:{shelf.ShelfID} 有命令存在:{get_no_finish_cmd_mcs_by_source_result.cmdMcs.CMD_ID}，不進行Shelf State更改");
                         continue;
                     }
                     var get_no_finish_cmd_mcs_by_dest_result = HasNoCompleteCmdMcsByDest(no_complete_transfer, shelf.ShelfID);
                     if (get_no_finish_cmd_mcs_by_dest_result.hasMcsCmd)
                     {
+                        TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + $"shelf id:{shelf.ShelfID} 有命令存在:{get_no_finish_cmd_mcs_by_dest_result.cmdMcs.CMD_ID}，不進行Shelf State更改");
                         continue;
                     }
+                    TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + $"shelf id:{shelf.ShelfID} 無帳料存在，無命令存在，將Shelf State更改為 [{ShelfDef.E_ShelfState.EmptyShelf}]");
                     shelfDefBLL.updateStatus(shelf.ShelfID, ShelfDef.E_ShelfState.EmptyShelf);
                 }
             }
