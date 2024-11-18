@@ -11,6 +11,7 @@ using com.mirle.ibg3k0.sc.App;
 using System.Transactions;
 using com.mirle.ibg3k0.sc.Service;
 using com.mirle.ibg3k0.sc.BLL.Interface;
+using CommonMessage.ProtocolFormat.ShelfFun;
 
 namespace com.mirle.ibg3k0.sc.BLL
 {
@@ -208,6 +209,7 @@ namespace com.mirle.ibg3k0.sc.BLL
                 {
                     scApp.TransferService.OHBC_AlarmCleared(scApp.getEQObjCacheManager().getLine().LINE_ID, ((int)AlarmLst.LINE_NotEmptyShelf).ToString());
                 }
+                ResetShelfStateChangeIntervalTime(shelf_id);
             }
             catch (Exception ex)
             {
@@ -216,6 +218,22 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
 
             return true;
+        }
+
+        private void ResetShelfStateChangeIntervalTime(string shelfID)
+        {
+            try
+            {
+                var get_cache = scApp.TransferService.tryGetShelfObj(shelfID);
+                if (!get_cache.isExist)
+                    return;
+                var shelf = get_cache.portIniData;
+                shelf.LastShelfStateChangeInterval.Restart();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+            }
         }
 
         public bool updateEnable(string shelf_id, bool enable)
@@ -338,13 +356,13 @@ namespace com.mirle.ibg3k0.sc.BLL
             }
         }
 
-        public List<ShelfDef> GetReserveShelf()
+        public List<ShelfDef> GetNotEmptyShelf()
         {
             try
             {
                 using (DBConnection_EF con = DBConnection_EF.GetUContext())
                 {
-                    return shelfdefDao.GetReserveShelf(con);
+                    return shelfdefDao.GetNotEmptyShelf(con);
                 }
             }
             catch (Exception ex)
@@ -353,6 +371,22 @@ namespace com.mirle.ibg3k0.sc.BLL
                 return null;
             }
 
+        }
+
+        public List<ShelfDef> GetReserved(string zoneID)
+        {
+            try
+            {
+                using (DBConnection_EF con = DBConnection_EF.GetUContext())
+                {
+                    return shelfdefDao.GetReserved(con, zoneID);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception");
+                return null;
+            }
         }
 
         public int GetDistance(string shelfID, string targetAddress)

@@ -247,7 +247,7 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                 throw;
             }
         }
-        public List<ShelfDef> GetReserveShelf(DBConnection_EF conn)  //取得不是空儲位的所有儲位
+        public List<ShelfDef> GetNotEmptyShelf(DBConnection_EF conn)  //取得不是空儲位的所有儲位
         {
             try
             {
@@ -262,6 +262,24 @@ namespace com.mirle.ibg3k0.sc.Data.DAO
                 throw;
             }
         }
+        public List<ShelfDef> GetReserved(DBConnection_EF conn, string zoneID)  //取得不是空儲位的所有儲位
+        {
+            try
+            {
+                var result = conn.ShelfDef
+                    .Where(x => (x.ShelfState == ShelfDef.E_ShelfState.RetrievalReserved ||
+                                x.ShelfState == ShelfDef.E_ShelfState.StorageInReserved) &&
+                                x.ZoneID == zoneID)
+                    .OrderByDescending(x => x.ShelfID).ToList();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex);
+                throw;
+            }
+        }
+
         public int getEnableShelfCountByZone(DBConnection_EF conn, string zoneID)
         {
             try

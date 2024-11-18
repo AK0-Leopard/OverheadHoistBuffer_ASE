@@ -120,6 +120,13 @@ namespace com.mirle.ibg3k0.sc.Service
         public bool oneInOneOutAgvStation { get; set; }
         public DateTime reservePortTime { get; set; }
         #endregion
+
+        #region Shelf 才有用到的屬性
+        public Stopwatch LastShelfStateChangeInterval { get; set; } = new Stopwatch();
+
+        #endregion
+
+
     }
     public class PortAdr
     {
@@ -422,7 +429,7 @@ namespace com.mirle.ibg3k0.sc.Service
         }
         public void EmptyShelf()
         {
-            foreach (var v in shelfDefBLL.GetReserveShelf())
+            foreach (var v in shelfDefBLL.GetNotEmptyShelf())
             {
                 CassetteData cstData = cassette_dataBLL.loadCassetteDataByLoc(v.ShelfID);
                 ACMD_MCS source = cmdBLL.GetCmdDataBySource(v.ShelfID);
@@ -434,6 +441,85 @@ namespace com.mirle.ibg3k0.sc.Service
                 }
             }
         }
+        public void ReCheckReservedShelf(string zoneID)
+        {
+            try
+            {
+                var reserved_shelf = scApp.ShelfDefBLL.GetReserved(zoneID);
+                if (!reserved_shelf.Any())
+                    return;
+                var no_complete_transfer = scApp.CMDBLL.LoadCmdData();
+                foreach (var shelf in reserved_shelf)
+                {
+                    var get_cache = tryGetShelfObj(shelf.ShelfID);
+                    if (!get_cache.isExist)
+                        continue;
+                    if (!IsStateKeepTimeout(get_cache.portIniData))
+                        continue;
+                    CassetteData cstData = cassette_dataBLL.loadCassetteDataByLoc(shelf.ShelfID);
+                    if (cstData != null)
+                        continue;
+                    var get_no_finish_cmd_mcs_by_source_result = HasNoCompleteCmdMcsBySource(no_complete_transfer, shelf.ShelfID);
+                    if (get_no_finish_cmd_mcs_by_source_result.hasMcsCmd)
+                    {
+                        continue;
+                    }
+                    var get_no_finish_cmd_mcs_by_dest_result = HasNoCompleteCmdMcsByDest(no_complete_transfer, shelf.ShelfID);
+                    if (get_no_finish_cmd_mcs_by_dest_result.hasMcsCmd)
+                    {
+                        continue;
+                    }
+                    shelfDefBLL.updateStatus(shelf.ShelfID, ShelfDef.E_ShelfState.EmptyShelf);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Exception:");
+            }
+        }
+
+
+        const int MAX_ALLOW_SHELF_STATE_KEEP_TIME = 300_000;
+        private bool IsStateKeepTimeout(PortINIData portIniData)
+        {
+            if (!portIniData.LastShelfStateChangeInterval.IsRunning)
+            {
+                portIniData.LastShelfStateChangeInterval.Restart();
+                return false;
+            }
+            if (portIniData.LastShelfStateChangeInterval.ElapsedMilliseconds > MAX_ALLOW_SHELF_STATE_KEEP_TIME)
+            {
+                portIniData.LastShelfStateChangeInterval.Restart();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
+        private (bool hasMcsCmd, ACMD_MCS cmdMcs) HasNoCompleteCmdMcsBySource(List<ACMD_MCS> noCompleteMcsCmd, string shelfID)
+        {
+            var no_complete_transfer = noCompleteMcsCmd.ToList();
+            ACMD_MCS no_complete_mcs_cmd_by_source =
+                no_complete_transfer.Where(cmdData =>
+                                           SCUtility.isMatche(cmdData.HOSTSOURCE, shelfID) ||
+                                           SCUtility.isMatche(cmdData.RelayStation, shelfID))
+                                    .FirstOrDefault();
+            return (no_complete_mcs_cmd_by_source != null, no_complete_mcs_cmd_by_source);
+        }
+        private (bool hasMcsCmd, ACMD_MCS cmdMcs) HasNoCompleteCmdMcsByDest(List<ACMD_MCS> noCompleteMcsCmd, string shelfID)
+        {
+            var no_complete_transfer = noCompleteMcsCmd.ToList();
+            ACMD_MCS no_complete_mcs_cmd_by_source =
+                no_complete_transfer.Where(cmdData =>
+                                           SCUtility.isMatche(cmdData.HOSTDESTINATION, shelfID) ||
+                                           SCUtility.isMatche(cmdData.RelayStation, shelfID))
+                                    .FirstOrDefault();
+            return (no_complete_mcs_cmd_by_source != null, no_complete_mcs_cmd_by_source);
+        }
+
         public void AlliniPortData()
         {
             TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + "AlliniPortData 開始------------------------------------");
@@ -1767,7 +1853,11 @@ namespace com.mirle.ibg3k0.sc.Service
             cmdBLL.updateCMD_MCS_TranStatus(mcsCmd.CMD_ID, E_TRAN_STATUS.TransferCompleted);
             reportBLL.ReportTransferInitiated(mcsCmd.CMD_ID.Trim());
             reportBLL.ReportTransferCompleted(mcsCmd, null, ResultCode.ZoneIsfull);
+
+            //當有發生ZoneShelf不足時，檢查一次該Zone是否有發生無帳但狀態為"I"的
+            ReCheckReservedShelf(mcsCmd.HOSTDESTINATION);
         }
+
 
         public bool checkAndProcessIsAgvPortToStation(ACMD_MCS mcsCmd)
         {
@@ -10927,6 +11017,14 @@ namespace com.mirle.ibg3k0.sc.Service
                 return (false, "");
             return (true, portINIData[shelfID].ZoneName);
         }
+        public (bool isExist, PortINIData portIniData) tryGetShelfObj(string shelfID)
+        {
+            if (!isShelfPort(shelfID))
+                return (false, null);
+            bool is_exist = portINIData.TryGetValue(shelfID, out var s);
+            return (is_exist, s);
+        }
+
 
         #endregion
     }
