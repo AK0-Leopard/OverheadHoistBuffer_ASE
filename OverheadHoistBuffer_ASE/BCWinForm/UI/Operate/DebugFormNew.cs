@@ -44,6 +44,7 @@ namespace com.mirle.ibg3k0.bc.winform.UI
             cb_id_31_timeout_test.Checked = DebugParameter.ID_31_TimeoutTest;
             cb_testZoneCommandReqNoReply.Checked = DebugParameter.Is_136_ZoneCommandReq_retry_test;
             cb_openPostionSeqNumCheck.Checked = DebugParameter.IsOpenPositionSeqNumCheck;
+            cb_shelfStateReCheck.Checked = DebugParameter.IsOpenShelfStateReCheck;
 
             num_priorityWatershed.Value = sc.App.SystemParameter.cmdPriorityWatershed;
             num_priorityForBoxMove.Value = sc.App.SystemParameter.BoxMovePriority;
@@ -529,6 +530,11 @@ namespace com.mirle.ibg3k0.bc.winform.UI
         private void num_reserveRequestTimeout_ValueChanged(object sender, EventArgs e)
         {
             sc.App.SystemParameter.setMaxAllowReserveRequestFailTimeMS((int)num_reserveRequestTimeout.Value);
+        }
+
+        private void cb_shelfStateReCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            DebugParameter.IsOpenShelfStateReCheck = cb_shelfStateReCheck.Checked;
         }
 
         //*************************************

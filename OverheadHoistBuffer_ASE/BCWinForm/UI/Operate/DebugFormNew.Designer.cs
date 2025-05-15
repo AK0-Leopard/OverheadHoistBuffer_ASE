@@ -93,6 +93,7 @@
             this.cb_OperMode = new System.Windows.Forms.ComboBox();
             this.button3 = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.cb_shelfStateReCheck = new System.Windows.Forms.CheckBox();
             this.tabPage1.SuspendLayout();
             this.grb_testAear.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -154,6 +155,7 @@
             // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.cb_shelfStateReCheck);
             this.groupBox6.Controls.Add(this.num_reserveRequestTimeout);
             this.groupBox6.Controls.Add(this.label10);
             this.groupBox6.Controls.Add(this.cb_openPostionSeqNumCheck);
@@ -176,7 +178,7 @@
             // 
             // num_reserveRequestTimeout
             // 
-            this.num_reserveRequestTimeout.Location = new System.Drawing.Point(226, 271);
+            this.num_reserveRequestTimeout.Location = new System.Drawing.Point(226, 303);
             this.num_reserveRequestTimeout.Maximum = new decimal(new int[] {
             600000,
             0,
@@ -195,7 +197,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(6, 273);
+            this.label10.Location = new System.Drawing.Point(6, 305);
             this.label10.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(224, 22);
@@ -862,6 +864,17 @@
             this.tabControl1.Size = new System.Drawing.Size(1206, 865);
             this.tabControl1.TabIndex = 23;
             // 
+            // cb_shelfStateReCheck
+            // 
+            this.cb_shelfStateReCheck.AutoSize = true;
+            this.cb_shelfStateReCheck.Location = new System.Drawing.Point(28, 271);
+            this.cb_shelfStateReCheck.Name = "cb_shelfStateReCheck";
+            this.cb_shelfStateReCheck.Size = new System.Drawing.Size(218, 26);
+            this.cb_shelfStateReCheck.TabIndex = 69;
+            this.cb_shelfStateReCheck.Text = "開啟儲位狀態再確認";
+            this.cb_shelfStateReCheck.UseVisualStyleBackColor = true;
+            this.cb_shelfStateReCheck.CheckedChanged += new System.EventHandler(this.cb_shelfStateReCheck_CheckedChanged);
+            // 
             // DebugFormNew
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 22F);
@@ -972,5 +985,6 @@
         private System.Windows.Forms.CheckBox cb_openPostionSeqNumCheck;
         private System.Windows.Forms.NumericUpDown num_reserveRequestTimeout;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.CheckBox cb_shelfStateReCheck;
     }
 }

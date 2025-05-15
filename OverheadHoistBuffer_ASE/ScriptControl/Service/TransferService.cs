@@ -445,6 +445,11 @@ namespace com.mirle.ibg3k0.sc.Service
         {
             try
             {
+                if (!DebugParameter.IsOpenShelfStateReCheck)
+                {
+                    TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + $"欲確認Zone:{zoneID}儲位預約狀態，但功能關閉中({DebugParameter.IsOpenShelfStateReCheck})");
+                    return;
+                }
                 TransferServiceLogger.Info(DateTime.Now.ToString("HH:mm:ss.fff ") + $"確認Zone:{zoneID}儲位預約狀態...");
                 var reserved_shelf = scApp.ShelfDefBLL.GetReserved(zoneID);
                 if (!reserved_shelf.Any())

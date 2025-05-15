@@ -2484,6 +2484,7 @@ namespace com.mirle.ibg3k0.sc.App
             CV,
             NTB
         }
+        public static Boolean IsOpenShelfStateReCheck = true;
 
     }
 }
