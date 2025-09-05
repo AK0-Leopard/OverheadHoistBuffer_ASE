@@ -640,6 +640,14 @@
     <Content Include="Images\arrow.png" />
     <Content Include="Image\add.png" />
     <Content Include="Image\arrow.png" />
+    <None Include="AllConfigAndDB\LINE1_Config.zip" />
+    <None Include="AllConfigAndDB\LINE2_Config.zip" />
+    <None Include="AllConfigAndDB\LINE3_Config.zip" />
+    <None Include="AllConfigAndDB\LOOP_Config.zip" />
+    <None Include="AllConfigAndDB\OHBC_ASE_K21_LINE1_20240813.zip" />
+    <None Include="AllConfigAndDB\OHBC_ASE_K21_LINE2_20240813.zip" />
+    <None Include="AllConfigAndDB\OHBC_ASE_K21_LINE3_V3_20240813.zip" />
+    <None Include="AllConfigAndDB\OHBC_ASE_K21_LOOP_20240813.zip" />
     <None Include="Config\App.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
